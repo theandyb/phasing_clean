@@ -1,0 +1,378 @@
+---
+title: "Synthetic Diploid Results"
+author: "Andy Beck"
+date: "2024-05-15"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Libraries and Directories
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(reactable)
+source("code/common_functions.R")
+
+eagle_switch_dir <-   "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/eagle/annotated/"
+shapeit_switch_dir <- "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/shapeit/annotated/"
+beagle_switch_dir <-  "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/beagle/annotated/"
+num_sites_dir <-      "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/vcf_n_sites/"
+het_loc_dir <-        "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/het_loc/"
+
+sample_info_df <- read_csv("data/1kgp/subject_info.csv") %>%
+  select(SAMPLE_NAME, POPULATION, SUPER)
+
+pair_info_df <- read_delim("data/sample_pairs.csv", col_names = c("POP", "ID1", "ID2"))
+pair_info_df <- left_join(pair_info_df, sample_info_df, by = c("ID1"="SAMPLE_NAME")) %>%
+  rename(SP = SUPER) %>%
+  select(-POPULATION)
+
+# data/chrX_gc1kb_pilot.bed
+gc_content_1kb <- read_tsv("data/chrX_gc1kb_pilot.bed")
+colnames(gc_content_1kb) <- c("CHR", "START", "END", "AT", "GC", "A", "C", "G", "T", "TOTAL", "OTHER", "LENGTH")
+gc_content_1kb  <- gc_content_1kb %>%
+  mutate(bin_id = (START / 1000) + 1)
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000")
+```
+
+
+## Introduction
+
+In this document, we present summaries and figures for the distributions of errors in phasing of our synthetic X chromosome diploids.
+
+## Load Switch and Flips Errors
+
+```{r}
+df_vcftools <- read_csv("output/switch_errors/switch_errors/summary.csv")
+```
+
+## Tables
+
+### Mean number of switches and flips
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_switch_eagle = mean(n_other_eagle),
+            mean_switch_beagle = mean(n_other_beagle),
+            mean_switch_shapeit = mean(n_other_shapeit),
+            mean_flip_eagle = mean(n_flip_eagle),
+            mean_flip_beagle = mean(n_flip_beagle),
+            mean_flip_shapeit = mean(n_flip_shapeit)) %>%
+  reactable()
+```
+
+### Mean number of switches and flips per MB
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_switch_eagle = mean(n_other_eagle / size_mb),
+            mean_switch_beagle = mean(n_other_beagle / size_mb),
+            mean_switch_shapeit = mean(n_other_shapeit / size_mb),
+            mean_flip_eagle = mean(n_flip_eagle / size_mb),
+            mean_flip_beagle = mean(n_flip_beagle / size_mb),
+            mean_flip_shapeit = mean(n_flip_shapeit / size_mb)) %>%
+  reactable()
+```
+
+### Mean median number of heterozygous sites between errors
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_het_switch_beagle = mean(med_hets_switch_beagle),
+            mean_het_switch_eagle = mean(med_hets_switch_eagle),
+            mean_het_switch_shapeit = mean(med_hets_switch_shapeit)) %>%
+  reactable()
+```
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_het_flip_beagle = mean(med_hets_flip_beagle),
+            mean_het_flip_eagle = mean(med_hets_flip_eagle),
+            mean_het_flip_shapeit = mean(med_hets_flip_shapeit)) %>%
+  reactable()
+```
+
+Note here that the populations will also differ in regards to the mean number of heterozygous sites in each pseudo-diploid:
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_n_het = mean(n_hets),
+            sd_n_het = sd(n_hets)) %>%
+  reactable()
+```
+
+### Mean mean number of heterozygous sites between errors
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_het_switch_beagle = mean(mean_hets_switch_beagle),
+            mean_het_switch_eagle = mean(mean_hets_switch_eagle),
+            mean_het_switch_shapeit = mean(mean_hets_switch_shapeit)) %>%
+  reactable()
+```
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_het_flip_beagle = mean(mean_hets_flip_beagle),
+            mean_het_flip_eagle = mean(mean_hets_flip_eagle),
+            mean_het_flip_shapeit = mean(mean_hets_flip_shapeit)) %>%
+  reactable()
+```
+
+## Figures
+
+### Total Errors
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  geom_point() +
+  ggtitle("Total Errors") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Total Errors") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Total Errors") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+#### Error rates (per heterozygous site)
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  geom_point() +
+  ggtitle("Total Errors per Heterozygous Site") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Total Errors per Heterozygous Site") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Total Errors per Heterozygous Site") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+### Non-flip switches
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %>%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  geom_point() +
+  ggtitle("Switches") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+   mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %>%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Switches") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+   mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %>%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Switches") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+#### Per het. site
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %>%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  geom_point() +
+  ggtitle("Switches per Heterozygous Site") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %>%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Switches per Heterozygous Site") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %>%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Switches per Heterozygous Site") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+### Flips
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %>%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  geom_point() +
+  ggtitle("Flips") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+   mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %>%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Flips") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+   mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %>%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Flips") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+#### Per het. site
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  geom_point() +
+  ggtitle("Flips per Heterozygous Site") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Flips per Heterozygous Site") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle("Flips per Heterozygous Site") +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)
+```
