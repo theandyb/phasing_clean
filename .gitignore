@@ -12,3 +12,9 @@ analysis/site_libs
 *vcf.gz*
 *.bcf*
 *.bed
+output/
+*.fasta*
+*.fna*
+*.sizes
+data/1kgp/chr15/
+data/1kgp/chr8/

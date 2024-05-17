@@ -1,0 +1,5 @@
+# Global configuration for phasing project
+
+# location of project on your computer/server
+base_dir: "/net/snowwhite/home/beckandy/research/phasing_clean"
+trio_result_dir: "output/trio_phase_15"
