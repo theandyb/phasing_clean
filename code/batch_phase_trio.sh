@@ -1,0 +1,112 @@
+#!/bin/bash
+#
+#SBATCH --job-name=trioPhase
+#SBATCH --ntasks=1
+#SBATCH --time=12:00:00
+#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=8GB
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=beckandy@umich.edu
+#SBATCH --array=1-602
+#SBATCH --constraint=avx2
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_15/slurm/sample.%A.%a.err
+#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_15/slurm/sample.%A.%a.out
+
+# Code for phasing 602 child samples against a panel with their parents removed
+base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
+shapeit_dir="/net/snowwhite/home/beckandy/software/shapeit5/shapeit5"
+panel_vcf="${base_dir}/data/1kgp/chr15/chr15_phased_overlap_2504.bcf"
+phased_vcf="${base_dir}/data/1kgp/chr15/chr15_phased_overlap.bcf"
+source_vcf="${base_dir}/data/1kgp/chr15/chr15_unphased_overlap.bcf"
+exclude_dir="${base_dir}/data/1kgp/chr15/exclude_samples/"
+out_dir="${base_dir}/output/trio_phase_15/"
+exclude_samples="${exclude_dir}/sample_${SLURM_ARRAY_TASK_ID}.txt"
+target_sample=$(head -n ${SLURM_ARRAY_TASK_ID} /net/snowwhite/home/beckandy/research/phasing_clean/data/1kgp/child_ids.txt  | tail -1)
+working_dir="/net/snowwhite/home/beckandy/scratch/"
+
+if ! test -f $out_dir/truth/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz; then
+  # generate reference panel for phasing
+  if ! test -f ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.vcf.gz; then
+  bcftools view  -S ^${exclude_samples} -Oz $panel_vcf  > ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.vcf.gz #| \
+    #bcftools norm --no-version -m -any | \
+    #bcftools norm --no-version -Oz -d none -f /net/snowwhite/home/beckandy/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna> ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  bcftools index ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  fi
+
+  echo "reference panel generated"
+
+  # generate target vcf.gz for phasing
+  if ! test -f ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.vcf.gz; then
+  bcftools view  -Oz -s $target_sample $source_vcf > ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  fi
+  echo "target vcf generated"
+
+  # generate "truth" vcf.gz for comparison
+  if ! test -f ${working_dir}andy_truth_${SLURM_ARRAY_TASK_ID}.vcf.gz; then
+  bcftools view  -Oz -s $target_sample $phased_vcf > ${working_dir}andy_truth_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  fi
+  echo "truth vcf generated"
+
+  # eagle documentation processing steps
+  # if ! test -f ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.bcf; then
+  # bcftools view ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.vcf.gz | \
+  #   bcftools norm --no-version -Ou -m -any | \
+  #   bcftools norm --no-version -Ou -d snps -f /net/snowwhite/home/beckandy/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna | \
+  #   bcftools view -Oz > ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}_2.vcf.gz
+  # rm ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  # mv ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}_2.vcf.gz ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  # bcftools index ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  # fi
+  echo "eagle documentation preprocessing complete"
+
+  # bcf  version of target and reference
+  if ! test -f ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.bcf; then
+  bcftools view -Ob ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.vcf.gz > ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.bcf
+  bcftools view -Ob ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.vcf.gz > ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.bcf
+  bcftools index  ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.bcf
+  bcftools index ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.bcf
+  fi
+
+  echo "bcf target and reference"
+
+  ## Phasing!
+  eagle --vcfTarget ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.bcf \
+    --vcfRef ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.bcf \
+    --geneticMapFile=/net/snowwhite/home/beckandy/software/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz \
+    --vcfOutFormat v \
+    --chrom chr15 \
+    --numThreads 4 \
+    --outPrefix=${working_dir}andy_eagle_${SLURM_ARRAY_TASK_ID}
+
+  $shapeit_dir/phase_common/bin/phase_common \
+    --input ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.bcf \
+    --map /net/snowwhite/home/beckandy/research/phasing/data/shapeit/chr15.b38.gmap.gz \
+    --reference ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.bcf \
+    --region chr15 \
+    --thread 4 \
+    --output ${working_dir}andy_shapeit_${SLURM_ARRAY_TASK_ID}.bcf
+
+  java -Xmx8g -jar /net/snowwhite/home/beckandy/bin/beagle.05May22.33a.jar \
+    gt=${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.vcf.gz \
+    ref=${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.vcf.gz \
+    map=/net/snowwhite/home/beckandy/research/phasing/data/ref/plink.chr15.map \
+    nthreads=4 \
+    impute=false \
+    out=${working_dir}andy_beagle_${SLURM_ARRAY_TASK_ID}
+
+  # move results to output directory
+  mv ${working_dir}andy_beagle_${SLURM_ARRAY_TASK_ID}.vcf.gz $out_dir/beagle/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  bcftools view -Oz ${working_dir}andy_eagle_${SLURM_ARRAY_TASK_ID}.vcf > $out_dir/eagle/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  bcftools view -Oz ${working_dir}andy_shapeit_${SLURM_ARRAY_TASK_ID}.bcf > $out_dir/shapeit/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz
+  mv ${working_dir}andy_truth_${SLURM_ARRAY_TASK_ID}.vcf.gz $out_dir/truth/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz
+
+  # clean up!
+  rm ${working_dir}andy_shapeit_${SLURM_ARRAY_TASK_ID}.*
+  rm ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.*
+  rm ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.*
+  rm ${working_dir}andy_beagle_${SLURM_ARRAY_TASK_ID}.*
+  rm ${working_dir}andy_eagle_${SLURM_ARRAY_TASK_ID}.*
+
+  echo "complete!"
+fi
+
