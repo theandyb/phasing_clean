@@ -38,22 +38,22 @@ The 1000 Genomes collection of 3,202 genomes is sampled from 26 different popula
 ```{r}
 df_subj %>%
   group_by(SUPER, POPULATION) %>%
-  summarize(n = n()) %>%
-  pander()
-
-df_subj %>%
-  group_by(SUPER) %>%
-  summarize(n = n()) %>%
-  pander()
+  summarize(N = n()) %>%
+  reactable( 
+            groupBy = c("SUPER"),
+            columns = list(
+              N = colDef(aggregate = "sum")),
+    bordered = TRUE,
+    defaultExpanded = TRUE)
 
 df_subj_rel %>%
   group_by(SUPER, POPULATION) %>%
-  summarize(n = n()) %>%
-  pander()
-
-df_subj_rel %>%
-  group_by(SUPER) %>%
-  summarize(n = n()) %>%
-  pander()
+  summarize(N = n()) %>%
+  reactable( 
+            groupBy = c("SUPER"),
+            columns = list(
+              N = colDef(aggregate = "sum")),
+    bordered = TRUE,
+    defaultExpanded = TRUE)
 ```
 
