@@ -37,6 +37,14 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/core-js-2.5.3/shim.min.js"></script>
+<script src="site_libs/react-18.2.0/react.min.js"></script>
+<script src="site_libs/react-18.2.0/react-dom.min.js"></script>
+<script src="site_libs/reactwidget-1.0.0/react-tools.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/reactable-0.4.4/reactable.css" rel="stylesheet" />
+<script src="site_libs/reactable-binding-0.4.4/reactable.js"></script>
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -513,13 +521,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongfa87641">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong91a7ac8">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> fa87641
+aria-hidden="true"></span> <strong>Repository version:</strong> 91a7ac8
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongfa87641"
+<div id="strongRepositoryversionstrong91a7ac8"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -528,7 +536,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version fa87641.
+The results in this page were generated with repository version 91a7ac8.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -632,6 +640,40 @@ Message
 Rmd
 </td>
 <td>
+91a7ac8
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-20
+</td>
+<td>
+wflow_publish("analysis/trio_phasing_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+ac90be7
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 fa87641
 </td>
 <td>
@@ -721,344 +763,30 @@ represented in the 2,504 1kGP phase 3 subjects, but not all are present
 in the 602 trios sequenced by the New York Genome Center:</p>
 <pre class="r"><code>df_subj %&gt;%
   group_by(SUPER, POPULATION) %&gt;%
-  summarize(n = n()) %&gt;%
-  pander()</code></pre>
+  summarize(N = n()) %&gt;%
+  reactable( 
+            groupBy = c(&quot;SUPER&quot;),
+            columns = list(
+              N = colDef(aggregate = &quot;sum&quot;)),
+    bordered = TRUE,
+    defaultExpanded = TRUE)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
 `.groups` argument.</code></pre>
-<table style="width:37%;">
-<colgroup>
-<col width="11%" />
-<col width="18%" />
-<col width="8%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">SUPER</th>
-<th align="center">POPULATION</th>
-<th align="center">n</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">AFR</td>
-<td align="center">ACB</td>
-<td align="center">116</td>
-</tr>
-<tr class="even">
-<td align="center">AFR</td>
-<td align="center">ASW</td>
-<td align="center">74</td>
-</tr>
-<tr class="odd">
-<td align="center">AFR</td>
-<td align="center">ESN</td>
-<td align="center">149</td>
-</tr>
-<tr class="even">
-<td align="center">AFR</td>
-<td align="center">GWD</td>
-<td align="center">178</td>
-</tr>
-<tr class="odd">
-<td align="center">AFR</td>
-<td align="center">LWK</td>
-<td align="center">99</td>
-</tr>
-<tr class="even">
-<td align="center">AFR</td>
-<td align="center">MSL</td>
-<td align="center">99</td>
-</tr>
-<tr class="odd">
-<td align="center">AFR</td>
-<td align="center">YRI</td>
-<td align="center">178</td>
-</tr>
-<tr class="even">
-<td align="center">AMR</td>
-<td align="center">CLM</td>
-<td align="center">132</td>
-</tr>
-<tr class="odd">
-<td align="center">AMR</td>
-<td align="center">MXL</td>
-<td align="center">97</td>
-</tr>
-<tr class="even">
-<td align="center">AMR</td>
-<td align="center">PEL</td>
-<td align="center">122</td>
-</tr>
-<tr class="odd">
-<td align="center">AMR</td>
-<td align="center">PUR</td>
-<td align="center">139</td>
-</tr>
-<tr class="even">
-<td align="center">EAS</td>
-<td align="center">CDX</td>
-<td align="center">93</td>
-</tr>
-<tr class="odd">
-<td align="center">EAS</td>
-<td align="center">CHB</td>
-<td align="center">103</td>
-</tr>
-<tr class="even">
-<td align="center">EAS</td>
-<td align="center">CHS</td>
-<td align="center">163</td>
-</tr>
-<tr class="odd">
-<td align="center">EAS</td>
-<td align="center">JPT</td>
-<td align="center">104</td>
-</tr>
-<tr class="even">
-<td align="center">EAS</td>
-<td align="center">KHV</td>
-<td align="center">122</td>
-</tr>
-<tr class="odd">
-<td align="center">EUR</td>
-<td align="center">CEU</td>
-<td align="center">179</td>
-</tr>
-<tr class="even">
-<td align="center">EUR</td>
-<td align="center">FIN</td>
-<td align="center">99</td>
-</tr>
-<tr class="odd">
-<td align="center">EUR</td>
-<td align="center">GBR</td>
-<td align="center">91</td>
-</tr>
-<tr class="even">
-<td align="center">EUR</td>
-<td align="center">IBS</td>
-<td align="center">157</td>
-</tr>
-<tr class="odd">
-<td align="center">EUR</td>
-<td align="center">TSI</td>
-<td align="center">107</td>
-</tr>
-<tr class="even">
-<td align="center">SAS</td>
-<td align="center">BEB</td>
-<td align="center">131</td>
-</tr>
-<tr class="odd">
-<td align="center">SAS</td>
-<td align="center">GIH</td>
-<td align="center">103</td>
-</tr>
-<tr class="even">
-<td align="center">SAS</td>
-<td align="center">ITU</td>
-<td align="center">107</td>
-</tr>
-<tr class="odd">
-<td align="center">SAS</td>
-<td align="center">PJL</td>
-<td align="center">146</td>
-</tr>
-<tr class="even">
-<td align="center">SAS</td>
-<td align="center">STU</td>
-<td align="center">114</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>df_subj %&gt;%
-  group_by(SUPER) %&gt;%
-  summarize(n = n()) %&gt;%
-  pander()</code></pre>
-<table style="width:22%;">
-<colgroup>
-<col width="11%" />
-<col width="11%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">SUPER</th>
-<th align="center">n</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">AFR</td>
-<td align="center">893</td>
-</tr>
-<tr class="even">
-<td align="center">AMR</td>
-<td align="center">490</td>
-</tr>
-<tr class="odd">
-<td align="center">EAS</td>
-<td align="center">585</td>
-</tr>
-<tr class="even">
-<td align="center">EUR</td>
-<td align="center">633</td>
-</tr>
-<tr class="odd">
-<td align="center">SAS</td>
-<td align="center">601</td>
-</tr>
-</tbody>
-</table>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-6a9a5cb16667fd02312b" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-6a9a5cb16667fd02312b">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"SUPER":["AFR","AFR","AFR","AFR","AFR","AFR","AFR","AMR","AMR","AMR","AMR","EAS","EAS","EAS","EAS","EAS","EUR","EUR","EUR","EUR","EUR","SAS","SAS","SAS","SAS","SAS"],"POPULATION":["ACB","ASW","ESN","GWD","LWK","MSL","YRI","CLM","MXL","PEL","PUR","CDX","CHB","CHS","JPT","KHV","CEU","FIN","GBR","IBS","TSI","BEB","GIH","ITU","PJL","STU"],"N":[116,74,149,178,99,99,178,132,97,122,139,93,103,163,104,122,179,99,91,157,107,131,103,107,146,114]},"columns":[{"id":"SUPER","name":"SUPER","type":"character"},{"id":"POPULATION","name":"POPULATION","type":"character"},{"id":"N","name":"N","type":"numeric","aggregate":"sum"}],"groupBy":["SUPER"],"defaultExpanded":true,"bordered":true,"dataKey":"dc4360fa03b5bb7b8b741e8574ebb628"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 <pre class="r"><code>df_subj_rel %&gt;%
   group_by(SUPER, POPULATION) %&gt;%
-  summarize(n = n()) %&gt;%
-  pander()</code></pre>
+  summarize(N = n()) %&gt;%
+  reactable( 
+            groupBy = c(&quot;SUPER&quot;),
+            columns = list(
+              N = colDef(aggregate = &quot;sum&quot;)),
+    bordered = TRUE,
+    defaultExpanded = TRUE)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
 `.groups` argument.</code></pre>
-<table style="width:36%;">
-<colgroup>
-<col width="11%" />
-<col width="18%" />
-<col width="6%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">SUPER</th>
-<th align="center">POPULATION</th>
-<th align="center">n</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">AFR</td>
-<td align="center">ACB</td>
-<td align="center">20</td>
-</tr>
-<tr class="even">
-<td align="center">AFR</td>
-<td align="center">ASW</td>
-<td align="center">13</td>
-</tr>
-<tr class="odd">
-<td align="center">AFR</td>
-<td align="center">ESN</td>
-<td align="center">43</td>
-</tr>
-<tr class="even">
-<td align="center">AFR</td>
-<td align="center">GWD</td>
-<td align="center">58</td>
-</tr>
-<tr class="odd">
-<td align="center">AFR</td>
-<td align="center">MSL</td>
-<td align="center">11</td>
-</tr>
-<tr class="even">
-<td align="center">AFR</td>
-<td align="center">YRI</td>
-<td align="center">56</td>
-</tr>
-<tr class="odd">
-<td align="center">AMR</td>
-<td align="center">CLM</td>
-<td align="center">35</td>
-</tr>
-<tr class="even">
-<td align="center">AMR</td>
-<td align="center">MXL</td>
-<td align="center">32</td>
-</tr>
-<tr class="odd">
-<td align="center">AMR</td>
-<td align="center">PEL</td>
-<td align="center">35</td>
-</tr>
-<tr class="even">
-<td align="center">AMR</td>
-<td align="center">PUR</td>
-<td align="center">35</td>
-</tr>
-<tr class="odd">
-<td align="center">EAS</td>
-<td align="center">CHS</td>
-<td align="center">51</td>
-</tr>
-<tr class="even">
-<td align="center">EAS</td>
-<td align="center">KHV</td>
-<td align="center">21</td>
-</tr>
-<tr class="odd">
-<td align="center">EUR</td>
-<td align="center">CEU</td>
-<td align="center">57</td>
-</tr>
-<tr class="even">
-<td align="center">EUR</td>
-<td align="center">IBS</td>
-<td align="center">50</td>
-</tr>
-<tr class="odd">
-<td align="center">SAS</td>
-<td align="center">BEB</td>
-<td align="center">30</td>
-</tr>
-<tr class="even">
-<td align="center">SAS</td>
-<td align="center">ITU</td>
-<td align="center">3</td>
-</tr>
-<tr class="odd">
-<td align="center">SAS</td>
-<td align="center">PJL</td>
-<td align="center">42</td>
-</tr>
-<tr class="even">
-<td align="center">SAS</td>
-<td align="center">STU</td>
-<td align="center">10</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>df_subj_rel %&gt;%
-  group_by(SUPER) %&gt;%
-  summarize(n = n()) %&gt;%
-  pander()</code></pre>
-<table style="width:22%;">
-<colgroup>
-<col width="11%" />
-<col width="11%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">SUPER</th>
-<th align="center">n</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">AFR</td>
-<td align="center">201</td>
-</tr>
-<tr class="even">
-<td align="center">AMR</td>
-<td align="center">137</td>
-</tr>
-<tr class="odd">
-<td align="center">EAS</td>
-<td align="center">72</td>
-</tr>
-<tr class="even">
-<td align="center">EUR</td>
-<td align="center">107</td>
-</tr>
-<tr class="odd">
-<td align="center">SAS</td>
-<td align="center">85</td>
-</tr>
-</tbody>
-</table>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-6810f9174ea17e24f83f" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-6810f9174ea17e24f83f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"SUPER":["AFR","AFR","AFR","AFR","AFR","AFR","AMR","AMR","AMR","AMR","EAS","EAS","EUR","EUR","SAS","SAS","SAS","SAS"],"POPULATION":["ACB","ASW","ESN","GWD","MSL","YRI","CLM","MXL","PEL","PUR","CHS","KHV","CEU","IBS","BEB","ITU","PJL","STU"],"N":[20,13,43,58,11,56,35,32,35,35,51,21,57,50,30,3,42,10]},"columns":[{"id":"SUPER","name":"SUPER","type":"character"},{"id":"POPULATION","name":"POPULATION","type":"character"},{"id":"N","name":"N","type":"numeric","aggregate":"sum"}],"groupBy":["SUPER"],"defaultExpanded":true,"bordered":true,"dataKey":"453e6390199b0fdec3474bbcdd887345"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1097,21 +825,21 @@ other attached packages:
 [13] tidyverse_2.0.0 workflowr_1.7.1
 
 loaded via a namespace (and not attached):
- [1] sass_0.4.9        utf8_1.2.4        generics_0.1.3    stringi_1.8.3    
- [5] hms_1.1.3         digest_0.6.34     magrittr_2.0.3    timechange_0.3.0 
- [9] evaluate_0.23     grid_4.4.0        fastmap_1.1.1     rprojroot_2.0.4  
-[13] jsonlite_1.8.8    processx_3.8.3    whisker_0.4.1     ps_1.7.6         
-[17] promises_1.2.1    httr_1.4.7        fansi_1.0.6       scales_1.3.0     
-[21] jquerylib_0.1.4   cli_3.6.2         crayon_1.5.2      rlang_1.1.3      
-[25] bit64_4.0.5       munsell_0.5.1     withr_3.0.0       cachem_1.0.8     
-[29] parallel_4.4.0    tools_4.4.0       tzdb_0.4.0        colorspace_2.1-0 
-[33] httpuv_1.6.14     vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4  
-[37] git2r_0.33.0      bit_4.0.5         htmlwidgets_1.6.4 fs_1.6.3         
-[41] vroom_1.6.5       archive_1.1.7     pkgconfig_2.0.3   callr_3.7.5      
-[45] pillar_1.9.0      bslib_0.7.0       later_1.3.2       gtable_0.3.4     
-[49] glue_1.7.0        Rcpp_1.0.12       xfun_0.42         tidyselect_1.2.0 
-[53] rstudioapi_0.15.0 knitr_1.45        htmltools_0.5.8   rmarkdown_2.26   
-[57] compiler_4.4.0    getPass_0.2-4    </code></pre>
+ [1] gtable_0.3.4      xfun_0.42         bslib_0.7.0       htmlwidgets_1.6.4
+ [5] processx_3.8.3    callr_3.7.5       tzdb_0.4.0        vctrs_0.6.5      
+ [9] tools_4.4.0       crosstalk_1.2.1   ps_1.7.6          generics_0.1.3   
+[13] parallel_4.4.0    fansi_1.0.6       pkgconfig_2.0.3   lifecycle_1.0.4  
+[17] compiler_4.4.0    git2r_0.33.0      munsell_0.5.1     getPass_0.2-4    
+[21] httpuv_1.6.14     htmltools_0.5.8   sass_0.4.9        later_1.3.2      
+[25] pillar_1.9.0      crayon_1.5.2      jquerylib_0.1.4   whisker_0.4.1    
+[29] cachem_1.0.8      tidyselect_1.2.0  digest_0.6.34     stringi_1.8.3    
+[33] rprojroot_2.0.4   fastmap_1.1.1     grid_4.4.0        archive_1.1.7    
+[37] colorspace_2.1-0  cli_3.6.2         magrittr_2.0.3    utf8_1.2.4       
+[41] reactR_0.5.0      withr_3.0.0       scales_1.3.0      promises_1.2.1   
+[45] bit64_4.0.5       timechange_0.3.0  rmarkdown_2.26    httr_1.4.7       
+[49] bit_4.0.5         hms_1.1.3         evaluate_0.23     knitr_1.45       
+[53] rlang_1.1.3       Rcpp_1.0.12       glue_1.7.0        rstudioapi_0.15.0
+[57] vroom_1.6.5       jsonlite_1.8.8    R6_2.5.1          fs_1.6.3         </code></pre>
 </div>
 </div>
 
