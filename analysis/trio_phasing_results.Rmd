@@ -30,7 +30,7 @@ df_subj_rel <- df_subj %>%
   filter(SAMPLE_NAME %in% child_ids)
 df_subj_rel$id2 <- 1:602
 
-df_trio <- read_csv(paste0(config_obj$base_dir,"/",config_obj$trio_result_dir, "/switch_errors/summary.csv"))
+df_switch_trio <- read_csv(paste0(config_obj$base_dir,"/",config_obj$trio_result_dir, "/switch_errors/summary.csv"))
 
 df_het <- read_tsv(paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/het_pos_count.tsv"),
                    col_names = c("id", "n_het"))
@@ -38,6 +38,7 @@ n_var_site <- 1627002
 df_het$frac_het <- df_het$n_het / n_var_site
 
 df_subj_rel <- left_join(df_subj_rel, df_het, by = c("id2" = "id"))
+
 ```
 
 ### Chr X Results
@@ -189,3 +190,156 @@ df_subj_rel %>%
   knitr::kable()
 ```
 
+## Switch Errors
+
+### Total Errors
+
+```{r}
+
+plot_total_errors <- function(df, m1, m2, pop){
+  p <- df %>%
+    mutate(Beagle = n_switch_beagle,
+         Eagle = n_switch_eagle,
+         SHAPEIT = n_switch_shapeit) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Total Errors", "Chromosome 15") +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_total_errors(df_switch_trio, "Beagle", "Eagle", "SUPER")
+plot_total_errors(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
+plot_total_errors(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+```
+
+#### Error Rate
+
+```{r}
+plot_total_rate <- function(df, m1, m2, pop){
+  p <- df %>%
+    mutate(Beagle = n_switch_beagle / n_hets,
+         Eagle = n_switch_eagle / n_hets,
+         SHAPEIT = n_switch_shapeit / n_hets) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Total Errors", "Chromosome 15") +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_total_rate(df_switch_trio, "Beagle", "Eagle", "SUPER")
+plot_total_rate(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
+plot_total_rate(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+```
+
+### Non-flip Switches
+
+```{r}
+
+plot_switches <- function(df, m1, m2, pop){
+  p <- df %>%
+    mutate(Beagle = n_other_beagle,
+         Eagle = n_other_eagle,
+         SHAPEIT = n_other_shapeit) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Total Errors", "Chromosome 15") +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_switches(df_switch_trio, "Beagle", "Eagle", "SUPER")
+plot_switches(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
+plot_switches(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+```
+
+#### Error Rate
+
+```{r}
+plot_switch_rate <- function(df, m1, m2, pop){
+  p <- df %>%
+    mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets,
+         SHAPEIT = n_other_shapeit / n_hets) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Total Errors", "Chromosome 15") +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_switch_rate(df_switch_trio, "Beagle", "Eagle", "SUPER")
+plot_switch_rate(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
+plot_switch_rate(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+```
+
+### Flips
+
+```{r}
+plot_flips <- function(df, m1, m2, pop){
+  p <- df %>%
+    mutate(Beagle = n_flip_beagle,
+         Eagle = n_flip_eagle,
+         SHAPEIT = n_flip_shapeit) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Total Errors", "Chromosome 15") +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_flips(df_switch_trio, "Beagle", "Eagle", "SUPER")
+plot_flips(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
+plot_flips(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+```
+
+#### Error Rate
+
+```{r}
+plot_flip_rate <- function(df, m1, m2, pop){
+  p <- df %>%
+    mutate(Beagle = n_flip_beagle / n_hets,
+         Eagle = n_flip_eagle / n_hets,
+         SHAPEIT = n_flip_shapeit / n_hets) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Total Errors", "Chromosome 15") +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_flip_rate(df_switch_trio, "Beagle", "Eagle", "SUPER")
+plot_flip_rate(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
+plot_flip_rate(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+```
