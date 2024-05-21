@@ -175,3 +175,17 @@ sd_pair_info_df %>%
   scale_fill_manual(values=cbPalette)
 ```
 
+And for another comparison, we'll summarize heterozygosity by super population:
+
+```{r}
+df_subj_rel %>%
+  group_by(SUPER) %>%
+  summarize(mean_het_15 = mean(frac_het)) %>%
+  left_join({ sd_pair_info_df %>%
+      group_by(SP) %>%
+      summarize(mean_het_x = mean(frac_het))
+  }, by = c("SUPER" = "SP")) %>%
+  mutate(x_15_ratio = mean_het_x/mean_het_15) %>%
+  knitr::kable()
+```
+
