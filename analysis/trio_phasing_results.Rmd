@@ -21,6 +21,8 @@ library(yaml)
 
 config_obj <- yaml::read_yaml("_config.yaml")
 
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 df_subj <- read_csv("data/1kgp/subject_info.csv")
 ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt")
 child_ids <- ped_df %>% filter(fatherID != "0" & motherID != "0") %>% pull(sampleID)
@@ -29,7 +31,34 @@ df_subj_rel <- df_subj %>%
 df_subj_rel$id2 <- 1:602
 
 df_trio <- read_csv(paste0(config_obj$base_dir,"/",config_obj$trio_result_dir, "/switch_errors/summary.csv"))
+
+df_het <- read_tsv(paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/het_pos_count.tsv"),
+                   col_names = c("id", "n_het"))
+n_var_site <- 1627002
+df_het$frac_het <- df_het$n_het / n_var_site
+
+df_subj_rel <- left_join(df_subj_rel, df_het, by = c("id2" = "id"))
 ```
+
+### Chr X Results
+
+We'll also pull in the results on chromosome X for the synthetic diploids to allow for comparisons of rates between 15 and X.
+
+```{r}
+sd_pair_info_df <- read_delim("data/sample_pairs.csv", col_names = c("POP", "ID1", "ID2"))
+sd_pair_info_df <- left_join(sd_pair_info_df, df_subj, by = c("ID1"="SAMPLE_NAME")) %>%
+  rename(SP = SUPER) %>%
+  select(-POPULATION)
+
+df_switch_x <- read_csv(paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/summary.csv"))
+df_het_x <- read_tsv(paste0(config_obj$base_dir, "/output/switch_errors/het_pos_count.tsv"), col_names = c("id", "n_het"))
+n_var_site_x <- 1722954
+df_het_x$frac_het <- df_het_x$n_het / n_var_site_x
+
+sd_pair_info_df$n_het <-df_het_x$n_het
+sd_pair_info_df$frac_het <-df_het_x$frac_het
+```
+
 
 ## Subject Information
 
@@ -55,5 +84,94 @@ df_subj_rel %>%
               N = colDef(aggregate = "sum")),
     bordered = TRUE,
     defaultExpanded = TRUE)
+```
+
+For completeness, we also tabulate other summary information about the 602 trios (which is just sex; 1 - male, 2 - female):
+
+```{r}
+df_subj_rel %>%
+  group_by(sex) %>%
+  summarize(N = n()) %>%
+  reactable( 
+            groupBy = c("sex"),
+            columns = list(
+              N = colDef(aggregate = "sum")),
+    bordered = TRUE,
+    defaultExpanded = TRUE)
+```
+
+## Chromosome 15 Information
+
+Things I'd like:
+
+* Density of heterozygous SNPs per individual
+* GC content of heterozygous positions
+
+First let's look at the density of heterozygous positions in each sample, i.e. what fraction of the sites are heterozygous.
+
+```{r}
+df_subj_rel %>%
+  ggplot() +
+  stat_density(aes(x = frac_het, colour = SUPER),
+                  geom="line",position="identity") +
+  theme_classic() +
+  ggtitle("Fraction of Sites Heterozygous", "Chromosome 15") +
+  labs(colour="Population") +
+  xlab("Fraction of Sites Heterozygous") +
+  scale_colour_manual(values=cbPalette)
+
+df_subj_rel %>%
+  ggplot() +
+  geom_boxplot(aes(x = frac_het, y = SUPER , fill = SUPER), show.legend = FALSE) +
+  theme_classic() +
+  ggtitle("Fraction of Sites Heterozygous", "Chromosome 15") +
+  labs(fill="Population") +
+  xlab("Fraction of Sites Heterozygous") +
+  ylab("Population") +
+  scale_fill_manual(values=cbPalette)
+
+df_subj_rel %>%
+  ggplot() +
+  geom_boxplot(aes(x = n_het, y = SUPER , fill = SUPER), show.legend = FALSE) +
+  theme_classic() +
+  ggtitle("Number of Heterozygous Sites", "Chromosome 15") +
+  labs(fill="Population") +
+  xlab("Number of Heterozygous Sites") +
+  ylab("Population") +
+  scale_fill_manual(values=cbPalette)
+```
+
+How does this compare to what we observe in the X chromosome?
+
+```{r}
+sd_pair_info_df %>%
+  ggplot() +
+  stat_density(aes(x = frac_het, colour = SP),
+                  geom="line",position="identity") +
+  theme_classic() +
+  ggtitle("Fraction of Sites Heterozygous", "Chromosome X") +
+  labs(colour="Population") +
+  xlab("Fraction of Sites Heterozygous") +
+  scale_colour_manual(values=cbPalette)
+
+sd_pair_info_df %>%
+  ggplot() +
+  geom_boxplot(aes(x = frac_het, y = SP , fill = SP), show.legend = FALSE) +
+  theme_classic() +
+  ggtitle("Fraction of Sites Heterozygous", "Chromosome X") +
+  labs(fill="Population") +
+  xlab("Fraction of Sites Heterozygous") +
+  ylab("Population") +
+  scale_fill_manual(values=cbPalette)
+
+sd_pair_info_df %>%
+  ggplot() +
+  geom_boxplot(aes(x = n_het, y = SP , fill = SP), show.legend = FALSE) +
+  theme_classic() +
+  ggtitle("Number of Heterozygous Sites", "Chromosome X") +
+  labs(fill="Population") +
+  xlab("Number of Heterozygous Sites") +
+  ylab("Population") +
+  scale_fill_manual(values=cbPalette)
 ```
 
