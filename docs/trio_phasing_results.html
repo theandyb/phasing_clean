@@ -521,13 +521,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong51a14cf">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong2aa6265">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 51a14cf
+aria-hidden="true"></span> <strong>Repository version:</strong> 2aa6265
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong51a14cf"
+<div id="strongRepositoryversionstrong2aa6265"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -536,7 +536,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 51a14cf.
+The results in this page were generated with repository version 2aa6265.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -636,6 +636,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+2aa6265
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+<td>
+wflow_publish("analysis/trio_phasing_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+ddd4d13
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -909,6 +943,43 @@ sample, i.e. what fraction of the sites are heterozygous.</p>
   xlab(&quot;Fraction of Sites Heterozygous&quot;) +
   scale_colour_manual(values=cbPalette)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ddd4d13
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_subj_rel %&gt;%
   ggplot() +
   geom_boxplot(aes(x = frac_het, y = SUPER , fill = SUPER), show.legend = FALSE) +
@@ -919,6 +990,43 @@ sample, i.e. what fraction of the sites are heterozygous.</p>
   ylab(&quot;Population&quot;) +
   scale_fill_manual(values=cbPalette)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
+Past versions of unnamed-chunk-5-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ddd4d13
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_subj_rel %&gt;%
   ggplot() +
   geom_boxplot(aes(x = n_het, y = SUPER , fill = SUPER), show.legend = FALSE) +
@@ -929,6 +1037,43 @@ sample, i.e. what fraction of the sites are heterozygous.</p>
   ylab(&quot;Population&quot;) +
   scale_fill_manual(values=cbPalette)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-3">
+Past versions of unnamed-chunk-5-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ddd4d13
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>How does this compare to what we observe in the X chromosome?</p>
 <pre class="r"><code>sd_pair_info_df %&gt;%
   ggplot() +
@@ -940,6 +1085,43 @@ sample, i.e. what fraction of the sites are heterozygous.</p>
   xlab(&quot;Fraction of Sites Heterozygous&quot;) +
   scale_colour_manual(values=cbPalette)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ddd4d13
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>sd_pair_info_df %&gt;%
   ggplot() +
   geom_boxplot(aes(x = frac_het, y = SP , fill = SP), show.legend = FALSE) +
@@ -950,6 +1132,43 @@ sample, i.e. what fraction of the sites are heterozygous.</p>
   ylab(&quot;Population&quot;) +
   scale_fill_manual(values=cbPalette)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-2">
+Past versions of unnamed-chunk-6-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ddd4d13
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>sd_pair_info_df %&gt;%
   ggplot() +
   geom_boxplot(aes(x = n_het, y = SP , fill = SP), show.legend = FALSE) +
@@ -960,6 +1179,96 @@ sample, i.e. what fraction of the sites are heterozygous.</p>
   ylab(&quot;Population&quot;) +
   scale_fill_manual(values=cbPalette)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-3">
+Past versions of unnamed-chunk-6-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ddd4d13
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>And for another comparison, we’ll summarize heterozygosity by super
+population:</p>
+<pre class="r"><code>df_subj_rel %&gt;%
+  group_by(SUPER) %&gt;%
+  summarize(mean_het_15 = mean(frac_het)) %&gt;%
+  left_join({ sd_pair_info_df %&gt;%
+      group_by(SP) %&gt;%
+      summarize(mean_het_x = mean(frac_het))
+  }, by = c(&quot;SUPER&quot; = &quot;SP&quot;)) %&gt;%
+  mutate(x_15_ratio = mean_het_x/mean_het_15) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="right">mean_het_15</th>
+<th align="right">mean_het_x</th>
+<th align="right">x_15_ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">0.0471563</td>
+<td align="right">0.0579344</td>
+<td align="right">1.2285603</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.0356724</td>
+<td align="right">0.0384868</td>
+<td align="right">1.0788963</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.0332371</td>
+<td align="right">0.0314937</td>
+<td align="right">0.9475482</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.0344184</td>
+<td align="right">0.0351699</td>
+<td align="right">1.0218350</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.0359237</td>
+<td align="right">0.0369510</td>
+<td align="right">1.0285967</td>
+</tr>
+</tbody>
+</table>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
