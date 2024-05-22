@@ -50,6 +50,20 @@ df_het_22$frac_het22 <- df_het_22$n_het22 / n_var_site_22
 df_subj_rel <- left_join(df_subj_rel, df_het, by = c("id2" = "id")) %>%
   left_join(df_het_22, by = c("id2" = "id"))
 
+df_triple_het <- read_tsv(paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/triple_het.tsv"),
+                   col_names = c("id", "n_t_het"))
+df_subj_rel <- left_join(df_subj_rel, df_triple_het, by = c("id2" = "id"))
+
+df_subj_rel$frac_t_het <- df_subj_rel$n_t_het / df_subj_rel$n_het
+
+df_triple_het22 <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_22/triple_het.tsv"),
+                   col_names = c("id", "n_t_het22"))
+df_subj_rel <- left_join(df_subj_rel, df_triple_het22, by = c("id2" = "id"))
+
+df_subj_rel$frac_t_het22 <- df_subj_rel$n_t_het22 / df_subj_rel$n_het22
+
+df_switch_trio <- left_join(df_switch_trio, df_triple_het, by=c("pair_id" = "id"))
+df_switch_trio_22 <- left_join(df_switch_trio_22, df_triple_het22, by=c("pair_id" = "id"))
 ```
 
 ### Chr X Results
@@ -216,6 +230,57 @@ df_subj_rel %>%
   
 ```
 
+In addition, we also know how many heterozygous sites are triple heterozygous in each trio:
+
+```{r}
+df_subj_rel %>%
+  ggplot(aes(x = frac_t_het, y = SUPER, fill = SUPER)) +
+  geom_boxplot(show.legend = FALSE) +
+  theme_classic() +
+  xlab("Triple Het Site Fraction") +
+  ylab("Population") +
+  scale_fill_manual(values = cbPalette) +
+  ggtitle("Fraction of heterozygous sites with triple heterozygotes", "Chromosome 15")
+
+df_subj_rel %>%
+  ggplot(aes(x = frac_t_het22, y = SUPER, fill = SUPER)) +
+  geom_boxplot(show.legend = FALSE) +
+  theme_classic() +
+  xlab("Triple Het Site Fraction") +
+  ylab("Population") +
+  scale_fill_manual(values = cbPalette) +
+  ggtitle("Fraction of heterozygous sites with triple heterozygotes", "Chromosome 22")
+
+df_subj_rel %>%
+  ggplot(aes(x = frac_t_het22, y = frac_t_het, color = SUPER)) +
+  geom_point() +
+  geom_abline(slope=1, intercept = 0) +
+  theme_classic() +
+  xlab("Chromosome 22") +
+  ylab("Chromosome 15") +
+  scale_color_manual(values = cbPalette) +
+  ggtitle("Fraction of heterozygous sites with triple heterozygotes")
+
+df_subj_rel %>%
+  ggplot(aes(x = n_t_het22, y = n_t_het, color = SUPER)) +
+  geom_point() +
+  theme_classic() +
+  xlab("Chromosome 22") +
+  ylab("Chromosome 15") +
+  scale_color_manual(values = cbPalette) +
+  ggtitle("Triple Heterozygous Sites")
+
+df_subj_rel %>%
+  ggplot(aes(x = n_t_het, y = SUPER, fill = SUPER)) +
+  geom_boxplot(show.legend = FALSE) +
+  theme_classic() +
+  xlab("Triple Het Sites") +
+  ylab("Population") +
+  scale_fill_manual(values = cbPalette) +
+  ggtitle("Triple Heterozygotes Sites", "Chromosome 15")
+```
+
+
 ## Switch Errors
 
 ### Total Errors
@@ -342,7 +407,7 @@ plot_switches(df_switch_x, "Beagle", "SHAPEIT", "pop", "X")
 plot_switches(df_switch_x, "SHAPEIT", "Eagle", "pop", "X")
 ```
 
-#### Error Rate
+#### Switch Rate
 
 ```{r}
 plot_switch_rate <- function(df, m1, m2, pop, chrom = 15){
@@ -424,7 +489,7 @@ plot_flips(df_switch_x, "Beagle", "SHAPEIT", "pop", "X")
 plot_flips(df_switch_x, "SHAPEIT", "Eagle", "pop", "X")
 ```
 
-#### Error Rate
+#### Flip Rate
 
 ```{r}
 plot_flip_rate <- function(df, m1, m2, pop, chrom = 15){
@@ -486,6 +551,16 @@ df_switch_trio %>%
             EagleX = mean(Eagle),
             SHAPEITX = mean(SHAPEIT))
   }, by = c("SUPER" = "pop")) %>%
+  left_join({
+    df_switch_trio_22 %>%
+      mutate(Beagle = n_other_beagle / n_hets,
+             Eagle = n_other_eagle / n_hets,
+             SHAPEIT = n_other_shapeit / n_hets) %>%
+      group_by(SUPER) %>%
+      summarize(Beagle22 = mean(Beagle),
+                Eagle22 = mean(Eagle),
+                SHAPEIT22 = mean(SHAPEIT))
+  }, by="SUPER") %>%
   knitr::kable()
 
 df_switch_trio %>%
@@ -506,10 +581,143 @@ df_switch_trio %>%
             EagleX = mean(Eagle),
             SHAPEITX = mean(SHAPEIT))
   }, by = c("SUPER" = "pop")) %>%
-  mutate(Beagle = Beagle15 / BeagleX,
-         Eagle = Eagle15 / EagleX,
-         SHAPEIT = SHAPEIT15 / SHAPEITX) %>%
-  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
+  left_join({
+    df_switch_trio_22 %>%
+      mutate(Beagle = n_other_beagle / n_hets,
+             Eagle = n_other_eagle / n_hets,
+             SHAPEIT = n_other_shapeit / n_hets) %>%
+      group_by(SUPER) %>%
+      summarize(Beagle22 = mean(Beagle),
+                Eagle22 = mean(Eagle),
+                SHAPEIT22 = mean(SHAPEIT))
+  }, by="SUPER") %>%
+  mutate(BeagleX = Beagle15 / BeagleX,
+         EagleX = Eagle15 / EagleX,
+         SHAPEITX = SHAPEIT15 / SHAPEITX,
+         Beagle22 = Beagle15 / Beagle22,
+         Eagle22 = Eagle15 / Eagle22,
+         SHAPEIT22 = SHAPEIT15 / SHAPEIT22) %>%
+  select(SUPER, BeagleX, EagleX, SHAPEITX, Beagle22, Eagle22, SHAPEIT22) %>%
   knitr::kable()
+
+df_switch_trio %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+            Eagle = n_other_eagle / n_hets,
+            SHAPEIT = n_other_shapeit / n_hets ) %>%
+  group_by(SUPER) %>%
+  summarize(Beagle15 = mean(Beagle),
+            Eagle15 = mean(Eagle),
+            SHAPEIT15 = mean(SHAPEIT)) %>%
+  left_join({
+    df_switch_x %>%
+      mutate(Beagle = n_other_beagle / n_hets,
+            Eagle = n_other_eagle / n_hets,
+            SHAPEIT = n_other_shapeit / n_hets ) %>%
+      group_by(pop) %>%
+      summarize(BeagleX = mean(Beagle),
+            EagleX = mean(Eagle),
+            SHAPEITX = mean(SHAPEIT))
+  }, by = c("SUPER" = "pop")) %>%
+  left_join({
+    df_switch_trio_22 %>%
+      mutate(Beagle = n_other_beagle / n_hets,
+             Eagle = n_other_eagle / n_hets,
+             SHAPEIT = n_other_shapeit / n_hets) %>%
+      group_by(SUPER) %>%
+      summarize(Beagle22 = mean(Beagle),
+                Eagle22 = mean(Eagle),
+                SHAPEIT22 = mean(SHAPEIT))
+  }, by="SUPER") %>%
+  mutate(BeagleX = BeagleX / Beagle15,
+         EagleX = EagleX / Eagle15,
+         SHAPEITX = SHAPEITX / SHAPEIT15,
+         Beagle22 = Beagle22 / Beagle15,
+         Eagle22 = Eagle22 / Eagle15,
+         SHAPEIT22 = SHAPEIT22 / SHAPEIT15) %>%
+  select(SUPER, BeagleX, EagleX, SHAPEITX, Beagle22, Eagle22, SHAPEIT22) %>%
+  knitr::kable()
+```
+
+## Error rates and triple het rate
+
+Using only trio sequencing data, the phase of sites which are heterozygous in both the parents and in the child cannot be determined by the principles of Mendelian segregation. Below we explore the assocition between the frequency of triple heterozygous sites in each trio and the rate of errors in phasing of the child.
+
+### Switch rate
+
+#### Beagle
+
+```{r}
+plot_th_sr <- function(df, m1, chrom = 15){
+  df <- df %>%
+    mutate(Beagle = n_other_beagle / n_hets,
+           Eagle = n_other_eagle / n_hets,
+           SHAPEIT = n_other_shapeit / n_hets,
+           frac_t_het = n_t_het / n_hets)
+  c_val <- signif(cor(df[m1], df["frac_t_het"]), 4)
+  c_obj <- cor.test(df[[m1]], df[["frac_t_het"]])
+  p_val <- paste0("p=",signif(c_obj$p.value, 4))
+  p <- df %>%
+    ggplot(aes(x = frac_t_het, y = !! sym(m1), color = SUPER)) +
+    geom_point() +
+    xlab("Fraction of sites triple heterozygous") +
+    ylab("Switch Error Rate") +
+    scale_color_manual(values = cbPalette) +
+    labs(color="Population") +
+    ggtitle("Switch error rates and triple heterozygotes", paste0("Chromosome ", chrom, "; corr = ", c_val, "(", p_val ,")"))
+  return(p)
+}
+
+plot_th_sr(df_switch_trio, "Beagle")
+```
+
+#### Eagle
+
+```{r}
+plot_th_sr(df_switch_trio, "Eagle")
+```
+
+#### SHAPEIT
+
+```{r}
+plot_th_sr(df_switch_trio, "SHAPEIT")
+```
+
+### Flip Rate
+
+#### Beagle
+```{r}
+plot_th_fr <- function(df, m1, chrom = 15){
+  df <- df %>%
+    mutate(Beagle = n_flip_beagle / n_hets,
+           Eagle = n_flip_eagle / n_hets,
+           SHAPEIT = n_flip_shapeit / n_hets,
+           frac_t_het = n_t_het / n_hets)
+  c_val <- signif(cor(df[m1], df["frac_t_het"]), 4)
+  c_obj <- cor.test(df[[m1]], df[["frac_t_het"]])
+  p_val <- paste0("p=",signif(c_obj$p.value, 4))
+  p <- df %>%
+    ggplot(aes(x = frac_t_het, y = !! sym(m1), color = SUPER)) +
+    geom_point() +
+    xlab("Fraction of sites triple heterozygous") +
+    ylab("Flip Error Rate") +
+    scale_color_manual(values = cbPalette) +
+    labs(color="Population") +
+    ggtitle("Flip error rates and triple heterozygotes", paste0("Chromosome ", chrom, "; corr = ", c_val, "(", p_val ,")"))
+  return(p)
+}
+
+plot_th_fr(df_switch_trio, "Beagle")
+```
+
+#### Eagle
+
+```{r}
+plot_th_fr(df_switch_trio, "Eagle")
+```
+
+#### SHAPEIT
+
+```{r}
+plot_th_fr(df_switch_trio, "SHAPEIT")
 ```
 
