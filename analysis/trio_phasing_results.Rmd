@@ -30,14 +30,25 @@ df_subj_rel <- df_subj %>%
   filter(SAMPLE_NAME %in% child_ids)
 df_subj_rel$id2 <- 1:602
 
-df_switch_trio <- read_csv(paste0(config_obj$base_dir,"/",config_obj$trio_result_dir, "/switch_errors/summary.csv"))
+df_switch_trio <- read_csv(paste0(config_obj$base_dir,"/",
+                                  config_obj$trio_result_dir, "/switch_errors/summary.csv"))
+
+df_switch_trio_22 <- read_csv(paste0(config_obj$base_dir,
+                                     "/output/trio_phase_22/switch_errors/summary.csv"))
 
 df_het <- read_tsv(paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/het_pos_count.tsv"),
                    col_names = c("id", "n_het"))
-n_var_site <- 1627002
-df_het$frac_het <- df_het$n_het / n_var_site
+df_het_22 <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_22/het_pos_count.tsv"),
+                   col_names = c("id", "n_het22"))
 
-df_subj_rel <- left_join(df_subj_rel, df_het, by = c("id2" = "id"))
+n_var_site <- 1627002
+n_var_site_22 <- 767007
+
+df_het$frac_het <- df_het$n_het / n_var_site
+df_het_22$frac_het22 <- df_het_22$n_het22 / n_var_site_22
+
+df_subj_rel <- left_join(df_subj_rel, df_het, by = c("id2" = "id")) %>%
+  left_join(df_het_22, by = c("id2" = "id"))
 
 ```
 
@@ -190,12 +201,26 @@ df_subj_rel %>%
   knitr::kable()
 ```
 
+And finally, since samples are shared between 15 and 22, let's look at how fraction of heterozygous sites looks like across chromosomes:
+
+```{r}
+df_subj_rel %>%
+  ggplot(aes(frac_het, frac_het22, color = SUPER)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  theme_classic() +
+  xlab("Chromosome 15 % Heterozygous") +
+  ylab("Chromosome 22 % Heterozygous") +
+  labs(color = "Population") +
+  scale_color_manual(values = cbPalette)
+  
+```
+
 ## Switch Errors
 
 ### Total Errors
 
 ```{r}
-
 plot_total_errors <- function(df, m1, m2, pop){
   p <- df %>%
     mutate(Beagle = n_switch_beagle,
@@ -217,6 +242,23 @@ plot_total_errors(df_switch_trio, "Beagle", "Eagle", "SUPER")
 plot_total_errors(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
 plot_total_errors(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
 ```
+
+And now chromosome 22:
+
+```{r}
+plot_total_errors(df_switch_trio_22, "Beagle", "Eagle", "SUPER")
+plot_total_errors(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER")
+plot_total_errors(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER")
+```
+
+And finally, chromosome X:
+
+```{r}
+plot_total_errors(df_switch_x, "Beagle", "Eagle", "pop")
+plot_total_errors(df_switch_x, "Beagle", "SHAPEIT", "pop")
+plot_total_errors(df_switch_x, "SHAPEIT", "Eagle", "pop")
+```
+
 
 #### Error Rate
 
@@ -243,10 +285,25 @@ plot_total_rate(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
 plot_total_rate(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
 ```
 
+And now chromosome 22:
+
+```{r}
+plot_total_rate(df_switch_trio_22, "Beagle", "Eagle", "SUPER")
+plot_total_rate(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER")
+plot_total_rate(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER")
+```
+
+And finally, chromosome X:
+
+```{r}
+plot_total_rate(df_switch_x, "Beagle", "Eagle", "pop")
+plot_total_rate(df_switch_x, "Beagle", "SHAPEIT", "pop")
+plot_total_rate(df_switch_x, "SHAPEIT", "Eagle", "pop")
+```
+
 ### Non-flip Switches
 
 ```{r}
-
 plot_switches <- function(df, m1, m2, pop){
   p <- df %>%
     mutate(Beagle = n_other_beagle,
@@ -267,6 +324,22 @@ plot_switches <- function(df, m1, m2, pop){
 plot_switches(df_switch_trio, "Beagle", "Eagle", "SUPER")
 plot_switches(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
 plot_switches(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+```
+
+And now chromosome 22:
+
+```{r}
+plot_switches(df_switch_trio_22, "Beagle", "Eagle", "SUPER")
+plot_switches(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER")
+plot_switches(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER")
+```
+
+And finally, chromosome X:
+
+```{r}
+plot_switches(df_switch_x, "Beagle", "Eagle", "pop")
+plot_switches(df_switch_x, "Beagle", "SHAPEIT", "pop")
+plot_switches(df_switch_x, "SHAPEIT", "Eagle", "pop")
 ```
 
 #### Error Rate
@@ -294,6 +367,22 @@ plot_switch_rate(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
 plot_switch_rate(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
 ```
 
+And now chromosome 22:
+
+```{r}
+plot_switch_rate(df_switch_trio_22, "Beagle", "Eagle", "SUPER")
+plot_switch_rate(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER")
+plot_switch_rate(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER")
+```
+
+And finally, chromosome X:
+
+```{r}
+plot_switch_rate(df_switch_x, "Beagle", "Eagle", "pop")
+plot_switch_rate(df_switch_x, "Beagle", "SHAPEIT", "pop")
+plot_switch_rate(df_switch_x, "SHAPEIT", "Eagle", "pop")
+```
+
 ### Flips
 
 ```{r}
@@ -319,6 +408,22 @@ plot_flips(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
 plot_flips(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
 ```
 
+And now chromosome 22:
+
+```{r}
+plot_flips(df_switch_trio_22, "Beagle", "Eagle", "SUPER")
+plot_flips(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER")
+plot_flips(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER")
+```
+
+And finally, chromosome X:
+
+```{r}
+plot_flips(df_switch_x, "Beagle", "Eagle", "pop")
+plot_flips(df_switch_x, "Beagle", "SHAPEIT", "pop")
+plot_flips(df_switch_x, "SHAPEIT", "Eagle", "pop")
+```
+
 #### Error Rate
 
 ```{r}
@@ -342,4 +447,20 @@ plot_flip_rate <- function(df, m1, m2, pop){
 plot_flip_rate(df_switch_trio, "Beagle", "Eagle", "SUPER")
 plot_flip_rate(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
 plot_flip_rate(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+```
+
+And now chromosome 22:
+
+```{r}
+plot_flip_rate(df_switch_trio_22, "Beagle", "Eagle", "SUPER")
+plot_flip_rate(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER")
+plot_flip_rate(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER")
+```
+
+And finally, chromosome X:
+
+```{r}
+plot_flip_rate(df_switch_x, "Beagle", "Eagle", "pop")
+plot_flip_rate(df_switch_x, "Beagle", "SHAPEIT", "pop")
+plot_flip_rate(df_switch_x, "SHAPEIT", "Eagle", "pop")
 ```
