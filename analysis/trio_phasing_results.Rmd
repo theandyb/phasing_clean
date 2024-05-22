@@ -464,3 +464,52 @@ plot_flip_rate(df_switch_x, "Beagle", "Eagle", "pop", "X")
 plot_flip_rate(df_switch_x, "Beagle", "SHAPEIT", "pop", "X")
 plot_flip_rate(df_switch_x, "SHAPEIT", "Eagle", "pop", "X")
 ```
+
+## Comparisons of Average Rates Across Chromosomes
+
+```{r}
+df_switch_trio %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+            Eagle = n_other_eagle / n_hets,
+            SHAPEIT = n_other_shapeit / n_hets ) %>%
+  group_by(SUPER) %>%
+  summarize(Beagle15 = mean(Beagle),
+            Eagle15 = mean(Eagle),
+            SHAPEIT15 = mean(SHAPEIT)) %>%
+  left_join({
+    df_switch_x %>%
+      mutate(Beagle = n_other_beagle / n_hets,
+            Eagle = n_other_eagle / n_hets,
+            SHAPEIT = n_other_shapeit / n_hets ) %>%
+      group_by(pop) %>%
+      summarize(BeagleX = mean(Beagle),
+            EagleX = mean(Eagle),
+            SHAPEITX = mean(SHAPEIT))
+  }, by = c("SUPER" = "pop")) %>%
+  knitr::kable()
+
+df_switch_trio %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+            Eagle = n_other_eagle / n_hets,
+            SHAPEIT = n_other_shapeit / n_hets ) %>%
+  group_by(SUPER) %>%
+  summarize(Beagle15 = mean(Beagle),
+            Eagle15 = mean(Eagle),
+            SHAPEIT15 = mean(SHAPEIT)) %>%
+  left_join({
+    df_switch_x %>%
+      mutate(Beagle = n_other_beagle / n_hets,
+            Eagle = n_other_eagle / n_hets,
+            SHAPEIT = n_other_shapeit / n_hets ) %>%
+      group_by(pop) %>%
+      summarize(BeagleX = mean(Beagle),
+            EagleX = mean(Eagle),
+            SHAPEITX = mean(SHAPEIT))
+  }, by = c("SUPER" = "pop")) %>%
+  mutate(Beagle = Beagle15 / BeagleX,
+         Eagle = Eagle15 / EagleX,
+         SHAPEIT = SHAPEIT15 / SHAPEITX) %>%
+  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
+  knitr::kable()
+```
+
