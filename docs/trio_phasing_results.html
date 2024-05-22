@@ -521,13 +521,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong3bc45e1">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong3601740">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 3bc45e1
+aria-hidden="true"></span> <strong>Repository version:</strong> 3601740
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong3bc45e1"
+<div id="strongRepositoryversionstrong3601740"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -536,7 +536,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 3bc45e1.
+The results in this page were generated with repository version 3601740.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -590,6 +590,8 @@ Ignored files:
     Ignored:    output/trio_phase_22/
 
 Untracked files:
+    Untracked:  code/batch_triple_hets.sh
+    Untracked:  code/trio_family_lists.R
     Untracked:  data/1kgp/chr22/
 
 Unstaged changes:
@@ -644,6 +646,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+3601740
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+wflow_publish("analysis/trio_phasing_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+4aa7b80
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1004,7 +1040,36 @@ df_het$frac_het &lt;- df_het$n_het / n_var_site
 df_het_22$frac_het22 &lt;- df_het_22$n_het22 / n_var_site_22
 
 df_subj_rel &lt;- left_join(df_subj_rel, df_het, by = c(&quot;id2&quot; = &quot;id&quot;)) %&gt;%
-  left_join(df_het_22, by = c(&quot;id2&quot; = &quot;id&quot;))</code></pre>
+  left_join(df_het_22, by = c(&quot;id2&quot; = &quot;id&quot;))
+
+df_triple_het &lt;- read_tsv(paste0(config_obj$base_dir, &quot;/&quot;, config_obj$trio_result_dir, &quot;/triple_het.tsv&quot;),
+                   col_names = c(&quot;id&quot;, &quot;n_t_het&quot;))</code></pre>
+<pre><code>Rows: 602 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+dbl (2): id, n_t_het
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>df_subj_rel &lt;- left_join(df_subj_rel, df_triple_het, by = c(&quot;id2&quot; = &quot;id&quot;))
+
+df_subj_rel$frac_t_het &lt;- df_subj_rel$n_t_het / df_subj_rel$n_het
+
+df_triple_het22 &lt;- read_tsv(paste0(config_obj$base_dir, &quot;/output/trio_phase_22/triple_het.tsv&quot;),
+                   col_names = c(&quot;id&quot;, &quot;n_t_het22&quot;))</code></pre>
+<pre><code>Rows: 602 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+dbl (2): id, n_t_het22
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>df_subj_rel &lt;- left_join(df_subj_rel, df_triple_het22, by = c(&quot;id2&quot; = &quot;id&quot;))
+
+df_subj_rel$frac_t_het22 &lt;- df_subj_rel$n_t_het22 / df_subj_rel$n_het22
+
+df_switch_trio &lt;- left_join(df_switch_trio, df_triple_het, by=c(&quot;pair_id&quot; = &quot;id&quot;))
+df_switch_trio_22 &lt;- left_join(df_switch_trio_22, df_triple_het22, by=c(&quot;pair_id&quot; = &quot;id&quot;))</code></pre>
 <div id="chr-x-results" class="section level3">
 <h3>Chr X Results</h3>
 <p>We’ll also pull in the results on chromosome X for the synthetic
@@ -1497,29 +1562,16 @@ Andy Beck
 </table>
 </div>
 </div>
-</div>
-<div id="switch-errors" class="section level2">
-<h2>Switch Errors</h2>
-<div id="total-errors" class="section level3">
-<h3>Total Errors</h3>
-<pre class="r"><code>plot_total_errors &lt;- function(df, m1, m2, pop, chrom=&quot;15&quot;){
-  p &lt;- df %&gt;%
-    mutate(Beagle = n_switch_beagle,
-         Eagle = n_switch_eagle,
-         SHAPEIT = n_switch_shapeit) %&gt;%
-    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
-    geom_point() +
-    geom_abline(slope = 1, intercept = 0) +
-    ggtitle(&quot;Total Errors&quot;, paste0(&quot;Chromosome &quot;, chrom)) +
-    theme_classic() +
-    xlab(m1) +
-    ylab(m2) +
-    labs(color=&quot;Population&quot;) +
-    scale_color_manual(values = cbPalette)
-  return(p)
-}
-
-plot_total_errors(df_switch_trio, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
+<p>In addition, we also know how many heterozygous sites are triple
+heterozygous in each trio:</p>
+<pre class="r"><code>df_subj_rel %&gt;%
+  ggplot(aes(x = frac_t_het, y = SUPER, fill = SUPER)) +
+  geom_boxplot(show.legend = FALSE) +
+  theme_classic() +
+  xlab(&quot;Triple Het Site Fraction&quot;) +
+  ylab(&quot;Population&quot;) +
+  scale_fill_manual(values = cbPalette) +
+  ggtitle(&quot;Fraction of heterozygous sites with triple heterozygotes&quot;, &quot;Chromosome 15&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
@@ -1569,7 +1621,14 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_errors(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
+<pre class="r"><code>df_subj_rel %&gt;%
+  ggplot(aes(x = frac_t_het22, y = SUPER, fill = SUPER)) +
+  geom_boxplot(show.legend = FALSE) +
+  theme_classic() +
+  xlab(&quot;Triple Het Site Fraction&quot;) +
+  ylab(&quot;Population&quot;) +
+  scale_fill_manual(values = cbPalette) +
+  ggtitle(&quot;Fraction of heterozygous sites with triple heterozygotes&quot;, &quot;Chromosome 22&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-2">
@@ -1619,7 +1678,15 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_errors(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
+<pre class="r"><code>df_subj_rel %&gt;%
+  ggplot(aes(x = frac_t_het22, y = frac_t_het, color = SUPER)) +
+  geom_point() +
+  geom_abline(slope=1, intercept = 0) +
+  theme_classic() +
+  xlab(&quot;Chromosome 22&quot;) +
+  ylab(&quot;Chromosome 15&quot;) +
+  scale_color_manual(values = cbPalette) +
+  ggtitle(&quot;Fraction of heterozygous sites with triple heterozygotes&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-3">
@@ -1669,8 +1736,47 @@ Andy Beck
 </table>
 </div>
 </div>
-<p>And now chromosome 22:</p>
-<pre class="r"><code>plot_total_errors(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>df_subj_rel %&gt;%
+  ggplot(aes(x = n_t_het22, y = n_t_het, color = SUPER)) +
+  geom_point() +
+  theme_classic() +
+  xlab(&quot;Chromosome 22&quot;) +
+  ylab(&quot;Chromosome 15&quot;) +
+  scale_color_manual(values = cbPalette) +
+  ggtitle(&quot;Triple Heterozygous Sites&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-9-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_subj_rel %&gt;%
+  ggplot(aes(x = n_t_het, y = SUPER, fill = SUPER)) +
+  geom_boxplot(show.legend = FALSE) +
+  theme_classic() +
+  xlab(&quot;Triple Het Sites&quot;) +
+  ylab(&quot;Population&quot;) +
+  scale_fill_manual(values = cbPalette) +
+  ggtitle(&quot;Triple Heterozygotes Sites&quot;, &quot;Chromosome 15&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-9-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="switch-errors" class="section level2">
+<h2>Switch Errors</h2>
+<div id="total-errors" class="section level3">
+<h3>Total Errors</h3>
+<pre class="r"><code>plot_total_errors &lt;- function(df, m1, m2, pop, chrom=&quot;15&quot;){
+  p &lt;- df %&gt;%
+    mutate(Beagle = n_switch_beagle,
+         Eagle = n_switch_eagle,
+         SHAPEIT = n_switch_shapeit) %&gt;%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle(&quot;Total Errors&quot;, paste0(&quot;Chromosome &quot;, chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color=&quot;Population&quot;) +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_total_errors(df_switch_trio, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
@@ -1731,7 +1837,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_errors(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_total_errors(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-2">
@@ -1792,7 +1898,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_errors(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_total_errors(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-3">
@@ -1853,8 +1959,8 @@ Andy Beck
 </table>
 </div>
 </div>
-<p>And finally, chromosome X:</p>
-<pre class="r"><code>plot_total_errors(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p>And now chromosome 22:</p>
+<pre class="r"><code>plot_total_errors(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
@@ -1915,7 +2021,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_errors(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_total_errors(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-2">
@@ -1976,7 +2082,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_errors(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_total_errors(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-11-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-3">
@@ -1984,6 +2090,190 @@ Past versions of unnamed-chunk-11-3.png
 </button>
 </p>
 <div id="fig-unnamed-chunk-11-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+d7d8f5a
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+da672c2
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+4255fdf
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>And finally, chromosome X:</p>
+<pre class="r"><code>plot_total_errors(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+d7d8f5a
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+da672c2
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+4255fdf
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>plot_total_errors(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-2">
+Past versions of unnamed-chunk-12-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+d7d8f5a
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+da672c2
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+4255fdf
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>plot_total_errors(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-12-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-3">
+Past versions of unnamed-chunk-12-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-3" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -2057,190 +2347,6 @@ Andy Beck
 }
 
 plot_total_rate(df_switch_trio, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
-Past versions of unnamed-chunk-12-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-12-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-d7d8f5a
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-da672c2
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-4255fdf
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-21
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>plot_total_rate(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-2">
-Past versions of unnamed-chunk-12-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-12-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-d7d8f5a
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-da672c2
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-4255fdf
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-21
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>plot_total_rate(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-12-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-3">
-Past versions of unnamed-chunk-12-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-12-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-d7d8f5a
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-da672c2
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-4255fdf
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-21
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>And now chromosome 22:</p>
-<pre class="r"><code>plot_total_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
@@ -2301,7 +2407,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_total_rate(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-13-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-2">
@@ -2362,7 +2468,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_rate(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_total_rate(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-13-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-3">
@@ -2423,8 +2529,8 @@ Andy Beck
 </table>
 </div>
 </div>
-<p>And finally, chromosome X:</p>
-<pre class="r"><code>plot_total_rate(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p>And now chromosome 22:</p>
+<pre class="r"><code>plot_total_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
@@ -2474,7 +2580,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_rate(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_total_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-14-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-2">
@@ -2524,7 +2630,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_total_rate(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_total_rate(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-14-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-3">
@@ -2532,6 +2638,157 @@ Past versions of unnamed-chunk-14-3.png
 </button>
 </p>
 <div id="fig-unnamed-chunk-14-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+d7d8f5a
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+da672c2
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>And finally, chromosome X:</p>
+<pre class="r"><code>plot_total_rate(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+d7d8f5a
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+da672c2
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>plot_total_rate(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-15-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-2">
+Past versions of unnamed-chunk-15-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+d7d8f5a
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+da672c2
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>plot_total_rate(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-15-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-3">
+Past versions of unnamed-chunk-15-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-3" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -2596,157 +2853,6 @@ Andy Beck
 }
 
 plot_switches(df_switch_trio, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
-Past versions of unnamed-chunk-15-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-15-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-d7d8f5a
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-da672c2
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>plot_switches(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-15-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-2">
-Past versions of unnamed-chunk-15-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-15-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-d7d8f5a
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-da672c2
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>plot_switches(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-15-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-3">
-Past versions of unnamed-chunk-15-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-15-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-d7d8f5a
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-da672c2
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>And now chromosome 22:</p>
-<pre class="r"><code>plot_switches(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
@@ -2796,7 +2902,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switches(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_switches(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-16-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-2">
@@ -2846,7 +2952,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switches(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_switches(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-16-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-3">
@@ -2896,8 +3002,8 @@ Andy Beck
 </table>
 </div>
 </div>
-<p>And finally, chromosome X:</p>
-<pre class="r"><code>plot_switches(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p>And now chromosome 22:</p>
+<pre class="r"><code>plot_switches(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-17-1">
@@ -2947,7 +3053,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switches(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_switches(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-17-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-17-2">
@@ -2997,7 +3103,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switches(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_switches(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-17-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-17-3">
@@ -3047,26 +3153,8 @@ Andy Beck
 </table>
 </div>
 </div>
-<div id="error-rate-1" class="section level4">
-<h4>Error Rate</h4>
-<pre class="r"><code>plot_switch_rate &lt;- function(df, m1, m2, pop, chrom = 15){
-  p &lt;- df %&gt;%
-    mutate(Beagle = n_other_beagle / n_hets,
-         Eagle = n_other_eagle / n_hets,
-         SHAPEIT = n_other_shapeit / n_hets) %&gt;%
-    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
-    geom_point() +
-    geom_abline(slope = 1, intercept = 0) +
-    ggtitle(&quot;Switch Rate&quot;, paste0(&quot;Chromosome &quot;, chrom)) +
-    theme_classic() +
-    xlab(m1) +
-    ylab(m2) +
-    labs(color=&quot;Population&quot;) +
-    scale_color_manual(values = cbPalette)
-  return(p)
-}
-
-plot_switch_rate(df_switch_trio, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
+<p>And finally, chromosome X:</p>
+<pre class="r"><code>plot_switches(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-1">
@@ -3116,7 +3204,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switch_rate(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
+<pre class="r"><code>plot_switches(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-18-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-2">
@@ -3166,7 +3254,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switch_rate(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
+<pre class="r"><code>plot_switches(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-18-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-3">
@@ -3216,8 +3304,26 @@ Andy Beck
 </table>
 </div>
 </div>
-<p>And now chromosome 22:</p>
-<pre class="r"><code>plot_switch_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<div id="switch-rate" class="section level4">
+<h4>Switch Rate</h4>
+<pre class="r"><code>plot_switch_rate &lt;- function(df, m1, m2, pop, chrom = 15){
+  p &lt;- df %&gt;%
+    mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets,
+         SHAPEIT = n_other_shapeit / n_hets) %&gt;%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle(&quot;Switch Rate&quot;, paste0(&quot;Chromosome &quot;, chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color=&quot;Population&quot;) +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_switch_rate(df_switch_trio, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-1">
@@ -3267,7 +3373,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switch_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_switch_rate(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-19-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-2">
@@ -3317,7 +3423,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switch_rate(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_switch_rate(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-19-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-3">
@@ -3367,8 +3473,8 @@ Andy Beck
 </table>
 </div>
 </div>
-<p>And finally, chromosome X:</p>
-<pre class="r"><code>plot_switch_rate(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p>And now chromosome 22:</p>
+<pre class="r"><code>plot_switch_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-1">
@@ -3418,7 +3524,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switch_rate(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_switch_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-20-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-2">
@@ -3468,7 +3574,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_switch_rate(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_switch_rate(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-20-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-3">
@@ -3476,6 +3582,157 @@ Past versions of unnamed-chunk-20-3.png
 </button>
 </p>
 <div id="fig-unnamed-chunk-20-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+d7d8f5a
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+da672c2
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>And finally, chromosome X:</p>
+<pre class="r"><code>plot_switch_rate(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-1">
+Past versions of unnamed-chunk-21-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+d7d8f5a
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+da672c2
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>plot_switch_rate(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-21-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-2">
+Past versions of unnamed-chunk-21-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+d7d8f5a
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+da672c2
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>plot_switch_rate(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-21-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-3">
+Past versions of unnamed-chunk-21-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-3" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -3540,157 +3797,6 @@ Andy Beck
 }
 
 plot_flips(df_switch_trio, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-1">
-Past versions of unnamed-chunk-21-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-21-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-d7d8f5a
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-da672c2
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>plot_flips(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-21-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-2">
-Past versions of unnamed-chunk-21-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-21-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-d7d8f5a
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-da672c2
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>plot_flips(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-21-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-3">
-Past versions of unnamed-chunk-21-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-21-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-d7d8f5a
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-da672c2
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>And now chromosome 22:</p>
-<pre class="r"><code>plot_flips(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-1">
@@ -3740,7 +3846,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flips(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_flips(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-22-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-2">
@@ -3790,7 +3896,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flips(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_flips(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-22-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-3">
@@ -3840,8 +3946,8 @@ Andy Beck
 </table>
 </div>
 </div>
-<p>And finally, chromosome X:</p>
-<pre class="r"><code>plot_flips(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p>And now chromosome 22:</p>
+<pre class="r"><code>plot_flips(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-1">
@@ -3891,7 +3997,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flips(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_flips(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-23-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-2">
@@ -3941,7 +4047,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flips(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_flips(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-23-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-3">
@@ -3991,26 +4097,8 @@ Andy Beck
 </table>
 </div>
 </div>
-<div id="error-rate-2" class="section level4">
-<h4>Error Rate</h4>
-<pre class="r"><code>plot_flip_rate &lt;- function(df, m1, m2, pop, chrom = 15){
-  p &lt;- df %&gt;%
-    mutate(Beagle = n_flip_beagle / n_hets,
-         Eagle = n_flip_eagle / n_hets,
-         SHAPEIT = n_flip_shapeit / n_hets) %&gt;%
-    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
-    geom_point() +
-    geom_abline(slope = 1, intercept = 0) +
-    ggtitle(&quot;Flip rate&quot;, paste0(&quot;Chromosome &quot;, chrom)) +
-    theme_classic() +
-    xlab(m1) +
-    ylab(m2) +
-    labs(color=&quot;Population&quot;) +
-    scale_color_manual(values = cbPalette)
-  return(p)
-}
-
-plot_flip_rate(df_switch_trio, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
+<p>And finally, chromosome X:</p>
+<pre class="r"><code>plot_flips(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-1">
@@ -4060,7 +4148,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flip_rate(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
+<pre class="r"><code>plot_flips(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-24-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-2">
@@ -4110,7 +4198,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flip_rate(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
+<pre class="r"><code>plot_flips(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-24-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-3">
@@ -4160,8 +4248,26 @@ Andy Beck
 </table>
 </div>
 </div>
-<p>And now chromosome 22:</p>
-<pre class="r"><code>plot_flip_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<div id="flip-rate" class="section level4">
+<h4>Flip Rate</h4>
+<pre class="r"><code>plot_flip_rate &lt;- function(df, m1, m2, pop, chrom = 15){
+  p &lt;- df %&gt;%
+    mutate(Beagle = n_flip_beagle / n_hets,
+         Eagle = n_flip_eagle / n_hets,
+         SHAPEIT = n_flip_shapeit / n_hets) %&gt;%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle(&quot;Flip rate&quot;, paste0(&quot;Chromosome &quot;, chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color=&quot;Population&quot;) +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_flip_rate(df_switch_trio, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-1">
@@ -4211,7 +4317,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flip_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_flip_rate(df_switch_trio, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-25-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-2">
@@ -4261,7 +4367,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flip_rate(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
+<pre class="r"><code>plot_flip_rate(df_switch_trio, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-25-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-3">
@@ -4311,8 +4417,8 @@ Andy Beck
 </table>
 </div>
 </div>
-<p>And finally, chromosome X:</p>
-<pre class="r"><code>plot_flip_rate(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p>And now chromosome 22:</p>
+<pre class="r"><code>plot_flip_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-26-1">
@@ -4362,7 +4468,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flip_rate(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_flip_rate(df_switch_trio_22, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-26-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-26-2">
@@ -4412,7 +4518,7 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>plot_flip_rate(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<pre class="r"><code>plot_flip_rate(df_switch_trio_22, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;SUPER&quot;, 22)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-26-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-26-3">
@@ -4462,6 +4568,13 @@ Andy Beck
 </table>
 </div>
 </div>
+<p>And finally, chromosome X:</p>
+<pre class="r"><code>plot_flip_rate(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot_flip_rate(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-27-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot_flip_rate(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-27-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 </div>
@@ -4486,16 +4599,29 @@ class="section level2">
             EagleX = mean(Eagle),
             SHAPEITX = mean(SHAPEIT))
   }, by = c(&quot;SUPER&quot; = &quot;pop&quot;)) %&gt;%
+  left_join({
+    df_switch_trio_22 %&gt;%
+      mutate(Beagle = n_other_beagle / n_hets,
+             Eagle = n_other_eagle / n_hets,
+             SHAPEIT = n_other_shapeit / n_hets) %&gt;%
+      group_by(SUPER) %&gt;%
+      summarize(Beagle22 = mean(Beagle),
+                Eagle22 = mean(Eagle),
+                SHAPEIT22 = mean(SHAPEIT))
+  }, by=&quot;SUPER&quot;) %&gt;%
   knitr::kable()</code></pre>
 <table style="width:100%;">
 <colgroup>
-<col width="9%" />
-<col width="15%" />
-<col width="15%" />
-<col width="15%" />
-<col width="15%" />
-<col width="15%" />
-<col width="15%" />
+<col width="6%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -4506,6 +4632,9 @@ class="section level2">
 <th align="right">BeagleX</th>
 <th align="right">EagleX</th>
 <th align="right">SHAPEITX</th>
+<th align="right">Beagle22</th>
+<th align="right">Eagle22</th>
+<th align="right">SHAPEIT22</th>
 </tr>
 </thead>
 <tbody>
@@ -4517,6 +4646,9 @@ class="section level2">
 <td align="right">0.0008880</td>
 <td align="right">0.0013558</td>
 <td align="right">0.0007707</td>
+<td align="right">0.0031591</td>
+<td align="right">0.0037957</td>
+<td align="right">0.0029395</td>
 </tr>
 <tr class="even">
 <td align="left">AMR</td>
@@ -4526,6 +4658,9 @@ class="section level2">
 <td align="right">0.0012206</td>
 <td align="right">0.0016760</td>
 <td align="right">0.0011439</td>
+<td align="right">0.0034680</td>
+<td align="right">0.0041346</td>
+<td align="right">0.0033479</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
@@ -4535,6 +4670,9 @@ class="section level2">
 <td align="right">0.0028352</td>
 <td align="right">0.0036614</td>
 <td align="right">0.0026536</td>
+<td align="right">0.0051743</td>
+<td align="right">0.0061074</td>
+<td align="right">0.0050655</td>
 </tr>
 <tr class="even">
 <td align="left">EUR</td>
@@ -4544,6 +4682,9 @@ class="section level2">
 <td align="right">0.0015108</td>
 <td align="right">0.0020636</td>
 <td align="right">0.0013951</td>
+<td align="right">0.0035231</td>
+<td align="right">0.0040631</td>
+<td align="right">0.0033597</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
@@ -4553,6 +4694,9 @@ class="section level2">
 <td align="right">0.0020451</td>
 <td align="right">0.0026914</td>
 <td align="right">0.0018639</td>
+<td align="right">0.0044818</td>
+<td align="right">0.0052986</td>
+<td align="right">0.0043844</td>
 </tr>
 </tbody>
 </table>
@@ -4574,18 +4718,34 @@ class="section level2">
             EagleX = mean(Eagle),
             SHAPEITX = mean(SHAPEIT))
   }, by = c(&quot;SUPER&quot; = &quot;pop&quot;)) %&gt;%
-  mutate(Beagle = Beagle15 / BeagleX,
-         Eagle = Eagle15 / EagleX,
-         SHAPEIT = SHAPEIT15 / SHAPEITX) %&gt;%
-  select(SUPER, Beagle, Eagle, SHAPEIT) %&gt;%
+  left_join({
+    df_switch_trio_22 %&gt;%
+      mutate(Beagle = n_other_beagle / n_hets,
+             Eagle = n_other_eagle / n_hets,
+             SHAPEIT = n_other_shapeit / n_hets) %&gt;%
+      group_by(SUPER) %&gt;%
+      summarize(Beagle22 = mean(Beagle),
+                Eagle22 = mean(Eagle),
+                SHAPEIT22 = mean(SHAPEIT))
+  }, by=&quot;SUPER&quot;) %&gt;%
+  mutate(BeagleX = Beagle15 / BeagleX,
+         EagleX = Eagle15 / EagleX,
+         SHAPEITX = SHAPEIT15 / SHAPEITX,
+         Beagle22 = Beagle15 / Beagle22,
+         Eagle22 = Eagle15 / Eagle22,
+         SHAPEIT22 = SHAPEIT15 / SHAPEIT22) %&gt;%
+  select(SUPER, BeagleX, EagleX, SHAPEITX, Beagle22, Eagle22, SHAPEIT22) %&gt;%
   knitr::kable()</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="left">SUPER</th>
-<th align="right">Beagle</th>
-<th align="right">Eagle</th>
-<th align="right">SHAPEIT</th>
+<th align="right">BeagleX</th>
+<th align="right">EagleX</th>
+<th align="right">SHAPEITX</th>
+<th align="right">Beagle22</th>
+<th align="right">Eagle22</th>
+<th align="right">SHAPEIT22</th>
 </tr>
 </thead>
 <tbody>
@@ -4594,33 +4754,226 @@ class="section level2">
 <td align="right">2.363750</td>
 <td align="right">1.934005</td>
 <td align="right">2.582241</td>
+<td align="right">0.6644303</td>
+<td align="right">0.6908147</td>
+<td align="right">0.6770152</td>
 </tr>
 <tr class="even">
 <td align="left">AMR</td>
 <td align="right">1.901232</td>
 <td align="right">1.740973</td>
 <td align="right">2.012420</td>
+<td align="right">0.6691692</td>
+<td align="right">0.7057198</td>
+<td align="right">0.6876123</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="right">1.381779</td>
 <td align="right">1.320731</td>
 <td align="right">1.463601</td>
+<td align="right">0.7571296</td>
+<td align="right">0.7917750</td>
+<td align="right">0.7667151</td>
 </tr>
 <tr class="even">
 <td align="left">EUR</td>
 <td align="right">1.653486</td>
 <td align="right">1.465200</td>
 <td align="right">1.726761</td>
+<td align="right">0.7090876</td>
+<td align="right">0.7441351</td>
+<td align="right">0.7170066</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="right">1.655670</td>
 <td align="right">1.536443</td>
 <td align="right">1.791711</td>
+<td align="right">0.7555182</td>
+<td align="right">0.7804361</td>
+<td align="right">0.7616811</td>
 </tr>
 </tbody>
 </table>
+<pre class="r"><code>df_switch_trio %&gt;%
+  mutate(Beagle = n_other_beagle / n_hets,
+            Eagle = n_other_eagle / n_hets,
+            SHAPEIT = n_other_shapeit / n_hets ) %&gt;%
+  group_by(SUPER) %&gt;%
+  summarize(Beagle15 = mean(Beagle),
+            Eagle15 = mean(Eagle),
+            SHAPEIT15 = mean(SHAPEIT)) %&gt;%
+  left_join({
+    df_switch_x %&gt;%
+      mutate(Beagle = n_other_beagle / n_hets,
+            Eagle = n_other_eagle / n_hets,
+            SHAPEIT = n_other_shapeit / n_hets ) %&gt;%
+      group_by(pop) %&gt;%
+      summarize(BeagleX = mean(Beagle),
+            EagleX = mean(Eagle),
+            SHAPEITX = mean(SHAPEIT))
+  }, by = c(&quot;SUPER&quot; = &quot;pop&quot;)) %&gt;%
+  left_join({
+    df_switch_trio_22 %&gt;%
+      mutate(Beagle = n_other_beagle / n_hets,
+             Eagle = n_other_eagle / n_hets,
+             SHAPEIT = n_other_shapeit / n_hets) %&gt;%
+      group_by(SUPER) %&gt;%
+      summarize(Beagle22 = mean(Beagle),
+                Eagle22 = mean(Eagle),
+                SHAPEIT22 = mean(SHAPEIT))
+  }, by=&quot;SUPER&quot;) %&gt;%
+  mutate(BeagleX = BeagleX / Beagle15,
+         EagleX = EagleX / Eagle15,
+         SHAPEITX = SHAPEITX / SHAPEIT15,
+         Beagle22 = Beagle22 / Beagle15,
+         Eagle22 = Eagle22 / Eagle15,
+         SHAPEIT22 = SHAPEIT22 / SHAPEIT15) %&gt;%
+  select(SUPER, BeagleX, EagleX, SHAPEITX, Beagle22, Eagle22, SHAPEIT22) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="right">BeagleX</th>
+<th align="right">EagleX</th>
+<th align="right">SHAPEITX</th>
+<th align="right">Beagle22</th>
+<th align="right">Eagle22</th>
+<th align="right">SHAPEIT22</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">0.4230566</td>
+<td align="right">0.5170618</td>
+<td align="right">0.3872606</td>
+<td align="right">1.505049</td>
+<td align="right">1.447566</td>
+<td align="right">1.477072</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.5259747</td>
+<td align="right">0.5743914</td>
+<td align="right">0.4969142</td>
+<td align="right">1.494390</td>
+<td align="right">1.416993</td>
+<td align="right">1.454308</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.7237048</td>
+<td align="right">0.7571563</td>
+<td align="right">0.6832465</td>
+<td align="right">1.320778</td>
+<td align="right">1.262985</td>
+<td align="right">1.304266</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.6047829</td>
+<td align="right">0.6825009</td>
+<td align="right">0.5791190</td>
+<td align="right">1.410263</td>
+<td align="right">1.343842</td>
+<td align="right">1.394687</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.6039851</td>
+<td align="right">0.6508539</td>
+<td align="right">0.5581256</td>
+<td align="right">1.323595</td>
+<td align="right">1.281335</td>
+<td align="right">1.312885</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="error-rates-and-triple-het-rate" class="section level2">
+<h2>Error rates and triple het rate</h2>
+<p>Using only trio sequencing data, the phase of sites which are
+heterozygous in both the parents and in the child cannot be determined
+by the principles of Mendelian segregation. Below we explore the
+assocition between the frequency of triple heterozygous sites in each
+trio and the rate of errors in phasing of the child.</p>
+<div id="switch-rate-1" class="section level3">
+<h3>Switch rate</h3>
+<div id="beagle" class="section level4">
+<h4>Beagle</h4>
+<pre class="r"><code>plot_th_sr &lt;- function(df, m1, chrom = 15){
+  df &lt;- df %&gt;%
+    mutate(Beagle = n_other_beagle / n_hets,
+           Eagle = n_other_eagle / n_hets,
+           SHAPEIT = n_other_shapeit / n_hets,
+           frac_t_het = n_t_het / n_hets)
+  c_val &lt;- signif(cor(df[m1], df[&quot;frac_t_het&quot;]), 4)
+  c_obj &lt;- cor.test(df[[m1]], df[[&quot;frac_t_het&quot;]])
+  p_val &lt;- paste0(&quot;p=&quot;,signif(c_obj$p.value, 4))
+  p &lt;- df %&gt;%
+    ggplot(aes(x = frac_t_het, y = !! sym(m1), color = SUPER)) +
+    geom_point() +
+    xlab(&quot;Fraction of sites triple heterozygous&quot;) +
+    ylab(&quot;Switch Error Rate&quot;) +
+    scale_color_manual(values = cbPalette) +
+    labs(color=&quot;Population&quot;) +
+    ggtitle(&quot;Switch error rates and triple heterozygotes&quot;, paste0(&quot;Chromosome &quot;, chrom, &quot;; corr = &quot;, c_val, &quot;(&quot;, p_val ,&quot;)&quot;))
+  return(p)
+}
+
+plot_th_sr(df_switch_trio, &quot;Beagle&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="eagle" class="section level4">
+<h4>Eagle</h4>
+<pre class="r"><code>plot_th_sr(df_switch_trio, &quot;Eagle&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="shapeit" class="section level4">
+<h4>SHAPEIT</h4>
+<pre class="r"><code>plot_th_sr(df_switch_trio, &quot;SHAPEIT&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="flip-rate-1" class="section level3">
+<h3>Flip Rate</h3>
+<div id="beagle-1" class="section level4">
+<h4>Beagle</h4>
+<pre class="r"><code>plot_th_fr &lt;- function(df, m1, chrom = 15){
+  df &lt;- df %&gt;%
+    mutate(Beagle = n_flip_beagle / n_hets,
+           Eagle = n_flip_eagle / n_hets,
+           SHAPEIT = n_flip_shapeit / n_hets,
+           frac_t_het = n_t_het / n_hets)
+  c_val &lt;- signif(cor(df[m1], df[&quot;frac_t_het&quot;]), 4)
+  c_obj &lt;- cor.test(df[[m1]], df[[&quot;frac_t_het&quot;]])
+  p_val &lt;- paste0(&quot;p=&quot;,signif(c_obj$p.value, 4))
+  p &lt;- df %&gt;%
+    ggplot(aes(x = frac_t_het, y = !! sym(m1), color = SUPER)) +
+    geom_point() +
+    xlab(&quot;Fraction of sites triple heterozygous&quot;) +
+    ylab(&quot;Flip Error Rate&quot;) +
+    scale_color_manual(values = cbPalette) +
+    labs(color=&quot;Population&quot;) +
+    ggtitle(&quot;Flip error rates and triple heterozygotes&quot;, paste0(&quot;Chromosome &quot;, chrom, &quot;; corr = &quot;, c_val, &quot;(&quot;, p_val ,&quot;)&quot;))
+  return(p)
+}
+
+plot_th_fr(df_switch_trio, &quot;Beagle&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="eagle-1" class="section level4">
+<h4>Eagle</h4>
+<pre class="r"><code>plot_th_fr(df_switch_trio, &quot;Eagle&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="shapeit-1" class="section level4">
+<h4>SHAPEIT</h4>
+<pre class="r"><code>plot_th_fr(df_switch_trio, &quot;SHAPEIT&quot;)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -4675,6 +5028,8 @@ loaded via a namespace (and not attached):
 [53] hms_1.1.3         evaluate_0.23     knitr_1.45        rlang_1.1.3      
 [57] Rcpp_1.0.12       glue_1.7.0        rstudioapi_0.15.0 vroom_1.6.5      
 [61] jsonlite_1.8.8    R6_2.5.1          fs_1.6.3         </code></pre>
+</div>
+</div>
 </div>
 </div>
 
