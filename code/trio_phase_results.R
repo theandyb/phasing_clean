@@ -32,3 +32,5 @@ df_trio <- lapply(c(1:602),
 
 df_trio$id2 <- 1:602
 df_trio <- left_join(df_trio, df_subj_rel, by="id2")
+
+write_csv(df_trio, paste0(config_obj$base_dir,"/",config_obj$trio_result_dir, "/switch_errors/summary.csv"))

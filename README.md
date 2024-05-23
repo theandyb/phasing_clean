@@ -5,7 +5,6 @@ This repository is an accompaniment to the paper "SUGAR TEA COFFEE FOR FREE"
 ## Data included in this repository
 
 -   `data/1kgp/unrelated_subjects.txt`: A list of IDs for the 2,502 unrelated samples from 1kGP phase 3
--   `data/1kgp/child_ids.txt`: A list of IDs for the children in the 602 trios
 -   `data/1kgp/unrelated_subj.tsv`: Slightly processed version of the [Tab delimited file list for the 2504 panel](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/1000G_2504_high_coverage.sequence.index)
 -   `data/1kgp/subject_info.csv`: SAMPLE_NAME, POPULATION, SUPER, fatherID, motherID, and sex (1 - male, 2 - female)
 
@@ -18,10 +17,12 @@ curl https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.chrom.sizes > 
 cat data/hg38.chrom.sizes | grep 'chrX\s' > data/chrX.sizes
 cat data/hg38.chrom.sizes | grep 'chr8\s' > data/chr8.sizes
 cat data/hg38.chrom.sizes | grep 'chr15\s' > data/chr15.sizes
+cat data/hg38.chrom.sizes | grep 'chr22\s' > data/chr22.sizes
 
 bedtools makewindows -g data/chrX.sizes -w 10000 > chrX_10k.bed
 bedtools makewindows -g data/chr8.sizes -w 10000 > chr8_10k.bed
 bedtools makewindows -g data/chr15.sizes -w 10000 > chr15_10k.bed
+bedtools makewindows -g data/chr22.sizes -w 10000 > chr22_10k.bed
 ```
 
 TO-DO:
@@ -43,6 +44,7 @@ We apply a few filtering steps to this VCF:
 3.  We apply the 1kGP pilot genome accessibility mask to remove hard to sequence regions of the chromosome
 4.  We only keep snps
 5.  We remove excess annotation from the VCF
+6.  We also remove multiallelic sites
 
 We download the [1kGP Pilot accessibility map](https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/) (note that this bed file is a list of sites that we want to keep in the VCF):
 
@@ -111,22 +113,22 @@ bedtools nuc -fi data/chrX_mask.fasta -bed data/chrX.1kb.sorted.bed > data/chrX_
 bedtools nuc -fi data/chr15_mask.fasta -bed data/chr15.1kb.sorted.bed > data/chr15_gc1kb_pilot.bed
 ```
 
-## Downloading and processing Chromosome 8
+## Downloading and processing Chromosome 15
 
 For our analysis of trios, we need to download both the phased and unphased VCFs from 1kGP:
 
 ```         
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr15.filtered.SNV_INDEL_SV_phased_panel.vcf.gz > data/1kgp/chr15/chr15_phased.vcf.gz
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr15.filtered.SNV_INDEL_SV_phased_panel.vcf.gz.tbi > data/1kgp/chr15/chr15_phased.vcf.gz.tbi
+curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr22.filtered.SNV_INDEL_SV_phased_panel.vcf.gz > data/1kgp/chr22/chr22_phased.vcf.gz
+curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr22.filtered.SNV_INDEL_SV_phased_panel.vcf.gz.tbi > data/1kgp/chr22/chr22_phased.vcf.gz.tbi
 
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/20201028_CCDG_14151_B01_GRM_WGS_2020-08-05_chr15.recalibrated_variants.vcf.gz > data/1kgp/chr15/chr15_unphased.vcf.gz
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/20201028_CCDG_14151_B01_GRM_WGS_2020-08-05_chr15.recalibrated_variants.vcf.gz.tbi > data/1kgp/chr15/chr15_unphased.vcf.gz.tbi
+curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/20201028_CCDG_14151_B01_GRM_WGS_2020-08-05_chr22.recalibrated_variants.vcf.gz > data/1kgp/chr22/chr22_unphased.vcf.gz
+curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/20201028_CCDG_14151_B01_GRM_WGS_2020-08-05_chr22.recalibrated_variants.vcf.gz.tbi > data/1kgp/chr22/chr22_unphased.vcf.gz.tbi
 ```
 
-We'll also download the 1kGP pilot accessibility mask for chromosome 8 as well:
+We'll also download the 1kGP pilot accessibility mask for chromosome 15 as well:
 
 ```         
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr15" > data/1kgp/chr15/chr15_pilot_mask.bed
+curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr22" > data/1kgp/chr22/chr22_pilot_mask.bed
 ```
 
 For the phased VCF
@@ -137,30 +139,30 @@ For the phased VCF
 4.  Apply filter=PASS
 
 ```         
-bcftools annotate -x ^INFO/AF,INFO/AC,^FORMAT/GT data/1kgp/chr15/chr15_phased.vcf.gz | \
-bcftools view -v snps -Ob > data/1kgp/chr15/chr15_phased.bcf
+bcftools annotate -x ^INFO/AF,INFO/AC,^FORMAT/GT data/1kgp/chr22/chr22_phased.vcf.gz | \
+bcftools view -v snps -Ob > data/1kgp/chr22/chr22_phased.bcf
 
-bcftools query -f "%POS\n" data/1kgp/chr15/chr15_phased.bcf | \
+bcftools query -f "%POS\n" data/1kgp/chr22/chr22_phased.bcf | \
 awk '{count[$1]++}END{for(key in count){if(count[key]>1){print(key)}}}' | \
 sort -n | \
-sed -e 's/^/chr15\t/' > data/1kgp/chr15/repeat_sites_phased.txt
+sed -e 's/^/chr22\t/' > data/1kgp/chr22/repeat_sites_phased.txt
 
-bcftools view -T ^data/1kgp/chr15/repeat_sites_phased.txt -Ob data/1kgp/chr15/chr15_phased.bcf > data/1kgp/chr15/chr15_phased_biallelic.bcf
+bcftools view -T ^data/1kgp/chr22/repeat_sites_phased.txt -Ob data/1kgp/chr22/chr22_phased.bcf > data/1kgp/chr22/chr22_phased_biallelic.bcf
 
 
-bcftools view data/1kgp/chr15/chr15_phased_biallelic.bcf | \
-bedtools intersect -a - -b data/1kgp/chr15/chr15_pilot_mask.bed -wa -header | \
-bcftools view -Ob > data/1kgp/chr15/chr15_phased_mask.bcf
+bcftools view data/1kgp/chr22/chr22_phased_biallelic.bcf | \
+bedtools intersect -a - -b data/1kgp/chr22/chr22_pilot_mask.bed -wa -header | \
+bcftools view -Ob > data/1kgp/chr22/chr22_phased_mask.bcf
 
-bcftools view data/1kgp/chr15/chr15_phased_mask.bcf | vcftools --singletons --out phased --vcf -
-awk '{if($1 == "chr15")print($1"\t"$2)}' phased.singletons > data/1kgp/chr15/singletons_phased.txt
+bcftools view data/1kgp/chr22/chr22_phased_mask.bcf | vcftools --singletons --out phased --vcf -
+awk '{if($1 == "chr22")print($1"\t"$2)}' phased.singletons > data/1kgp/chr22/singletons_phased.txt
 rm phased.log phased.singletons
 
-bcftools view -Ob -T ^data/1kgp/chr15/singletons_phased.txt data/1kgp/chr15/chr15_phased_mask.bcf > data/1kgp/chr15/chr15_phased_mask_noSing.bcf
+bcftools view -Ob -T ^data/1kgp/chr22/singletons_phased.txt data/1kgp/chr22/chr22_phased_mask.bcf > data/1kgp/chr22/chr22_phased_mask_noSing.bcf
 
-bcftools view -Ob -S data/1kgp/unrelated_subjects.txt data/1kgp/chr15/chr15_phased_mask_noSing.bcf > data/1kgp/chr15/chr15_phased_mask_noSing_2504.bcf
+bcftools view -Ob -S data/1kgp/unrelated_subjects.txt data/1kgp/chr22/chr22_phased_mask_noSing.bcf > data/1kgp/chr22/chr22_phased_mask_noSing_2504.bcf
 
-bcftools index data/1kgp/chr15/chr15_phased_mask_noSing.bcf
+bcftools index data/1kgp/chr22/chr22_phased_mask_noSing.bcf
 ```
 
 For the (large) unphased VCF we:
@@ -172,21 +174,39 @@ For the (large) unphased VCF we:
 We also remove sites from the phased VCF that are biallelic in the unphased VCF
 
 ```         
-bcftools annotate -x ^INFO/AF,INFO/AC,INFO/DP,^FORMAT/GT data/1kgp/chr15/chr15_unphased.vcf.gz | \
-bcftools view -v snps -Ob > data/1kgp/chr15/chr15_unphased.bcf
+bcftools annotate -x ^INFO/AF,INFO/AC,INFO/DP,^FORMAT/GT data/1kgp/chr22/chr22_unphased.vcf.gz | \
+bcftools view -v snps -Ob > data/1kgp/chr22/chr22_unphased.bcf
 
-bcftools index data/1kgp/chr15/chr15_unphased.bcf
+bcftools index data/1kgp/chr22/chr22_unphased.bcf
 
-bcftools isec -n~11 -c all data/1kgp/chr15/chr15_phased_mask_noSing.bcf data/1kgp/chr15/chr15_unphased.bcf > data/1kgp/chr15/overlap_sites.txt
+bcftools isec -n~11 -c all data/1kgp/chr22/chr22_phased_mask_noSing.bcf data/1kgp/chr22/chr22_unphased.bcf > data/1kgp/chr22/overlap_sites.txt
 
-bcftools view -T data/1kgp/chr15/overlap_sites.txt data/1kgp/chr15/chr15_unphased.bcf | \
-bcftools view -m2 -M2 -Ob > data/1kgp/chr15/chr15_unphased_overlap.bcf
+bcftools view -T data/1kgp/chr22/overlap_sites.txt data/1kgp/chr22/chr22_unphased.bcf | \
+bcftools view -m2 -M2 -Ob > data/1kgp/chr22/chr22_unphased_overlap.bcf
 
-bcftools query -f "%CHROM\t%POS\n" data/1kgp/chr15/chr15_unphased_overlap.bcf > data/1kgp/chr15/overlap_sites_biallelic.txt
+bcftools query -f "%CHROM\t%POS\n" data/1kgp/chr22/chr22_unphased_overlap.bcf > data/1kgp/chr22/overlap_sites_biallelic.txt
 
-bcftools view -T data/1kgp/chr15/overlap_sites_biallelic.txt -Ob data/1kgp/chr15/chr15_phased_mask_noSing.bcf > data/1kgp/chr15/chr15_phased_overlap.bcf
+bcftools view -T data/1kgp/chr22/overlap_sites_biallelic.txt -Ob data/1kgp/chr22/chr22_phased_mask_noSing.bcf > data/1kgp/chr22/chr22_phased_overlap.bcf
 
-bcftools view -Ob -S data/1kgp/unrelated_subjects.txt data/1kgp/chr15/chr15_phased_overlap.bcf > data/1kgp/chr15/chr15_phased_overlap_2504.bcf
+bcftools view -Ob -S data/1kgp/unrelated_subjects.txt data/1kgp/chr22/chr22_phased_overlap.bcf > data/1kgp/chr22/chr22_phased_overlap_2504.bcf
+```
+
+### Extract additional information from vcf
+
+#### Count triple heterozygous sites per trio
+
+```
+mkdir -p data/1kgp/chr15/triple_het/trio_lists
+
+Rscript code/trio_family_lists.R
+
+sbatch code/batch_triple_hets.sh
+
+for i in `seq 1 602`; do
+wc -l data/1kgp/chr15/triple_het/sample_${i}.tsv >> output/trio_phase_15/triple_het.tmp
+done
+
+awk '{print(NR"\t"$1)}' output/trio_phase_15/triple_het.tmp > output/trio_phase_15/triple_het.tsv
 ```
 
 ## Phasing Synthetic Diploids
@@ -197,8 +217,8 @@ We then submit the batch script `code/batch_phase_sd.sh` to generate the synthet
 
 Additional steps:
 
-1. Annotate each heterozygous position with CpG status and 3-mer motif (`code/batch_annotate_het.sh`)
-2. Generate `phased_size.txt` in the directory `output/switch_errors/het_loc`
+1.Annotate each heterozygous position with CpG status and 3-mer motif (`code/batch_annotate_het.sh`)
+2.Generate `phased_size.txt` in the directory `output/switch_errors/het_loc`
 
 ```
 for i in `seq 1 1000`; do
@@ -207,20 +227,40 @@ echo $i"\t"$size >> output/switch_errors/het_loc/phased_size.txt
 done
 ```
 
+3.Generate count of heterozygous sites in each synthetic diploid:
+
+```
+for i in `seq 1 1000`; do
+wc -l output/switch_errors/het_loc/pair_${i}_het_loc.txt >> output/switch_errors/het_pos_count.tmp
+done
+
+awk '{print(NR"\t"$1)}' output/switch_errors/het_pos_count.tmp > output/switch_errors/het_pos_count.tsv
+```
+
 ## Phasing Trio Children
 
 For each of the 602 children of the trios, we need to identify which samples need to be excluded from the reference panel when phasing (i.e., either removing the parents, the child themselves, or no one in the case neither the parents nor the child were part of the 2,504 phase 3 samples). The script in `code/trio_exclude_lists.R` generates a file for each child with a list of IDs to exclude from the reference panel for the children.
 
-## Phasing chromosome 8
+## Phasing chromosome 15
 
 ```
-out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase"
+out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_15"
 mkdir -p $out_dir/beagle
 mkdir $out_dir/eagle
 mkdir $out_dir/shapeit
 mkdir -p $out_dir/het_pos/annotated
 mkdir $out_dir/truth
-mkdir -p $out_dir/switch_errors/beagle
-mkdir -p $out_dir/switch_errors/eagle
-mkdir -p $out_dir/switch_errors/shapeit
+mkdir -p $out_dir/switch_errors/beagle/annotated
+mkdir -p $out_dir/switch_errors/eagle/annotated
+mkdir -p $out_dir/switch_errors/shapeit/annotated
+```
+
+The batch script `code/batch_phase_trios.sh` submits a job to SLURM for each of the 602 trios and generates 4 phased VCFs: 1 with the "true" phase for the child, and 3 phases infered using only the reference panel. The batch script `code/batch_compare_trio.sh` generates a list of switch error locations. A summary of these switches is generated by the script `code/trio_phase_results.R` and analysis is documented in `analysis/trio_phasing_results.Rmd`. We also extract some additional summary information on the samples (e.g., number of heterozygous sites)
+
+```
+for i in `seq 1 602`; do
+wc -l output/trio_phase15/het_pos/sample_${i}.bed >> output/trio_phase_15/het_pos_count.tmp 
+done
+
+awk '{print(NR"\t"$1)}' output/trio_phase_15/het_pos_count.tmp > output/trio_phase_15/het_pos_count.tsv
 ```

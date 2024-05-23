@@ -8,10 +8,10 @@
 #SBATCH --job-name=eAn
 #SBATCH --array=1-602
 #SBATCH --requeue
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_15/slurm/e_ann-%A_%a.err
-#SBATCH -o /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_15/slurm/e_ann-%A_%a.out
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/e_ann-%A_%a.err
+#SBATCH -o /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/e_ann-%A_%a.out
 
-input_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_15/switch_errors/eagle"
+input_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/switch_errors/eagle"
 output_dir="${input_dir}/annotated"
 
 python /net/snowwhite/home/beckandy/research/phasing_clean/code/append_cpg.py -c X \

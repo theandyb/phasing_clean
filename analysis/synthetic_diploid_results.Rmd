@@ -14,12 +14,15 @@ library(tidyverse)
 library(janitor)
 library(reactable)
 source("code/common_functions.R")
+library(yaml)
 
-eagle_switch_dir <-   "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/eagle/annotated/"
-shapeit_switch_dir <- "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/shapeit/annotated/"
-beagle_switch_dir <-  "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/beagle/annotated/"
-num_sites_dir <-      "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/vcf_n_sites/"
-het_loc_dir <-        "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/het_loc/"
+config_obj <- yaml::read_yaml("_config.yaml")
+
+eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/eagle/annotated/")
+shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/shapeit/annotated/")
+beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/beagle/annotated/")
+num_sites_dir <-      paste0(config_obj$base_dir,"/output/switch_errors/vcf_n_sites/")
+het_loc_dir <-        paste0(config_obj$base_dir,"/output/switch_errors/het_loc/")
 
 sample_info_df <- read_csv("data/1kgp/subject_info.csv") %>%
   select(SAMPLE_NAME, POPULATION, SUPER)
@@ -46,7 +49,7 @@ In this document, we present summaries and figures for the distributions of erro
 ## Load Switch and Flips Errors
 
 ```{r}
-df_vcftools <- read_csv("output/switch_errors/switch_errors/summary.csv")
+df_vcftools <- read_csv(paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/summary.csv"))
 ```
 
 ## Tables
