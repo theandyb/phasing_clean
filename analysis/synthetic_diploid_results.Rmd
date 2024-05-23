@@ -440,3 +440,68 @@ df_vcftools %>%
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
+
+### Proportion of errors at CpG
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(everything(), names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  ggtitle("Enrichment of Switches at CpG Sites") +
+  xlab("Method") +
+  ylab("Enrichment") +
+  theme_classic() +
+  geom_hline(yintercept = 1)
+
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(everything(), names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  ggtitle("Enrichment of Flips at CpG Sites") +
+  xlab("Method") +
+  ylab("Enrichment") +
+  theme_classic() +
+  geom_hline(yintercept = 1)
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich, colour = pop)) +
+  geom_boxplot() +
+  ggtitle("Enrichment of Switches at CpG Sites") +
+  xlab("Method") +
+  ylab("Enrichment") +
+  theme_classic() +
+  geom_hline(yintercept = 1) +
+  scale_color_manual(values=cbPalette) +
+  labs(color = "Population")
+
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich, color = pop)) +
+  geom_boxplot() +
+  ggtitle("Enrichment of Flips at CpG Sites") +
+  xlab("Method") +
+  ylab("Enrichment") +
+  theme_classic() +
+  geom_hline(yintercept = 1) +
+  scale_color_manual(values=cbPalette) +
+  labs(color = "Population")
+```
+
