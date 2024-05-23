@@ -146,6 +146,52 @@ df_vcftools %>%
   knitr::kable()
 ```
 
+### Errors at CpGs
+
+#### Total
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_switch_eagle = mean(n_other_cpg_eagle),
+            mean_switch_beagle = mean(n_other_cpg_beagle),
+            mean_switch_shapeit = mean(n_other_cpg_shapeit),
+            mean_flip_eagle = mean(n_flip_cpg_eagle),
+            mean_flip_beagle = mean(n_flip_cpg_beagle),
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit)) %>%
+  knitr::kable()
+```
+
+#### Proportions
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_switch_eagle = mean(n_other_cpg_eagle / n_other_eagle),
+            mean_switch_beagle = mean(n_other_cpg_beagle / n_other_beagle),
+            mean_switch_shapeit = mean(n_other_cpg_shapeit / n_other_shapeit),
+            mean_flip_eagle = mean(n_flip_cpg_eagle / n_flip_eagle),
+            mean_flip_beagle = mean(n_flip_cpg_beagle / n_flip_beagle),
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit / n_flip_shapeit)) %>%
+  knitr::kable()
+```
+
+#### Enrichment
+
+We compute the ratio of the proportion of errors at CpGs to the proportion of heterozygous locations that are at CpGs.
+
+```{r}
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_switch_eagle = mean((n_other_cpg_eagle / n_other_eagle) / ( n_het_cpg / n_hets)),
+            mean_switch_beagle = mean((n_other_cpg_beagle / n_other_beagle) / ( n_het_cpg / n_hets)),
+            mean_switch_shapeit = mean((n_other_cpg_shapeit / n_other_shapeit) / ( n_het_cpg / n_hets) ),
+            mean_flip_eagle = mean((n_flip_cpg_eagle / n_flip_eagle) / ( n_het_cpg / n_hets)),
+            mean_flip_beagle = mean((n_flip_cpg_beagle / n_flip_beagle) / ( n_het_cpg / n_hets)),
+            mean_flip_shapeit = mean((n_flip_cpg_shapeit / n_flip_shapeit) / ( n_het_cpg / n_hets))) %>%
+  knitr::kable()
+```
+
 ## Figures
 
 ### Total Errors
