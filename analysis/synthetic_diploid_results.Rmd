@@ -65,7 +65,7 @@ df_vcftools %>%
             mean_flip_eagle = mean(n_flip_eagle),
             mean_flip_beagle = mean(n_flip_beagle),
             mean_flip_shapeit = mean(n_flip_shapeit)) %>%
-  reactable()
+  knitr::kable()
 ```
 
 ### Mean number of switches and flips per MB
@@ -79,7 +79,7 @@ df_vcftools %>%
             mean_flip_eagle = mean(n_flip_eagle / size_mb),
             mean_flip_beagle = mean(n_flip_beagle / size_mb),
             mean_flip_shapeit = mean(n_flip_shapeit / size_mb)) %>%
-  reactable()
+  knitr::kable()
 ```
 
 ### Mean median number of heterozygous sites between errors
@@ -90,7 +90,7 @@ df_vcftools %>%
   summarize(mean_het_switch_beagle = mean(med_hets_switch_beagle),
             mean_het_switch_eagle = mean(med_hets_switch_eagle),
             mean_het_switch_shapeit = mean(med_hets_switch_shapeit)) %>%
-  reactable()
+  knitr::kable()
 ```
 
 ```{r}
@@ -99,7 +99,7 @@ df_vcftools %>%
   summarize(mean_het_flip_beagle = mean(med_hets_flip_beagle),
             mean_het_flip_eagle = mean(med_hets_flip_eagle),
             mean_het_flip_shapeit = mean(med_hets_flip_shapeit)) %>%
-  reactable()
+  knitr::kable()
 ```
 
 Note here that the populations will also differ in regards to the mean number of heterozygous sites in each pseudo-diploid:
@@ -109,7 +109,7 @@ df_vcftools %>%
   group_by(pop) %>%
   summarize(mean_n_het = mean(n_hets),
             sd_n_het = sd(n_hets)) %>%
-  reactable()
+  knitr::kable()
 ```
 
 ### Mean mean number of heterozygous sites between errors
@@ -120,7 +120,7 @@ df_vcftools %>%
   summarize(mean_het_switch_beagle = mean(mean_hets_switch_beagle),
             mean_het_switch_eagle = mean(mean_hets_switch_eagle),
             mean_het_switch_shapeit = mean(mean_hets_switch_shapeit)) %>%
-  reactable()
+  knitr::kable()
 ```
 
 ```{r}
@@ -129,7 +129,7 @@ df_vcftools %>%
   summarize(mean_het_flip_beagle = mean(mean_hets_flip_beagle),
             mean_het_flip_eagle = mean(mean_hets_flip_eagle),
             mean_het_flip_shapeit = mean(mean_hets_flip_shapeit)) %>%
-  reactable()
+  knitr::kable()
 ```
 
 ## Figures
@@ -146,7 +146,8 @@ df_vcftools %>%
   ggtitle("Total Errors") +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
-  scale_color_manual(values = cbPalette)
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Population")
 ```
 
 ```{r}

@@ -9,3 +9,7 @@ editor_options:
 ---
 
 Welcome to my research website.
+
+[Synthetic Diploid Results](synthetic_diploid_results.html)
+
+[Trio phasing results](trio_phasing_results.html)
