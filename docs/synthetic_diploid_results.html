@@ -37,14 +37,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<script src="site_libs/core-js-2.5.3/shim.min.js"></script>
-<script src="site_libs/react-18.2.0/react.min.js"></script>
-<script src="site_libs/react-18.2.0/react-dom.min.js"></script>
-<script src="site_libs/reactwidget-1.0.0/react-tools.js"></script>
-<link href="site_libs/htmltools-fill-0.5.8/fill.css" rel="stylesheet" />
-<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-<link href="site_libs/reactable-0.4.4/reactable.css" rel="stylesheet" />
-<script src="site_libs/reactable-binding-0.4.4/reactable.js"></script>
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -369,7 +361,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -380,8 +372,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -390,13 +382,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-05-16
+<strong>Last updated:</strong> 2024-05-22
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>phasing_clean/</code> <span
@@ -506,86 +498,30 @@ run.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
 </p>
 </div>
-<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
 <div class="panel-body">
-<p>
-Using absolute paths to the files within your workflowr project makes it
-difficult for you and others to run your code on a different machine.
-Change the absolute path(s) below to the suggested relative path(s) to
-make your code more reproducible.
-</p>
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th style="text-align:left;">
-absolute
-</th>
-<th style="text-align:left;">
-relative
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/eagle/annotated/
-</td>
-<td style="text-align:left;">
-output/switch_errors/switch_errors/eagle/annotated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/shapeit/annotated/
-</td>
-<td style="text-align:left;">
-output/switch_errors/switch_errors/shapeit/annotated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/beagle/annotated/
-</td>
-<td style="text-align:left;">
-output/switch_errors/switch_errors/beagle/annotated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/vcf_n_sites/
-</td>
-<td style="text-align:left;">
-output/switch_errors/vcf_n_sites
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/het_loc/
-</td>
-<td style="text-align:left;">
-output/switch_errors/het_loc
-</td>
-</tr>
-</tbody>
-</table>
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstronge8cb325">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree2e92c4cfad59b685df182f0c281312cd2a54e57etargetblank2e92c4ca">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> e8cb325
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/theandyb/phasing_clean/tree/2e92c4cfad59b685df182f0c281312cd2a54e57e" target="_blank">2e92c4c</a>
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstronge8cb325"
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree2e92c4cfad59b685df182f0c281312cd2a54e57etargetblank2e92c4ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -594,7 +530,8 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version e8cb325.
+The results in this page were generated with repository version
+<a href="https://github.com/theandyb/phasing_clean/tree/2e92c4cfad59b685df182f0c281312cd2a54e57e" target="_blank">2e92c4c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -611,59 +548,42 @@ were generated:
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    chr10_10k.bed
-    Ignored:    chr8_10k.bed
-    Ignored:    chrX_10k.bed
+    Ignored:    .ipynb_checkpoints/
+    Ignored:    chr22_10k.bed
     Ignored:    data/1kgp/chr10_pilot_mask.bed
+    Ignored:    data/1kgp/chr15/
+    Ignored:    data/1kgp/chr22/
+    Ignored:    data/1kgp/chr8/
     Ignored:    data/1kgp/chrX.vcf.gz
     Ignored:    data/1kgp/chrX.vcf.gz.tbi
     Ignored:    data/1kgp/chrX_2504_snps_noPAR.bcf
     Ignored:    data/1kgp/chrX_2504_snps_noPAR_noSing.bcf
     Ignored:    data/1kgp/chrX_pilot_mask.bed
+    Ignored:    data/chr10.sizes
+    Ignored:    data/chr15.1kb.sorted.bed
+    Ignored:    data/chr15.fasta
+    Ignored:    data/chr15.sizes
+    Ignored:    data/chr15_gc1kb_pilot.bed
+    Ignored:    data/chr15_mask.fasta
+    Ignored:    data/chr15_mask.fasta.fai
+    Ignored:    data/chr22.sizes
+    Ignored:    data/chr8.sizes
     Ignored:    data/chrX.1kb.sorted.bed
+    Ignored:    data/chrX.fasta
+    Ignored:    data/chrX.sizes
     Ignored:    data/chrX_gc1kb_pilot.bed
+    Ignored:    data/chrX_mask.fasta
+    Ignored:    data/chrX_mask.fasta.fai
+    Ignored:    data/hg38.chrom.sizes
+    Ignored:    data/mask_pilot_15_fasta.bed
     Ignored:    data/mask_pilot_X_fasta.bed
+    Ignored:    data/ref_GRCh38.fna
+    Ignored:    data/ref_GRCh38.fna.fai
+    Ignored:    data/ref_GRCh38.fna.in
     Ignored:    output/switch_errors/
     Ignored:    output/trio_phase/
     Ignored:    output/trio_phase_15/
-
-Untracked files:
-    Untracked:  code/append_cpg.py
-    Untracked:  code/append_cpg_het.py
-    Untracked:  code/batch_annotate_het.sh
-    Untracked:  code/batch_annotate_switch.sh
-    Untracked:  code/batch_annotate_trio_switch.sh
-    Untracked:  code/batch_compare_trio.sh
-    Untracked:  code/batch_phase_sd.sh
-    Untracked:  code/batch_phase_trio.sh
-    Untracked:  code/common_functions.R
-    Untracked:  code/diploidifier.R
-    Untracked:  code/sample_X_pairs.R
-    Untracked:  code/synthetic_phase_results.R
-    Untracked:  code/trio_exclude_lists.R
-    Untracked:  data/1kgp/child_ids.txt
-    Untracked:  data/1kgp/chr13/
-    Untracked:  data/1kgp/chr15/
-    Untracked:  data/1kgp/chr8/
-    Untracked:  data/1kgp/repeat_sites.txt
-    Untracked:  data/1kgp/singletons.txt
-    Untracked:  data/1kgp/subject_info.csv
-    Untracked:  data/1kgp/unrelated_subj.tsv
-    Untracked:  data/chr10.sizes
-    Untracked:  data/chr8.sizes
-    Untracked:  data/chrX.fasta
-    Untracked:  data/chrX.sizes
-    Untracked:  data/chrX_mask.fasta
-    Untracked:  data/chrX_mask.fasta.fai
-    Untracked:  data/hg38.chrom.sizes
-    Untracked:  data/ref_GRCh38.fna
-    Untracked:  data/ref_GRCh38.fna.fai
-    Untracked:  data/ref_GRCh38.fna.in
-    Untracked:  data/sample_pairs.csv
-
-Unstaged changes:
-    Modified:   .gitignore
-    Modified:   README.md
+    Ignored:    output/trio_phase_22/
 
 </code></pre>
 <p>
@@ -715,7 +635,59 @@ Message
 Rmd
 </td>
 <td>
-e8cb325
+<a href="https://github.com/theandyb/phasing_clean/blob/2e92c4cfad59b685df182f0c281312cd2a54e57e/analysis/synthetic_diploid_results.Rmd" target="_blank">2e92c4c</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+wflow_publish(c("analysis/index.Rmd",
+"analysis/synthetic_diploid_results.Rmd"))
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e3d7c36cb467feb3a86e899ebd79278f56e05641/analysis/synthetic_diploid_results.Rmd" target="_blank">e3d7c36</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+update 22May24
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/synthetic_diploid_results.html" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e8cb325e12eb933ed7686661dcae741bd040aafa/analysis/synthetic_diploid_results.Rmd" target="_blank">e8cb325</a>
 </td>
 <td>
 Andy Beck
@@ -757,12 +729,15 @@ The following objects are masked from &#39;package:stats&#39;:
     chisq.test, fisher.test</code></pre>
 <pre class="r"><code>library(reactable)
 source(&quot;code/common_functions.R&quot;)
+library(yaml)
 
-eagle_switch_dir &lt;-   &quot;/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/eagle/annotated/&quot;
-shapeit_switch_dir &lt;- &quot;/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/shapeit/annotated/&quot;
-beagle_switch_dir &lt;-  &quot;/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/switch_errors/beagle/annotated/&quot;
-num_sites_dir &lt;-      &quot;/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/vcf_n_sites/&quot;
-het_loc_dir &lt;-        &quot;/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/het_loc/&quot;
+config_obj &lt;- yaml::read_yaml(&quot;_config.yaml&quot;)
+
+eagle_switch_dir &lt;-   paste0(config_obj$base_dir,&quot;/output/switch_errors/switch_errors/eagle/annotated/&quot;)
+shapeit_switch_dir &lt;- paste0(config_obj$base_dir,&quot;/output/switch_errors/switch_errors/shapeit/annotated/&quot;)
+beagle_switch_dir &lt;-  paste0(config_obj$base_dir,&quot;/output/switch_errors/switch_errors/beagle/annotated/&quot;)
+num_sites_dir &lt;-      paste0(config_obj$base_dir,&quot;/output/switch_errors/vcf_n_sites/&quot;)
+het_loc_dir &lt;-        paste0(config_obj$base_dir,&quot;/output/switch_errors/het_loc/&quot;)
 
 sample_info_df &lt;- read_csv(&quot;data/1kgp/subject_info.csv&quot;) %&gt;%
   select(SAMPLE_NAME, POPULATION, SUPER)</code></pre>
@@ -810,7 +785,7 @@ diploids.</p>
 </div>
 <div id="load-switch-and-flips-errors" class="section level2">
 <h2>Load Switch and Flips Errors</h2>
-<pre class="r"><code>df_vcftools &lt;- read_csv(&quot;output/switch_errors/switch_errors/summary.csv&quot;)</code></pre>
+<pre class="r"><code>df_vcftools &lt;- read_csv(paste0(config_obj$base_dir,&quot;/output/switch_errors/switch_errors/summary.csv&quot;))</code></pre>
 <pre><code>Rows: 1000 Columns: 44
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
@@ -832,9 +807,76 @@ dbl (42): pair_id, n_switch_eagle, n_switch_beagle, n_switch_shapeit, n_flip...
             mean_flip_eagle = mean(n_flip_eagle),
             mean_flip_beagle = mean(n_flip_beagle),
             mean_flip_shapeit = mean(n_flip_shapeit)) %&gt;%
-  reactable()</code></pre>
-<div class="reactable html-widget html-fill-item" id="htmlwidget-6a9a5cb16667fd02312b" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-6a9a5cb16667fd02312b">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"pop":["AFR","AMR","EAS","EUR","SAS"],"mean_switch_eagle":[135.285,102.735,197.965,125.06,170.675],"mean_switch_beagle":[88.58,73.81,153.14,91.635,129.67],"mean_switch_shapeit":[76.9,68.585,143.36,84.57,118.15],"mean_flip_eagle":[99.79,68.44,105.165,74.62,102.92],"mean_flip_beagle":[100.67,69.22,105.8,75.255,100.89],"mean_flip_shapeit":[119.285,80.545,114.19,86.3,114.135]},"columns":[{"id":"pop","name":"pop","type":"character"},{"id":"mean_switch_eagle","name":"mean_switch_eagle","type":"numeric"},{"id":"mean_switch_beagle","name":"mean_switch_beagle","type":"numeric"},{"id":"mean_switch_shapeit","name":"mean_switch_shapeit","type":"numeric"},{"id":"mean_flip_eagle","name":"mean_flip_eagle","type":"numeric"},{"id":"mean_flip_beagle","name":"mean_flip_beagle","type":"numeric"},{"id":"mean_flip_shapeit","name":"mean_flip_shapeit","type":"numeric"}],"dataKey":"ee14144c210a64cd27908be84484012c"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="3%" />
+<col width="16%" />
+<col width="16%" />
+<col width="17%" />
+<col width="14%" />
+<col width="15%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_switch_eagle</th>
+<th align="right">mean_switch_beagle</th>
+<th align="right">mean_switch_shapeit</th>
+<th align="right">mean_flip_eagle</th>
+<th align="right">mean_flip_beagle</th>
+<th align="right">mean_flip_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">135.285</td>
+<td align="right">88.580</td>
+<td align="right">76.900</td>
+<td align="right">99.790</td>
+<td align="right">100.670</td>
+<td align="right">119.285</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">102.735</td>
+<td align="right">73.810</td>
+<td align="right">68.585</td>
+<td align="right">68.440</td>
+<td align="right">69.220</td>
+<td align="right">80.545</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">197.965</td>
+<td align="right">153.140</td>
+<td align="right">143.360</td>
+<td align="right">105.165</td>
+<td align="right">105.800</td>
+<td align="right">114.190</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">125.060</td>
+<td align="right">91.635</td>
+<td align="right">84.570</td>
+<td align="right">74.620</td>
+<td align="right">75.255</td>
+<td align="right">86.300</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">170.675</td>
+<td align="right">129.670</td>
+<td align="right">118.150</td>
+<td align="right">102.920</td>
+<td align="right">100.890</td>
+<td align="right">114.135</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="mean-number-of-switches-and-flips-per-mb"
 class="section level3">
@@ -847,9 +889,76 @@ class="section level3">
             mean_flip_eagle = mean(n_flip_eagle / size_mb),
             mean_flip_beagle = mean(n_flip_beagle / size_mb),
             mean_flip_shapeit = mean(n_flip_shapeit / size_mb)) %&gt;%
-  reactable()</code></pre>
-<div class="reactable html-widget html-fill-item" id="htmlwidget-6810f9174ea17e24f83f" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-6810f9174ea17e24f83f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"pop":["AFR","AMR","EAS","EUR","SAS"],"mean_switch_eagle":[0.903162030630311,0.685883299293392,1.32164280078247,0.834879030617164,1.13940641127644],"mean_switch_beagle":[0.591344842560896,0.492772751983947,1.02238285492673,0.611739322879189,0.865665618912746],"mean_switch_shapeit":[0.513372590920572,0.457891745908819,0.957094182954415,0.564575839727459,0.788753207273502],"mean_flip_eagle":[0.666213116829596,0.456919494863814,0.702096138151534,0.498150723843775,0.687079209954739],"mean_flip_beagle":[0.67207286930936,0.462127536763699,0.706335580806716,0.502389604729012,0.673531123909524],"mean_flip_shapeit":[0.796349794487403,0.537734926260263,0.76234988415875,0.576126263567083,0.761948490430551]},"columns":[{"id":"pop","name":"pop","type":"character"},{"id":"mean_switch_eagle","name":"mean_switch_eagle","type":"numeric"},{"id":"mean_switch_beagle","name":"mean_switch_beagle","type":"numeric"},{"id":"mean_switch_shapeit","name":"mean_switch_shapeit","type":"numeric"},{"id":"mean_flip_eagle","name":"mean_flip_eagle","type":"numeric"},{"id":"mean_flip_beagle","name":"mean_flip_beagle","type":"numeric"},{"id":"mean_flip_shapeit","name":"mean_flip_shapeit","type":"numeric"}],"dataKey":"7c0f61999a573c5d996b94ab041f80b9"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="3%" />
+<col width="16%" />
+<col width="16%" />
+<col width="17%" />
+<col width="14%" />
+<col width="15%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_switch_eagle</th>
+<th align="right">mean_switch_beagle</th>
+<th align="right">mean_switch_shapeit</th>
+<th align="right">mean_flip_eagle</th>
+<th align="right">mean_flip_beagle</th>
+<th align="right">mean_flip_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">0.9031620</td>
+<td align="right">0.5913448</td>
+<td align="right">0.5133726</td>
+<td align="right">0.6662131</td>
+<td align="right">0.6720729</td>
+<td align="right">0.7963498</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.6858833</td>
+<td align="right">0.4927728</td>
+<td align="right">0.4578917</td>
+<td align="right">0.4569195</td>
+<td align="right">0.4621275</td>
+<td align="right">0.5377349</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">1.3216428</td>
+<td align="right">1.0223829</td>
+<td align="right">0.9570942</td>
+<td align="right">0.7020961</td>
+<td align="right">0.7063356</td>
+<td align="right">0.7623499</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.8348790</td>
+<td align="right">0.6117393</td>
+<td align="right">0.5645758</td>
+<td align="right">0.4981507</td>
+<td align="right">0.5023896</td>
+<td align="right">0.5761263</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">1.1394064</td>
+<td align="right">0.8656656</td>
+<td align="right">0.7887532</td>
+<td align="right">0.6870792</td>
+<td align="right">0.6735311</td>
+<td align="right">0.7619485</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="mean-median-number-of-heterozygous-sites-between-errors"
 class="section level3">
@@ -859,26 +968,146 @@ class="section level3">
   summarize(mean_het_switch_beagle = mean(med_hets_switch_beagle),
             mean_het_switch_eagle = mean(med_hets_switch_eagle),
             mean_het_switch_shapeit = mean(med_hets_switch_shapeit)) %&gt;%
-  reactable()</code></pre>
-<div class="reactable html-widget html-fill-item" id="htmlwidget-3ebdc3d6ea4b0d9c4ece" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-3ebdc3d6ea4b0d9c4ece">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"pop":["AFR","AMR","EAS","EUR","SAS"],"mean_het_switch_beagle":[472.1675,389.9675,122.415,295.715,175.8725],"mean_het_switch_eagle":[363.425,314.24,109.6275,236.3,156.7575],"mean_het_switch_shapeit":[472.1025,370.4475,128.7175,305.515,185.435]},"columns":[{"id":"pop","name":"pop","type":"character"},{"id":"mean_het_switch_beagle","name":"mean_het_switch_beagle","type":"numeric"},{"id":"mean_het_switch_eagle","name":"mean_het_switch_eagle","type":"numeric"},{"id":"mean_het_switch_shapeit","name":"mean_het_switch_shapeit","type":"numeric"}],"dataKey":"cd8f45155fcd8c97b96818229733fc59"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="5%" />
+<col width="31%" />
+<col width="30%" />
+<col width="32%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_het_switch_beagle</th>
+<th align="right">mean_het_switch_eagle</th>
+<th align="right">mean_het_switch_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">472.1675</td>
+<td align="right">363.4250</td>
+<td align="right">472.1025</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">389.9675</td>
+<td align="right">314.2400</td>
+<td align="right">370.4475</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">122.4150</td>
+<td align="right">109.6275</td>
+<td align="right">128.7175</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">295.7150</td>
+<td align="right">236.3000</td>
+<td align="right">305.5150</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">175.8725</td>
+<td align="right">156.7575</td>
+<td align="right">185.4350</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>df_vcftools %&gt;%
   group_by(pop) %&gt;%
   summarize(mean_het_flip_beagle = mean(med_hets_flip_beagle),
             mean_het_flip_eagle = mean(med_hets_flip_eagle),
             mean_het_flip_shapeit = mean(med_hets_flip_shapeit)) %&gt;%
-  reactable()</code></pre>
-<div class="reactable html-widget html-fill-item" id="htmlwidget-ab734e3015e212fdbd57" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-ab734e3015e212fdbd57">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"pop":["AFR","AMR","EAS","EUR","SAS"],"mean_het_flip_beagle":[620.1825,572.5475,271.3,502.055,359.3325],"mean_het_flip_eagle":[601.1875,588.475,290.6925,504.4675,356.295],"mean_het_flip_shapeit":[505.36,487.8575,256.0175,431.38,320.49]},"columns":[{"id":"pop","name":"pop","type":"character"},{"id":"mean_het_flip_beagle","name":"mean_het_flip_beagle","type":"numeric"},{"id":"mean_het_flip_eagle","name":"mean_het_flip_eagle","type":"numeric"},{"id":"mean_het_flip_shapeit","name":"mean_het_flip_shapeit","type":"numeric"}],"dataKey":"573ef5a4466b69032c348e48385d1def"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_het_flip_beagle</th>
+<th align="right">mean_het_flip_eagle</th>
+<th align="right">mean_het_flip_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">620.1825</td>
+<td align="right">601.1875</td>
+<td align="right">505.3600</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">572.5475</td>
+<td align="right">588.4750</td>
+<td align="right">487.8575</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">271.3000</td>
+<td align="right">290.6925</td>
+<td align="right">256.0175</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">502.0550</td>
+<td align="right">504.4675</td>
+<td align="right">431.3800</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">359.3325</td>
+<td align="right">356.2950</td>
+<td align="right">320.4900</td>
+</tr>
+</tbody>
+</table>
 <p>Note here that the populations will also differ in regards to the
 mean number of heterozygous sites in each pseudo-diploid:</p>
 <pre class="r"><code>df_vcftools %&gt;%
   group_by(pop) %&gt;%
   summarize(mean_n_het = mean(n_hets),
             sd_n_het = sd(n_hets)) %&gt;%
-  reactable()</code></pre>
-<div class="reactable html-widget html-fill-item" id="htmlwidget-7258c3b8df456657141e" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-7258c3b8df456657141e">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"pop":["AFR","AMR","EAS","EUR","SAS"],"mean_n_het":[99817.32,66309.945,54261.28,60595.2,63663.905],"sd_n_het":[3346.94072530325,12057.0334585702,2590.51007988192,3056.26978767834,2690.03977030155]},"columns":[{"id":"pop","name":"pop","type":"character"},{"id":"mean_n_het","name":"mean_n_het","type":"numeric"},{"id":"sd_n_het","name":"sd_n_het","type":"numeric"}],"dataKey":"43c5bbc73f094dfa99962048908fe604"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_n_het</th>
+<th align="right">sd_n_het</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">99817.32</td>
+<td align="right">3346.941</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">66309.95</td>
+<td align="right">12057.033</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">54261.28</td>
+<td align="right">2590.510</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">60595.20</td>
+<td align="right">3056.270</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">63663.90</td>
+<td align="right">2690.040</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="mean-mean-number-of-heterozygous-sites-between-errors"
 class="section level3">
@@ -888,17 +1117,103 @@ class="section level3">
   summarize(mean_het_switch_beagle = mean(mean_hets_switch_beagle),
             mean_het_switch_eagle = mean(mean_hets_switch_eagle),
             mean_het_switch_shapeit = mean(mean_hets_switch_shapeit)) %&gt;%
-  reactable()</code></pre>
-<div class="reactable html-widget html-fill-item" id="htmlwidget-2d6af9c0a5b2ac9ad75c" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-2d6af9c0a5b2ac9ad75c">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"pop":["AFR","AMR","EAS","EUR","SAS"],"mean_het_switch_beagle":[1232.36282200274,1230.02318288814,361.466988465298,741.022522828392,545.706381011592],"mean_het_switch_eagle":[786.228228307452,779.97719065609,277.450849862207,526.726205340782,401.135457307787],"mean_het_switch_shapeit":[1433.58780918895,1396.19007910297,386.934183318192,821.153363416369,619.736258711348]},"columns":[{"id":"pop","name":"pop","type":"character"},{"id":"mean_het_switch_beagle","name":"mean_het_switch_beagle","type":"numeric"},{"id":"mean_het_switch_eagle","name":"mean_het_switch_eagle","type":"numeric"},{"id":"mean_het_switch_shapeit","name":"mean_het_switch_shapeit","type":"numeric"}],"dataKey":"94adc40359c6c582d3f5c398d721fd42"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="5%" />
+<col width="31%" />
+<col width="30%" />
+<col width="32%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_het_switch_beagle</th>
+<th align="right">mean_het_switch_eagle</th>
+<th align="right">mean_het_switch_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1232.3628</td>
+<td align="right">786.2282</td>
+<td align="right">1433.5878</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">1230.0232</td>
+<td align="right">779.9772</td>
+<td align="right">1396.1901</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">361.4670</td>
+<td align="right">277.4508</td>
+<td align="right">386.9342</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">741.0225</td>
+<td align="right">526.7262</td>
+<td align="right">821.1534</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">545.7064</td>
+<td align="right">401.1355</td>
+<td align="right">619.7363</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>df_vcftools %&gt;%
   group_by(pop) %&gt;%
   summarize(mean_het_flip_beagle = mean(mean_hets_flip_beagle),
             mean_het_flip_eagle = mean(mean_hets_flip_eagle),
             mean_het_flip_shapeit = mean(mean_hets_flip_shapeit)) %&gt;%
-  reactable()</code></pre>
-<div class="reactable html-widget html-fill-item" id="htmlwidget-031f33d43096ccf3c9f6" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-031f33d43096ccf3c9f6">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"pop":["AFR","AMR","EAS","EUR","SAS"],"mean_het_flip_beagle":[1052.31051117788,1083.41754531436,519.168763865388,861.559796879586,675.388080607078],"mean_het_flip_eagle":[1059.8691593254,1048.33978614075,520.344875017763,844.59543465074,644.361566832979],"mean_het_flip_shapeit":[879.639086732422,908.389063811846,482.477589325811,753.658139616702,597.190571280436]},"columns":[{"id":"pop","name":"pop","type":"character"},{"id":"mean_het_flip_beagle","name":"mean_het_flip_beagle","type":"numeric"},{"id":"mean_het_flip_eagle","name":"mean_het_flip_eagle","type":"numeric"},{"id":"mean_het_flip_shapeit","name":"mean_het_flip_shapeit","type":"numeric"}],"dataKey":"f058ec60159952af737b209179528d3c"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_het_flip_beagle</th>
+<th align="right">mean_het_flip_eagle</th>
+<th align="right">mean_het_flip_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1052.3105</td>
+<td align="right">1059.8692</td>
+<td align="right">879.6391</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">1083.4175</td>
+<td align="right">1048.3398</td>
+<td align="right">908.3891</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">519.1688</td>
+<td align="right">520.3449</td>
+<td align="right">482.4776</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">861.5598</td>
+<td align="right">844.5954</td>
+<td align="right">753.6581</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">675.3881</td>
+<td align="right">644.3616</td>
+<td align="right">597.1906</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="figures" class="section level2">
@@ -914,8 +1229,46 @@ class="section level3">
   ggtitle(&quot;Total Errors&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
-  scale_color_manual(values = cbPalette)</code></pre>
+  scale_color_manual(values = cbPalette) +
+  labs(color = &quot;Population&quot;)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-10-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = n_other_beagle + n_flip_beagle,
          Eagle = n_other_eagle + n_flip_eagle, 
@@ -927,6 +1280,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-11-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = n_other_beagle + n_flip_beagle,
          Eagle = n_other_eagle + n_flip_eagle, 
@@ -938,6 +1328,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-12-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="error-rates-per-heterozygous-site" class="section level4">
 <h4>Error rates (per heterozygous site)</h4>
 <pre class="r"><code>df_vcftools %&gt;%
@@ -951,6 +1378,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-13-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
          Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
@@ -962,6 +1426,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
          Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
@@ -973,6 +1474,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="non-flip-switches" class="section level3">
@@ -988,6 +1526,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
+Past versions of unnamed-chunk-16-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
    mutate(Beagle = (n_other_beagle),
          Eagle = (n_other_eagle ), 
@@ -999,6 +1574,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-17-1">
+Past versions of unnamed-chunk-17-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-17-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
    mutate(Beagle = (n_other_beagle),
          Eagle = (n_other_eagle ), 
@@ -1010,6 +1622,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-1">
+Past versions of unnamed-chunk-18-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-18-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="per-het.-site" class="section level4">
 <h4>Per het. site</h4>
 <pre class="r"><code>df_vcftools %&gt;%
@@ -1023,6 +1672,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-1">
+Past versions of unnamed-chunk-19-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-19-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_other_beagle) / n_hets,
          Eagle = (n_other_eagle ) / n_hets, 
@@ -1034,6 +1720,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-1">
+Past versions of unnamed-chunk-20-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-20-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_other_beagle) / n_hets,
          Eagle = (n_other_eagle ) / n_hets, 
@@ -1045,6 +1768,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-1">
+Past versions of unnamed-chunk-21-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="flips" class="section level3">
@@ -1060,6 +1820,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-1">
+Past versions of unnamed-chunk-22-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-22-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
    mutate(Beagle = (n_flip_beagle),
          Eagle = (n_flip_eagle ), 
@@ -1071,6 +1868,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-1">
+Past versions of unnamed-chunk-23-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
    mutate(Beagle = (n_flip_beagle),
          Eagle = (n_flip_eagle ), 
@@ -1082,6 +1916,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-1">
+Past versions of unnamed-chunk-24-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="per-het.-site-1" class="section level4">
 <h4>Per het. site</h4>
 <pre class="r"><code>df_vcftools %&gt;%
@@ -1095,6 +1966,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-1">
+Past versions of unnamed-chunk-25-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_flip_beagle) / n_hets,
          Eagle = (n_flip_eagle ) / n_hets, 
@@ -1106,6 +2014,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-26-1">
+Past versions of unnamed-chunk-26-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-26-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_flip_beagle) / n_hets,
          Eagle = (n_flip_eagle ) / n_hets, 
@@ -1117,6 +2062,43 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-27-1">
+Past versions of unnamed-chunk-27-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-27-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">0e0d172</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1149,29 +2131,28 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] reactable_0.4.4 janitor_2.2.0   lubridate_1.9.3 forcats_1.0.0  
- [5] stringr_1.5.1   dplyr_1.1.4     purrr_1.0.2     readr_2.1.5    
- [9] tidyr_1.3.1     tibble_3.2.1    ggplot2_3.5.0   tidyverse_2.0.0
-[13] workflowr_1.7.1
+ [1] yaml_2.3.8      reactable_0.4.4 janitor_2.2.0   lubridate_1.9.3
+ [5] forcats_1.0.0   stringr_1.5.1   dplyr_1.1.4     purrr_1.0.2    
+ [9] readr_2.1.5     tidyr_1.3.1     tibble_3.2.1    ggplot2_3.5.0  
+[13] tidyverse_2.0.0 workflowr_1.7.1
 
 loaded via a namespace (and not attached):
  [1] gtable_0.3.4      xfun_0.42         bslib_0.7.0       htmlwidgets_1.6.4
- [5] processx_3.8.3    callr_3.7.5       tzdb_0.4.0        crosstalk_1.2.1  
- [9] vctrs_0.6.5       tools_4.4.0       ps_1.7.6          generics_0.1.3   
-[13] parallel_4.4.0    fansi_1.0.6       highr_0.10        pkgconfig_2.0.3  
-[17] lifecycle_1.0.4   farver_2.1.1      compiler_4.4.0    git2r_0.33.0     
-[21] munsell_0.5.1     getPass_0.2-4     snakecase_0.11.1  httpuv_1.6.14    
-[25] htmltools_0.5.8   sass_0.4.9        yaml_2.3.8        later_1.3.2      
-[29] pillar_1.9.0      crayon_1.5.2      jquerylib_0.1.4   whisker_0.4.1    
-[33] cachem_1.0.8      tidyselect_1.2.0  digest_0.6.34     stringi_1.8.3    
-[37] labeling_0.4.3    rprojroot_2.0.4   fastmap_1.1.1     grid_4.4.0       
-[41] archive_1.1.7     colorspace_2.1-0  cli_3.6.2         magrittr_2.0.3   
-[45] utf8_1.2.4        reactR_0.5.0      withr_3.0.0       scales_1.3.0     
-[49] promises_1.2.1    bit64_4.0.5       timechange_0.3.0  rmarkdown_2.26   
-[53] httr_1.4.7        bit_4.0.5         hms_1.1.3         evaluate_0.23    
-[57] knitr_1.45        rlang_1.1.3       Rcpp_1.0.12       glue_1.7.0       
-[61] rstudioapi_0.15.0 vroom_1.6.5       jsonlite_1.8.8    R6_2.5.1         
-[65] fs_1.6.3         </code></pre>
+ [5] processx_3.8.3    callr_3.7.5       tzdb_0.4.0        vctrs_0.6.5      
+ [9] tools_4.4.0       ps_1.7.6          generics_0.1.3    parallel_4.4.0   
+[13] fansi_1.0.6       highr_0.10        pkgconfig_2.0.3   lifecycle_1.0.4  
+[17] farver_2.1.1      compiler_4.4.0    git2r_0.33.0      munsell_0.5.1    
+[21] getPass_0.2-4     snakecase_0.11.1  httpuv_1.6.14     htmltools_0.5.8  
+[25] sass_0.4.9        later_1.3.2       pillar_1.9.0      crayon_1.5.2     
+[29] jquerylib_0.1.4   whisker_0.4.1     cachem_1.0.8      tidyselect_1.2.0 
+[33] digest_0.6.34     stringi_1.8.3     labeling_0.4.3    rprojroot_2.0.4  
+[37] fastmap_1.1.1     grid_4.4.0        archive_1.1.7     colorspace_2.1-0 
+[41] cli_3.6.2         magrittr_2.0.3    utf8_1.2.4        withr_3.0.0      
+[45] scales_1.3.0      promises_1.2.1    bit64_4.0.5       timechange_0.3.0 
+[49] rmarkdown_2.26    httr_1.4.7        bit_4.0.5         hms_1.1.3        
+[53] evaluate_0.23     knitr_1.45        rlang_1.1.3       Rcpp_1.0.12      
+[57] glue_1.7.0        rstudioapi_0.15.0 vroom_1.6.5       jsonlite_1.8.8   
+[61] R6_2.5.1          fs_1.6.3         </code></pre>
 </div>
 </div>
 </div>
