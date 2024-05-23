@@ -209,6 +209,15 @@ done
 awk '{print(NR"\t"$1)}' output/trio_phase_15/triple_het.tmp > output/trio_phase_15/triple_het.tsv
 ```
 
+#### Get maf at variant sites
+
+```
+bcftools view data/1kgp/chr15/chr15_phased_overlap.bcf | vcftools --vcf - --freq --out chr15_freq
+awk 'NR>1 {split($5,a,":");split($6,b,":");c = (a[2]<b[2])?a[2]:b[2]; print($1"\t"$2"\t"c)}' chr15_freq.frq > data/1kgp/chr15/maf.tsv
+
+rm chr15_freq.*
+```
+
 ## Phasing Synthetic Diploids
 
 First, we sample males from the same sub-populations using the script `code/sample_X_pairs.R`. This generates the file `data/sample_pairs.csv`.
@@ -235,6 +244,25 @@ wc -l output/switch_errors/het_loc/pair_${i}_het_loc.txt >> output/switch_errors
 done
 
 awk '{print(NR"\t"$1)}' output/switch_errors/het_pos_count.tmp > output/switch_errors/het_pos_count.tsv
+```
+
+4.Count number of hets that are at CpG sites for each synthetic diploid
+
+```
+for i in `seq 1 1000`; do
+awk -F',' '{n_cpg += $3}END{print(n_cpg)}' output/switch_errors/het_loc/annotated/pair_${i}.csv  >> output/switch_errors/het_cpg_count.tmp
+done
+
+awk '{print(NR"\t"$1)}' output/switch_errors/het_cpg_count.tmp > output/switch_errors/het_cpg_count.tsv
+```
+
+5.Get maf at variant sites
+
+```
+bcftools view data/1kgp/chrX_2504_snps_noPAR_noSing.bcf | vcftools --vcf - --freq --out chrX_freq
+awk 'NR>1 {split($5,a,":");split($6,b,":");c = (a[2]<b[2])?a[2]:b[2]; print($1"\t"$2"\t"c)}' chrX_freq.frq > data/1kgp/chrX_maf.tsv
+
+rm chr15_freq.*
 ```
 
 ## Phasing Trio Children

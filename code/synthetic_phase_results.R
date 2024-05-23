@@ -1,6 +1,8 @@
 library(tidyverse)
 library(yaml)
 
+source("code/common_functions.R")
+
 config_obj <- yaml::read_yaml("_config.yaml")
 
 eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/eagle/annotated/")
@@ -16,6 +18,9 @@ pair_info_df <- read_delim("data/sample_pairs.csv", col_names = c("POP", "ID1", 
 pair_info_df <- left_join(pair_info_df, sample_info_df, by = c("ID1"="SAMPLE_NAME")) %>%
   rename(SP = SUPER) %>%
   select(-POPULATION)
+
+n_het_cpg_df <- read_tsv(paste0(config_obj$base_dir,"/output/switch_errors/het_cpg_count.tsv"),
+                         col_names = c("pair_id", "n_het_cpg"))
 
 gc_content_1kb <- read_tsv("data/chrX_gc1kb_pilot.bed")
 colnames(gc_content_1kb) <- c("CHR", "START", "END", "AT", "GC", "A", "C", "G", "T", "TOTAL", "OTHER", "LENGTH")
@@ -37,4 +42,6 @@ pd_size <- read_tsv("/net/snowwhite/home/beckandy/research/phasing_clean/output/
   mutate(size_mb = (size - par_size) / 1e6)
 
 df_vcftools$size_mb <- pd_size$size_mb
+df_vcftools <- left_join(df_vcftools, n_het_cpg_df)
+
 write_csv(df_vcftools, "output/switch_errors/switch_errors/summary.csv")
