@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomthandybphasingcleantreebe983e0faec864a1001597ab3a3f67edf0f7b67atargetblankbe983e0a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomthandybphasingcleantreea13fa5ebc8a05a1d764f1b6b38b31f905ad8cd8btargetblanka13fa5ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/thandyb/phasing_clean/tree/be983e0faec864a1001597ab3a3f67edf0f7b67a" target="_blank">be983e0</a>
+<a href="https://github.com/thandyb/phasing_clean/tree/a13fa5ebc8a05a1d764f1b6b38b31f905ad8cd8b" target="_blank">a13fa5e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomthandybphasingcleantreebe983e0faec864a1001597ab3a3f67edf0f7b67atargetblankbe983e0a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomthandybphasingcleantreea13fa5ebc8a05a1d764f1b6b38b31f905ad8cd8btargetblanka13fa5ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/thandyb/phasing_clean/tree/be983e0faec864a1001597ab3a3f67edf0f7b67a" target="_blank">be983e0</a>.
+<a href="https://github.com/thandyb/phasing_clean/tree/a13fa5ebc8a05a1d764f1b6b38b31f905ad8cd8b" target="_blank">a13fa5e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -593,6 +593,10 @@ Ignored files:
     Ignored:    output/trio_phase_15/
     Ignored:    output/trio_phase_22/
 
+Unstaged changes:
+    Modified:   README.md
+    Modified:   code/synthetic_phase_results.R
+
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not
@@ -638,6 +642,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/thandyb/phasing_clean/blob/a13fa5ebc8a05a1d764f1b6b38b31f905ad8cd8b/analysis/synthetic_diploid_results.Rmd" target="_blank">a13fa5e</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+wflow_publish("analysis/synthetic_diploid_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/thandyb/phasing_clean/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/synthetic_diploid_results.html" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -828,11 +866,11 @@ diploids.</p>
 <div id="load-switch-and-flips-errors" class="section level2">
 <h2>Load Switch and Flips Errors</h2>
 <pre class="r"><code>df_vcftools &lt;- read_csv(paste0(config_obj$base_dir,&quot;/output/switch_errors/switch_errors/summary.csv&quot;))</code></pre>
-<pre><code>Rows: 1000 Columns: 44
+<pre><code>Rows: 1000 Columns: 45
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr  (2): pop, subpop
-dbl (42): pair_id, n_switch_eagle, n_switch_beagle, n_switch_shapeit, n_flip...
+dbl (43): pair_id, n_switch_eagle, n_switch_beagle, n_switch_shapeit, n_flip...
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
@@ -1339,6 +1377,254 @@ class="section level3">
 </tbody>
 </table>
 </div>
+<div id="errors-at-cpgs" class="section level3">
+<h3>Errors at CpGs</h3>
+<div id="total" class="section level4">
+<h4>Total</h4>
+<pre class="r"><code>df_vcftools %&gt;%
+  group_by(pop) %&gt;%
+  summarize(mean_switch_eagle = mean(n_other_cpg_eagle),
+            mean_switch_beagle = mean(n_other_cpg_beagle),
+            mean_switch_shapeit = mean(n_other_cpg_shapeit),
+            mean_flip_eagle = mean(n_flip_cpg_eagle),
+            mean_flip_beagle = mean(n_flip_cpg_beagle),
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit)) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="3%" />
+<col width="16%" />
+<col width="16%" />
+<col width="17%" />
+<col width="14%" />
+<col width="15%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_switch_eagle</th>
+<th align="right">mean_switch_beagle</th>
+<th align="right">mean_switch_shapeit</th>
+<th align="right">mean_flip_eagle</th>
+<th align="right">mean_flip_beagle</th>
+<th align="right">mean_flip_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">26.520</td>
+<td align="right">13.510</td>
+<td align="right">11.160</td>
+<td align="right">15.325</td>
+<td align="right">15.775</td>
+<td align="right">18.535</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">21.010</td>
+<td align="right">12.745</td>
+<td align="right">11.225</td>
+<td align="right">10.870</td>
+<td align="right">11.235</td>
+<td align="right">13.225</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">37.735</td>
+<td align="right">26.235</td>
+<td align="right">23.830</td>
+<td align="right">16.870</td>
+<td align="right">17.060</td>
+<td align="right">18.430</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">24.295</td>
+<td align="right">15.335</td>
+<td align="right">13.825</td>
+<td align="right">11.520</td>
+<td align="right">12.090</td>
+<td align="right">13.725</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">33.595</td>
+<td align="right">21.500</td>
+<td align="right">19.355</td>
+<td align="right">16.215</td>
+<td align="right">16.445</td>
+<td align="right">18.575</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="proportions" class="section level4">
+<h4>Proportions</h4>
+<pre class="r"><code>df_vcftools %&gt;%
+  group_by(pop) %&gt;%
+  summarize(mean_switch_eagle = mean(n_other_cpg_eagle / n_other_eagle),
+            mean_switch_beagle = mean(n_other_cpg_beagle / n_other_beagle),
+            mean_switch_shapeit = mean(n_other_cpg_shapeit / n_other_shapeit),
+            mean_flip_eagle = mean(n_flip_cpg_eagle / n_flip_eagle),
+            mean_flip_beagle = mean(n_flip_cpg_beagle / n_flip_beagle),
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit / n_flip_shapeit)) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="3%" />
+<col width="16%" />
+<col width="16%" />
+<col width="17%" />
+<col width="14%" />
+<col width="15%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_switch_eagle</th>
+<th align="right">mean_switch_beagle</th>
+<th align="right">mean_switch_shapeit</th>
+<th align="right">mean_flip_eagle</th>
+<th align="right">mean_flip_beagle</th>
+<th align="right">mean_flip_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">0.1960176</td>
+<td align="right">0.1516058</td>
+<td align="right">0.1442128</td>
+<td align="right">0.1524737</td>
+<td align="right">0.1578361</td>
+<td align="right">0.1555537</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.2024815</td>
+<td align="right">0.1703186</td>
+<td align="right">0.1609514</td>
+<td align="right">0.1588046</td>
+<td align="right">0.1592436</td>
+<td align="right">0.1630341</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.1906593</td>
+<td align="right">0.1715390</td>
+<td align="right">0.1661589</td>
+<td align="right">0.1602174</td>
+<td align="right">0.1614343</td>
+<td align="right">0.1616865</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.1944161</td>
+<td align="right">0.1695228</td>
+<td align="right">0.1662217</td>
+<td align="right">0.1538511</td>
+<td align="right">0.1613461</td>
+<td align="right">0.1612719</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.1960681</td>
+<td align="right">0.1648754</td>
+<td align="right">0.1626863</td>
+<td align="right">0.1567358</td>
+<td align="right">0.1631997</td>
+<td align="right">0.1622706</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="enrichment" class="section level4">
+<h4>Enrichment</h4>
+<p>We compute the ratio of the proportion of errors at CpGs to the
+proportion of heterozygous locations that are at CpGs.</p>
+<pre class="r"><code>df_vcftools %&gt;%
+  group_by(pop) %&gt;%
+  summarize(mean_switch_eagle = mean((n_other_cpg_eagle / n_other_eagle) / ( n_het_cpg / n_hets)),
+            mean_switch_beagle = mean((n_other_cpg_beagle / n_other_beagle) / ( n_het_cpg / n_hets)),
+            mean_switch_shapeit = mean((n_other_cpg_shapeit / n_other_shapeit) / ( n_het_cpg / n_hets) ),
+            mean_flip_eagle = mean((n_flip_cpg_eagle / n_flip_eagle) / ( n_het_cpg / n_hets)),
+            mean_flip_beagle = mean((n_flip_cpg_beagle / n_flip_beagle) / ( n_het_cpg / n_hets)),
+            mean_flip_shapeit = mean((n_flip_cpg_shapeit / n_flip_shapeit) / ( n_het_cpg / n_hets))) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="3%" />
+<col width="16%" />
+<col width="16%" />
+<col width="17%" />
+<col width="14%" />
+<col width="15%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_switch_eagle</th>
+<th align="right">mean_switch_beagle</th>
+<th align="right">mean_switch_shapeit</th>
+<th align="right">mean_flip_eagle</th>
+<th align="right">mean_flip_beagle</th>
+<th align="right">mean_flip_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.365514</td>
+<td align="right">1.056137</td>
+<td align="right">1.004449</td>
+<td align="right">1.062315</td>
+<td align="right">1.099800</td>
+<td align="right">1.083928</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">1.427975</td>
+<td align="right">1.200901</td>
+<td align="right">1.135150</td>
+<td align="right">1.120175</td>
+<td align="right">1.123578</td>
+<td align="right">1.150170</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">1.334293</td>
+<td align="right">1.200384</td>
+<td align="right">1.162641</td>
+<td align="right">1.120754</td>
+<td align="right">1.129690</td>
+<td align="right">1.131121</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">1.373847</td>
+<td align="right">1.197689</td>
+<td align="right">1.174313</td>
+<td align="right">1.087464</td>
+<td align="right">1.140019</td>
+<td align="right">1.139891</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">1.377990</td>
+<td align="right">1.159009</td>
+<td align="right">1.143357</td>
+<td align="right">1.101402</td>
+<td align="right">1.146620</td>
+<td align="right">1.140126</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="figures" class="section level2">
 <h2>Figures</h2>
@@ -1355,152 +1641,6 @@ class="section level3">
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette) +
   labs(color = &quot;Population&quot;)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
-Past versions of unnamed-chunk-11-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-11-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-11-1.png" target="_blank">0e0d172</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = n_other_beagle + n_flip_beagle,
-         Eagle = n_other_eagle + n_flip_eagle, 
-         SHAPEIT = n_other_shapeit + n_flip_shapeit) %&gt;%
-  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
-  geom_point() +
-  ggtitle(&quot;Total Errors&quot;) +
-  theme_classic() +
-  geom_abline(slope = 1, intercept = 0) +
-  scale_color_manual(values = cbPalette)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
-Past versions of unnamed-chunk-12-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-12-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-12-1.png" target="_blank">0e0d172</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = n_other_beagle + n_flip_beagle,
-         Eagle = n_other_eagle + n_flip_eagle, 
-         SHAPEIT = n_other_shapeit + n_flip_shapeit) %&gt;%
-  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
-  geom_point() +
-  ggtitle(&quot;Total Errors&quot;) +
-  theme_classic() +
-  geom_abline(slope = 1, intercept = 0) +
-  scale_color_manual(values = cbPalette)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
-Past versions of unnamed-chunk-13-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-13-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-13-1.png" target="_blank">0e0d172</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="error-rates-per-heterozygous-site" class="section level4">
-<h4>Error rates (per heterozygous site)</h4>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
-         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
-  geom_point() +
-  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
-  theme_classic() +
-  geom_abline(slope = 1, intercept = 0) +
-  scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
@@ -1526,6 +1666,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1540,12 +1691,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
-         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %&gt;%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
+  ggtitle(&quot;Total Errors&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -1574,6 +1725,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1588,12 +1750,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
-         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %&gt;%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
+  ggtitle(&quot;Total Errors&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -1622,6 +1784,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1635,17 +1808,15 @@ Andy Beck
 </table>
 </div>
 </div>
-</div>
-</div>
-<div id="non-flip-switches" class="section level3">
-<h3>Non-flip switches</h3>
+<div id="error-rates-per-heterozygous-site" class="section level4">
+<h4>Error rates (per heterozygous site)</h4>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle),
-         Eagle = (n_other_eagle ), 
-         SHAPEIT = (n_other_shapeit)) %&gt;%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches&quot;) +
+  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -1674,6 +1845,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1688,12 +1870,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-   mutate(Beagle = (n_other_beagle),
-         Eagle = (n_other_eagle ), 
-         SHAPEIT = (n_other_shapeit)) %&gt;%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches&quot;) +
+  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -1722,6 +1904,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1736,12 +1929,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-   mutate(Beagle = (n_other_beagle),
-         Eagle = (n_other_eagle ), 
-         SHAPEIT = (n_other_shapeit)) %&gt;%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches&quot;) +
+  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -1770,6 +1963,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1783,15 +1987,17 @@ Andy Beck
 </table>
 </div>
 </div>
-<div id="per-het.-site" class="section level4">
-<h4>Per het. site</h4>
+</div>
+</div>
+<div id="non-flip-switches" class="section level3">
+<h3>Non-flip switches</h3>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle) / n_hets,
-         Eagle = (n_other_eagle ) / n_hets, 
-         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
+  mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %&gt;%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
+  ggtitle(&quot;Switches&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -1820,6 +2026,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1834,12 +2051,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle) / n_hets,
-         Eagle = (n_other_eagle ) / n_hets, 
-         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
+   mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %&gt;%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
+  ggtitle(&quot;Switches&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -1868,6 +2085,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1882,12 +2110,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle) / n_hets,
-         Eagle = (n_other_eagle ) / n_hets, 
-         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
+   mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %&gt;%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
+  ggtitle(&quot;Switches&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -1916,6 +2144,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1929,17 +2168,15 @@ Andy Beck
 </table>
 </div>
 </div>
-</div>
-</div>
-<div id="flips" class="section level3">
-<h3>Flips</h3>
+<div id="per-het.-site" class="section level4">
+<h4>Per het. site</h4>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_flip_beagle),
-         Eagle = (n_flip_eagle ), 
-         SHAPEIT = (n_flip_shapeit)) %&gt;%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -1968,6 +2205,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -1982,12 +2230,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-   mutate(Beagle = (n_flip_beagle),
-         Eagle = (n_flip_eagle ), 
-         SHAPEIT = (n_flip_shapeit)) %&gt;%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -2016,6 +2264,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -2030,12 +2289,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-   mutate(Beagle = (n_flip_beagle),
-         Eagle = (n_flip_eagle ), 
-         SHAPEIT = (n_flip_shapeit)) %&gt;%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -2064,6 +2323,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -2077,15 +2347,17 @@ Andy Beck
 </table>
 </div>
 </div>
-<div id="per-het.-site-1" class="section level4">
-<h4>Per het. site</h4>
+</div>
+</div>
+<div id="flips" class="section level3">
+<h3>Flips</h3>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_flip_beagle) / n_hets,
-         Eagle = (n_flip_eagle ) / n_hets, 
-         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
+  mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %&gt;%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
+  ggtitle(&quot;Flips&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -2114,6 +2386,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -2128,12 +2411,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_flip_beagle) / n_hets,
-         Eagle = (n_flip_eagle ) / n_hets, 
-         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
+   mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %&gt;%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
+  ggtitle(&quot;Flips&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -2162,6 +2445,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
@@ -2176,6 +2470,78 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
+   mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %&gt;%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle(&quot;Flips&quot;) +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-28-1">
+Past versions of unnamed-chunk-28-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-28-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-28-1.png" target="_blank">f08aad3</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="per-het.-site-1" class="section level4">
+<h4>Per het. site</h4>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  geom_point() +
+  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_flip_beagle) / n_hets,
          Eagle = (n_flip_eagle ) / n_hets, 
          SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
@@ -2185,7 +2551,7 @@ Andy Beck
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
