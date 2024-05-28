@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-05-23
+<strong>Last updated:</strong> 2024-05-28
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomthandybphasingcleantree50265e35e8983542060f656f189733f2e9558cb4targetblank50265e3a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree3ea0c3d698b03635ee8a14ffe973fa6a560a3166targetblank3ea0c3da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/thandyb/phasing_clean/tree/50265e35e8983542060f656f189733f2e9558cb4" target="_blank">50265e3</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/3ea0c3d698b03635ee8a14ffe973fa6a560a3166" target="_blank">3ea0c3d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomthandybphasingcleantree50265e35e8983542060f656f189733f2e9558cb4targetblank50265e3a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree3ea0c3d698b03635ee8a14ffe973fa6a560a3166targetblank3ea0c3da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/thandyb/phasing_clean/tree/50265e35e8983542060f656f189733f2e9558cb4" target="_blank">50265e3</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/3ea0c3d698b03635ee8a14ffe973fa6a560a3166" target="_blank">3ea0c3d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -566,6 +566,8 @@ Ignored files:
     Ignored:    data/1kgp/chrX.vcf.gz.tbi
     Ignored:    data/1kgp/chrX_2504_snps_noPAR.bcf
     Ignored:    data/1kgp/chrX_2504_snps_noPAR_noSing.bcf
+    Ignored:    data/1kgp/chrX_freq.tsv
+    Ignored:    data/1kgp/chrX_maf.tsv
     Ignored:    data/1kgp/chrX_pilot_mask.bed
     Ignored:    data/chr10.sizes
     Ignored:    data/chr15.1kb.sorted.bed
@@ -594,12 +596,14 @@ Ignored files:
     Ignored:    output/trio_phase_22/
 
 Untracked files:
-    Untracked:  chr15_freq.frq
-    Untracked:  chr15_freq.log
+    Untracked:  code/maf_categories_15.R
 
 Unstaged changes:
     Modified:   README.md
-    Modified:   code/synthetic_phase_results.R
+    Modified:   code/batch_annotate_het.sh
+    Modified:   code/batch_compare_trio.sh
+    Modified:   code/get_maf_at_errors_trio.R
+    Modified:   code/maf_distributions.R
 
 </code></pre>
 <p>
@@ -651,7 +655,41 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/50265e35e8983542060f656f189733f2e9558cb4/analysis/synthetic_diploid_results.Rmd" target="_blank">50265e3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/3ea0c3d698b03635ee8a14ffe973fa6a560a3166/analysis/synthetic_diploid_results.Rmd" target="_blank">3ea0c3d</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-28
+</td>
+<td>
+wflow_publish("analysis/synthetic_diploid_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/af46d78ebdfe3df4a908c936e9fd9cb3c6a24173/docs/synthetic_diploid_results.html" target="_blank">af46d78</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/50265e35e8983542060f656f189733f2e9558cb4/analysis/synthetic_diploid_results.Rmd" target="_blank">50265e3</a>
 </td>
 <td>
 Andy Beck
@@ -668,7 +706,7 @@ wflow_publish("analysis/synthetic_diploid_results.Rmd")
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/thandyb/phasing_clean/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/synthetic_diploid_results.html" target="_blank">7f7e2da</a>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/synthetic_diploid_results.html" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -685,7 +723,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/a13fa5ebc8a05a1d764f1b6b38b31f905ad8cd8b/analysis/synthetic_diploid_results.Rmd" target="_blank">a13fa5e</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/a13fa5ebc8a05a1d764f1b6b38b31f905ad8cd8b/analysis/synthetic_diploid_results.Rmd" target="_blank">a13fa5e</a>
 </td>
 <td>
 Andy Beck
@@ -702,7 +740,7 @@ wflow_publish("analysis/synthetic_diploid_results.Rmd")
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/thandyb/phasing_clean/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/synthetic_diploid_results.html" target="_blank">f08aad3</a>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/synthetic_diploid_results.html" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -719,7 +757,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/be983e0faec864a1001597ab3a3f67edf0f7b67a/analysis/synthetic_diploid_results.Rmd" target="_blank">be983e0</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/be983e0faec864a1001597ab3a3f67edf0f7b67a/analysis/synthetic_diploid_results.Rmd" target="_blank">be983e0</a>
 </td>
 <td>
 Andy Beck
@@ -736,7 +774,7 @@ wflow_publish("analysis/synthetic_diploid_results.Rmd")
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/thandyb/phasing_clean/c8e461cb8432c76ec2ef04e39efbe62fb32c8251/docs/synthetic_diploid_results.html" target="_blank">c8e461c</a>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/c8e461cb8432c76ec2ef04e39efbe62fb32c8251/docs/synthetic_diploid_results.html" target="_blank">c8e461c</a>
 </td>
 <td>
 Andy Beck
@@ -753,7 +791,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/2e92c4cfad59b685df182f0c281312cd2a54e57e/analysis/synthetic_diploid_results.Rmd" target="_blank">2e92c4c</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/2e92c4cfad59b685df182f0c281312cd2a54e57e/analysis/synthetic_diploid_results.Rmd" target="_blank">2e92c4c</a>
 </td>
 <td>
 Andy Beck
@@ -771,7 +809,7 @@ wflow_publish(c("analysis/index.Rmd",
 Rmd
 </td>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/e3d7c36cb467feb3a86e899ebd79278f56e05641/analysis/synthetic_diploid_results.Rmd" target="_blank">e3d7c36</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/e3d7c36cb467feb3a86e899ebd79278f56e05641/analysis/synthetic_diploid_results.Rmd" target="_blank">e3d7c36</a>
 </td>
 <td>
 Andy Beck
@@ -788,7 +826,7 @@ update 22May24
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/thandyb/phasing_clean/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/synthetic_diploid_results.html" target="_blank">0e0d172</a>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/synthetic_diploid_results.html" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -805,7 +843,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/e8cb325e12eb933ed7686661dcae741bd040aafa/analysis/synthetic_diploid_results.Rmd" target="_blank">e8cb325</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/e8cb325e12eb933ed7686661dcae741bd040aafa/analysis/synthetic_diploid_results.Rmd" target="_blank">e8cb325</a>
 </td>
 <td>
 Andy Beck
@@ -893,7 +931,21 @@ dbl (11): 2_usercol, 3_usercol, 4_pct_at, 5_pct_gc, 6_num_A, 7_num_C, 8_num_...
 gc_content_1kb  &lt;- gc_content_1kb %&gt;%
   mutate(bin_id = (START / 1000) + 1)
 
-cbPalette &lt;- c(&quot;#999999&quot;, &quot;#E69F00&quot;, &quot;#56B4E9&quot;, &quot;#009E73&quot;, &quot;#F0E442&quot;, &quot;#0072B2&quot;, &quot;#D55E00&quot;, &quot;#CC79A7&quot;, &quot;#000&quot;)</code></pre>
+cbPalette &lt;- c(&quot;#999999&quot;, &quot;#E69F00&quot;, &quot;#56B4E9&quot;, &quot;#009E73&quot;, &quot;#F0E442&quot;, &quot;#0072B2&quot;, &quot;#D55E00&quot;, &quot;#CC79A7&quot;, &quot;#000&quot;)
+
+maf_prop_df &lt;- read_csv(paste0(config_obj$base_dir,&quot;/output/switch_errors/maf_props.csv&quot;))</code></pre>
+<pre><code>Rows: 39000 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (1): category
+dbl (2): proportion, id
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>pair_info_df$id &lt;- 1:1000
+maf_prop_df &lt;- left_join(maf_prop_df, {pair_info_df %&gt;% select(id, SP, POP)})</code></pre>
+<pre><code>Joining with `by = join_by(id)`</code></pre>
+<pre class="r"><code>pair_info_df &lt;- pair_info_df %&gt;% select(id)</code></pre>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
@@ -1704,7 +1756,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -1715,7 +1767,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -1726,7 +1778,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-14-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -1774,7 +1826,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -1785,7 +1837,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -1796,7 +1848,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-15-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -1844,7 +1896,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -1855,7 +1907,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -1866,7 +1918,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-16-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -1916,7 +1968,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -1927,7 +1979,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -1938,7 +1990,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-17-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -1986,7 +2038,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -1997,7 +2049,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2008,7 +2060,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-18-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2056,7 +2108,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2067,7 +2119,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2078,7 +2130,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2130,7 +2182,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2141,7 +2193,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2152,7 +2204,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2200,7 +2252,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2211,7 +2263,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2222,7 +2274,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-21-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2270,7 +2322,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2281,7 +2333,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2292,7 +2344,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2342,7 +2394,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2353,7 +2405,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2364,7 +2416,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2412,7 +2464,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2423,7 +2475,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2434,7 +2486,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2482,7 +2534,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2493,7 +2545,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2504,7 +2556,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2556,7 +2608,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2567,7 +2619,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2578,7 +2630,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2626,7 +2678,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2637,7 +2689,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2648,7 +2700,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -2696,7 +2748,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-28-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-28-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2707,7 +2759,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-28-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-28-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -2757,7 +2809,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-29-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-29-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2805,7 +2857,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-30-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-30-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2853,7 +2905,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/thandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-31-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-31-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -2884,6 +2936,43 @@ Andy Beck
   theme_classic() +
   geom_hline(yintercept = 1)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-32-1">
+Past versions of unnamed-chunk-32-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-32-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/af46d78ebdfe3df4a908c936e9fd9cb3c6a24173/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-1.png" target="_blank">af46d78</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
@@ -2898,6 +2987,43 @@ Andy Beck
   theme_classic() +
   geom_hline(yintercept = 1)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-32-2">
+Past versions of unnamed-chunk-32-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-32-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/af46d78ebdfe3df4a908c936e9fd9cb3c6a24173/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-2.png" target="_blank">af46d78</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
@@ -2914,6 +3040,43 @@ Andy Beck
   scale_color_manual(values=cbPalette) +
   labs(color = &quot;Population&quot;)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-32-3">
+Past versions of unnamed-chunk-32-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-32-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/af46d78ebdfe3df4a908c936e9fd9cb3c6a24173/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-3.png" target="_blank">af46d78</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
@@ -2930,6 +3093,1165 @@ Andy Beck
   scale_color_manual(values=cbPalette) +
   labs(color = &quot;Population&quot;)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-32-4">
+Past versions of unnamed-chunk-32-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-32-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/af46d78ebdfe3df4a908c936e9fd9cb3c6a24173/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-4.png" target="_blank">af46d78</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="maf-bins" class="section level2">
+<h2>MAF Bins</h2>
+<p>In the <code>maf_prop_df</code> data frame, we have for each
+synthetic diploid the proportion of heterozygous sites that are: rare
+variants (maf &lt; 0.01); uncommon variants (0.01 &lt; maf &lt; 0.05);
+and common variants (maf &gt; 0.05). We also have these proportions for
+each type of error for each method (switch; flip start; flip end;
+correct).</p>
+<p>Let’s first look at the distributions of these proportions for all
+heterozygous positions within each individual:</p>
+<pre class="r"><code>prop_maf_fig &lt;- function(cat_type, title_text){
+  df &lt;- maf_prop_df %&gt;%
+    filter(str_detect(category, paste0(cat_type, &quot;_[rcu]&quot;))) %&gt;%
+    mutate(category = factor(category)) %&gt;%
+    mutate(category = fct_recode(category, &quot;Rare&quot; = paste0(cat_type, &quot;_rare&quot;),
+                               &quot;Uncommon&quot; = paste0(cat_type, &quot;_uncommon&quot;),
+                               &quot;Common&quot; = paste0(cat_type, &quot;_common&quot;))) %&gt;%
+    mutate(category = fct_relevel(category, c(&quot;Rare&quot;, &quot;Uncommon&quot;, &quot;Common&quot;)))
+  
+  p &lt;- df %&gt;%
+    ggplot(aes(x = category, y = proportion, color = SP)) +
+    geom_boxplot() +
+    ggtitle(paste0(title_text, &quot; in MAF Bins&quot;)) +
+    xlab(&quot;&quot;) +
+    ylab(&quot;Proportion of Switches Sites&quot;) +
+    theme_classic() +
+    labs(color = &quot;Population&quot;) +
+    scale_color_manual(values = cbPalette)
+  
+  tab_prop &lt;- df %&gt;%
+    group_by(SP, category) %&gt;%
+    summarize(mean_prop = mean(proportion))
+  
+  return(list(p = p, tab_prop = tab_prop))
+}
+
+res_obj &lt;- prop_maf_fig(&quot;het&quot;, &quot;Heterozygous Sites&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.0965162</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2067589</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.6967250</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.0423491</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0781212</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.8795297</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.0558559</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0414441</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.9027000</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.0469553</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0574450</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.8955997</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.0591361</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0428479</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.8980160</td>
+</tr>
+</tbody>
+</table>
+<div id="beagle-errors" class="section level3">
+<h3>Beagle Errors</h3>
+<div id="switches" class="section level4">
+<h4>Switches</h4>
+<pre class="r"><code>cat_type &lt;- &quot;beagle_switch&quot;
+title_text &lt;- &quot;Beagle Switches&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1977515</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2311955</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.5710530</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.2016912</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1718932</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.6264156</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2413776</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1069866</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.6516358</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.2082330</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1438064</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.6479606</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2462984</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0846292</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.6690725</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-1" class="section level3">
+<h3>Flips</h3>
+<div id="start" class="section level4">
+<h4>Start</h4>
+<pre class="r"><code>cat_type &lt;- &quot;beagle_flip&quot;
+title_text &lt;- &quot;Beagle Flip Starts&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.2005113</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2427894</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.5566992</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.1702893</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2066506</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.6230602</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2781685</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1259335</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.5958981</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.2250877</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1747947</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.6001176</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2677171</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1027475</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.6295353</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="end" class="section level4">
+<h4>End</h4>
+<pre class="r"><code>cat_type &lt;- &quot;beagle_flip end&quot;
+title_text &lt;- &quot;Beagle Flip Ends&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.5380834</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1343066</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.3276100</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.5878307</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1107531</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.3014162</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.5724462</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0986035</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.3289503</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.5621629</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1089259</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.3289112</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.5865144</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0877529</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.3257327</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="eagle-errors" class="section level3">
+<h3>Eagle Errors</h3>
+<div id="switches-1" class="section level4">
+<h4>Switches</h4>
+<pre class="r"><code>cat_type &lt;- &quot;eagle_switch&quot;
+title_text &lt;- &quot;Eagle Switches&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.3195673</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2086280</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.4718046</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.5710530</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.1977515</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.2311955</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.3014370</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1685080</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.5300550</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6264156</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2016912</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.1718932</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.3262138</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1041170</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.5696693</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6516358</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2413776</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.1069866</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.3043085</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1414773</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.5542142</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6479606</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2082330</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.1438064</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.3464289</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0832175</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.5703536</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6690725</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2462984</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.0846292</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-2" class="section level3">
+<h3>Flips</h3>
+<div id="start-1" class="section level4">
+<h4>Start</h4>
+<pre class="r"><code>cat_type &lt;- &quot;eagle_flip&quot;
+title_text &lt;- &quot;Eagle Flip Starts&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1656078</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2343106</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.6000816</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.5566992</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.2005113</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.2427894</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.1425067</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1793214</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.6781720</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.6230602</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.1702893</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.2066506</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2327266</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1088336</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.6584398</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.5958981</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.2781685</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.1259335</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.1818085</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1484667</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.6697248</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.6001176</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.2250877</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.1747947</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2218468</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0896698</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.6884834</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.6295353</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.2677171</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.1027475</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="end-1" class="section level4">
+<h4>End</h4>
+<pre class="r"><code>cat_type &lt;- &quot;Eagle_flip end&quot;
+title_text &lt;- &quot;Eagle Flip Ends&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `category = fct_recode(...)`.
+Caused by warning:
+! Unknown levels in `f`: Eagle_flip end_rare, Eagle_flip end_uncommon, Eagle_flip end_common</code></pre>
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `category = fct_relevel(category, c(&quot;Rare&quot;, &quot;Uncommon&quot;,
+  &quot;Common&quot;))`.
+Caused by warning:
+! 3 unknown levels in `f`: Rare, Uncommon, and Common</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+<div id="shapeit-errors" class="section level3">
+<h3>SHAPEIT Errors</h3>
+<div id="switches-2" class="section level4">
+<h4>Switches</h4>
+<pre class="r"><code>cat_type &lt;- &quot;shapeit_switch&quot;
+title_text &lt;- &quot;SHAPEIT Switches&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1908531</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2246195</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.5845274</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.1819466</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1684561</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.6495973</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2275464</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1032252</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.6692284</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.1959008</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1381216</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.6659776</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2370686</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0819418</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.6809895</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-3" class="section level3">
+<h3>Flips</h3>
+<div id="start-2" class="section level4">
+<h4>Start</h4>
+<pre class="r"><code>cat_type &lt;- &quot;shapeit_flip&quot;
+title_text &lt;- &quot;SHAPEIT Flip Starts&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1956511</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2475701</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.5567788</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.1737855</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2097408</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.6164738</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2691495</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1333427</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.5975079</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.2227005</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1782547</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.5990448</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2659782</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1043710</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.6296507</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="end-2" class="section level4">
+<h4>End</h4>
+<pre class="r"><code>cat_type &lt;- &quot;shapeit_flip end&quot;
+title_text &lt;- &quot;SHAPEIT Flip Ends&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SP</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.5215304</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1478400</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.3306296</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.5917000</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1141980</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.2941019</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.5545337</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1022251</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.3432412</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.5599597</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1053868</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.3346536</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.5830829</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0900896</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.3268275</td>
+</tr>
+</tbody>
+</table>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -2984,6 +4306,7 @@ loaded via a namespace (and not attached):
 [53] evaluate_0.23     knitr_1.45        rlang_1.1.3       Rcpp_1.0.12      
 [57] glue_1.7.0        rstudioapi_0.15.0 vroom_1.6.5       jsonlite_1.8.8   
 [61] R6_2.5.1          fs_1.6.3         </code></pre>
+</div>
 </div>
 </div>
 </div>
