@@ -8,7 +8,7 @@ eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_15/switch_e
 shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/shapeit/annotated/")
 beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/beagle/annotated/")
 
-maf_df <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chr15/maf.tsv"),
+maf_df <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chr15/chr15_freq.tsv"),
                    col_names = c("chrom", "pos", "maf"))
 
 df_subj <- read_csv(paste0(config_obj$base_dir,"/data/1kgp/subject_info.csv"))

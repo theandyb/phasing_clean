@@ -26,7 +26,7 @@ bedtools makewindows -g data/chr22.sizes -w 10000 > chr22_10k.bed
 ```
 
 TO-DO:
-Downloading genetic maps for phasing
+Downloading genetic maps for phasing (adding "chr" to beginning of each line for Beagle's)
 
 ## Downloading and Processing X Chromosome Reference Data
 
@@ -84,6 +84,14 @@ awk '{if($1 == "chrX")print($1"\t"$2)}' out.singletons > data/1kgp/singletons.tx
 rm out.log out.singletons
 
 bcftools view -Ob -T ^data/1kgp/singletons.txt data/1kgp/chrX_2504_snps_noPAR.bcf > data/1kgp/chrX_2504_snps_noPAR_noSing.bcf
+```
+
+### MAF distribution in X
+
+```
+bcftools +fill-tags data/1kgp/chrX_2504_snps_noPAR_noSing.bcf -- -t AF | \
+bcftools query -f "%CHROM\t%POS\t%AF\n" | \
+  awk '{maf = (1-$3 < $3 ? 1-$3 : $3); print($1"\t"$2"\t"maf)}' > data/1kgp/chrX_freq.tsv
 ```
 
 ### GC Content in Windows on X and 15
@@ -212,10 +220,9 @@ awk '{print(NR"\t"$1)}' output/trio_phase_15/triple_het.tmp > output/trio_phase_
 #### Get maf at variant sites
 
 ```
-bcftools view data/1kgp/chr15/chr15_phased_overlap.bcf | vcftools --vcf - --freq --out chr15_freq
-awk 'NR>1 {split($5,a,":");split($6,b,":");c = (a[2]<b[2])?a[2]:b[2]; print($1"\t"$2"\t"c)}' chr15_freq.frq > data/1kgp/chr15/maf.tsv
-
-rm chr15_freq.*
+bcftools +fill-tags data/1kgp/chr15/chr15_phased_overlap.bcf -- -t AF | \
+  bcftools query -f "%CHROM\t%POS\t%AF\n" | \
+  awk '{maf = (1-$3 < $3 ? 1-$3 : $3); print($1"\t"$2"\t"maf)}' > data/1kgp/chr15/chr15_freq.tsv
 ```
 
 ## Phasing Synthetic Diploids
@@ -261,8 +268,6 @@ awk '{print(NR"\t"$1)}' output/switch_errors/het_cpg_count.tmp > output/switch_e
 ```
 bcftools view data/1kgp/chrX_2504_snps_noPAR_noSing.bcf | vcftools --vcf - --freq --out chrX_freq
 awk 'NR>1 {split($5,a,":");split($6,b,":");c = (a[2]<b[2])?a[2]:b[2]; print($1"\t"$2"\t"c)}' chrX_freq.frq > data/1kgp/chrX_maf.tsv
-
-rm chr15_freq.*
 ```
 
 ## Phasing Trio Children
@@ -276,7 +281,7 @@ out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1
 mkdir -p $out_dir/beagle
 mkdir $out_dir/eagle
 mkdir $out_dir/shapeit
-mkdir -p $out_dir/het_pos/annotated
+mkdir -p $out_dir/het_loc/annotated
 mkdir $out_dir/truth
 mkdir -p $out_dir/switch_errors/beagle/annotated
 mkdir -p $out_dir/switch_errors/eagle/annotated
