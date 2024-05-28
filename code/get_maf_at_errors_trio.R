@@ -79,14 +79,26 @@ for(i in 1:602){
 
 # smash into single data frames, get unique rows
 
-beagle_switches_df <- bind_rows(beagle_switches) %>% unique()
-beagle_flips_df <- bind_rows(beagle_flips) %>% unique()
+beagle_switches_df <- bind_rows(beagle_switches) %>%
+  group_by(pop, pos_start) %>%
+  summarize(n = n())
+beagle_flips_df <- bind_rows(beagle_flips) %>%
+  group_by(pop, pos_start) %>%
+  summarize(n = n())
 
-eagle_switches_df <- bind_rows(eagle_switches) %>% unique()
-eagle_flips_df <- bind_rows(eagle_flips) %>% unique()
+eagle_switches_df <- bind_rows(eagle_switches) %>%
+  group_by(pop, pos_start) %>%
+  summarize(n = n())
+eagle_flips_df <- bind_rows(eagle_flips) %>%
+  group_by(pop, pos_start) %>%
+  summarize(n = n())
 
-shapeit_switches_df <- bind_rows(shapeit_switches) %>% unique()
-shapeit_flips_df <- bind_rows(shapeit_flips) %>% unique()
+shapeit_switches_df <- bind_rows(shapeit_switches) %>%
+  group_by(pop, pos_start) %>%
+  summarize(n = n())
+shapeit_flips_df <- bind_rows(shapeit_flips) %>%
+  group_by(pop, pos_start) %>%
+  summarize(n = n())
 
 # save for later analysis
 write_csv(beagle_switches_df, paste0(config_obj$base_dir, "/output/trio_phase_15/beagle_switch_maf.csv"))
