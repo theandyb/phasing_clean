@@ -39,6 +39,11 @@ gc_content_1kb  <- gc_content_1kb %>%
   mutate(bin_id = (START / 1000) + 1)
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000")
+
+maf_prop_df <- read_csv(paste0(config_obj$base_dir,"/output/switch_errors/maf_props.csv"))
+pair_info_df$id <- 1:1000
+maf_prop_df <- left_join(maf_prop_df, {pair_info_df %>% select(id, SP, POP)})
+pair_info_df <- pair_info_df %>% select(id)
 ```
 
 
@@ -505,3 +510,172 @@ df_vcftools %>%
   labs(color = "Population")
 ```
 
+## MAF Bins
+
+In the `maf_prop_df` data frame, we have for each synthetic diploid the proportion of heterozygous sites that are: rare variants (maf < 0.01); uncommon variants (0.01 < maf < 0.05); and common variants (maf > 0.05). We also have these proportions for each type of error for each method (switch; flip start; flip end; correct).
+
+Let's first look at the distributions of these proportions for all heterozygous positions within each individual:
+
+```{r}
+
+prop_maf_fig <- function(cat_type, title_text){
+  df <- maf_prop_df %>%
+    filter(str_detect(category, paste0(cat_type, "_[rcu]"))) %>%
+    mutate(category = factor(category)) %>%
+    mutate(category = fct_recode(category, "Rare" = paste0(cat_type, "_rare"),
+                               "Uncommon" = paste0(cat_type, "_uncommon"),
+                               "Common" = paste0(cat_type, "_common"))) %>%
+    mutate(category = fct_relevel(category, c("Rare", "Uncommon", "Common")))
+  
+  p <- df %>%
+    ggplot(aes(x = category, y = proportion, color = SP)) +
+    geom_boxplot() +
+    ggtitle(paste0(title_text, " in MAF Bins")) +
+    xlab("") +
+    ylab("Proportion of Switches Sites") +
+    theme_classic() +
+    labs(color = "Population") +
+    scale_color_manual(values = cbPalette)
+  
+  tab_prop <- df %>%
+    group_by(SP, category) %>%
+    summarize(mean_prop = mean(proportion))
+  
+  return(list(p = p, tab_prop = tab_prop))
+}
+
+res_obj <- prop_maf_fig("het", "Heterozygous Sites")
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
+
+### Beagle Errors
+
+#### Switches
+
+```{r}
+cat_type <- "beagle_switch"
+title_text <- "Beagle Switches"
+
+res_obj <- prop_maf_fig(cat_type, title_text)
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
+
+### Flips
+
+#### Start
+
+```{r}
+cat_type <- "beagle_flip"
+title_text <- "Beagle Flip Starts"
+
+res_obj <- prop_maf_fig(cat_type, title_text)
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
+
+#### End
+
+```{r}
+cat_type <- "beagle_flip end"
+title_text <- "Beagle Flip Ends"
+
+res_obj <- prop_maf_fig(cat_type, title_text)
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
+
+### Eagle Errors
+
+#### Switches
+
+```{r}
+cat_type <- "eagle_switch"
+title_text <- "Eagle Switches"
+
+res_obj <- prop_maf_fig(cat_type, title_text)
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
+
+### Flips
+
+#### Start
+
+```{r}
+cat_type <- "eagle_flip"
+title_text <- "Eagle Flip Starts"
+
+res_obj <- prop_maf_fig(cat_type, title_text)
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
+
+#### End
+
+```{r}
+cat_type <- "Eagle_flip end"
+title_text <- "Eagle Flip Ends"
+
+res_obj <- prop_maf_fig(cat_type, title_text)
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
+
+### SHAPEIT Errors
+
+#### Switches
+
+```{r}
+cat_type <- "shapeit_switch"
+title_text <- "SHAPEIT Switches"
+
+res_obj <- prop_maf_fig(cat_type, title_text)
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
+
+### Flips
+
+#### Start
+
+```{r}
+cat_type <- "shapeit_flip"
+title_text <- "SHAPEIT Flip Starts"
+
+res_obj <- prop_maf_fig(cat_type, title_text)
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
+
+#### End
+
+```{r}
+cat_type <- "shapeit_flip end"
+title_text <- "SHAPEIT Flip Ends"
+
+res_obj <- prop_maf_fig(cat_type, title_text)
+print(res_obj$p)
+
+res_obj$tab_prop %>%
+  knitr::kable()
+```
