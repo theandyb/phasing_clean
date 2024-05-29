@@ -529,15 +529,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreed6dca59ce60fa926bbefcbd9ae78d81f7d52ad3ctargetblankd6dca59a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree5ba3e674d334c572c2235bdee6356cae3bec667etargetblank5ba3e67a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/d6dca59ce60fa926bbefcbd9ae78d81f7d52ad3c" target="_blank">d6dca59</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/5ba3e674d334c572c2235bdee6356cae3bec667e" target="_blank">5ba3e67</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreed6dca59ce60fa926bbefcbd9ae78d81f7d52ad3ctargetblankd6dca59a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree5ba3e674d334c572c2235bdee6356cae3bec667etargetblank5ba3e67a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -547,7 +547,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/d6dca59ce60fa926bbefcbd9ae78d81f7d52ad3c" target="_blank">d6dca59</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/5ba3e674d334c572c2235bdee6356cae3bec667e" target="_blank">5ba3e67</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -652,6 +652,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/5ba3e674d334c572c2235bdee6356cae3bec667e/analysis/trio_phasing_results.Rmd" target="_blank">5ba3e67</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+<td>
+wflow_publish("analysis/trio_phasing_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/808cfb808faf1a67f36a54d323404932439cf9ba/docs/trio_phasing_results.html" target="_blank">808cfb8</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -6098,7 +6132,7 @@ correct).</p>
 heterozygous positions within each individual:</p>
 <pre class="r"><code>prop_maf_fig &lt;- function(cat_type, title_text){
   df &lt;- maf_prop_df %&gt;%
-    filter(str_detect(category, paste0(cat_type, &quot;_[rcu]&quot;))) %&gt;%
+    filter(str_detect(category, paste0(&quot;^&quot;, cat_type, &quot;_[rcu]&quot;))) %&gt;%
     mutate(category = factor(category)) %&gt;%
     mutate(category = fct_recode(category, &quot;Rare&quot; = paste0(cat_type, &quot;_rare&quot;),
                                &quot;Uncommon&quot; = paste0(cat_type, &quot;_uncommon&quot;),
@@ -6407,7 +6441,7 @@ Andy Beck
 <div id="start" class="section level4">
 <h4>Start</h4>
 <pre class="r"><code>cat_type &lt;- &quot;beagle_flip&quot;
-title_text &lt;- &quot;Beagle Flip Starts&quot;
+title_text &lt;- &quot;Beagle Flips&quot;
 
 res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
@@ -6786,49 +6820,19 @@ Andy Beck
 <td align="right">0.5708886</td>
 </tr>
 <tr class="even">
-<td align="left">AFR</td>
-<td align="left">beagle_switch_common</td>
-<td align="right">0.6169689</td>
-</tr>
-<tr class="odd">
-<td align="left">AFR</td>
-<td align="left">beagle_switch_rare</td>
-<td align="right">0.1861816</td>
-</tr>
-<tr class="even">
-<td align="left">AFR</td>
-<td align="left">beagle_switch_uncommon</td>
-<td align="right">0.1968495</td>
-</tr>
-<tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Rare</td>
 <td align="right">0.2576974</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Uncommon</td>
 <td align="right">0.1018827</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">AMR</td>
 <td align="left">Common</td>
 <td align="right">0.6404199</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">beagle_switch_common</td>
-<td align="right">0.6833767</td>
-</tr>
-<tr class="odd">
-<td align="left">AMR</td>
-<td align="left">beagle_switch_rare</td>
-<td align="right">0.2080965</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">beagle_switch_uncommon</td>
-<td align="right">0.1085269</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
@@ -6846,49 +6850,19 @@ Andy Beck
 <td align="right">0.6608686</td>
 </tr>
 <tr class="even">
-<td align="left">EAS</td>
-<td align="left">beagle_switch_common</td>
-<td align="right">0.6960738</td>
-</tr>
-<tr class="odd">
-<td align="left">EAS</td>
-<td align="left">beagle_switch_rare</td>
-<td align="right">0.2353436</td>
-</tr>
-<tr class="even">
-<td align="left">EAS</td>
-<td align="left">beagle_switch_uncommon</td>
-<td align="right">0.0685826</td>
-</tr>
-<tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Rare</td>
 <td align="right">0.2323533</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Uncommon</td>
 <td align="right">0.0927154</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">EUR</td>
 <td align="left">Common</td>
 <td align="right">0.6749313</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">beagle_switch_common</td>
-<td align="right">0.7145901</td>
-</tr>
-<tr class="odd">
-<td align="left">EUR</td>
-<td align="left">beagle_switch_rare</td>
-<td align="right">0.1903093</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">beagle_switch_uncommon</td>
-<td align="right">0.0951006</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
@@ -6905,21 +6879,6 @@ Andy Beck
 <td align="left">Common</td>
 <td align="right">0.6667187</td>
 </tr>
-<tr class="even">
-<td align="left">SAS</td>
-<td align="left">beagle_switch_common</td>
-<td align="right">0.7143439</td>
-</tr>
-<tr class="odd">
-<td align="left">SAS</td>
-<td align="left">beagle_switch_rare</td>
-<td align="right">0.2199657</td>
-</tr>
-<tr class="even">
-<td align="left">SAS</td>
-<td align="left">beagle_switch_uncommon</td>
-<td align="right">0.0656904</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -6929,7 +6888,7 @@ Andy Beck
 <div id="start-1" class="section level4">
 <h4>Start</h4>
 <pre class="r"><code>cat_type &lt;- &quot;eagle_flip&quot;
-title_text &lt;- &quot;Eagle Flip Starts&quot;
+title_text &lt;- &quot;Eagle Flips&quot;
 
 res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
@@ -7011,49 +6970,19 @@ Andy Beck
 <td align="right">0.2248345</td>
 </tr>
 <tr class="even">
-<td align="left">AFR</td>
-<td align="left">beagle_flip_common</td>
-<td align="right">0.1685099</td>
-</tr>
-<tr class="odd">
-<td align="left">AFR</td>
-<td align="left">beagle_flip_rare</td>
-<td align="right">0.7746888</td>
-</tr>
-<tr class="even">
-<td align="left">AFR</td>
-<td align="left">beagle_flip_uncommon</td>
-<td align="right">0.0568014</td>
-</tr>
-<tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Rare</td>
 <td align="right">0.7702335</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Uncommon</td>
 <td align="right">0.0399831</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">AMR</td>
 <td align="left">Common</td>
 <td align="right">0.1897834</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">beagle_flip_common</td>
-<td align="right">0.1500668</td>
-</tr>
-<tr class="odd">
-<td align="left">AMR</td>
-<td align="left">beagle_flip_rare</td>
-<td align="right">0.8164452</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">beagle_flip_uncommon</td>
-<td align="right">0.0334880</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
@@ -7071,49 +7000,19 @@ Andy Beck
 <td align="right">0.1904074</td>
 </tr>
 <tr class="even">
-<td align="left">EAS</td>
-<td align="left">beagle_flip_common</td>
-<td align="right">0.1535346</td>
-</tr>
-<tr class="odd">
-<td align="left">EAS</td>
-<td align="left">beagle_flip_rare</td>
-<td align="right">0.8226285</td>
-</tr>
-<tr class="even">
-<td align="left">EAS</td>
-<td align="left">beagle_flip_uncommon</td>
-<td align="right">0.0238369</td>
-</tr>
-<tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Rare</td>
 <td align="right">0.7636334</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Uncommon</td>
 <td align="right">0.0303916</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">EUR</td>
 <td align="left">Common</td>
 <td align="right">0.2059750</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">beagle_flip_common</td>
-<td align="right">0.1766149</td>
-</tr>
-<tr class="odd">
-<td align="left">EUR</td>
-<td align="left">beagle_flip_rare</td>
-<td align="right">0.7960008</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">beagle_flip_uncommon</td>
-<td align="right">0.0273843</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
@@ -7130,39 +7029,15 @@ Andy Beck
 <td align="left">Common</td>
 <td align="right">0.1990338</td>
 </tr>
-<tr class="even">
-<td align="left">SAS</td>
-<td align="left">beagle_flip_common</td>
-<td align="right">0.1706479</td>
-</tr>
-<tr class="odd">
-<td align="left">SAS</td>
-<td align="left">beagle_flip_rare</td>
-<td align="right">0.8075328</td>
-</tr>
-<tr class="even">
-<td align="left">SAS</td>
-<td align="left">beagle_flip_uncommon</td>
-<td align="right">0.0218194</td>
-</tr>
 </tbody>
 </table>
 </div>
 <div id="end-1" class="section level4">
 <h4>End</h4>
-<pre class="r"><code>cat_type &lt;- &quot;Eagle_flip end&quot;
+<pre class="r"><code>cat_type &lt;- &quot;eagle_flip end&quot;
 title_text &lt;- &quot;Eagle Flip Ends&quot;
 
 res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
-<pre><code>Warning: There was 1 warning in `mutate()`.
-ℹ In argument: `category = fct_recode(...)`.
-Caused by warning:
-! Unknown levels in `f`: Eagle_flip end_rare, Eagle_flip end_uncommon, Eagle_flip end_common</code></pre>
-<pre><code>Warning: There was 1 warning in `mutate()`.
-ℹ In argument: `category = fct_relevel(category, c(&quot;Rare&quot;, &quot;Uncommon&quot;,
-  &quot;Common&quot;))`.
-Caused by warning:
-! 3 unknown levels in `f`: Rare, Uncommon, and Common</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
 `.groups` argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
@@ -7215,6 +7090,81 @@ Andy Beck
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1469236</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2152061</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.6378704</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.1267323</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1177484</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.7555192</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1756803</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0744618</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.7498579</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.1452658</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1093052</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.7454289</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1515304</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0722684</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.7762012</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -7374,7 +7324,7 @@ Andy Beck
 <div id="start-2" class="section level4">
 <h4>Start</h4>
 <pre class="r"><code>cat_type &lt;- &quot;shapeit_flip&quot;
-title_text &lt;- &quot;SHAPEIT Flip Starts&quot;
+title_text &lt;- &quot;SHAPEIT Flips&quot;
 
 res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
