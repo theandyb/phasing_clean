@@ -14,7 +14,6 @@ Here in this document we present figures, tables, and statistics for the phasing
 ## Libraries and Data
 
 ```{r}
-#regen
 library(tidyverse)
 library(pander)
 library(reactable)
@@ -729,6 +728,141 @@ plot_th_fr(df_switch_trio, "Eagle")
 plot_th_fr(df_switch_trio, "SHAPEIT")
 ```
 
+## Enrichment at CpG
+
+```{r}
+df_switch_trio %>%
+  summarize(mean_switch_eagle = mean(n_other_cpg_eagle),
+            mean_switch_beagle = mean(n_other_cpg_beagle),
+            mean_switch_shapeit = mean(n_other_cpg_shapeit),
+            mean_flip_eagle = mean(n_flip_cpg_eagle),
+            mean_flip_beagle = mean(n_flip_cpg_beagle),
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit)) %>%
+  knitr::kable()
+
+df_switch_trio %>%
+  group_by(SUPER) %>%
+  summarize(mean_switch_eagle = mean(n_other_cpg_eagle),
+            mean_switch_beagle = mean(n_other_cpg_beagle),
+            mean_switch_shapeit = mean(n_other_cpg_shapeit),
+            mean_flip_eagle = mean(n_flip_cpg_eagle),
+            mean_flip_beagle = mean(n_flip_cpg_beagle),
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit)) %>%
+  knitr::kable()
+
+df_switch_trio %>%
+  summarize(mean_switch_eagle = mean(n_other_cpg_eagle / n_other_eagle),
+            mean_switch_beagle = mean(n_other_cpg_beagle / n_other_beagle),
+            mean_switch_shapeit = mean(n_other_cpg_shapeit / n_other_shapeit),
+            mean_flip_eagle = mean(n_flip_cpg_eagle / n_flip_eagle),
+            mean_flip_beagle = mean(n_flip_cpg_beagle / n_flip_beagle),
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit / n_flip_shapeit)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_switch_trio %>%
+  summarize(mean_switch_eagle = mean((n_other_cpg_eagle / n_other_eagle) / ( n_het_cpg / n_hets)),
+            mean_switch_beagle = mean((n_other_cpg_beagle / n_other_beagle) / ( n_het_cpg / n_hets)),
+            mean_switch_shapeit = mean((n_other_cpg_shapeit / n_other_shapeit) / ( n_het_cpg / n_hets) ),
+            mean_flip_eagle = mean((n_flip_cpg_eagle / n_flip_eagle) / ( n_het_cpg / n_hets)),
+            mean_flip_beagle = mean((n_flip_cpg_beagle / n_flip_beagle) / ( n_het_cpg / n_hets)),
+            mean_flip_shapeit = mean((n_flip_cpg_shapeit / n_flip_shapeit) / ( n_het_cpg / n_hets))) %>%
+  knitr::kable()
+```
+
+```{r}
+df_switch_trio %>%
+  mutate( prop_cpg_beagle =  n_other_cpg_beagle / n_other_beagle,
+             prop_cpg_eagle =  n_other_cpg_eagle / n_other_eagle,
+             prop_cpg_shapeit =  n_other_cpg_shapeit / n_other_shapeit) %>%
+  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
+         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
+         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
+         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
+  mutate(Beagle = ods_beagle / ods_het,
+         Eagle = ods_eagle / ods_het,
+         SHAPEIT = ods_shapeit / ods_het) %>%
+  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-SUPER, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
+  geom_boxplot() +
+  ylab("Odds CpG Switch / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Switches") +
+  theme_classic() +
+  labs(colour = "Population") +
+  scale_color_manual(values = cbPalette) +
+  geom_hline(yintercept = 1, linetype=2)
+
+df_switch_trio %>%
+  mutate( prop_cpg_beagle =  n_other_cpg_beagle / n_other_beagle,
+             prop_cpg_eagle =  n_other_cpg_eagle / n_other_eagle,
+             prop_cpg_shapeit =  n_other_cpg_shapeit / n_other_shapeit) %>%
+  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
+         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
+         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
+         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
+  mutate(Beagle = ods_beagle / ods_het,
+         Eagle = ods_eagle / ods_het,
+         SHAPEIT = ods_shapeit / ods_het) %>%
+  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-SUPER, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR)) +
+  geom_boxplot() +
+  ylab("Odds CpG Switch / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Switches") +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  geom_hline(yintercept = 1, linetype=2)
+```
+
+And flips:
+
+```{r}
+df_switch_trio %>%
+  mutate( prop_cpg_beagle =  n_flip_cpg_beagle / n_flip_beagle,
+             prop_cpg_eagle =  n_flip_cpg_eagle / n_flip_eagle,
+             prop_cpg_shapeit =  n_flip_cpg_shapeit / n_flip_shapeit) %>%
+  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
+         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
+         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
+         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
+  mutate(Beagle = ods_beagle / ods_het,
+         Eagle = ods_eagle / ods_het,
+         SHAPEIT = ods_shapeit / ods_het) %>%
+  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-SUPER, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
+  geom_boxplot() +
+  ylab("Odds CpG Switch / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Switches") +
+  theme_classic() +
+  labs(colour = "Population") +
+  scale_color_manual(values = cbPalette) +
+  geom_hline(yintercept = 1, linetype=2)
+
+df_switch_trio %>%
+  mutate( prop_cpg_beagle =  n_flip_cpg_beagle / n_flip_beagle,
+             prop_cpg_eagle =  n_flip_cpg_eagle / n_flip_eagle,
+             prop_cpg_shapeit =  n_flip_cpg_shapeit / n_flip_shapeit) %>%
+  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
+         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
+         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
+         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
+  mutate(Beagle = ods_beagle / ods_het,
+         Eagle = ods_eagle / ods_het,
+         SHAPEIT = ods_shapeit / ods_het) %>%
+  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-SUPER, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR)) +
+  geom_boxplot() +
+  ylab("Odds CpG Switch / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Switches") +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  geom_hline(yintercept = 1, linetype=2)
+
+```
 
 ## MAF Bins
 
