@@ -898,3 +898,52 @@ print(res_obj$p)
 res_obj$tab_prop %>%
   knitr::kable()
 ```
+
+### Odds Ratios
+
+Here we'll compoute the ratio of odds of being in the rare variant category for errors and all heterozygous positions within each individual.
+
+```{r}
+maf_prop_df %>%
+  select(category, proportion, id, SUPER) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(or_het = het_rare / (1 - het_rare),
+         or_b_s = beagle_switch_rare / (1 - beagle_switch_rare),
+         or_e_s = eagle_switch_rare / (1 - eagle_switch_rare),
+         or_s_s = shapeit_switch_rare / (1 - shapeit_switch_rare)) %>%
+  mutate(Beagle = or_b_s / or_het,
+         Eagle = or_e_s / or_het,
+         SHAPEIT = or_s_s / or_het) %>%
+  select(id, SUPER, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(!id & !SUPER, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
+  geom_boxplot() +
+  ggtitle("Odds Ratio of Rare Variant") +
+  ylab("Odds Rare Switch / Odds Rare Heterozygous") +
+  theme_classic() +
+  labs(colour = "Population") +
+  geom_hline(yintercept = 1, linetype = 2)
+```
+
+```{r}
+maf_prop_df %>%
+  select(category, proportion, id, SUPER) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(or_het = het_rare / (1 - het_rare),
+         or_b_s = beagle_flip_rare / (1 - beagle_flip_rare),
+         or_e_s = eagle_flip_rare / (1 - beagle_flip_rare),
+         or_s_s = shapeit_flip_rare / (1 - beagle_flip_rare)) %>%
+  mutate(Beagle = or_b_s / or_het,
+         Eagle = or_e_s / or_het,
+         SHAPEIT = or_s_s / or_het) %>%
+  select(id, SUPER, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(!id & !SUPER, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
+  geom_boxplot() +
+  ggtitle("Odds Ratio of Rare Variant") +
+  ylab("Odds Rare Flip / Odds Rare Heterozygous") +
+  theme_classic() +
+  labs(colour = "Population") +
+  geom_hline(yintercept = 1, linetype = 2)
+```
+
