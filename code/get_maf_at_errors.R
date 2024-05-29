@@ -52,20 +52,20 @@ for(i in 1:1000){
   df_eagle$is_switch <- !(df_eagle$is_flip | df_eagle$part_of_flip)
   df_shapeit$is_switch <- !(df_shapeit$is_flip | df_shapeit$part_of_flip)
 
-  # append maf to pos start
-  df_beagle <- left_join(df_beagle, maf_df, by=c("pos_start" = "pos"))
-  df_eagle <- left_join(df_eagle, maf_df, by=c("pos_start" = "pos"))
-  df_shapeit <- left_join(df_shapeit, maf_df, by=c("pos_start" = "pos"))
+  # append maf to pos end
+  df_beagle <- left_join(df_beagle, maf_df, by=c("pos_end" = "pos"))
+  df_eagle <- left_join(df_eagle, maf_df, by=c("pos_end" = "pos"))
+  df_shapeit <- left_join(df_shapeit, maf_df, by=c("pos_end" = "pos"))
 
   # store mafs
-  beagle_switches[[i]] <- df_beagle %>% filter(is_switch) %>% select(pos_start, maf)
-  beagle_flips[[i]] <- df_beagle %>% filter(is_flip) %>% select(pos_start, maf)
+  beagle_switches[[i]] <- df_beagle %>% filter(is_switch) %>% select(pos_end, maf)
+  beagle_flips[[i]] <- df_beagle %>% filter(is_flip) %>% select(pos_end, maf)
 
-  eagle_switches[[i]] <- df_eagle %>% filter(is_switch) %>% select(pos_start, maf)
-  eagle_flips[[i]] <- df_eagle %>% filter(is_flip) %>% select(pos_start, maf)
+  eagle_switches[[i]] <- df_eagle %>% filter(is_switch) %>% select(pos_end, maf)
+  eagle_flips[[i]] <- df_eagle %>% filter(is_flip) %>% select(pos_end, maf)
 
-  shapeit_switches[[i]] <- df_shapeit %>% filter(is_switch) %>% select(pos_start, maf)
-  shapeit_flips[[i]] <- df_shapeit %>% filter(is_flip) %>% select(pos_start, maf)
+  shapeit_switches[[i]] <- df_shapeit %>% filter(is_switch) %>% select(pos_end, maf)
+  shapeit_flips[[i]] <- df_shapeit %>% filter(is_flip) %>% select(pos_end, maf)
 }
 
 # assign population labels to each df
@@ -82,27 +82,27 @@ for(i in 1:1000){
 # smash into single data frames, get unique rows
 
 beagle_switches_df <- bind_rows(beagle_switches) %>%
-  group_by(pop, pos_start) %>%
+  group_by(pop, pos_end) %>%
   summarize(n = n())
 
 beagle_flips_df <- bind_rows(beagle_flips) %>%
-  group_by(pop, pos_start) %>%
+  group_by(pop, pos_end) %>%
   summarize(n = n())
 
 eagle_switches_df <- bind_rows(eagle_switches) %>%
-  group_by(pop, pos_start) %>%
+  group_by(pop, pos_end) %>%
   summarize(n = n())
 
 eagle_flips_df <- bind_rows(eagle_flips) %>%
-  group_by(pop, pos_start) %>%
+  group_by(pop, pos_end) %>%
   summarize(n = n())
 
 shapeit_switches_df <- bind_rows(shapeit_switches)%>%
-  group_by(pop, pos_start) %>%
+  group_by(pop, pos_end) %>%
   summarize(n = n())
 
 shapeit_flips_df <- bind_rows(shapeit_flips) %>%
-  group_by(pop, pos_start) %>%
+  group_by(pop, pos_end) %>%
   summarize(n = n())
 
 # save for later analysis

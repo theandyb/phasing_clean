@@ -68,41 +68,41 @@ get_df_het <- function(id){
   df_het$beagle_status[which(df_het$pos %in%
                                {df_beagle %>%
                                    filter(is_switch) %>%
-                                   pull(pos_start)})] <- "switch"
+                                   pull(pos_end)})] <- "switch"
   df_het$beagle_status[which(df_het$pos %in%
                                {df_beagle %>%
                                    filter(part_of_flip) %>%
-                                   pull(pos_start)})] <- "flip end"
+                                   pull(pos_end)})] <- "flip end"
   df_het$beagle_status[which(df_het$pos %in%
                                {df_beagle %>%
                                    filter(is_flip) %>%
-                                   pull(pos_start)})] <- "flip"
+                                   pull(pos_end)})] <- "flip"
 
   df_het$eagle_status[which(df_het$pos %in%
                               {df_eagle %>%
                                   filter(is_switch) %>%
-                                  pull(pos_start)})] <- "switch"
+                                  pull(pos_end)})] <- "switch"
   df_het$eagle_status[which(df_het$pos %in%
                               {df_eagle %>%
                                   filter(part_of_flip) %>%
-                                  pull(pos_start)})] <- "flip end"
+                                  pull(pos_end)})] <- "flip end"
   df_het$eagle_status[which(df_het$pos %in%
                               {df_eagle %>%
                                   filter(is_flip) %>%
-                                  pull(pos_start)})] <- "flip"
+                                  pull(pos_end)})] <- "flip"
 
   df_het$shapeit_status[which(df_het$pos %in%
                                 {df_shapeit %>%
                                     filter(is_switch) %>%
-                                    pull(pos_start)})] <- "switch"
+                                    pull(pos_end)})] <- "switch"
   df_het$shapeit_status[which(df_het$pos %in%
                                 {df_shapeit %>%
                                     filter(part_of_flip) %>%
-                                    pull(pos_start)})] <- "flip end"
+                                    pull(pos_end)})] <- "flip end"
   df_het$shapeit_status[which(df_het$pos %in%
                                 {df_shapeit %>%
                                     filter(is_flip) %>%
-                                    pull(pos_start)})] <- "flip"
+                                    pull(pos_end)})] <- "flip"
   df_het$id <- id
   return(df_het)
 }

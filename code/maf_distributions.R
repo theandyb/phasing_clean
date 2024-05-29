@@ -44,41 +44,41 @@ get_df_het <- function(id){
   df_het$beagle_status[which(df_het$pos %in%
                                {df_beagle %>%
                                    filter(is_switch) %>%
-                                   pull(pos_start)})] <- "switch"
+                                   pull(pos_end)})] <- "switch"
   df_het$beagle_status[which(df_het$pos %in%
                                {df_beagle %>%
                                    filter(part_of_flip) %>%
-                                   pull(pos_start)})] <- "flip end"
+                                   pull(pos_end)})] <- "flip end"
   df_het$beagle_status[which(df_het$pos %in%
                                {df_beagle %>%
                                    filter(is_flip) %>%
-                                   pull(pos_start)})] <- "flip"
+                                   pull(pos_end)})] <- "flip"
 
   df_het$eagle_status[which(df_het$pos %in%
                               {df_eagle %>%
                                   filter(is_switch) %>%
-                                  pull(pos_start)})] <- "switch"
+                                  pull(pos_end)})] <- "switch"
   df_het$eagle_status[which(df_het$pos %in%
                               {df_eagle %>%
                                   filter(part_of_flip) %>%
-                                  pull(pos_start)})] <- "flip end"
+                                  pull(pos_end)})] <- "flip end"
   df_het$eagle_status[which(df_het$pos %in%
                               {df_eagle %>%
                                   filter(is_flip) %>%
-                                  pull(pos_start)})] <- "flip"
+                                  pull(pos_end)})] <- "flip"
 
   df_het$shapeit_status[which(df_het$pos %in%
                                 {df_shapeit %>%
                                     filter(is_switch) %>%
-                                    pull(pos_start)})] <- "switch"
+                                    pull(pos_end)})] <- "switch"
   df_het$shapeit_status[which(df_het$pos %in%
                                 {df_shapeit %>%
                                     filter(part_of_flip) %>%
-                                    pull(pos_start)})] <- "flip end"
+                                    pull(pos_end)})] <- "flip end"
   df_het$shapeit_status[which(df_het$pos %in%
                                 {df_shapeit %>%
                                     filter(is_flip) %>%
-                                    pull(pos_start)})] <- "flip"
+                                    pull(pos_end)})] <- "flip"
   df_het$id <- id
   return(df_het)
 }
@@ -125,3 +125,6 @@ for(i in 2:1000){
   df_prop <- bind_rows(df_prop, df_het_summary(i))
 }
 write_csv(df_prop, paste0(config_obj$base_dir,"/output/switch_errors/maf_props.csv"))
+
+### MAF distribution at sites flanking switch errors
+df_test <- get_df_het(201)
