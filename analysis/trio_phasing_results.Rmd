@@ -14,6 +14,7 @@ Here in this document we present figures, tables, and statistics for the phasing
 ## Libraries and Data
 
 ```{r}
+#regen
 library(tidyverse)
 library(pander)
 library(reactable)

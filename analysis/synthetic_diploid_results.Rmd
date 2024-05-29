@@ -44,6 +44,7 @@ maf_prop_df <- read_csv(paste0(config_obj$base_dir,"/output/switch_errors/maf_pr
 pair_info_df$id <- 1:1000
 maf_prop_df <- left_join(maf_prop_df, {pair_info_df %>% select(id, SP, POP)})
 pair_info_df <- pair_info_df %>% select(id)
+#regen
 ```
 
 
