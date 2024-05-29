@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree487e8bfddd230b30f0cc1d0041b8e3639eee78d3targetblank487e8bfa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreed6dca59ce60fa926bbefcbd9ae78d81f7d52ad3ctargetblankd6dca59a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/487e8bfddd230b30f0cc1d0041b8e3639eee78d3" target="_blank">487e8bf</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/d6dca59ce60fa926bbefcbd9ae78d81f7d52ad3c" target="_blank">d6dca59</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree487e8bfddd230b30f0cc1d0041b8e3639eee78d3targetblank487e8bfa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreed6dca59ce60fa926bbefcbd9ae78d81f7d52ad3ctargetblankd6dca59a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/487e8bfddd230b30f0cc1d0041b8e3639eee78d3" target="_blank">487e8bf</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/d6dca59ce60fa926bbefcbd9ae78d81f7d52ad3c" target="_blank">d6dca59</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -595,6 +595,11 @@ Ignored files:
     Ignored:    output/trio_phase_15/
     Ignored:    output/trio_phase_22/
 
+Unstaged changes:
+    Modified:   code/get_maf_at_errors.R
+    Modified:   code/maf_categories_15.R
+    Modified:   code/maf_distributions.R
+
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not
@@ -639,6 +644,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/sd_error_overlap.html" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -731,6 +753,43 @@ including the positions of both involved heterozygous sites):</p>
           shapeit = {df %&gt;% filter(switch_s | flip_s | flip2_s) %&gt;% pull(pos)})
 ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;red&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-3-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>I want to be a bit more rigorous in counting overlaps; for each
 method, I only want start sites to overlap errors of other methods,
 i.e. I don’t want to double count flips in method A, but would count as
@@ -819,6 +878,43 @@ p2 &lt;- ggVennDiagram(x, label=&quot;count&quot;) +
 
 gridExtra::grid.arrange(p1,p2,ncol=2)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-5-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Naturally, we may ask how many intersections of errors do we miss by
 considering only matching error types and, in the case of flips, only
 matching directly overlapping errors. First, we look at how many
@@ -839,6 +935,43 @@ p2 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&
 
 gridExtra::grid.arrange(p1,p2,ncol=2)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-6-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>x &lt;- list(beagle_flip = {df %&gt;% filter(flip_b | flip2_b) %&gt;% pull(pos)},
           beagle_switch = {df %&gt;% filter(switch_b) %&gt;% pull(pos)},
           eagle = {df %&gt;% filter(switch_e) %&gt;% pull(pos)},
@@ -855,6 +988,43 @@ p2 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&
 
 gridExtra::grid.arrange(p1,p2,ncol=2)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-7-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>x &lt;- list(beagle_flip = {df %&gt;% filter(flip_b | flip2_b) %&gt;% pull(pos)},
           beagle_switch = {df %&gt;% filter(switch_b) %&gt;% pull(pos)},
           eagle_switch = {df %&gt;% filter(switch_e) %&gt;% pull(pos)},
@@ -871,6 +1041,43 @@ p2 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&
 
 gridExtra::grid.arrange(p1,p2,ncol=2)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-8-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>So, if we wanted to aggregate these counts across multiple SDs, we’d
 have to generate 14 numbers per SD. Is there a quick way of doing
 this?</p>
@@ -1156,12 +1363,123 @@ results_eur[[1]] %&gt;%
 
 count_to_ven(results_eur[[1]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-12-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_eur[[2]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-2">
+Past versions of unnamed-chunk-12-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-12-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_eur[[3]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-12-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-3">
+Past versions of unnamed-chunk-12-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-12-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 </div>
 <div id="afr" class="section level2">
@@ -1290,12 +1608,123 @@ results_afr[[1]] %&gt;%
 </table>
 <pre class="r"><code>count_to_ven(results_afr[[1]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-13-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_afr[[2]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-13-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-2">
+Past versions of unnamed-chunk-13-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-13-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_afr[[3]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-13-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-3">
+Past versions of unnamed-chunk-13-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-13-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 </div>
 <div id="amr" class="section level2">
@@ -1424,12 +1853,123 @@ results_amr[[1]] %&gt;%
 </table>
 <pre class="r"><code>count_to_ven(results_amr[[1]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-14-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_amr[[2]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-14-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-2">
+Past versions of unnamed-chunk-14-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-14-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_amr[[3]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-14-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-3">
+Past versions of unnamed-chunk-14-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-14-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 </div>
 <div id="eas" class="section level2">
@@ -1558,12 +2098,123 @@ results_eas[[1]] %&gt;%
 </table>
 <pre class="r"><code>count_to_ven(results_eas[[1]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-15-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_eas[[2]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-15-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-2">
+Past versions of unnamed-chunk-15-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-15-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_eas[[3]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-15-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-3">
+Past versions of unnamed-chunk-15-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-15-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 </div>
 <div id="sas" class="section level2">
@@ -1692,12 +2343,123 @@ results_sas[[1]] %&gt;%
 </table>
 <pre class="r"><code>count_to_ven(results_sas[[1]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
+Past versions of unnamed-chunk-16-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-16-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_sas[[2]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-16-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-2">
+Past versions of unnamed-chunk-16-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-16-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>count_to_ven(results_sas[[3]])</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-16-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-3">
+Past versions of unnamed-chunk-16-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-16-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>NULL</code></pre>
 </div>
 </div>
@@ -1722,6 +2484,43 @@ df &lt;- annotate_het_list(1, het_loc_dir, beagle_switch_dir, eagle_switch_dir, 
   geom_line() +
   theme_classic()</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-1">
+Past versions of unnamed-chunk-18-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-18-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-18-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Now let’s lower our resolution and look at 10MB bins:</p>
 <pre class="r"><code>bin_size &lt;- 1e7
 df %&gt;%
@@ -1736,6 +2535,43 @@ df %&gt;%
   geom_line() +
   theme_classic()</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-1">
+Past versions of unnamed-chunk-19-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-19-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-19-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="eur-1" class="section level2">
 <h2>EUR</h2>
 <p>Now let’s see what this distribution looks like across all EUR SDs.
@@ -1795,6 +2631,43 @@ df_eur %&gt;%
   ylab(&quot;Heterozygous Sites&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-1">
+Past versions of unnamed-chunk-20-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-20-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-20-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -1806,6 +2679,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-20-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-2">
+Past versions of unnamed-chunk-20-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-20-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-20-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -1819,6 +2729,43 @@ df_eur %&gt;%
   ggtitle(&quot;Switches per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-20-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-3">
+Past versions of unnamed-chunk-20-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-20-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-20-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(beagle_s, eagle_s, shapeit_s) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -1903,6 +2850,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-1">
+Past versions of unnamed-chunk-21-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-21-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -1919,6 +2903,43 @@ df_eur %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-21-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-2">
+Past versions of unnamed-chunk-21-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-21-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -2008,6 +3029,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-1">
+Past versions of unnamed-chunk-22-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-22-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-22-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
   rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
@@ -2021,6 +3079,43 @@ df_eur %&gt;%
   ggtitle(&quot;Flips per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-22-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-2">
+Past versions of unnamed-chunk-22-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-22-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-22-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
   rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
@@ -2036,6 +3131,43 @@ df_eur %&gt;%
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;
 `geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-22-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-3">
+Past versions of unnamed-chunk-22-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-22-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-22-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(beagle_f, eagle_f, shapeit_f) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -2120,6 +3252,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-1">
+Past versions of unnamed-chunk-23-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-23-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -2136,6 +3305,43 @@ df_eur %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-23-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-2">
+Past versions of unnamed-chunk-23-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-23-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -2225,6 +3431,43 @@ df_eur %&gt;%
   ylab(&quot;Heterozygous Sites&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-1">
+Past versions of unnamed-chunk-24-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-24-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -2236,6 +3479,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-2">
+Past versions of unnamed-chunk-24-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-24-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(eagle_beagle = eagle_s - beagle_s,
          eagle_shapeit = eagle_s - shapeit_s) %&gt;%
@@ -2252,6 +3532,43 @@ df_eur %&gt;%
 <pre><code>`geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;
 `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-3">
+Past versions of unnamed-chunk-24-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-24-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
   rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
@@ -2263,6 +3580,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-4">
+Past versions of unnamed-chunk-24-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-24-4.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -2277,6 +3631,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per Heterozygous Site per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-5">
+Past versions of unnamed-chunk-24-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-24-5.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -2293,6 +3684,43 @@ df_eur %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-6">
+Past versions of unnamed-chunk-24-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-24-6.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -2381,6 +3809,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per Heterozygous Site per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-7">
+Past versions of unnamed-chunk-24-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-24-7.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -2397,6 +3862,43 @@ df_eur %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-8">
+Past versions of unnamed-chunk-24-8.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-24-8.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -2485,6 +3987,43 @@ df_eur %&gt;%
   ylab(&quot;Heterozygous Sites&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-1">
+Past versions of unnamed-chunk-25-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-25-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -2496,6 +4035,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-2">
+Past versions of unnamed-chunk-25-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-25-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(eagle_beagle = eagle_s - beagle_s,
          eagle_shapeit = eagle_s - shapeit_s) %&gt;%
@@ -2512,6 +4088,43 @@ df_eur %&gt;%
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;
 `geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-3">
+Past versions of unnamed-chunk-25-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-25-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -2526,6 +4139,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per Heterozygous Site per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-4">
+Past versions of unnamed-chunk-25-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-25-4.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -2542,6 +4192,43 @@ df_eur %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-5">
+Past versions of unnamed-chunk-25-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-25-5.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
   rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
@@ -2553,6 +4240,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-6">
+Past versions of unnamed-chunk-25-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-25-6.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -2567,6 +4291,43 @@ df_eur %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per Heterozygous Site per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-7">
+Past versions of unnamed-chunk-25-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-25-7.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -2583,6 +4344,43 @@ df_eur %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-8">
+Past versions of unnamed-chunk-25-8.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-25-8.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eur %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -2675,6 +4473,43 @@ df_afr %&gt;%
   ylab(&quot;Heterozygous Sites&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-26-1">
+Past versions of unnamed-chunk-26-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-26-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-26-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_afr %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -2686,6 +4521,43 @@ df_afr %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-26-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-26-2">
+Past versions of unnamed-chunk-26-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-26-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-26-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_afr %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -2699,6 +4571,43 @@ df_afr %&gt;%
   ggtitle(&quot;Switches per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-26-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-26-3">
+Past versions of unnamed-chunk-26-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-26-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-26-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_afr %&gt;%
   select(beagle_s, eagle_s, shapeit_s) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -2783,6 +4692,43 @@ df_afr %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-27-1">
+Past versions of unnamed-chunk-27-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-27-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-27-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_afr %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -2872,6 +4818,43 @@ df_afr %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-28-1">
+Past versions of unnamed-chunk-28-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-28-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-28-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_afr %&gt;%
   select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
   rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
@@ -2885,6 +4868,43 @@ df_afr %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-28-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-28-2">
+Past versions of unnamed-chunk-28-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-28-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-28-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_afr %&gt;%
   select(beagle_f, eagle_f, shapeit_f) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -2969,6 +4989,43 @@ df_afr %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-1">
+Past versions of unnamed-chunk-29-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-29-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_afr %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -3062,6 +5119,43 @@ df_amr %&gt;%
   ylab(&quot;Heterozygous Sites&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-30-1">
+Past versions of unnamed-chunk-30-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-30-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-30-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_amr %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -3073,6 +5167,43 @@ df_amr %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-30-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-30-2">
+Past versions of unnamed-chunk-30-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-30-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-30-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_amr %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -3086,6 +5217,43 @@ df_amr %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-30-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-30-3">
+Past versions of unnamed-chunk-30-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-30-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-30-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_amr %&gt;%
   select(beagle_s, eagle_s, shapeit_s) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -3170,6 +5338,43 @@ df_amr %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-31-1">
+Past versions of unnamed-chunk-31-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-31-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-31-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_amr %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -3259,6 +5464,43 @@ df_amr %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-32-1">
+Past versions of unnamed-chunk-32-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-32-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-32-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_amr %&gt;%
   select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
   rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
@@ -3272,6 +5514,43 @@ df_amr %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-32-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-32-2">
+Past versions of unnamed-chunk-32-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-32-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-32-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_amr %&gt;%
   select(beagle_f, eagle_f, shapeit_f) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -3356,6 +5635,43 @@ df_amr %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-33-1">
+Past versions of unnamed-chunk-33-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-33-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-33-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_amr %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -3448,6 +5764,43 @@ df_eas %&gt;%
   ylab(&quot;Heterozygous Sites&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-34-1">
+Past versions of unnamed-chunk-34-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-34-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-34-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eas %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -3459,6 +5812,43 @@ df_eas %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-34-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-34-2">
+Past versions of unnamed-chunk-34-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-34-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-34-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eas %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -3472,6 +5862,43 @@ df_eas %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-34-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-34-3">
+Past versions of unnamed-chunk-34-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-34-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-34-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eas %&gt;%
   select(beagle_s, eagle_s, shapeit_s) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -3556,6 +5983,43 @@ df_eas %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-35-1">
+Past versions of unnamed-chunk-35-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-35-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-35-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eas %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -3645,6 +6109,43 @@ df_eas %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-36-1">
+Past versions of unnamed-chunk-36-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-36-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-36-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eas %&gt;%
   select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
   rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
@@ -3658,6 +6159,43 @@ df_eas %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-36-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-36-2">
+Past versions of unnamed-chunk-36-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-36-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-36-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eas %&gt;%
   select(beagle_f, eagle_f, shapeit_f) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -3742,6 +6280,43 @@ df_eas %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-1">
+Past versions of unnamed-chunk-37-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-37-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-37-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_eas %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -3834,6 +6409,43 @@ df_sas %&gt;%
   ylab(&quot;Heterozygous Sites&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-38-1">
+Past versions of unnamed-chunk-38-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-38-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-38-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_sas %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -3845,6 +6457,43 @@ df_sas %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-38-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-38-2">
+Past versions of unnamed-chunk-38-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-38-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-38-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_sas %&gt;%
   select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
   rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
@@ -3858,6 +6507,43 @@ df_sas %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-38-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-38-3">
+Past versions of unnamed-chunk-38-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-38-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-38-3.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_sas %&gt;%
   select(beagle_s, eagle_s, shapeit_s) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -3942,6 +6628,43 @@ df_sas %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-39-1">
+Past versions of unnamed-chunk-39-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-39-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-39-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_sas %&gt;%
   mutate(beagle = beagle_s / hets,
          eagle = eagle_s / hets,
@@ -4031,6 +6754,43 @@ df_sas %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-40-1">
+Past versions of unnamed-chunk-40-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-40-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-40-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_sas %&gt;%
   select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
   rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
@@ -4044,6 +6804,43 @@ df_sas %&gt;%
   geom_smooth()</code></pre>
 <pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-40-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-40-2">
+Past versions of unnamed-chunk-40-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-40-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-40-2.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_sas %&gt;%
   select(beagle_f, eagle_f, shapeit_f) %&gt;%
   cor(method = &quot;pearson&quot;) %&gt;%
@@ -4128,6 +6925,43 @@ df_sas %&gt;%
     xlab(&quot;Bin&quot;) +
   ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-41-1">
+Past versions of unnamed-chunk-41-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-41-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-41-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_sas %&gt;%
   mutate(beagle = beagle_f / hets,
          eagle = eagle_f / hets,
@@ -4230,6 +7064,43 @@ df %&gt;%
   theme_classic() +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-43-1">
+Past versions of unnamed-chunk-43-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-43-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-43-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df %&gt;%
   select(-bin_id) %&gt;% 
   cor() %&gt;%
@@ -4366,6 +7237,43 @@ df %&gt;%
   theme_classic() +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-44-1">
+Past versions of unnamed-chunk-44-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-44-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-44-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df %&gt;%
   select(-bin_id) %&gt;% 
   cor() %&gt;%
@@ -4502,6 +7410,43 @@ df %&gt;%
   theme_classic() +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-45-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-45-1">
+Past versions of unnamed-chunk-45-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-45-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-45-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df %&gt;%
   select(-bin_id) %&gt;% 
   cor() %&gt;%
@@ -4641,6 +7586,43 @@ df %&gt;%
   theme_classic() +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-46-1">
+Past versions of unnamed-chunk-46-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-46-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-46-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df %&gt;%
   select(-bin_id) %&gt;% 
   cor() %&gt;%
@@ -4777,6 +7759,43 @@ df %&gt;%
   theme_classic() +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-47-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-47-1">
+Past versions of unnamed-chunk-47-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-47-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-47-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df %&gt;%
   select(-bin_id) %&gt;% 
   cor() %&gt;%
@@ -4913,6 +7932,43 @@ df %&gt;%
   theme_classic() +
   scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-48-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-48-1">
+Past versions of unnamed-chunk-48-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-48-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/c4c32be1e0ed55e783752772d6c8ff5a96bf2a07/docs/figure/sd_error_overlap.Rmd/unnamed-chunk-48-1.png" target="_blank">c4c32be</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df %&gt;%
   select(-bin_id) %&gt;% 
   cor() %&gt;%
