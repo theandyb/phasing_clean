@@ -517,7 +517,6 @@ In the `maf_prop_df` data frame, we have for each synthetic diploid the proporti
 Let's first look at the distributions of these proportions for all heterozygous positions within each individual:
 
 ```{r}
-
 prop_maf_fig <- function(cat_type, title_text){
   df <- maf_prop_df %>%
     filter(str_detect(category, paste0(cat_type, "_[rcu]"))) %>%
@@ -532,7 +531,7 @@ prop_maf_fig <- function(cat_type, title_text){
     geom_boxplot() +
     ggtitle(paste0(title_text, " in MAF Bins")) +
     xlab("") +
-    ylab("Proportion of Switches Sites") +
+    ylab("Proportion of Sites") +
     theme_classic() +
     labs(color = "Population") +
     scale_color_manual(values = cbPalette)
