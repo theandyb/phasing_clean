@@ -14,4 +14,4 @@ Welcome to my research website.
 
 [Trio phasing results](trio_phasing_results.html)
 
-[Overlap of errors](sd_error_overlap.Rmd)
+[Overlap of errors](sd_error_overlap.html)
