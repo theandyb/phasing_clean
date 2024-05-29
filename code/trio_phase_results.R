@@ -23,6 +23,9 @@ colnames(gc_content_1kb) <- c("CHR", "START", "END", "AT", "GC", "A", "C", "G", 
 gc_content_1kb  <- gc_content_1kb %>%
   mutate(bin_id = (START / 1000) + 1)
 
+n_het_cpg_df <- read_tsv(paste0(config_obj$base_dir,"/output/trio_phase_15/het_cpg_count.tsv"),
+                         col_names = c("pair_id", "n_het_cpg"))
+
 
 df_trio <- lapply(c(1:602),
                     function(x){
@@ -32,5 +35,6 @@ df_trio <- lapply(c(1:602),
 
 df_trio$id2 <- 1:602
 df_trio <- left_join(df_trio, df_subj_rel, by="id2")
+df_trio <- left_join(df_trio, n_het_cpg_df)
 
 write_csv(df_trio, paste0(config_obj$base_dir,"/",config_obj$trio_result_dir, "/switch_errors/summary.csv"))

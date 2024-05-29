@@ -23,11 +23,11 @@ get_flip_pos <- function(df){
 
 switch_summary <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_content_1kb, het_loc_dir, bin_size = 1000){
   switch_err_eagle <- read_csv(paste0(eagle_dir, "switch_", pair_id, ".csv"), show_col_types = FALSE) %>%
-    mutate(bin_id = ceiling(pos_start / bin_size))
+    mutate(bin_id = ceiling(pos_end / bin_size))
   switch_err_beagle <- read_csv(paste0(beagle_dir, "switch_", pair_id, ".csv"), show_col_types = FALSE) %>%
-    mutate(bin_id = ceiling(pos_start / bin_size))
+    mutate(bin_id = ceiling(pos_end / bin_size))
   switch_err_shapeit <- read_csv(paste0(shapeit_dir, "switch_", pair_id, ".csv"), show_col_types = FALSE) %>%
-    mutate(bin_id = ceiling(pos_start / bin_size))
+    mutate(bin_id = ceiling(pos_end / bin_size))
 
   het_df <- read_tsv(paste0(paste0(het_loc_dir, "pair_", pair_id, "_het_loc.txt")),
                      col_names = c("chr", "pos_start", "gt"), show_col_types = FALSE) %>%
@@ -113,47 +113,47 @@ switch_summary <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_conte
   n_other_shapeit <- n_switch_shapeit - 2*n_flip_shapeit
 
   n_switch_cpg_eagle <- switch_err_eagle %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     filter(is_flip != TRUE | start_flip == TRUE) %>%
     pull(is_flip) %>%
     length()
   n_switch_cpg_beagle <- switch_err_beagle %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     filter(is_flip != TRUE | start_flip == TRUE) %>%
     pull(is_flip) %>%
     length()
   n_switch_cpg_shapeit <- switch_err_shapeit %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     filter(is_flip != TRUE | start_flip == TRUE) %>%
     pull(is_flip) %>%
     length()
 
   n_flip_cpg_eagle <- switch_err_eagle %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     pull(start_flip) %>%
     sum()
   n_flip_cpg_beagle <- switch_err_beagle %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     pull(start_flip) %>%
     sum()
   n_flip_cpg_shapeit <- switch_err_shapeit %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     pull(start_flip) %>%
     sum()
 
   n_other_cpg_eagle <- switch_err_eagle %>%
     filter(is_flip != TRUE) %>%
-    pull(cpg_start) %>%
+    pull(cpg_end) %>%
     sum()
 
   n_other_cpg_beagle <- switch_err_beagle %>%
     filter(is_flip != TRUE) %>%
-    pull(cpg_start) %>%
+    pull(cpg_end) %>%
     sum()
 
   n_other_cpg_shapeit <- switch_err_shapeit %>%
     filter(is_flip != TRUE) %>%
-    pull(cpg_start) %>%
+    pull(cpg_end) %>%
     sum()
 
 
@@ -164,33 +164,33 @@ switch_summary <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_conte
   # distance metrics
   median_dist_beagle <- switch_err_beagle %>%
     filter(is_flip == F | start_flip == T) %>% # filter out latter halves of flips
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     median()
   median_dist_eagle <- switch_err_eagle %>%
     filter(is_flip == F | start_flip == T) %>%
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     median()
   median_dist_shapeit <- switch_err_shapeit %>%
     filter(is_flip == F | start_flip == T) %>%
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     median()
 
   mean_dist_beagle <- switch_err_beagle %>%
     filter(is_flip == F | start_flip == T) %>% # filter out latter halves of flips
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     mean()
   mean_dist_eagle <- switch_err_eagle %>%
     filter(is_flip == F | start_flip == T) %>%
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     mean()
   mean_dist_shapeit <- switch_err_shapeit %>%
     filter(is_flip == F | start_flip == T) %>%
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     mean()
 
@@ -330,16 +330,16 @@ switch_summary <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_conte
 
 switch_summary_trio <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_content_1kb, het_loc_dir, bin_size = 1000){
   switch_err_eagle <- read_csv(paste0(eagle_dir, "switch_", pair_id, ".csv"), show_col_types = FALSE) %>%
-    mutate(bin_id = ceiling(pos_start / bin_size))
+    mutate(bin_id = ceiling(pos_end / bin_size))
   switch_err_beagle <- read_csv(paste0(beagle_dir, "switch_", pair_id, ".csv"), show_col_types = FALSE) %>%
-    mutate(bin_id = ceiling(pos_start / bin_size))
+    mutate(bin_id = ceiling(pos_end / bin_size))
   switch_err_shapeit <- read_csv(paste0(shapeit_dir, "switch_", pair_id, ".csv"), show_col_types = FALSE) %>%
-    mutate(bin_id = ceiling(pos_start / bin_size))
+    mutate(bin_id = ceiling(pos_end / bin_size))
 
   het_df <- read_tsv(paste0(paste0(het_loc_dir, "sample_", pair_id, ".bed")),
-                     col_names = c("chr", "pos_before", "pos_start"), show_col_types = FALSE) %>%
-    select(chr, pos_start) %>%
-    mutate(pos_end = lead(pos_start)) %>%
+                     col_names = c("chr", "pos_before", "pos"), show_col_types = FALSE) %>%
+    select(chr, pos) %>%
+    mutate(pos_next = lead(pos)) %>%
     drop_na()
 
   switch_err_eagle <- switch_err_eagle %>%
@@ -375,41 +375,41 @@ switch_summary_trio <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_
 
   # Append switch/flip locations to het_df
   het_df <- het_df %>%
-    mutate(beagle_switch = pos_start %in% {
+    mutate(beagle_switch = pos %in% {
       switch_err_beagle %>%
         filter(!is_flip) %>%
-        pull(pos_start)},
-      beagle_flip = pos_start %in% {
+        pull(pos_end)},
+      beagle_flip = pos %in% {
         switch_err_beagle %>%
           filter(start_flip) %>%
-          pull(pos_start)
+          pull(pos_end)
       })
   het_df <- het_df %>%
-    mutate(eagle_switch = pos_start %in% {
+    mutate(eagle_switch = pos %in% {
       switch_err_eagle %>%
         filter(!is_flip) %>%
-        pull(pos_start)},
-      eagle_flip = pos_start %in% {
+        pull(pos_end)},
+      eagle_flip = pos %in% {
         switch_err_eagle %>%
           filter(start_flip) %>%
-          pull(pos_start)
+          pull(pos_end)
       })
   het_df <- het_df %>%
-    mutate(shapeit_switch = pos_start %in% {
+    mutate(shapeit_switch = pos %in% {
       switch_err_shapeit %>%
         filter(!is_flip) %>%
-        pull(pos_start)},
-      shapeit_flip = pos_start %in% {
+        pull(pos_end)},
+      shapeit_flip = pos %in% {
         switch_err_shapeit %>%
           filter(start_flip) %>%
-          pull(pos_start)
+          pull(pos_end)
       })
   het_df$id <- 1:length(het_df$chr)
 
   # stats we want to pull
-  n_switch_eagle <- length(switch_err_eagle$pos_start)
-  n_switch_beagle <- length(switch_err_beagle$pos_start)
-  n_switch_shapeit <- length(switch_err_shapeit$pos_start)
+  n_switch_eagle <- length(switch_err_eagle$pos_end)
+  n_switch_beagle <- length(switch_err_beagle$pos_end)
+  n_switch_shapeit <- length(switch_err_shapeit$pos_end)
 
   n_flip_eagle <- sum(switch_err_eagle$is_flip) / 2
   n_flip_beagle <- sum(switch_err_beagle$is_flip) / 2
@@ -420,47 +420,47 @@ switch_summary_trio <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_
   n_other_shapeit <- n_switch_shapeit - 2*n_flip_shapeit
 
   n_switch_cpg_eagle <- switch_err_eagle %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     filter(is_flip != TRUE | start_flip == TRUE) %>%
     pull(is_flip) %>%
     length()
   n_switch_cpg_beagle <- switch_err_beagle %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     filter(is_flip != TRUE | start_flip == TRUE) %>%
     pull(is_flip) %>%
     length()
   n_switch_cpg_shapeit <- switch_err_shapeit %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     filter(is_flip != TRUE | start_flip == TRUE) %>%
     pull(is_flip) %>%
     length()
 
   n_flip_cpg_eagle <- switch_err_eagle %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     pull(start_flip) %>%
     sum()
   n_flip_cpg_beagle <- switch_err_beagle %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     pull(start_flip) %>%
     sum()
   n_flip_cpg_shapeit <- switch_err_shapeit %>%
-    filter(cpg_start == 1) %>%
+    filter(cpg_end == 1) %>%
     pull(start_flip) %>%
     sum()
 
   n_other_cpg_eagle <- switch_err_eagle %>%
     filter(is_flip != TRUE) %>%
-    pull(cpg_start) %>%
+    pull(cpg_end) %>%
     sum()
 
   n_other_cpg_beagle <- switch_err_beagle %>%
     filter(is_flip != TRUE) %>%
-    pull(cpg_start) %>%
+    pull(cpg_end) %>%
     sum()
 
   n_other_cpg_shapeit <- switch_err_shapeit %>%
     filter(is_flip != TRUE) %>%
-    pull(cpg_start) %>%
+    pull(cpg_end) %>%
     sum()
 
 
@@ -471,33 +471,33 @@ switch_summary_trio <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_
   # distance metrics
   median_dist_beagle <- switch_err_beagle %>%
     filter(is_flip == F | start_flip == T) %>% # filter out latter halves of flips
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     median()
   median_dist_eagle <- switch_err_eagle %>%
     filter(is_flip == F | start_flip == T) %>%
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     median()
   median_dist_shapeit <- switch_err_shapeit %>%
     filter(is_flip == F | start_flip == T) %>%
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     median()
 
   mean_dist_beagle <- switch_err_beagle %>%
     filter(is_flip == F | start_flip == T) %>% # filter out latter halves of flips
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     mean()
   mean_dist_eagle <- switch_err_eagle %>%
     filter(is_flip == F | start_flip == T) %>%
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     mean()
   mean_dist_shapeit <- switch_err_shapeit %>%
     filter(is_flip == F | start_flip == T) %>%
-    pull(pos_start) %>%
+    pull(pos_end) %>%
     diff(lag = 1) %>%
     mean()
 
@@ -631,7 +631,7 @@ switch_summary_trio <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_
                     mean_hets_flip_beagle = mean_hets_flip_beagle,
                     mean_hets_flip_eagle = mean_hets_flip_eagle,
                     mean_hets_flip_shapeit = mean_hets_flip_shapeit,
-                    n_hets = length(het_df$pos_start)
+                    n_hets = length(het_df$pos)
   ))
 }
 
