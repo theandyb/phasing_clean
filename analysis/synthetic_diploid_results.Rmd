@@ -520,7 +520,7 @@ Let's first look at the distributions of these proportions for all heterozygous 
 ```{r}
 prop_maf_fig <- function(cat_type, title_text){
   df <- maf_prop_df %>%
-    filter(str_detect(category, paste0(cat_type, "_[rcu]"))) %>%
+    filter(str_detect(category, paste0("^",cat_type, "_[rcu]"))) %>%
     mutate(category = factor(category)) %>%
     mutate(category = fct_recode(category, "Rare" = paste0(cat_type, "_rare"),
                                "Uncommon" = paste0(cat_type, "_uncommon"),
@@ -615,7 +615,7 @@ res_obj$tab_prop %>%
 
 ```{r}
 cat_type <- "eagle_flip"
-title_text <- "Eagle Flip Starts"
+title_text <- "Eagle Flips"
 
 res_obj <- prop_maf_fig(cat_type, title_text)
 print(res_obj$p)
@@ -627,7 +627,7 @@ res_obj$tab_prop %>%
 #### End
 
 ```{r}
-cat_type <- "Eagle_flip end"
+cat_type <- "eagle_flip end"
 title_text <- "Eagle Flip Ends"
 
 res_obj <- prop_maf_fig(cat_type, title_text)
@@ -658,7 +658,7 @@ res_obj$tab_prop %>%
 
 ```{r}
 cat_type <- "shapeit_flip"
-title_text <- "SHAPEIT Flip Starts"
+title_text <- "SHAPEIT Flips"
 
 res_obj <- prop_maf_fig(cat_type, title_text)
 print(res_obj$p)
