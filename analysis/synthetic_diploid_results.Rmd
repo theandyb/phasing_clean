@@ -296,9 +296,9 @@ df_vcftools %>%
   geom_hline(yintercept = 1, linetype=2)
 
 df_vcftools %>%
-  mutate( prop_cpg_beagle =  n_other_cpg_beagle / n_other_beagle,
-             prop_cpg_eagle =  n_other_cpg_eagle / n_other_eagle,
-             prop_cpg_shapeit =  n_other_cpg_shapeit / n_other_shapeit) %>%
+  mutate( prop_cpg_beagle =  n_flip_cpg_beagle / n_flip_beagle,
+             prop_cpg_eagle =  n_flip_cpg_eagle / n_flip_eagle,
+             prop_cpg_shapeit =  n_flip_cpg_shapeit / n_flip_shapeit) %>%
   mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
          ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
          ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
