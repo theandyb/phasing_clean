@@ -158,6 +158,19 @@ df_vcftools %>%
 
 ```{r}
 df_vcftools %>%
+  summarize(mean_switch_eagle = mean(n_other_cpg_eagle),
+            mean_switch_beagle = mean(n_other_cpg_beagle),
+            mean_switch_shapeit = mean(n_other_cpg_shapeit),
+            mean_flip_eagle = mean(n_flip_cpg_eagle),
+            mean_flip_beagle = mean(n_flip_cpg_beagle),
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit)) %>%
+  knitr::kable()
+```
+
+##### By Population
+
+```{r}
+df_vcftools %>%
   group_by(pop) %>%
   summarize(mean_switch_eagle = mean(n_other_cpg_eagle),
             mean_switch_beagle = mean(n_other_cpg_beagle),
@@ -169,6 +182,19 @@ df_vcftools %>%
 ```
 
 #### Proportions
+
+```{r}
+df_vcftools %>%
+  summarize(mean_switch_eagle = mean(n_other_cpg_eagle / n_other_eagle),
+            mean_switch_beagle = mean(n_other_cpg_beagle / n_other_beagle),
+            mean_switch_shapeit = mean(n_other_cpg_shapeit / n_other_shapeit),
+            mean_flip_eagle = mean(n_flip_cpg_eagle / n_flip_eagle),
+            mean_flip_beagle = mean(n_flip_cpg_beagle / n_flip_beagle),
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit / n_flip_shapeit)) %>%
+  knitr::kable()
+```
+
+##### By Population
 
 ```{r}
 df_vcftools %>%
@@ -185,6 +211,115 @@ df_vcftools %>%
 #### Enrichment
 
 We compute the ratio of the proportion of errors at CpGs to the proportion of heterozygous locations that are at CpGs.
+
+```{r}
+df_vcftools %>%
+  summarize(mean_switch_eagle = mean((n_other_cpg_eagle / n_other_eagle) / ( n_het_cpg / n_hets)),
+            mean_switch_beagle = mean((n_other_cpg_beagle / n_other_beagle) / ( n_het_cpg / n_hets)),
+            mean_switch_shapeit = mean((n_other_cpg_shapeit / n_other_shapeit) / ( n_het_cpg / n_hets) ),
+            mean_flip_eagle = mean((n_flip_cpg_eagle / n_flip_eagle) / ( n_het_cpg / n_hets)),
+            mean_flip_beagle = mean((n_flip_cpg_beagle / n_flip_beagle) / ( n_het_cpg / n_hets)),
+            mean_flip_shapeit = mean((n_flip_cpg_shapeit / n_flip_shapeit) / ( n_het_cpg / n_hets))) %>%
+  knitr::kable()
+```
+
+Alternative view: odds ratios
+
+```{r}
+df_vcftools %>%
+  mutate( prop_cpg_beagle =  n_other_cpg_beagle / n_other_beagle,
+             prop_cpg_eagle =  n_other_cpg_eagle / n_other_eagle,
+             prop_cpg_shapeit =  n_other_cpg_shapeit / n_other_shapeit) %>%
+  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
+         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
+         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
+         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
+  mutate(Beagle = ods_beagle / ods_het,
+         Eagle = ods_eagle / ods_het,
+         SHAPEIT = ods_shapeit / ods_het) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR, colour = pop)) +
+  geom_boxplot() +
+  ylab("Odds CpG Switch / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Switches") +
+  theme_classic() +
+  labs(colour = "Population") +
+  scale_color_manual(values = cbPalette) +
+  geom_hline(yintercept = 1, linetype=2)
+
+df_vcftools %>%
+  mutate( prop_cpg_beagle =  n_other_cpg_beagle / n_other_beagle,
+             prop_cpg_eagle =  n_other_cpg_eagle / n_other_eagle,
+             prop_cpg_shapeit =  n_other_cpg_shapeit / n_other_shapeit) %>%
+  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
+         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
+         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
+         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
+  mutate(Beagle = ods_beagle / ods_het,
+         Eagle = ods_eagle / ods_het,
+         SHAPEIT = ods_shapeit / ods_het) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR)) +
+  geom_boxplot() +
+  ylab("Odds CpG Switch / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Switches") +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  geom_hline(yintercept = 1, linetype=2)
+```
+
+And flips:
+
+```{r}
+df_vcftools %>%
+  mutate( prop_cpg_beagle =  n_flip_cpg_beagle / n_flip_beagle,
+             prop_cpg_eagle =  n_flip_cpg_eagle / n_flip_eagle,
+             prop_cpg_shapeit =  n_flip_cpg_shapeit / n_flip_shapeit) %>%
+  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
+         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
+         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
+         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
+  mutate(Beagle = ods_beagle / ods_het,
+         Eagle = ods_eagle / ods_het,
+         SHAPEIT = ods_shapeit / ods_het) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR, colour = pop)) +
+  geom_boxplot() +
+  ylab("Odds CpG Switch / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Switches") +
+  theme_classic() +
+  labs(colour = "Population") +
+  scale_color_manual(values = cbPalette) +
+  geom_hline(yintercept = 1, linetype=2)
+
+df_vcftools %>%
+  mutate( prop_cpg_beagle =  n_other_cpg_beagle / n_other_beagle,
+             prop_cpg_eagle =  n_other_cpg_eagle / n_other_eagle,
+             prop_cpg_shapeit =  n_other_cpg_shapeit / n_other_shapeit) %>%
+  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
+         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
+         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
+         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
+  mutate(Beagle = ods_beagle / ods_het,
+         Eagle = ods_eagle / ods_het,
+         SHAPEIT = ods_shapeit / ods_het) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR)) +
+  geom_boxplot() +
+  ylab("Odds CpG Switch / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Switches") +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  geom_hline(yintercept = 1, linetype=2)
+
+```
+
+
+##### By Population
 
 ```{r}
 df_vcftools %>%
