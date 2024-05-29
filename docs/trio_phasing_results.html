@@ -45,6 +45,8 @@
 <script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <link href="site_libs/reactable-0.4.4/reactable.css" rel="stylesheet" />
 <script src="site_libs/reactable-binding-0.4.4/reactable.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -349,7 +351,13 @@ div.tocify {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/thandyb/phasing_clean">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -390,7 +398,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-05-22
+<strong>Last updated:</strong> 2024-05-29
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,13 +529,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong3601740">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree0669558eec5e85ce21377a217903f0c25210aac2targetblank0669558a">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 3601740
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/theandyb/phasing_clean/tree/0669558eec5e85ce21377a217903f0c25210aac2" target="_blank">0669558</a>
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong3601740"
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree0669558eec5e85ce21377a217903f0c25210aac2targetblank0669558a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -536,7 +546,8 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 3601740.
+The results in this page were generated with repository version
+<a href="https://github.com/theandyb/phasing_clean/tree/0669558eec5e85ce21377a217903f0c25210aac2" target="_blank">0669558</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,11 +568,14 @@ Ignored files:
     Ignored:    chr22_10k.bed
     Ignored:    data/1kgp/chr10_pilot_mask.bed
     Ignored:    data/1kgp/chr15/
+    Ignored:    data/1kgp/chr22/
     Ignored:    data/1kgp/chr8/
     Ignored:    data/1kgp/chrX.vcf.gz
     Ignored:    data/1kgp/chrX.vcf.gz.tbi
     Ignored:    data/1kgp/chrX_2504_snps_noPAR.bcf
     Ignored:    data/1kgp/chrX_2504_snps_noPAR_noSing.bcf
+    Ignored:    data/1kgp/chrX_freq.tsv
+    Ignored:    data/1kgp/chrX_maf.tsv
     Ignored:    data/1kgp/chrX_pilot_mask.bed
     Ignored:    data/chr10.sizes
     Ignored:    data/chr15.1kb.sorted.bed
@@ -588,19 +602,6 @@ Ignored files:
     Ignored:    output/trio_phase/
     Ignored:    output/trio_phase_15/
     Ignored:    output/trio_phase_22/
-
-Untracked files:
-    Untracked:  code/batch_triple_hets.sh
-    Untracked:  code/trio_family_lists.R
-    Untracked:  data/1kgp/chr22/
-
-Unstaged changes:
-    Modified:   README.md
-    Modified:   analysis/synthetic_diploid_results.Rmd
-    Modified:   code/batch_annotate_switch.sh
-    Modified:   code/batch_compare_trio.sh
-    Modified:   code/batch_phase_trio.sh
-    Modified:   code/trio_phase_results.R
 
 </code></pre>
 <p>
@@ -651,16 +652,17 @@ Message
 Rmd
 </td>
 <td>
-3601740
+<a href="https://github.com/theandyb/phasing_clean/blob/0669558eec5e85ce21377a217903f0c25210aac2/analysis/trio_phasing_results.Rmd" target="_blank">0669558</a>
 </td>
 <td>
 Andy Beck
 </td>
 <td>
-2024-05-22
+2024-05-29
 </td>
 <td>
-wflow_publish("analysis/trio_phasing_results.Rmd")
+wflow_publish(c("analysis/synthetic_diploid_results.Rmd",
+"analysis/trio_phasing_results.Rmd"))
 </td>
 </tr>
 <tr>
@@ -668,41 +670,7 @@ wflow_publish("analysis/trio_phasing_results.Rmd")
 html
 </td>
 <td>
-4aa7b80
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-3bc45e1
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-<td>
-wflow_publish("analysis/trio_phasing_results.Rmd")
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-d7d8f5a
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/trio_phasing_results.html" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -719,7 +687,7 @@ Build site.
 Rmd
 </td>
 <td>
-0fdea9e
+<a href="https://github.com/theandyb/phasing_clean/blob/36017404b148f79cf5ac4126c518103aed974202/analysis/trio_phasing_results.Rmd" target="_blank">3601740</a>
 </td>
 <td>
 Andy Beck
@@ -736,7 +704,7 @@ wflow_publish("analysis/trio_phasing_results.Rmd")
 html
 </td>
 <td>
-da672c2
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/4aa7b80f47294d0b21e1082d41d99f596b5d6f35/docs/trio_phasing_results.html" target="_blank">4aa7b80</a>
 </td>
 <td>
 Andy Beck
@@ -753,7 +721,7 @@ Build site.
 Rmd
 </td>
 <td>
-ab88699
+<a href="https://github.com/theandyb/phasing_clean/blob/3bc45e1dd2cf9dde915d8ed0a38ebdd9d11af0ab/analysis/trio_phasing_results.Rmd" target="_blank">3bc45e1</a>
 </td>
 <td>
 Andy Beck
@@ -770,7 +738,75 @@ wflow_publish("analysis/trio_phasing_results.Rmd")
 html
 </td>
 <td>
-4255fdf
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/trio_phasing_results.html" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0fdea9e4247c735d39d5aeafa85ae33f0022c3a3/analysis/trio_phasing_results.Rmd" target="_blank">0fdea9e</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+wflow_publish("analysis/trio_phasing_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/da672c257d05949d72218f237a074a69c06d0726/docs/trio_phasing_results.html" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ab886993928a40ea0f10351be9f072cf7f61c62f/analysis/trio_phasing_results.Rmd" target="_blank">ab88699</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+<td>
+wflow_publish("analysis/trio_phasing_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/trio_phasing_results.html" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -787,7 +823,7 @@ Build site.
 Rmd
 </td>
 <td>
-610b7e2
+<a href="https://github.com/theandyb/phasing_clean/blob/610b7e2cbe9d285fdd366d7d6d0c7c2d4cb462d2/analysis/trio_phasing_results.Rmd" target="_blank">610b7e2</a>
 </td>
 <td>
 Andy Beck
@@ -804,7 +840,7 @@ wflow_publish("analysis/trio_phasing_results.Rmd")
 html
 </td>
 <td>
-1f7bff3
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/1f7bff3ed5312dbf28e714b6b607ee52d8fa2c3d/docs/trio_phasing_results.html" target="_blank">1f7bff3</a>
 </td>
 <td>
 Andy Beck
@@ -821,7 +857,7 @@ Build site.
 Rmd
 </td>
 <td>
-2aa6265
+<a href="https://github.com/theandyb/phasing_clean/blob/2aa62657678efb59588f931a63c17f1e46f632f4/analysis/trio_phasing_results.Rmd" target="_blank">2aa6265</a>
 </td>
 <td>
 Andy Beck
@@ -838,7 +874,7 @@ wflow_publish("analysis/trio_phasing_results.Rmd")
 html
 </td>
 <td>
-ddd4d13
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/ddd4d1362069c89ed9bed006c53f58d01f592478/docs/trio_phasing_results.html" target="_blank">ddd4d13</a>
 </td>
 <td>
 Andy Beck
@@ -855,7 +891,7 @@ Build site.
 Rmd
 </td>
 <td>
-51a14cf
+<a href="https://github.com/theandyb/phasing_clean/blob/51a14cf68f9c4408f6ca56189ed85fbfd0c4acc6/analysis/trio_phasing_results.Rmd" target="_blank">51a14cf</a>
 </td>
 <td>
 Andy Beck
@@ -872,7 +908,7 @@ wflow_publish("analysis/trio_phasing_results.Rmd")
 html
 </td>
 <td>
-60c7dfc
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/60c7dfc96a32bebef1422f8a176e259026b2e119/docs/trio_phasing_results.html" target="_blank">60c7dfc</a>
 </td>
 <td>
 Andy Beck
@@ -889,7 +925,7 @@ Build site.
 Rmd
 </td>
 <td>
-91a7ac8
+<a href="https://github.com/theandyb/phasing_clean/blob/91a7ac8b0e513d8346da1fe74a3a4b170dc1ce41/analysis/trio_phasing_results.Rmd" target="_blank">91a7ac8</a>
 </td>
 <td>
 Andy Beck
@@ -906,7 +942,7 @@ wflow_publish("analysis/trio_phasing_results.Rmd")
 html
 </td>
 <td>
-ac90be7
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/ac90be7c5bc9ee082cbebb0f28d3424dfec009c8/docs/trio_phasing_results.html" target="_blank">ac90be7</a>
 </td>
 <td>
 Andy Beck
@@ -923,7 +959,7 @@ Build site.
 Rmd
 </td>
 <td>
-fa87641
+<a href="https://github.com/theandyb/phasing_clean/blob/fa87641c1a7f0ab1cfd31ad628f5d6d63620f517/analysis/trio_phasing_results.Rmd" target="_blank">fa87641</a>
 </td>
 <td>
 Andy Beck
@@ -1069,7 +1105,21 @@ dbl (2): id, n_t_het22
 df_subj_rel$frac_t_het22 &lt;- df_subj_rel$n_t_het22 / df_subj_rel$n_het22
 
 df_switch_trio &lt;- left_join(df_switch_trio, df_triple_het, by=c(&quot;pair_id&quot; = &quot;id&quot;))
-df_switch_trio_22 &lt;- left_join(df_switch_trio_22, df_triple_het22, by=c(&quot;pair_id&quot; = &quot;id&quot;))</code></pre>
+df_switch_trio_22 &lt;- left_join(df_switch_trio_22, df_triple_het22, by=c(&quot;pair_id&quot; = &quot;id&quot;))
+
+maf_prop_df &lt;- read_csv(paste0(config_obj$base_dir,&quot;/output/trio_phase_15/maf_props.csv&quot;))</code></pre>
+<pre><code>Rows: 23478 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (1): category
+dbl (2): proportion, id
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>maf_prop_df &lt;- left_join(maf_prop_df, 
+                         {df_subj_rel %&gt;% 
+                             select(id2, POPULATION, SUPER, sex, n_het, n_t_het)},
+                         by = c(&quot;id&quot; = &quot;id2&quot;))</code></pre>
 <div id="chr-x-results" class="section level3">
 <h3>Chr X Results</h3>
 <p>We’ll also pull in the results on chromosome X for the synthetic
@@ -1087,11 +1137,11 @@ chr (3): POP, ID1, ID2
   select(-POPULATION)
 
 df_switch_x &lt;- read_csv(paste0(config_obj$base_dir,&quot;/output/switch_errors/switch_errors/summary.csv&quot;))</code></pre>
-<pre><code>Rows: 1000 Columns: 44
+<pre><code>Rows: 1000 Columns: 45
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr  (2): pop, subpop
-dbl (42): pair_id, n_switch_eagle, n_switch_beagle, n_switch_shapeit, n_flip...
+dbl (43): pair_id, n_switch_eagle, n_switch_beagle, n_switch_shapeit, n_flip...
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
@@ -1200,7 +1250,7 @@ Date
 <tbody>
 <tr>
 <td>
-ddd4d13
+<a href="https://github.com/theandyb/phasing_clean/blob/ddd4d1362069c89ed9bed006c53f58d01f592478/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-5-1.png" target="_blank">ddd4d13</a>
 </td>
 <td>
 Andy Beck
@@ -1247,7 +1297,7 @@ Date
 <tbody>
 <tr>
 <td>
-ddd4d13
+<a href="https://github.com/theandyb/phasing_clean/blob/ddd4d1362069c89ed9bed006c53f58d01f592478/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-5-2.png" target="_blank">ddd4d13</a>
 </td>
 <td>
 Andy Beck
@@ -1294,7 +1344,7 @@ Date
 <tbody>
 <tr>
 <td>
-ddd4d13
+<a href="https://github.com/theandyb/phasing_clean/blob/ddd4d1362069c89ed9bed006c53f58d01f592478/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-5-3.png" target="_blank">ddd4d13</a>
 </td>
 <td>
 Andy Beck
@@ -1342,7 +1392,7 @@ Date
 <tbody>
 <tr>
 <td>
-ddd4d13
+<a href="https://github.com/theandyb/phasing_clean/blob/ddd4d1362069c89ed9bed006c53f58d01f592478/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-6-1.png" target="_blank">ddd4d13</a>
 </td>
 <td>
 Andy Beck
@@ -1389,7 +1439,7 @@ Date
 <tbody>
 <tr>
 <td>
-ddd4d13
+<a href="https://github.com/theandyb/phasing_clean/blob/ddd4d1362069c89ed9bed006c53f58d01f592478/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-6-2.png" target="_blank">ddd4d13</a>
 </td>
 <td>
 Andy Beck
@@ -1436,7 +1486,7 @@ Date
 <tbody>
 <tr>
 <td>
-ddd4d13
+<a href="https://github.com/theandyb/phasing_clean/blob/ddd4d1362069c89ed9bed006c53f58d01f592478/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-6-3.png" target="_blank">ddd4d13</a>
 </td>
 <td>
 Andy Beck
@@ -1538,7 +1588,7 @@ Date
 <tbody>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-8-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -1549,7 +1599,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-8-1.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -1597,7 +1647,7 @@ Date
 <tbody>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -1608,7 +1658,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-1.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-1.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -1654,7 +1715,7 @@ Date
 <tbody>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -1665,7 +1726,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-2.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-2.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -1712,7 +1784,7 @@ Date
 <tbody>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -1723,7 +1795,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-3.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-3.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -1745,6 +1828,43 @@ Andy Beck
   scale_color_manual(values = cbPalette) +
   ggtitle(&quot;Triple Heterozygous Sites&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-9-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-4">
+Past versions of unnamed-chunk-9-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-4.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_subj_rel %&gt;%
   ggplot(aes(x = n_t_het, y = SUPER, fill = SUPER)) +
   geom_boxplot(show.legend = FALSE) +
@@ -1754,6 +1874,43 @@ Andy Beck
   scale_fill_manual(values = cbPalette) +
   ggtitle(&quot;Triple Heterozygotes Sites&quot;, &quot;Chromosome 15&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-9-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-5">
+Past versions of unnamed-chunk-9-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-9-5.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="switch-errors" class="section level2">
 <h2>Switch Errors</h2>
@@ -1802,7 +1959,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -1813,7 +1970,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-1.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -1824,7 +1981,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-1.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-1.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -1863,7 +2031,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -1874,7 +2042,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-2.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -1885,7 +2053,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-2.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-2.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -1924,7 +2103,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -1935,7 +2114,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-3.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -1946,7 +2125,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-3.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-10-3.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -1986,7 +2176,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -1997,7 +2187,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-1.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -2008,7 +2198,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-1.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-1.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -2047,7 +2248,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2058,7 +2259,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-2.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -2069,7 +2270,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-2.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-2.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -2108,7 +2320,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2119,7 +2331,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-3.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -2130,7 +2342,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-3.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-11-3.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -2170,7 +2393,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2181,7 +2404,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-1.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -2192,7 +2415,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-1.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-1.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -2231,7 +2465,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2242,7 +2476,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-2.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -2253,7 +2487,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-2.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-2.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -2292,7 +2537,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2303,7 +2548,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-3.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -2314,7 +2559,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-3.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-12-3.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -2372,7 +2628,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2383,7 +2639,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-1.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -2394,7 +2650,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-1.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-1.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -2433,7 +2700,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2444,7 +2711,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-2.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -2455,7 +2722,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-2.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-2.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -2494,7 +2772,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2505,7 +2783,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-3.png" target="_blank">d7d8f5a</a>
 </td>
 <td>
 Andy Beck
@@ -2516,7 +2794,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-4255fdf
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-3.png" target="_blank">da672c2</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/4255fdf0af4470164d0f0e32de7e1af1a6782a41/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-13-3.png" target="_blank">4255fdf</a>
 </td>
 <td>
 Andy Beck
@@ -2556,7 +2845,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-14-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2567,7 +2856,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-14-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-14-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -2606,7 +2906,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-14-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2617,7 +2917,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-14-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-14-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -2656,7 +2967,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-14-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2667,7 +2978,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-14-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-14-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -2707,7 +3029,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-15-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2718,7 +3040,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-15-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-15-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -2757,7 +3090,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-15-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2768,7 +3101,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-15-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-15-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -2807,7 +3151,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-15-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2818,7 +3162,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-15-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-15-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -2878,7 +3233,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-16-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2889,7 +3244,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-16-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-16-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -2928,7 +3294,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-16-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2939,7 +3305,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-16-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-16-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -2978,7 +3355,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-16-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -2989,7 +3366,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-16-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-16-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3029,7 +3417,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-17-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3040,7 +3428,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-17-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-17-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3079,7 +3478,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-17-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3090,7 +3489,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-17-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-17-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3129,7 +3539,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-17-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3140,7 +3550,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-17-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-17-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3180,7 +3601,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-18-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3191,7 +3612,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-18-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-18-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3230,7 +3662,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-18-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3241,7 +3673,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-18-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-18-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3280,7 +3723,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-18-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3291,7 +3734,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-18-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-18-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3349,7 +3803,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-19-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3360,7 +3814,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-19-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-19-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3399,7 +3864,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-19-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3410,7 +3875,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-19-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-19-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3449,7 +3925,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-19-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3460,7 +3936,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-19-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-19-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3500,7 +3987,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-20-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3511,7 +3998,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-20-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-20-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3550,7 +4048,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-20-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3561,7 +4059,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-20-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-20-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3600,7 +4109,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-20-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3611,7 +4120,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-20-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-20-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3651,7 +4171,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-21-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3662,7 +4182,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-21-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-21-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3701,7 +4232,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-21-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3712,7 +4243,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-21-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-21-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3751,7 +4293,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-21-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3762,7 +4304,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-21-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-21-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3822,7 +4375,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-22-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3833,7 +4386,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-22-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-22-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3872,7 +4436,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-22-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3883,7 +4447,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-22-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-22-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3922,7 +4497,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-22-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3933,7 +4508,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-22-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-22-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -3973,7 +4559,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-23-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -3984,7 +4570,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-23-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-23-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4023,7 +4620,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-23-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4034,7 +4631,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-23-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-23-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4073,7 +4681,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-23-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4084,7 +4692,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-23-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-23-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4124,7 +4743,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-24-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4135,7 +4754,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-24-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-24-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4174,7 +4804,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-24-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4185,7 +4815,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-24-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-24-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4224,7 +4865,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-24-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4235,7 +4876,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-24-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-24-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4293,7 +4945,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-25-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4304,7 +4956,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-25-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-25-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4343,7 +5006,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-25-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4354,7 +5017,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-25-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-25-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4393,7 +5067,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-25-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4404,7 +5078,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-25-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-25-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4444,7 +5129,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-26-1.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4455,7 +5140,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-26-1.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-26-1.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4494,7 +5190,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-26-2.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4505,7 +5201,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-26-2.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-26-2.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4544,7 +5251,7 @@ Date
 <tbody>
 <tr>
 <td>
-d7d8f5a
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-26-3.png" target="_blank">17d41d5</a>
 </td>
 <td>
 Andy Beck
@@ -4555,7 +5262,18 @@ Andy Beck
 </tr>
 <tr>
 <td>
-da672c2
+<a href="https://github.com/theandyb/phasing_clean/blob/d7d8f5a9720ad55400fe5a1207f5a0989a3c6dc8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-26-3.png" target="_blank">d7d8f5a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/da672c257d05949d72218f237a074a69c06d0726/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-26-3.png" target="_blank">da672c2</a>
 </td>
 <td>
 Andy Beck
@@ -4571,10 +5289,121 @@ Andy Beck
 <p>And finally, chromosome X:</p>
 <pre class="r"><code>plot_flip_rate(df_switch_x, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-27-1">
+Past versions of unnamed-chunk-27-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-27-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-27-1.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>plot_flip_rate(df_switch_x, &quot;Beagle&quot;, &quot;SHAPEIT&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-27-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-27-2">
+Past versions of unnamed-chunk-27-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-27-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-27-2.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>plot_flip_rate(df_switch_x, &quot;SHAPEIT&quot;, &quot;Eagle&quot;, &quot;pop&quot;, &quot;X&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-27-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-27-3">
+Past versions of unnamed-chunk-27-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-27-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-27-3.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -4926,16 +5755,127 @@ trio and the rate of errors in phasing of the child.</p>
 
 plot_th_sr(df_switch_trio, &quot;Beagle&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-1">
+Past versions of unnamed-chunk-29-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-29-1.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="eagle" class="section level4">
 <h4>Eagle</h4>
 <pre class="r"><code>plot_th_sr(df_switch_trio, &quot;Eagle&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-30-1">
+Past versions of unnamed-chunk-30-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-30-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-30-1.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="shapeit" class="section level4">
 <h4>SHAPEIT</h4>
 <pre class="r"><code>plot_th_sr(df_switch_trio, &quot;SHAPEIT&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-31-1">
+Past versions of unnamed-chunk-31-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-31-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-31-1.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="flip-rate-1" class="section level3">
@@ -4964,16 +5904,1250 @@ plot_th_sr(df_switch_trio, &quot;Beagle&quot;)</code></pre>
 
 plot_th_fr(df_switch_trio, &quot;Beagle&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-32-1">
+Past versions of unnamed-chunk-32-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-32-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-32-1.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="eagle-1" class="section level4">
 <h4>Eagle</h4>
 <pre class="r"><code>plot_th_fr(df_switch_trio, &quot;Eagle&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-33-1">
+Past versions of unnamed-chunk-33-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-33-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-33-1.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="shapeit-1" class="section level4">
 <h4>SHAPEIT</h4>
 <pre class="r"><code>plot_th_fr(df_switch_trio, &quot;SHAPEIT&quot;)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-34-1">
+Past versions of unnamed-chunk-34-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-34-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/17d41d5a7cf185b5d27837afae1c15caf2272bd8/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-34-1.png" target="_blank">17d41d5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="maf-bins" class="section level2">
+<h2>MAF Bins</h2>
+<p>In the <code>maf_prop_df</code> data frame, we have for each
+synthetic diploid the proportion of heterozygous sites that are: rare
+variants (maf &lt; 0.01); uncommon variants (0.01 &lt; maf &lt; 0.05);
+and common variants (maf &gt; 0.05). We also have these proportions for
+each type of error for each method (switch; flip start; flip end;
+correct).</p>
+<p>Let’s first look at the distributions of these proportions for all
+heterozygous positions within each individual:</p>
+<pre class="r"><code>prop_maf_fig &lt;- function(cat_type, title_text){
+  df &lt;- maf_prop_df %&gt;%
+    filter(str_detect(category, paste0(cat_type, &quot;_[rcu]&quot;))) %&gt;%
+    mutate(category = factor(category)) %&gt;%
+    mutate(category = fct_recode(category, &quot;Rare&quot; = paste0(cat_type, &quot;_rare&quot;),
+                               &quot;Uncommon&quot; = paste0(cat_type, &quot;_uncommon&quot;),
+                               &quot;Common&quot; = paste0(cat_type, &quot;_common&quot;))) %&gt;%
+    mutate(category = fct_relevel(category, c(&quot;Rare&quot;, &quot;Uncommon&quot;, &quot;Common&quot;)))
+  
+  p &lt;- df %&gt;%
+    ggplot(aes(x = category, y = proportion, color = SUPER)) +
+    geom_boxplot() +
+    ggtitle(paste0(title_text, &quot; in MAF Bins&quot;)) +
+    xlab(&quot;&quot;) +
+    ylab(&quot;Proportion of Sites&quot;) +
+    theme_classic() +
+    labs(color = &quot;Population&quot;) +
+    scale_color_manual(values = cbPalette)
+  
+  tab_prop &lt;- df %&gt;%
+    group_by(SUPER, category) %&gt;%
+    summarize(mean_prop = mean(proportion))
+  
+  return(list(p = p, tab_prop = tab_prop))
+}
+
+res_obj &lt;- prop_maf_fig(&quot;het&quot;, &quot;Heterozygous Sites&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.0911487</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1887811</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.7200702</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.0416627</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0644495</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.8938878</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.0506423</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0445416</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.9048161</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.0407045</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0528419</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.9064535</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.0496801</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0467739</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.9035461</td>
+</tr>
+</tbody>
+</table>
+<div id="beagle-errors" class="section level3">
+<h3>Beagle Errors</h3>
+<div id="switches" class="section level4">
+<h4>Switches</h4>
+<pre class="r"><code>cat_type &lt;- &quot;beagle_switch&quot;
+title_text &lt;- &quot;Beagle Switches&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1950781</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1958752</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.6090467</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.2215357</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1065396</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.6719247</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2542494</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0718720</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.6738787</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.2047675</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0947301</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.7005024</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2364991</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0639282</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.6995727</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-1" class="section level3">
+<h3>Flips</h3>
+<div id="start" class="section level4">
+<h4>Start</h4>
+<pre class="r"><code>cat_type &lt;- &quot;beagle_flip&quot;
+title_text &lt;- &quot;Beagle Flip Starts&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1556647</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2164719</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.6278634</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.1370230</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1207635</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.7422135</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1823276</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0817227</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.7359497</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.1512914</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1130190</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.7356896</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1617512</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0748889</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.7633599</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="end" class="section level4">
+<h4>End</h4>
+<pre class="r"><code>cat_type &lt;- &quot;beagle_flip end&quot;
+title_text &lt;- &quot;Beagle Flip Ends&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.7746888</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0568014</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.1685099</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.8164452</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0334880</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.1500668</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.8226285</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0238369</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.1535346</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.7960008</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0273843</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.1766149</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.8075328</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0218194</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.1706479</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="eagle-errors" class="section level3">
+<h3>Eagle Errors</h3>
+<div id="switches-1" class="section level4">
+<h4>Switches</h4>
+<pre class="r"><code>cat_type &lt;- &quot;eagle_switch&quot;
+title_text &lt;- &quot;Eagle Switches&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.2416903</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1911404</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.5671693</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6090467</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.1950781</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.1958752</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.2583504</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1042562</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.6373934</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6719247</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2215357</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.1065396</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2839739</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0680951</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.6479311</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6738787</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2542494</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.0718720</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.2420076</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0906313</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.6673611</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.7005024</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2047675</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.0947301</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2767865</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0671165</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.6560970</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6995727</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2364991</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.0639282</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-2" class="section level3">
+<h3>Flips</h3>
+<div id="start-1" class="section level4">
+<h4>Start</h4>
+<pre class="r"><code>cat_type &lt;- &quot;eagle_flip&quot;
+title_text &lt;- &quot;Eagle Flip Starts&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1396991</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2162390</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.6440619</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.6278634</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.1556647</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.2164719</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.1207636</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1176316</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.7616048</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.7422135</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.1370230</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.1207635</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1620181</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0766328</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.7613491</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.7359497</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.1823276</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.0817227</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.1385810</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1082627</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.7531563</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.7356896</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.1512914</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.1130190</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1458126</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0729413</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.7812461</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">beagle_flip_common</td>
+<td align="right">0.7633599</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">beagle_flip_rare</td>
+<td align="right">0.1617512</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">beagle_flip_uncommon</td>
+<td align="right">0.0748889</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="end-1" class="section level4">
+<h4>End</h4>
+<pre class="r"><code>cat_type &lt;- &quot;Eagle_flip end&quot;
+title_text &lt;- &quot;Eagle Flip Ends&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `category = fct_recode(...)`.
+Caused by warning:
+! Unknown levels in `f`: Eagle_flip end_rare, Eagle_flip end_uncommon, Eagle_flip end_common</code></pre>
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `category = fct_relevel(category, c(&quot;Rare&quot;, &quot;Uncommon&quot;,
+  &quot;Common&quot;))`.
+Caused by warning:
+! 3 unknown levels in `f`: Rare, Uncommon, and Common</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+<div id="shapeit-errors" class="section level3">
+<h3>SHAPEIT Errors</h3>
+<div id="switches-2" class="section level4">
+<h4>Switches</h4>
+<pre class="r"><code>cat_type &lt;- &quot;shapeit_switch&quot;
+title_text &lt;- &quot;SHAPEIT Switches&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.2064054</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1889627</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.6046319</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.2305346</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1070104</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.6624550</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2630830</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0680281</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.6688889</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.2169089</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0903980</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.6926931</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2498901</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0632847</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.6868252</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-3" class="section level3">
+<h3>Flips</h3>
+<div id="start-2" class="section level4">
+<h4>Start</h4>
+<pre class="r"><code>cat_type &lt;- &quot;shapeit_flip&quot;
+title_text &lt;- &quot;SHAPEIT Flip Starts&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1545896</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2158893</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.6295210</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.1343152</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1202959</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.7453890</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1796116</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0830709</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.7373175</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.1471702</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1136741</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.7391556</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1568169</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0775049</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.7656782</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="end-2" class="section level4">
+<h4>End</h4>
+<pre class="r"><code>cat_type &lt;- &quot;shapeit_flip end&quot;
+title_text &lt;- &quot;SHAPEIT Flip Ends&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.7678290</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0586530</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.1735179</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.8161006</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0334402</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.1504591</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.8115285</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0243596</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.1641119</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.7857868</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0280658</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.1861474</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.8022584</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0210539</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.1766877</td>
+</tr>
+</tbody>
+</table>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
