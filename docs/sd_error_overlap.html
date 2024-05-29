@@ -1,0 +1,5203 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Andy Beck" />
+
+<meta name="date" content="2024-02-20" />
+
+<title>venn_diagram</title>
+
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">phasing_clean</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/thandyb/phasing_clean">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">venn_diagram</h1>
+<h4 class="author">Andy Beck</h4>
+<h4 class="date">2024-02-20</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-05-29
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>phasing_clean/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240501code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240501)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240501code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240501)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree487e8bfddd230b30f0cc1d0041b8e3639eee78d3targetblank487e8bfa">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/theandyb/phasing_clean/tree/487e8bfddd230b30f0cc1d0041b8e3639eee78d3" target="_blank">487e8bf</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree487e8bfddd230b30f0cc1d0041b8e3639eee78d3targetblank487e8bfa"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/theandyb/phasing_clean/tree/487e8bfddd230b30f0cc1d0041b8e3639eee78d3" target="_blank">487e8bf</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    .ipynb_checkpoints/
+    Ignored:    chr22_10k.bed
+    Ignored:    data/1kgp/chr10_pilot_mask.bed
+    Ignored:    data/1kgp/chr15/
+    Ignored:    data/1kgp/chr22/
+    Ignored:    data/1kgp/chr8/
+    Ignored:    data/1kgp/chrX.vcf.gz
+    Ignored:    data/1kgp/chrX.vcf.gz.tbi
+    Ignored:    data/1kgp/chrX_2504_snps_noPAR.bcf
+    Ignored:    data/1kgp/chrX_2504_snps_noPAR_noSing.bcf
+    Ignored:    data/1kgp/chrX_freq.tsv
+    Ignored:    data/1kgp/chrX_maf.tsv
+    Ignored:    data/1kgp/chrX_pilot_mask.bed
+    Ignored:    data/chr10.sizes
+    Ignored:    data/chr15.1kb.sorted.bed
+    Ignored:    data/chr15.fasta
+    Ignored:    data/chr15.sizes
+    Ignored:    data/chr15_gc1kb_pilot.bed
+    Ignored:    data/chr15_mask.fasta
+    Ignored:    data/chr15_mask.fasta.fai
+    Ignored:    data/chr22.sizes
+    Ignored:    data/chr8.sizes
+    Ignored:    data/chrX.1kb.sorted.bed
+    Ignored:    data/chrX.fasta
+    Ignored:    data/chrX.sizes
+    Ignored:    data/chrX_gc1kb_pilot.bed
+    Ignored:    data/chrX_mask.fasta
+    Ignored:    data/chrX_mask.fasta.fai
+    Ignored:    data/hg38.chrom.sizes
+    Ignored:    data/mask_pilot_15_fasta.bed
+    Ignored:    data/mask_pilot_X_fasta.bed
+    Ignored:    data/ref_GRCh38.fna
+    Ignored:    data/ref_GRCh38.fna.fai
+    Ignored:    data/ref_GRCh38.fna.in
+    Ignored:    output/switch_errors/
+    Ignored:    output/trio_phase/
+    Ignored:    output/trio_phase_15/
+    Ignored:    output/trio_phase_22/
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/sd_error_overlap.Rmd</code>) and
+HTML (<code>docs/sd_error_overlap.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/487e8bfddd230b30f0cc1d0041b8e3639eee78d3/analysis/sd_error_overlap.Rmd" target="_blank">487e8bf</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+<td>
+wflow_publish(c("analysis/index.Rmd", "analysis/sd_error_overlap.Rmd"))
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>In this document we will explore the construction of a “venn diagram”
+of the overlap of phasing errors across three methods over 700 synthetic
+diploids. Intuitively, this makes sense for a single synthetic diploid:
+we partition all errors into categories determined by which method(s)
+produced the error. The potential complication is if we wish to look
+only at particular classes of errors, e.g. switches or flips. For an
+example of what can happen, suppose a heterozygous location is the site
+of a switch in Beagle. That same position could be the location of a
+switch in Eagle or SHAPEIT, or it may have been correctly phased. Those
+are not exhaustive, however; another potential outcome is that same
+location is the latter half of a flip error in either Eagle or SHAPEIT.
+Is this still considered an overlapping switch?</p>
+<p>For a first pass, I’ll be a bit exhaustive in terms of the categories
+of overlap for the errors in a single synthetic diploid.</p>
+<pre class="r"><code>load_het_pos &lt;- function(id, het_loc_dir){
+  fname &lt;- paste0(het_loc_dir, &quot;pair_&quot;, id, &quot;.csv&quot;)
+  return(read_csv(fname, show_col_types = FALSE))
+}
+
+load_switch_df &lt;- function(id, switch_dir){
+  fname &lt;- paste0(switch_dir, &quot;switch_&quot;, id, &quot;.csv&quot;)
+  results &lt;- read_csv(fname, show_col_types = FALSE)
+  flip_loc &lt;- get_flip_pos(results)
+  results$is_flip &lt;- (results$pos_start %in% flip_loc) | (results$pos_end %in% flip_loc)
+  results$flip &lt;- results$pos_end %in% flip_loc
+  # results &lt;- results %&gt;%
+  #   filter(flip | (!is_flip &amp; !flip))
+  # return(results %&gt;% select(-is_flip))
+  return(results)
+}
+
+annotate_het_list &lt;- function(id, het_loc_dir, beagle_dir, eagle_dir, shapeit_dir, df_freq){
+  result &lt;- load_het_pos(id, het_loc_dir)
+  df_b &lt;- load_switch_df(id, beagle_dir)
+  df_e &lt;- load_switch_df(id, eagle_dir)
+  df_s &lt;- load_switch_df(id, shapeit_dir)
+  
+  result$switch_b &lt;- result$pos %in% {df_b %&gt;% filter(!is_flip) %&gt;% pull(pos_start)}
+  result$flip_b &lt;- result$pos %in% {df_b %&gt;% filter(flip) %&gt;% pull(pos_start)}
+  result$flip2_b &lt;- result$pos %in% {df_b %&gt;% filter(is_flip &amp; !flip) %&gt;% pull(pos_start)}
+  
+  result$switch_e &lt;- result$pos %in% {df_e %&gt;% filter(!is_flip) %&gt;% pull(pos_start)}
+  result$flip_e &lt;- result$pos %in% {df_e %&gt;% filter(flip) %&gt;% pull(pos_start)}
+  result$flip2_e &lt;- result$pos %in% {df_e %&gt;% filter(is_flip &amp; !flip) %&gt;% pull(pos_start)}
+  
+  result$switch_s &lt;- result$pos %in% {df_s %&gt;% filter(!is_flip) %&gt;% pull(pos_start)}
+  result$flip_s &lt;- result$pos %in% {df_s %&gt;% filter(flip) %&gt;% pull(pos_start)}
+  result$flip2_s &lt;- result$pos %in% {df_s %&gt;% filter(is_flip &amp; !flip) %&gt;% pull(pos_start)}
+  
+  result &lt;- left_join(result,
+                       {df_freq %&gt;%
+                           select(pos, maf)},
+                       by = c(&quot;pos&quot; = &quot;pos&quot;))
+  
+  return(result)
+}
+
+df &lt;- annotate_het_list(1, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)</code></pre>
+<p>For the <code>ggVennDiagram</code> library, we will want lists of
+positions for each error type (note that here we “double count” flips by
+including the positions of both involved heterozygous sites):</p>
+<pre class="r"><code>x &lt;- list(beagle = {df %&gt;% filter(switch_b | flip_b | flip2_b) %&gt;% pull(pos)},
+          eagle = {df %&gt;% filter(switch_e | flip_e | flip2_e) %&gt;% pull(pos)},
+          shapeit = {df %&gt;% filter(switch_s | flip_s | flip2_s) %&gt;% pull(pos)})
+ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;red&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>I want to be a bit more rigorous in counting overlaps; for each
+method, I only want start sites to overlap errors of other methods,
+i.e. I don’t want to double count flips in method A, but would count as
+overlap if same position were the second-half of a flip in method B.</p>
+<pre class="r"><code># Get flip and switch positions
+b_flip_pos &lt;- {df %&gt;% filter(flip_b) %&gt;% pull(pos)}
+e_flip_pos &lt;- {df %&gt;% filter(flip_e) %&gt;% pull(pos)}
+s_flip_pos &lt;- {df %&gt;% filter(flip_s) %&gt;% pull(pos)}
+b_switch_pos &lt;- {df %&gt;% filter(switch_b) %&gt;% pull(pos)}
+e_switch_pos &lt;- {df %&gt;% filter(switch_e) %&gt;% pull(pos)}
+s_switch_pos &lt;- {df %&gt;% filter(switch_s) %&gt;% pull(pos)}
+b_flip2_pos &lt;- {df %&gt;% filter(flip2_b) %&gt;% pull(pos)}
+e_flip2_pos &lt;- {df %&gt;% filter(flip2_e) %&gt;% pull(pos)}
+s_flip2_pos &lt;- {df %&gt;% filter(flip2_s) %&gt;% pull(pos)}
+
+# Beagle overlap
+b_switch_unique &lt;- b_switch_pos[b_switch_pos %!in% c(e_flip_pos, s_flip_pos, e_switch_pos, s_switch_pos, e_flip2_pos, s_flip2_pos)]
+b_switch_e &lt;- b_switch_pos[(b_switch_pos %in% c(e_flip_pos, e_switch_pos, e_flip2_pos)) &amp; b_switch_pos %!in% c(s_flip_pos, s_switch_pos, s_flip2_pos)]
+b_switch_s &lt;- b_switch_pos[(b_switch_pos %in% c(s_flip_pos, s_switch_pos, s_flip2_pos)) &amp; b_switch_pos %!in% c(e_flip_pos, e_switch_pos, e_flip2_pos)]
+b_switch_e_s &lt;- b_switch_pos[b_switch_pos %in% c(s_flip_pos, s_switch_pos, s_flip2_pos) &amp; b_switch_pos %in% c(e_flip_pos, e_switch_pos, e_flip2_pos)]
+
+b_flip_unique &lt;- b_flip_pos[b_flip_pos %!in% c(e_flip_pos, s_flip_pos, e_switch_pos, s_switch_pos, e_flip2_pos, s_flip2_pos)]
+b_flip_e &lt;- b_flip_pos[(b_flip_pos %in% c(e_flip_pos, e_switch_pos, e_flip2_pos)) &amp; b_flip_pos %!in% c(s_flip_pos, s_switch_pos, s_flip2_pos)]
+b_flip_s &lt;- b_flip_pos[(b_flip_pos %in% c(s_flip_pos, s_switch_pos, s_flip2_pos)) &amp; b_flip_pos %!in% c(e_flip_pos, e_switch_pos, e_flip2_pos)]
+b_flip_e_s &lt;- b_flip_pos[b_flip_pos %in% c(s_flip_pos, s_switch_pos, s_flip2_pos) &amp; b_flip_pos %in% c(e_flip_pos, e_switch_pos, e_flip2_pos)]
+
+# Eagle Overlap
+e_switch_unique &lt;- e_switch_pos[e_switch_pos %!in% c(b_flip_pos, s_flip_pos, b_switch_pos, s_switch_pos, b_flip2_pos, s_flip2_pos)]
+e_switch_b &lt;- e_switch_pos[(e_switch_pos %in% c(b_flip_pos, b_switch_pos, b_flip2_pos)) &amp; e_switch_pos %!in% c(s_flip_pos, s_switch_pos, s_flip2_pos)]
+e_switch_s &lt;- e_switch_pos[(e_switch_pos %in% c(s_flip_pos, s_switch_pos, s_flip2_pos)) &amp; e_switch_pos %!in% c(b_flip_pos, b_switch_pos, b_flip2_pos)]
+e_switch_b_s &lt;- e_switch_pos[e_switch_pos %in% c(s_flip_pos, s_switch_pos, s_flip2_pos) &amp; e_switch_pos %in% c(b_flip_pos, b_switch_pos, b_flip2_pos)]
+
+e_flip_unique &lt;- e_flip_pos[e_flip_pos %!in% c(b_flip_pos, s_flip_pos, b_switch_pos, s_switch_pos, b_flip2_pos, s_flip2_pos)]
+e_flip_b &lt;- e_flip_pos[(e_flip_pos %in% c(b_flip_pos, b_switch_pos, b_flip2_pos)) &amp; e_flip_pos %!in% c(s_flip_pos, s_switch_pos, s_flip2_pos)]
+e_flip_s &lt;- e_flip_pos[(e_flip_pos %in% c(s_flip_pos, s_switch_pos, s_flip2_pos)) &amp; e_flip_pos %!in% c(b_flip_pos, b_switch_pos, b_flip2_pos)]
+e_flip_b_s &lt;- e_flip_pos[e_flip_pos %in% c(s_flip_pos, s_switch_pos, s_flip2_pos) &amp; e_flip_pos %in% c(b_flip_pos, b_switch_pos, b_flip2_pos)]
+
+# SHAPEIT Overlap
+s_switch_unique &lt;- s_switch_pos[s_switch_pos %!in% c(b_flip_pos, e_flip_pos, b_switch_pos, e_switch_pos, b_flip2_pos, e_flip2_pos)]
+s_switch_b &lt;- s_switch_pos[(s_switch_pos %in% c(b_flip_pos, b_switch_pos, b_flip2_pos)) &amp; s_switch_pos %!in% c(e_flip_pos, e_switch_pos, e_flip2_pos)]
+s_switch_e &lt;- s_switch_pos[(s_switch_pos %in% c(e_flip_pos, e_switch_pos, e_flip2_pos)) &amp; s_switch_pos %!in% c(b_flip_pos, b_switch_pos, b_flip2_pos)]
+s_switch_b_e &lt;- s_switch_pos[s_switch_pos %in% c(e_flip_pos, e_switch_pos, e_flip2_pos) &amp; s_switch_pos %in% c(b_flip_pos, b_switch_pos, b_flip2_pos)]
+
+s_flip_unique &lt;- s_flip_pos[s_flip_pos %!in% c(e_flip_pos, b_flip_pos, e_switch_pos, b_switch_pos, e_flip2_pos, b_flip2_pos)]
+s_flip_b &lt;- s_flip_pos[(s_flip_pos %in% c(b_flip_pos, b_switch_pos, b_flip2_pos)) &amp; s_flip_pos %!in% c(e_flip_pos, e_switch_pos, e_flip2_pos)]
+s_flip_e &lt;- s_flip_pos[(s_flip_pos %in% c(e_flip_pos, e_switch_pos, e_flip2_pos)) &amp; s_flip_pos %!in% c(b_flip_pos, b_switch_pos, b_flip2_pos)]
+s_flip_b_e &lt;- s_flip_pos[s_flip_pos %in% c(e_flip_pos, e_switch_pos, e_flip2_pos) &amp; s_flip_pos %in% c(b_flip_pos, b_switch_pos, b_flip2_pos)]
+
+# Get counts</code></pre>
+<p>I think I have to double count flips for this analysis, since we’d
+want to identify cases where the latter half of a flip is also the
+location of either a switch or the start of a flip in another
+method.</p>
+<ol style="list-style-type: decimal">
+<li>Switches: get list of which ones do or do not appear in the error
+lists for the other methods</li>
+<li>Flips: identify overlaps, subsetting list to begin position</li>
+</ol>
+<p>What’s missing from above code is checking if flip2 overlaps an error
+in the other methods</p>
+<p>Or, hear me out: we say nuts to the above, and just do the very
+simple criteria of:</p>
+<ol style="list-style-type: decimal">
+<li>Switches are shared only with switches that occur at the same
+position</li>
+<li>Flips are shared only with flips that start at the same
+position</li>
+<li>Everything else is distinct as far as we care</li>
+</ol>
+<p>So for each SD we get two venn diagrams with 3 circles.</p>
+<pre class="r"><code>x &lt;- list(beagle = {df %&gt;% filter(switch_b) %&gt;% pull(pos)},
+          eagle = {df %&gt;% filter(switch_e) %&gt;% pull(pos)},
+          shapeit = {df %&gt;% filter(switch_s) %&gt;% pull(pos)})
+p1 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + 
+  scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;green&quot;) + 
+  ggtitle(&quot;Switches&quot;) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+x &lt;- list(beagle = {df %&gt;% filter(flip_b) %&gt;% pull(pos)},
+          eagle = {df %&gt;% filter(flip_e) %&gt;% pull(pos)},
+          shapeit = {df %&gt;% filter(flip_s) %&gt;% pull(pos)})
+p2 &lt;- ggVennDiagram(x, label=&quot;count&quot;) + 
+  scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;blue&quot;) + 
+  ggtitle(&quot;Flips&quot;) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+gridExtra::grid.arrange(p1,p2,ncol=2)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Naturally, we may ask how many intersections of errors do we miss by
+considering only matching error types and, in the case of flips, only
+matching directly overlapping errors. First, we look at how many
+switches from each method overlap flips from the other two methods:</p>
+<pre class="r"><code>x &lt;- list(beagle = {df %&gt;% filter(switch_b) %&gt;% pull(pos)},
+          eagle_flip = {df %&gt;% filter(flip_e | flip2_e) %&gt;% pull(pos)},
+          eagle_switch = {df %&gt;% filter(switch_e) %&gt;% pull(pos)},
+          shapeit_switch = {df %&gt;% filter(switch_s) %&gt;% pull(pos)},
+          shapeit_flip = {df %&gt;% filter(flip_s | flip2_s) %&gt;% pull(pos)})
+p1 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;purple&quot;) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+x &lt;- list(beagle = {df %&gt;% filter(switch_b) %&gt;% pull(pos)},
+          eagle_flip = {df %&gt;% filter(flip_e | flip2_e) %&gt;% pull(pos)},
+          shapeit_flip = {df %&gt;% filter(flip_s | flip2_s) %&gt;% pull(pos)})
+p2 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;darkgreen&quot;) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+gridExtra::grid.arrange(p1,p2,ncol=2)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>x &lt;- list(beagle_flip = {df %&gt;% filter(flip_b | flip2_b) %&gt;% pull(pos)},
+          beagle_switch = {df %&gt;% filter(switch_b) %&gt;% pull(pos)},
+          eagle = {df %&gt;% filter(switch_e) %&gt;% pull(pos)},
+          shapeit_switch = {df %&gt;% filter(switch_s) %&gt;% pull(pos)},
+          shapeit_flip = {df %&gt;% filter(flip_s | flip2_s) %&gt;% pull(pos)})
+p1 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;purple&quot;) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+x &lt;- list(beagle_flip = {df %&gt;% filter(flip_b | flip2_b) %&gt;% pull(pos)},
+          eagle = {df %&gt;% filter(switch_e) %&gt;% pull(pos)},
+          shapeit_flip = {df %&gt;% filter(flip_s | flip2_s) %&gt;% pull(pos)})
+p2 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;darkgreen&quot;) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+gridExtra::grid.arrange(p1,p2,ncol=2)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>x &lt;- list(beagle_flip = {df %&gt;% filter(flip_b | flip2_b) %&gt;% pull(pos)},
+          beagle_switch = {df %&gt;% filter(switch_b) %&gt;% pull(pos)},
+          eagle_switch = {df %&gt;% filter(switch_e) %&gt;% pull(pos)},
+          eagle_flip = {df %&gt;% filter(flip_e | flip2_e) %&gt;% pull(pos)},
+          shapeit = {df %&gt;% filter(switch_s) %&gt;% pull(pos)})
+p1 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;purple&quot;) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+x &lt;- list(beagle_flip = {df %&gt;% filter(flip_b | flip2_b) %&gt;% pull(pos)},
+          eagle_flip = {df %&gt;% filter(flip_e | flip2_e) %&gt;% pull(pos)},
+          shapeit = {df %&gt;% filter(switch_s) %&gt;% pull(pos)})
+p2 &lt;- ggVennDiagram(x, label = &quot;count&quot;) + scale_fill_gradient(low=&quot;grey90&quot;,high = &quot;darkgreen&quot;) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+gridExtra::grid.arrange(p1,p2,ncol=2)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>So, if we wanted to aggregate these counts across multiple SDs, we’d
+have to generate 14 numbers per SD. Is there a quick way of doing
+this?</p>
+<pre class="r"><code>df_switch &lt;- df %&gt;%
+  filter(switch_b | switch_e | switch_s) %&gt;%
+  mutate(beagle = ifelse(switch_b, &quot;Y&quot;, &quot;N&quot;),
+         eagle = ifelse(switch_e, &quot;Y&quot;, &quot;N&quot;),
+         shapeit = ifelse(switch_s, &quot;Y&quot;, &quot;N&quot;)) %&gt;%
+  mutate(count_cat = paste(beagle, eagle, shapeit, sep=&quot;_&quot;)) %&gt;%
+  pull(count_cat) %&gt;%
+  table() %&gt;%
+  as.data.frame() %&gt;%
+  rename(count_cat = &quot;.&quot;)
+
+df_flip &lt;- df %&gt;%
+  filter(flip_b | flip_e | flip_s) %&gt;%
+  mutate(beagle = ifelse(flip_b, &quot;Y&quot;, &quot;N&quot;),
+         eagle = ifelse(flip_e, &quot;Y&quot;, &quot;N&quot;),
+         shapeit = ifelse(flip_s, &quot;Y&quot;, &quot;N&quot;)) %&gt;%
+  mutate(count_cat = paste(beagle, eagle, shapeit, sep=&quot;_&quot;)) %&gt;%
+  pull(count_cat) %&gt;%
+  table() %&gt;%
+  as.data.frame() %&gt;%
+  rename(count_cat = &quot;.&quot;)
+
+df_switch_noflip &lt;- df %&gt;%
+  filter((switch_b | switch_e | switch_s) &amp; !(flip_b | flip2_b | flip_e | flip2_e | flip_s | flip2_s)) %&gt;%
+  mutate(beagle = ifelse(switch_b, &quot;Y&quot;, &quot;N&quot;),
+         eagle = ifelse(switch_e, &quot;Y&quot;, &quot;N&quot;),
+         shapeit = ifelse(switch_s, &quot;Y&quot;, &quot;N&quot;)) %&gt;%
+  mutate(count_cat = paste(beagle, eagle, shapeit, sep=&quot;_&quot;)) %&gt;%
+  pull(count_cat) %&gt;%
+  table() %&gt;%
+  as.data.frame() %&gt;%
+  rename(count_cat = &quot;.&quot;)</code></pre>
+</div>
+<div id="simple-overlap" class="section level1">
+<h1>Simple Overlap</h1>
+<pre class="r"><code># Version which only does exact matches of flips and switches
+get_error_counts &lt;- function(ids, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
+  n &lt;- length(ids)
+  results &lt;- vector(mode = &quot;list&quot;, length = 2)
+  
+  df &lt;- annotate_het_list(ids[1], het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+  df_switch &lt;- df %&gt;%
+    filter(switch_b | switch_e | switch_s) %&gt;%
+    mutate(beagle = ifelse(switch_b, &quot;Y&quot;, &quot;N&quot;),
+           eagle = ifelse(switch_e, &quot;Y&quot;, &quot;N&quot;),
+           shapeit = ifelse(switch_s, &quot;Y&quot;, &quot;N&quot;)) %&gt;%
+    mutate(count_cat = paste(beagle, eagle, shapeit, sep=&quot;_&quot;)) %&gt;%
+    pull(count_cat) %&gt;%
+    table() %&gt;%
+    as.data.frame() %&gt;%
+    rename(count_cat = &quot;.&quot;)
+  
+  df_flip &lt;- df %&gt;%
+    filter(flip_b | flip_e | flip_s) %&gt;%
+    mutate(beagle = ifelse(flip_b, &quot;Y&quot;, &quot;N&quot;),
+           eagle = ifelse(flip_e, &quot;Y&quot;, &quot;N&quot;),
+           shapeit = ifelse(flip_s, &quot;Y&quot;, &quot;N&quot;)) %&gt;%
+    mutate(count_cat = paste(beagle, eagle, shapeit, sep=&quot;_&quot;)) %&gt;%
+    pull(count_cat) %&gt;%
+    table() %&gt;%
+    as.data.frame() %&gt;%
+    rename(count_cat = &quot;.&quot;)
+  
+  df_switch_noflip &lt;- df %&gt;%
+    filter((switch_b | switch_e | switch_s) &amp; !(flip_b | flip2_b | flip_e | flip2_e | flip_s | flip2_s)) %&gt;%
+    mutate(beagle = ifelse(switch_b, &quot;Y&quot;, &quot;N&quot;),
+           eagle = ifelse(switch_e, &quot;Y&quot;, &quot;N&quot;),
+           shapeit = ifelse(switch_s, &quot;Y&quot;, &quot;N&quot;)) %&gt;%
+    mutate(count_cat = paste(beagle, eagle, shapeit, sep=&quot;_&quot;)) %&gt;%
+    pull(count_cat) %&gt;%
+    table() %&gt;%
+    as.data.frame() %&gt;%
+    rename(count_cat = &quot;.&quot;)
+  
+  for(i in 2:n){
+    df &lt;- annotate_het_list(ids[i], het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+    df_switch2 &lt;- df %&gt;%
+      filter(switch_b | switch_e | switch_s) %&gt;%
+      mutate(beagle = ifelse(switch_b, &quot;Y&quot;, &quot;N&quot;),
+             eagle = ifelse(switch_e, &quot;Y&quot;, &quot;N&quot;),
+             shapeit = ifelse(switch_s, &quot;Y&quot;, &quot;N&quot;)) %&gt;%
+      mutate(count_cat = paste(beagle, eagle, shapeit, sep=&quot;_&quot;)) %&gt;%
+      pull(count_cat) %&gt;%
+      table() %&gt;%
+      as.data.frame() %&gt;%
+      rename(count_cat = &quot;.&quot;, Freq2 = Freq)
+    
+    df_switch &lt;- df_switch %&gt;%
+      full_join(df_switch2, by=&quot;count_cat&quot;) %&gt;%
+      replace_na(list(&quot;Freq&quot; = 0, &quot;Freq2&quot; = 0)) %&gt;%
+      mutate(Freq = Freq + Freq2) %&gt;%
+      select(-Freq2)
+      
+    
+    df_flip2 &lt;- df %&gt;%
+      filter(flip_b | flip_e | flip_s) %&gt;%
+      mutate(beagle = ifelse(flip_b, &quot;Y&quot;, &quot;N&quot;),
+             eagle = ifelse(flip_e, &quot;Y&quot;, &quot;N&quot;),
+             shapeit = ifelse(flip_s, &quot;Y&quot;, &quot;N&quot;)) %&gt;%
+      mutate(count_cat = paste(beagle, eagle, shapeit, sep=&quot;_&quot;)) %&gt;%
+      pull(count_cat) %&gt;%
+      table() %&gt;%
+      as.data.frame() %&gt;%
+      rename(count_cat = &quot;.&quot;, Freq2 = Freq)
+    
+    df_flip &lt;- df_flip %&gt;%
+      full_join(df_flip2, by=&quot;count_cat&quot;) %&gt;%
+      replace_na(list(&quot;Freq&quot; = 0, &quot;Freq2&quot; = 0)) %&gt;%
+      mutate(Freq = Freq + Freq2) %&gt;%
+      select(-Freq2)
+    
+    df_switch_noflip2 &lt;- df %&gt;%
+      filter((switch_b | switch_e | switch_s) &amp; !(flip_b | flip2_b | flip_e | flip2_e | flip_s | flip2_s)) %&gt;%
+      mutate(beagle = ifelse(switch_b, &quot;Y&quot;, &quot;N&quot;),
+             eagle = ifelse(switch_e, &quot;Y&quot;, &quot;N&quot;),
+             shapeit = ifelse(switch_s, &quot;Y&quot;, &quot;N&quot;)) %&gt;%
+      mutate(count_cat = paste(beagle, eagle, shapeit, sep=&quot;_&quot;)) %&gt;%
+      pull(count_cat) %&gt;%
+      table() %&gt;%
+      as.data.frame() %&gt;%
+      rename(count_cat = &quot;.&quot;, Freq2 = Freq)
+    
+    df_switch_noflip &lt;- df_switch_noflip %&gt;%
+      full_join(df_switch_noflip2, by=&quot;count_cat&quot;) %&gt;%
+      replace_na(list(&quot;Freq&quot; = 0, &quot;Freq2&quot; = 0)) %&gt;%
+      mutate(Freq = Freq + Freq2) %&gt;%
+      select(-Freq2)
+  }
+  results[[1]] &lt;- df_switch
+  results[[2]] &lt;- df_flip
+  results[[3]] &lt;- df_switch_noflip
+  return(results)
+}</code></pre>
+<div id="eur" class="section level2">
+<h2>EUR</h2>
+<pre class="r"><code>results_eur &lt;- get_error_counts(1:200, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+results_eur[[1]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">5929</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">14437</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">2313</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">7014</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">3050</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">2641</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">5617</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_eur[[2]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">6631</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">6070</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">2422</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">4901</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">3717</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">1942</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">4490</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_eur[[3]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">5181</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">9584</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">2044</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">5359</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">2726</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">2226</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">5617</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>count_to_ven &lt;- function(x){
+  df &lt;- x %&gt;%
+    mutate(beagle = ifelse(str_sub(count_cat, 1, 1)==&quot;Y&quot;, 1, 0),
+           eagle = ifelse(str_sub(count_cat, 3, 3)==&quot;Y&quot;, 1, 0),
+           shapeit = ifelse(str_sub(count_cat, 5, 5)== &quot;Y&quot;, 1, 0)) %&gt;%
+    select(beagle, eagle, shapeit, Freq)
+  
+  n_b &lt;- df %&gt;% filter(beagle == 1, eagle == 0, shapeit == 0) %&gt;% pull(Freq)
+  n_e &lt;- df %&gt;% filter(beagle == 0, eagle == 1, shapeit == 0) %&gt;% pull(Freq)
+  n_s &lt;- df %&gt;% filter(beagle == 0, eagle == 0, shapeit == 1) %&gt;% pull(Freq)
+  n_b_e &lt;- df %&gt;% filter(beagle == 1, eagle == 1, shapeit == 0) %&gt;% pull(Freq)
+  n_b_s &lt;- df %&gt;% filter(beagle == 1, eagle == 0, shapeit == 1) %&gt;% pull(Freq)
+  n_e_s &lt;- df %&gt;% filter(beagle == 0, eagle == 1, shapeit == 1) %&gt;% pull(Freq)
+  n_b_e_s &lt;- df %&gt;% filter(beagle == 1, eagle == 1, shapeit == 1) %&gt;% pull(Freq)
+  
+  data.frame(beagle = c(rep(TRUE, n_b), rep(FALSE, n_e),rep(FALSE, n_s), rep(TRUE, n_b_e), rep(TRUE, n_b_s), rep(FALSE, n_e_s) , rep(TRUE, n_b_e_s)),
+             eagle = c(rep(FALSE, n_b), rep(TRUE, n_e),rep(FALSE, n_s), rep(TRUE, n_b_e), rep(FALSE, n_b_s), rep(TRUE, n_e_s) , rep(TRUE, n_b_e_s)),
+             shapeit = c(rep(FALSE, n_b), rep(FALSE, n_e), rep(TRUE, n_s), rep(FALSE, n_b_e), rep(TRUE, n_b_s), rep(TRUE, n_e_s) , rep(TRUE, n_b_e_s)) 
+             ) %&gt;%
+    vennCounts() %&gt;%
+    vennDiagram() %&gt;% print()
+}
+
+count_to_ven(results_eur[[1]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_eur[[2]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_eur[[3]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-12-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+</div>
+<div id="afr" class="section level2">
+<h2>AFR</h2>
+<pre class="r"><code>results_afr &lt;- get_error_counts(201:400, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+results_afr[[1]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">5199</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">17856</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">1854</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">7288</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">3084</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">2101</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">5238</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_afr[[2]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">8865</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">8394</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">3519</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">6400</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">5688</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">2261</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">5782</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_afr[[3]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">4526</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">11200</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">1613</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">5168</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">2776</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">1723</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">5238</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>count_to_ven(results_afr[[1]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_afr[[2]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-13-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_afr[[3]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-13-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+</div>
+<div id="amr" class="section level2">
+<h2>AMR</h2>
+<pre class="r"><code>results_amr &lt;- get_error_counts(401:600, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+results_amr[[1]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">4990</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">12132</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">1784</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">5660</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">2473</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">2159</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">4464</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_amr[[2]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">6198</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">5570</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">2294</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">4416</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">3602</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">1811</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">4013</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_amr[[3]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">4283</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">7495</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">1541</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">4078</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">2187</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">1798</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">4464</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>count_to_ven(results_amr[[1]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_amr[[2]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-14-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_amr[[3]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-14-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+</div>
+<div id="eas" class="section level2">
+<h2>EAS</h2>
+<pre class="r"><code>results_eas &lt;- get_error_counts(601:800, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+results_eas[[1]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">10728</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">22187</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">4244</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">12297</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">5171</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">4631</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">8524</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_eas[[2]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">9026</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">9408</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">3357</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">7903</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">4988</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">2803</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">5463</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_eas[[3]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">9098</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">15103</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">3635</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">9543</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">4540</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">3865</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">8524</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>count_to_ven(results_eas[[1]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_eas[[2]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-15-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_eas[[3]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-15-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+</div>
+<div id="sas" class="section level2">
+<h2>SAS</h2>
+<pre class="r"><code>results_sas &lt;- get_error_counts(801:1000, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+results_sas[[1]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">8759</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">19677</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">3490</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">10691</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">4277</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">3863</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">7094</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_sas[[2]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">9313</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">9221</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">3365</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">7464</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">4720</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">2565</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">5428</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>results_sas[[3]] %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">count_cat</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N_N_Y</td>
+<td align="right">7418</td>
+</tr>
+<tr class="even">
+<td align="left">N_Y_N</td>
+<td align="right">13223</td>
+</tr>
+<tr class="odd">
+<td align="left">N_Y_Y</td>
+<td align="right">2985</td>
+</tr>
+<tr class="even">
+<td align="left">Y_N_N</td>
+<td align="right">8326</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_N_Y</td>
+<td align="right">3782</td>
+</tr>
+<tr class="even">
+<td align="left">Y_Y_N</td>
+<td align="right">3201</td>
+</tr>
+<tr class="odd">
+<td align="left">Y_Y_Y</td>
+<td align="right">7094</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>count_to_ven(results_sas[[1]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_sas[[2]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-16-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+<pre class="r"><code>count_to_ven(results_sas[[3]])</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-16-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>NULL</code></pre>
+</div>
+</div>
+<div id="errors-in-bins" class="section level1">
+<h1>Errors in Bins</h1>
+<p>To get the sense of how much the methods overlap in a larger scale,
+we’ll look at the aggregate number of errors in bins across the genome
+for both switches and flips. First, let’s take a look at what this
+overlap looks like within a single synthetic diploid:</p>
+<pre class="r"><code>bin_size &lt;- 1e6 # try 1MB
+df &lt;- annotate_het_list(1, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq) %&gt;%
+  mutate(bin_id = ceiling(pos / bin_size))</code></pre>
+<p>Let’s first look at switches across bins</p>
+<pre class="r"><code>df %&gt;%
+  group_by(bin_id) %&gt;%
+  summarize(beagle = sum(switch_b),
+            eagle = sum(switch_e),
+            shapeit = sum(switch_s)) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;method&quot;, values_to = &quot;switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = switches, color = method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic()</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now let’s lower our resolution and look at 10MB bins:</p>
+<pre class="r"><code>bin_size &lt;- 1e7
+df %&gt;%
+  mutate(bin_id = ceiling(pos / bin_size)) %&gt;%
+  group_by(bin_id) %&gt;%
+  summarize(beagle = sum(switch_b),
+            eagle = sum(switch_e),
+            shapeit = sum(switch_s)) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;method&quot;, values_to = &quot;switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = switches, color = method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic()</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="eur-1" class="section level2">
+<h2>EUR</h2>
+<p>Now let’s see what this distribution looks like across all EUR SDs.
+First, on the MB scale:</p>
+<div id="switches" class="section level3">
+<h3>Switches</h3>
+<pre class="r"><code>get_errors_mb &lt;- function(ids, bin_size, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
+  
+  final_df &lt;- annotate_het_list(ids[1], het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq) %&gt;%
+    mutate(bin_id = ceiling(pos / bin_size)) %&gt;%
+    group_by(bin_id) %&gt;%
+    summarize(beagle_s = sum(switch_b),
+              eagle_s = sum(switch_e),
+              shapeit_s = sum(switch_s),
+              beagle_f = sum(flip_b),
+              eagle_f = sum(flip_e),
+              shapeit_f = sum(flip_s),
+              hets = n())
+  
+  for(i in 2:length(ids)){
+    df2 &lt;- annotate_het_list(ids[i], het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq) %&gt;%
+      mutate(bin_id = ceiling(pos / bin_size)) %&gt;%
+      group_by(bin_id) %&gt;%
+      summarize(beagle_s2 = sum(switch_b),
+                eagle_s2 = sum(switch_e),
+                shapeit_s2 = sum(switch_s),
+                beagle_f2 = sum(flip_b),
+              eagle_f2 = sum(flip_e),
+              shapeit_f2 = sum(flip_s),
+              hets2 = n())
+    final_df &lt;- full_join(final_df, df2, by=&quot;bin_id&quot;) %&gt;%
+      replace_na(list(&quot;beagle_s&quot; = 0, &quot;eagle_s&quot; = 0, &quot;shapeit_s&quot; = 0,
+                      &quot;beagle_s2&quot; = 0, &quot;eagle_s2&quot; = 0, &quot;shapeit_s2&quot; = 0,
+                      &quot;beagle_f&quot; = 0, &quot;eagle_f&quot; = 0, &quot;shapeit_f&quot; = 0,
+                      &quot;beagle_f2&quot; = 0, &quot;eagle_f2&quot; = 0, &quot;shapeit_f2&quot; = 0,
+                      &quot;hets&quot; = 0, &quot;hets2&quot; = 0)) %&gt;%
+      mutate(beagle_s = beagle_s + beagle_s2,
+             eagle_s = eagle_s + eagle_s2,
+             shapeit_s = shapeit_s + shapeit_s2,
+             beagle_f = beagle_f + beagle_f2,
+             eagle_f = eagle_f + eagle_f2,
+             shapeit_f = shapeit_f + shapeit_f2,
+             hets = hets + hets2) %&gt;%
+      select(bin_id, beagle_s, eagle_s, shapeit_s, beagle_f, eagle_f, shapeit_f, hets)
+  }
+  return(final_df %&gt;% arrange(bin_id))
+}
+
+df_eur &lt;- get_errors_mb(1:200, 1e6, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+df_eur %&gt;%
+  ggplot(aes(x = bin_id, y = hets)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Aggregated Heterozygous Sites per Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  xlab(&quot;Bin&quot;) +
+  ylab(&quot;Heterozygous Sites&quot;) +
+  theme_classic()</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-20-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+  geom_smooth() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-20-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9781056</td>
+<td align="right">0.9919078</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.9781056</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9735997</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9919078</td>
+<td align="right">0.9735997</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eur %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9068386</td>
+<td align="right">0.9836862</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.9068386</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8816582</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9836862</td>
+<td align="right">0.8816582</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-21-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8315731</td>
+<td align="right">0.9833574</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.8315731</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7641023</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9833574</td>
+<td align="right">0.7641023</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9070094</td>
+<td align="right">0.9767271</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9070094</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8483269</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9767271</td>
+<td align="right">0.8483269</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips" class="section level3">
+<h3>Flips</h3>
+<pre class="r"><code>df_eur %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+  geom_smooth() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-22-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+  geom_smooth() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;
+`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-22-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8805328</td>
+<td align="right">0.9545180</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.8805328</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8933332</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9545180</td>
+<td align="right">0.8933332</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eur %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8514837</td>
+<td align="right">0.9322053</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.8514837</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8567442</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9322053</td>
+<td align="right">0.8567442</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites-1" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-23-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9612741</td>
+<td align="right">0.9843589</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9612741</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9545397</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9843589</td>
+<td align="right">0.9545397</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9364308</td>
+<td align="right">0.9694807</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9364308</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9406483</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9694807</td>
+<td align="right">0.9406483</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="higher-resolution" class="section level3">
+<h3>Higher Resolution</h3>
+<pre class="r"><code>df_eur &lt;- get_errors_mb(1:200, 1e5, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+df_eur %&gt;%
+  ggplot(aes(x = bin_id, y = hets)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Aggregated Heterozygous Sites per Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  xlab(&quot;Bin&quot;) +
+  ylab(&quot;Heterozygous Sites&quot;) +
+  theme_classic()</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(eagle_beagle = eagle_s - beagle_s,
+         eagle_shapeit = eagle_s - shapeit_s) %&gt;%
+  select(bin_id, eagle_beagle, eagle_shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Comparison&quot;, values_to = &quot;Difference&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Difference, color = Comparison, group = Comparison)) +
+    geom_point() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  geom_hline(yintercept = 0) +
+  ggtitle(&quot;Difference in Switches per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  geom_smooth(linewidth = 2.5, color = &quot;black&quot;, se = FALSE)+
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;
+`geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8105791</td>
+<td align="right">0.9535655</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.8105791</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7848665</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9535655</td>
+<td align="right">0.7848665</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7867802</td>
+<td align="right">0.8713968</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.7867802</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7230802</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.8713968</td>
+<td align="right">0.7230802</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per 100KB Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-24-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8376024</td>
+<td align="right">0.9353711</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.8376024</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8733253</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9353711</td>
+<td align="right">0.8733253</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7977302</td>
+<td align="right">0.8773443</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.7977302</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8031964</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.8773443</td>
+<td align="right">0.8031964</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="lower-resolution" class="section level3">
+<h3>Lower Resolution</h3>
+<pre class="r"><code>df_eur &lt;- get_errors_mb(1:200, 1e7, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+df_eur %&gt;%
+  ggplot(aes(x = bin_id, y = hets)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Aggregated Heterozygous Sites per Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  xlab(&quot;Bin&quot;) +
+  ylab(&quot;Heterozygous Sites&quot;) +
+  theme_classic()</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(eagle_beagle = eagle_s - beagle_s,
+         eagle_shapeit = eagle_s - shapeit_s) %&gt;%
+  select(bin_id, eagle_beagle, eagle_shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Comparison&quot;, values_to = &quot;Difference&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Difference, color = Comparison, group = Comparison)) +
+    geom_point() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  geom_hline(yintercept = 0) +
+  ggtitle(&quot;Difference in Switches per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  geom_smooth(linewidth = 2.5, color = &quot;black&quot;, se = FALSE)+
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;
+`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per 10MB Bin&quot;, &quot;EUR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-25-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9364464</td>
+<td align="right">0.9947034</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9364464</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9566757</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9947034</td>
+<td align="right">0.9566757</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eur %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9823529</td>
+<td align="right">0.9882353</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9823529</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9852941</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9882353</td>
+<td align="right">0.9852941</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="afr-1" class="section level2">
+<h2>AFR</h2>
+<div id="switches-1" class="section level3">
+<h3>Switches</h3>
+<pre class="r"><code>df_afr &lt;- get_errors_mb(201:400, 1e6, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq) %&gt;%
+  arrange(bin_id)
+
+df_afr %&gt;%
+  ggplot(aes(x = bin_id, y = hets)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Aggregated Heterozygous Sites per Bin&quot;, &quot;AFR Synthetic Diploids&quot;) +
+  xlab(&quot;Bin&quot;) +
+  ylab(&quot;Heterozygous Sites&quot;) +
+  theme_classic()</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_afr %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-26-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_afr %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  geom_smooth() +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-26-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_afr %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9599481</td>
+<td align="right">0.9913585</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.9599481</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9538292</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9913585</td>
+<td align="right">0.9538292</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_afr %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8727911</td>
+<td align="right">0.9778103</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.8727911</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8393660</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9778103</td>
+<td align="right">0.8393660</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites-2" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_afr %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_afr %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8858757</td>
+<td align="right">0.9835961</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.8858757</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8430832</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9835961</td>
+<td align="right">0.8430832</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_afr %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8569990</td>
+<td align="right">0.9697978</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.8569990</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7977797</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9697978</td>
+<td align="right">0.7977797</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-1" class="section level3">
+<h3>Flips</h3>
+<pre class="r"><code>df_afr %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_afr %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-28-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_afr %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9384559</td>
+<td align="right">0.9673602</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.9384559</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9563473</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9673602</td>
+<td align="right">0.9563473</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_afr %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8955730</td>
+<td align="right">0.9423641</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.8955730</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9190195</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9423641</td>
+<td align="right">0.9190195</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites-3" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_afr %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;AFR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_afr %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9197298</td>
+<td align="right">0.9710524</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9197298</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9501458</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9710524</td>
+<td align="right">0.9501458</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_afr %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9302963</td>
+<td align="right">0.9601708</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9302963</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9429035</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9601708</td>
+<td align="right">0.9429035</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="amr-1" class="section level2">
+<h2>AMR</h2>
+<div id="switches-2" class="section level3">
+<h3>Switches</h3>
+<pre class="r"><code>df_amr &lt;- get_errors_mb(401:600, 1e6, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq) %&gt;%
+  arrange(bin_id)
+
+df_amr %&gt;%
+  ggplot(aes(x = bin_id, y = hets)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Aggregated Heterozygous Sites per Bin&quot;, &quot;AMR Synthetic Diploids&quot;) +
+  xlab(&quot;Bin&quot;) +
+  ylab(&quot;Heterozygous Sites&quot;) +
+  theme_classic()</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_amr %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-30-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_amr %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-30-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_amr %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9700566</td>
+<td align="right">0.9899233</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.9700566</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9620969</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9899233</td>
+<td align="right">0.9620969</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_amr %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8728822</td>
+<td align="right">0.9748778</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.8728822</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8524239</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9748778</td>
+<td align="right">0.8524239</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites-4" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_amr %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_amr %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8095082</td>
+<td align="right">0.978211</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.8095082</td>
+<td align="right">1.0000000</td>
+<td align="right">0.754300</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9782110</td>
+<td align="right">0.7543000</td>
+<td align="right">1.000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_amr %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8809516</td>
+<td align="right">0.9608993</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.8809516</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8217393</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9608993</td>
+<td align="right">0.8217393</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-2" class="section level3">
+<h3>Flips</h3>
+<pre class="r"><code>df_amr %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_amr %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-32-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_amr %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8788731</td>
+<td align="right">0.9554157</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.8788731</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8891003</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9554157</td>
+<td align="right">0.8891003</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_amr %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8166718</td>
+<td align="right">0.9307767</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.8166718</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8296381</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9307767</td>
+<td align="right">0.8296381</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites-5" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_amr %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;AMR Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_amr %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9298999</td>
+<td align="right">0.9846052</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9298999</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9442952</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9846052</td>
+<td align="right">0.9442952</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_amr %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9452109</td>
+<td align="right">0.9746602</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9452109</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9460300</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9746602</td>
+<td align="right">0.9460300</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="eas-1" class="section level2">
+<h2>EAS</h2>
+<div id="switches-3" class="section level3">
+<h3>Switches</h3>
+<pre class="r"><code>df_eas &lt;- get_errors_mb(601:800, 1e6, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+df_eas %&gt;%
+  ggplot(aes(x = bin_id, y = hets)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Aggregated Heterozygous Sites per Bin&quot;, &quot;EAS Synthetic Diploids&quot;) +
+  xlab(&quot;Bin&quot;) +
+  ylab(&quot;Heterozygous Sites&quot;) +
+  theme_classic()</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eas %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-34-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eas %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-34-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eas %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9848448</td>
+<td align="right">0.9941522</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.9848448</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9841966</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9941522</td>
+<td align="right">0.9841966</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eas %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9439963</td>
+<td align="right">0.9870759</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.9439963</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9378415</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9870759</td>
+<td align="right">0.9378415</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites-6" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_eas %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eas %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8469108</td>
+<td align="right">0.9898591</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.8469108</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8112932</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9898591</td>
+<td align="right">0.8112932</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eas %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9018020</td>
+<td align="right">0.9815859</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9018020</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8617916</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9815859</td>
+<td align="right">0.8617916</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-3" class="section level3">
+<h3>Flips</h3>
+<pre class="r"><code>df_eas %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eas %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-36-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eas %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9332142</td>
+<td align="right">0.9631649</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.9332142</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9348032</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9631649</td>
+<td align="right">0.9348032</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eas %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8720019</td>
+<td align="right">0.9426542</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.8720019</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8716095</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9426542</td>
+<td align="right">0.8716095</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites-7" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_eas %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;EAS Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_eas %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9804064</td>
+<td align="right">0.9917497</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9804064</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9836533</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9917497</td>
+<td align="right">0.9836533</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_eas %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9733879</td>
+<td align="right">0.9763158</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9733879</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9665319</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9763158</td>
+<td align="right">0.9665319</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="sas-1" class="section level2">
+<h2>SAS</h2>
+<div id="switches-4" class="section level3">
+<h3>Switches</h3>
+<pre class="r"><code>df_sas &lt;- get_errors_mb(801:1000, 1e6, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+df_sas %&gt;%
+  ggplot(aes(x = bin_id, y = hets)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Aggregated Heterozygous Sites per Bin&quot;, &quot;SAS Synthetic Diploids&quot;) +
+  xlab(&quot;Bin&quot;) +
+  ylab(&quot;Heterozygous Sites&quot;) +
+  theme_classic()</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_sas %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-38-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_sas %&gt;%
+  select(bin_id, beagle_s, eagle_s, shapeit_s) %&gt;%
+  rename(Beagle = beagle_s, Eagle = eagle_s, SHAPEIT = shapeit_s) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-38-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_sas %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9783579</td>
+<td align="right">0.9928913</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.9783579</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9771822</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9928913</td>
+<td align="right">0.9771822</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_sas %&gt;%
+  select(beagle_s, eagle_s, shapeit_s) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_s</th>
+<th align="right">eagle_s</th>
+<th align="right">shapeit_s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_s</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9134730</td>
+<td align="right">0.9889126</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_s</td>
+<td align="right">0.9134730</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9070935</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_s</td>
+<td align="right">0.9889126</td>
+<td align="right">0.9070935</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites-8" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_sas %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_sas %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8261806</td>
+<td align="right">0.9926952</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.8261806</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8023780</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9926952</td>
+<td align="right">0.8023780</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_sas %&gt;%
+  mutate(beagle = beagle_s / hets,
+         eagle = eagle_s / hets,
+         shapeit = shapeit_s / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9131753</td>
+<td align="right">0.9855943</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9131753</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8861241</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9855943</td>
+<td align="right">0.8861241</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-4" class="section level3">
+<h3>Flips</h3>
+<pre class="r"><code>df_sas %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_sas %&gt;%
+  select(bin_id, beagle_f, eagle_f, shapeit_f) %&gt;%
+  rename(Beagle = beagle_f, Eagle = eagle_f, SHAPEIT = shapeit_f) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;) +
+  geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-40-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_sas %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;pearson&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9009381</td>
+<td align="right">0.9498142</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.9009381</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9214059</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9498142</td>
+<td align="right">0.9214059</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_sas %&gt;%
+  select(beagle_f, eagle_f, shapeit_f) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle_f</th>
+<th align="right">eagle_f</th>
+<th align="right">shapeit_f</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle_f</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8593584</td>
+<td align="right">0.9225351</td>
+</tr>
+<tr class="even">
+<td align="left">eagle_f</td>
+<td align="right">0.8593584</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8920091</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit_f</td>
+<td align="right">0.9225351</td>
+<td align="right">0.8920091</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<div id="adjust-for-het-sites-9" class="section level4">
+<h4>Adjust for het sites</h4>
+<pre class="r"><code>df_sas %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(bin_id, beagle, eagle, shapeit) %&gt;%
+  rename(Beagle = beagle, Eagle = eagle, SHAPEIT = shapeit) %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Method&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Method )) +
+    geom_point() +
+    geom_line() +
+    theme_classic() +
+    xlab(&quot;Bin&quot;) +
+  ggtitle(&quot;Flips per Heterozygous Site per MB Bin&quot;, &quot;SAS Synthetic Diploids&quot;)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_sas %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9685955</td>
+<td align="right">0.9885870</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9685955</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9820229</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9885870</td>
+<td align="right">0.9820229</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_sas %&gt;%
+  mutate(beagle = beagle_f / hets,
+         eagle = eagle_f / hets,
+         shapeit = shapeit_f / hets) %&gt;%
+  select(beagle, eagle, shapeit) %&gt;%
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">beagle</th>
+<th align="right">eagle</th>
+<th align="right">shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beagle</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9450261</td>
+<td align="right">0.9771209</td>
+</tr>
+<tr class="even">
+<td align="left">eagle</td>
+<td align="right">0.9450261</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9536598</td>
+</tr>
+<tr class="odd">
+<td align="left">shapeit</td>
+<td align="right">0.9771209</td>
+<td align="right">0.9536598</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="population-comparisons" class="section level1">
+<h1>Population Comparisons</h1>
+<pre class="r"><code>df_eur &lt;- get_errors_mb(1:200, 1e6, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)</code></pre>
+<div id="switches-5" class="section level2">
+<h2>Switches</h2>
+<div id="beagle" class="section level3">
+<h3>Beagle</h3>
+<pre class="r"><code>df &lt;- data.frame(bin_id = df_eur$bin_id,
+                 AFR = df_afr$beagle_s / df_afr$hets,
+                 AMR = df_amr$beagle_s / df_amr$hets,
+                 EAS = df_eas$beagle_s / df_eas$hets,
+                 EUR = df_eur$beagle_s / df_eur$hets,
+                 SAS = df_sas$beagle_s / df_sas$hets)
+
+df %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Population&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Population)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Beagle Switch Rate per MB Bin&quot;) + 
+  xlab(&quot;Bin&quot;) +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8415042</td>
+<td align="right">0.5682852</td>
+<td align="right">0.8181140</td>
+<td align="right">0.6378567</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.8415042</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8050052</td>
+<td align="right">0.9236331</td>
+<td align="right">0.8373987</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.5682852</td>
+<td align="right">0.8050052</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7687613</td>
+<td align="right">0.9244556</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.8181140</td>
+<td align="right">0.9236331</td>
+<td align="right">0.7687613</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8458719</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.6378567</td>
+<td align="right">0.8373987</td>
+<td align="right">0.9244556</td>
+<td align="right">0.8458719</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8443918</td>
+<td align="right">0.7782781</td>
+<td align="right">0.8397665</td>
+<td align="right">0.8342384</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.8443918</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8912583</td>
+<td align="right">0.8955037</td>
+<td align="right">0.9382328</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.7782781</td>
+<td align="right">0.8912583</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8584629</td>
+<td align="right">0.9088010</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.8397665</td>
+<td align="right">0.8955037</td>
+<td align="right">0.8584629</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9322691</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.8342384</td>
+<td align="right">0.9382328</td>
+<td align="right">0.9088010</td>
+<td align="right">0.9322691</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="eagle" class="section level3">
+<h3>Eagle</h3>
+<pre class="r"><code>df &lt;- data.frame(bin_id = df_eur$bin_id,
+                 AFR = df_afr$eagle_s / df_afr$hets,
+                 AMR = df_amr$eagle_s / df_amr$hets,
+                 EAS = df_eas$eagle_s / df_eas$hets,
+                 EUR = df_eur$eagle_s / df_eur$hets,
+                 SAS = df_sas$eagle_s / df_sas$hets)
+
+df %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Population&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Population)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Eagle Switch Rate per MB Bin&quot;) + 
+  xlab(&quot;Bin&quot;) +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7893029</td>
+<td align="right">0.4575886</td>
+<td align="right">0.7176975</td>
+<td align="right">0.5534297</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.7893029</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7138334</td>
+<td align="right">0.8923199</td>
+<td align="right">0.7792565</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.4575886</td>
+<td align="right">0.7138334</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7418699</td>
+<td align="right">0.8972301</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.7176975</td>
+<td align="right">0.8923199</td>
+<td align="right">0.7418699</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8639438</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.5534297</td>
+<td align="right">0.7792565</td>
+<td align="right">0.8972301</td>
+<td align="right">0.8639438</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7837923</td>
+<td align="right">0.6869571</td>
+<td align="right">0.7489369</td>
+<td align="right">0.7703172</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.7837923</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8754723</td>
+<td align="right">0.8687104</td>
+<td align="right">0.9091251</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.6869571</td>
+<td align="right">0.8754723</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8299163</td>
+<td align="right">0.8814604</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.7489369</td>
+<td align="right">0.8687104</td>
+<td align="right">0.8299163</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8754758</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.7703172</td>
+<td align="right">0.9091251</td>
+<td align="right">0.8814604</td>
+<td align="right">0.8754758</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="shapeit" class="section level3">
+<h3>SHAPEIT</h3>
+<pre class="r"><code>df &lt;- data.frame(bin_id = df_eur$bin_id,
+                 AFR = df_afr$shapeit_s / df_afr$hets,
+                 AMR = df_amr$shapeit_s / df_amr$hets,
+                 EAS = df_eas$shapeit_s / df_eas$hets,
+                 EUR = df_eur$shapeit_s / df_eur$hets,
+                 SAS = df_sas$shapeit_s / df_sas$hets)
+
+df %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Population&quot;, values_to = &quot;Switches&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Switches, color = Population)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;SHAPEIT Switch Rate per MB Bin&quot;) + 
+  xlab(&quot;Bin&quot;) +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-45-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8349191</td>
+<td align="right">0.5610519</td>
+<td align="right">0.8368358</td>
+<td align="right">0.6255793</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.8349191</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8049919</td>
+<td align="right">0.9410042</td>
+<td align="right">0.8342642</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.5610519</td>
+<td align="right">0.8049919</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7688830</td>
+<td align="right">0.9281856</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.8368358</td>
+<td align="right">0.9410042</td>
+<td align="right">0.7688830</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8383096</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.6255793</td>
+<td align="right">0.8342642</td>
+<td align="right">0.9281856</td>
+<td align="right">0.8383096</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8759603</td>
+<td align="right">0.8119693</td>
+<td align="right">0.8791112</td>
+<td align="right">0.8554374</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.8759603</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9011467</td>
+<td align="right">0.9252457</td>
+<td align="right">0.9282781</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.8119693</td>
+<td align="right">0.9011467</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8721018</td>
+<td align="right">0.9230603</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.8791112</td>
+<td align="right">0.9252457</td>
+<td align="right">0.8721018</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9368665</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.8554374</td>
+<td align="right">0.9282781</td>
+<td align="right">0.9230603</td>
+<td align="right">0.9368665</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="flips-5" class="section level2">
+<h2>Flips</h2>
+<div id="beagle-1" class="section level3">
+<h3>Beagle</h3>
+<pre class="r"><code>df &lt;- data.frame(bin_id = df_eur$bin_id,
+                 AFR = df_afr$beagle_f / df_afr$hets,
+                 AMR = df_amr$beagle_f / df_amr$hets,
+                 EAS = df_eas$beagle_f / df_eas$hets,
+                 EUR = df_eur$beagle_f / df_eur$hets,
+                 SAS = df_sas$beagle_f / df_sas$hets)
+
+df %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Population&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Population)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Beagle Flip Rate per MB Bin&quot;) + 
+  xlab(&quot;Bin&quot;) +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7469885</td>
+<td align="right">0.4974002</td>
+<td align="right">0.6763617</td>
+<td align="right">0.6280741</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.7469885</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7755516</td>
+<td align="right">0.8972826</td>
+<td align="right">0.8735538</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.4974002</td>
+<td align="right">0.7755516</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8141504</td>
+<td align="right">0.8982518</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.6763617</td>
+<td align="right">0.8972826</td>
+<td align="right">0.8141504</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9427483</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.6280741</td>
+<td align="right">0.8735538</td>
+<td align="right">0.8982518</td>
+<td align="right">0.9427483</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7069920</td>
+<td align="right">0.6071697</td>
+<td align="right">0.6662182</td>
+<td align="right">0.7269118</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.7069920</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8257372</td>
+<td align="right">0.8176682</td>
+<td align="right">0.8789125</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.6071697</td>
+<td align="right">0.8257372</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7734333</td>
+<td align="right">0.8373893</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.6662182</td>
+<td align="right">0.8176682</td>
+<td align="right">0.7734333</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8725584</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.7269118</td>
+<td align="right">0.8789125</td>
+<td align="right">0.8373893</td>
+<td align="right">0.8725584</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="eagle-1" class="section level3">
+<h3>Eagle</h3>
+<pre class="r"><code>df &lt;- data.frame(bin_id = df_eur$bin_id,
+                 AFR = df_afr$eagle_f / df_afr$hets,
+                 AMR = df_amr$eagle_f / df_amr$hets,
+                 EAS = df_eas$eagle_f / df_eas$hets,
+                 EUR = df_eur$eagle_f / df_eur$hets,
+                 SAS = df_sas$eagle_f / df_sas$hets)
+
+df %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Population&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Population)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;Eagle Flip Rate per MB Bin&quot;) + 
+  xlab(&quot;Bin&quot;) +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-47-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.6579184</td>
+<td align="right">0.4993440</td>
+<td align="right">0.6474326</td>
+<td align="right">0.5953172</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.6579184</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7332568</td>
+<td align="right">0.7991103</td>
+<td align="right">0.7829134</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.4993440</td>
+<td align="right">0.7332568</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7750879</td>
+<td align="right">0.8863612</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.6474326</td>
+<td align="right">0.7991103</td>
+<td align="right">0.7750879</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8911404</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.5953172</td>
+<td align="right">0.7829134</td>
+<td align="right">0.8863612</td>
+<td align="right">0.8911404</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.6930812</td>
+<td align="right">0.6548066</td>
+<td align="right">0.7035971</td>
+<td align="right">0.7829453</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.6930812</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7809725</td>
+<td align="right">0.7347403</td>
+<td align="right">0.8127710</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.6548066</td>
+<td align="right">0.7809725</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7252248</td>
+<td align="right">0.8250087</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.7035971</td>
+<td align="right">0.7347403</td>
+<td align="right">0.7252248</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8205437</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.7829453</td>
+<td align="right">0.8127710</td>
+<td align="right">0.8250087</td>
+<td align="right">0.8205437</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="shapeit-1" class="section level3">
+<h3>SHAPEIT</h3>
+<pre class="r"><code>df &lt;- data.frame(bin_id = df_eur$bin_id,
+                 AFR = df_afr$shapeit_f / df_afr$hets,
+                 AMR = df_amr$shapeit_f / df_amr$hets,
+                 EAS = df_eas$shapeit_f / df_eas$hets,
+                 EUR = df_eur$shapeit_f / df_eur$hets,
+                 SAS = df_sas$shapeit_f / df_sas$hets)
+
+df %&gt;%
+  pivot_longer(-bin_id, names_to = &quot;Population&quot;, values_to = &quot;Flips&quot;) %&gt;%
+  ggplot(aes(x = bin_id, y = Flips, color = Population)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;SHAPEIT Flip Rate per MB Bin&quot;) + 
+  xlab(&quot;Bin&quot;) +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/sd_error_overlap.Rmd/unnamed-chunk-48-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7372663</td>
+<td align="right">0.5212313</td>
+<td align="right">0.7082065</td>
+<td align="right">0.6489615</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.7372663</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7813170</td>
+<td align="right">0.8900699</td>
+<td align="right">0.8615290</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.5212313</td>
+<td align="right">0.7813170</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8111475</td>
+<td align="right">0.9059461</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.7082065</td>
+<td align="right">0.8900699</td>
+<td align="right">0.8111475</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9291660</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.6489615</td>
+<td align="right">0.8615290</td>
+<td align="right">0.9059461</td>
+<td align="right">0.9291660</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df %&gt;%
+  select(-bin_id) %&gt;% 
+  cor(method = &quot;spearman&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">AFR</th>
+<th align="right">AMR</th>
+<th align="right">EAS</th>
+<th align="right">EUR</th>
+<th align="right">SAS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7379017</td>
+<td align="right">0.6210491</td>
+<td align="right">0.7340049</td>
+<td align="right">0.7639979</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">0.7379017</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8354409</td>
+<td align="right">0.8262496</td>
+<td align="right">0.8740258</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">0.6210491</td>
+<td align="right">0.8354409</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7727745</td>
+<td align="right">0.8295608</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">0.7340049</td>
+<td align="right">0.8262496</td>
+<td align="right">0.7727745</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8564064</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">0.7639979</td>
+<td align="right">0.8740258</td>
+<td align="right">0.8295608</td>
+<td align="right">0.8564064</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="recombination-rate" class="section level1">
+<h1>Recombination Rate</h1>
+<pre class="r"><code># rr_df_hapmap &lt;- rr_df_hapmap %&gt;%
+#   mutate(bin_id =  ceiling(pos / 1e6))
+# 
+# df_eur %&gt;%
+#   left_join({rr_df_hapmap %&gt;% 
+#       select(bin_id, combined) %&gt;% 
+#       group_by(bin_id) %&gt;% 
+#       summarise(rr = mean(combined, na.rm = T))},
+#       by = &quot;bin_id&quot;) %&gt;%
+#   ggplot(aes(x = bin_id, y = rr)) +
+#   geom_point() + 
+#   geom_line() +
+#   theme_classic() +
+#   xlab(&quot;Bin&quot;) +
+#   ylab(&quot;HapMap Recombination Rate&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.4.0 (2024-04-24)
+Platform: x86_64-pc-linux-gnu
+Running under: Ubuntu 20.04.6 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
+LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3;  LAPACK version 3.9.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: America/New_York
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] yaml_2.3.8          limma_3.58.1        ggVennDiagram_1.5.2
+ [4] ggExtra_0.10.1      lubridate_1.9.3     forcats_1.0.0      
+ [7] stringr_1.5.1       dplyr_1.1.4         purrr_1.0.2        
+[10] readr_2.1.5         tidyr_1.3.1         tibble_3.2.1       
+[13] ggplot2_3.5.0       tidyverse_2.0.0     workflowr_1.7.1    
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.4      xfun_0.42         bslib_0.7.0       processx_3.8.3   
+ [5] lattice_0.22-6    callr_3.7.5       tzdb_0.4.0        vctrs_0.6.5      
+ [9] tools_4.4.0       ps_1.7.6          generics_0.1.3    parallel_4.4.0   
+[13] fansi_1.0.6       highr_0.10        pkgconfig_2.0.3   Matrix_1.6-5     
+[17] lifecycle_1.0.4   farver_2.1.1      compiler_4.4.0    git2r_0.33.0     
+[21] statmod_1.5.0     munsell_0.5.1     getPass_0.2-4     httpuv_1.6.14    
+[25] htmltools_0.5.8   sass_0.4.9        crayon_1.5.2      later_1.3.2      
+[29] pillar_1.9.0      jquerylib_0.1.4   whisker_0.4.1     cachem_1.0.8     
+[33] nlme_3.1-164      mime_0.12         tidyselect_1.2.0  digest_0.6.34    
+[37] stringi_1.8.3     splines_4.4.0     labeling_0.4.3    rprojroot_2.0.4  
+[41] fastmap_1.1.1     grid_4.4.0        archive_1.1.7     colorspace_2.1-0 
+[45] cli_3.6.2         magrittr_2.0.3    utf8_1.2.4        withr_3.0.0      
+[49] scales_1.3.0      promises_1.2.1    bit64_4.0.5       timechange_0.3.0 
+[53] rmarkdown_2.26    httr_1.4.7        bit_4.0.5         gridExtra_2.3    
+[57] hms_1.1.3         shiny_1.8.1       evaluate_0.23     knitr_1.45       
+[61] miniUI_0.1.1.1    mgcv_1.9-1        rlang_1.1.3       Rcpp_1.0.12      
+[65] xtable_1.8-4      glue_1.7.0        rstudioapi_0.15.0 vroom_1.6.5      
+[69] jsonlite_1.8.8    R6_2.5.1          fs_1.6.3         </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
