@@ -529,15 +529,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree0669558eec5e85ce21377a217903f0c25210aac2targetblank0669558a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreef1bf0baca982366a81ca64acaee28b87c876bd22targetblankf1bf0baa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/0669558eec5e85ce21377a217903f0c25210aac2" target="_blank">0669558</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/f1bf0baca982366a81ca64acaee28b87c876bd22" target="_blank">f1bf0ba</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree0669558eec5e85ce21377a217903f0c25210aac2targetblank0669558a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreef1bf0baca982366a81ca64acaee28b87c876bd22targetblankf1bf0baa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -547,7 +547,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/0669558eec5e85ce21377a217903f0c25210aac2" target="_blank">0669558</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/f1bf0baca982366a81ca64acaee28b87c876bd22" target="_blank">f1bf0ba</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -603,6 +603,11 @@ Ignored files:
     Ignored:    output/trio_phase_15/
     Ignored:    output/trio_phase_22/
 
+Unstaged changes:
+    Modified:   code/get_maf_at_errors.R
+    Modified:   code/maf_categories_15.R
+    Modified:   code/maf_distributions.R
+
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not
@@ -647,6 +652,41 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/f1bf0baca982366a81ca64acaee28b87c876bd22/analysis/trio_phasing_results.Rmd" target="_blank">f1bf0ba</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+<td>
+wflow_publish(c("analysis/synthetic_diploid_results.Rmd",
+"analysis/trio_phasing_results.Rmd"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/trio_phasing_results.html" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -988,7 +1028,8 @@ pedigree-adjusted phased genome for each sample.</p>
 </div>
 <div id="libraries-and-data" class="section level2">
 <h2>Libraries and Data</h2>
-<pre class="r"><code>library(tidyverse)</code></pre>
+<pre class="r"><code>#regen
+library(tidyverse)</code></pre>
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ✔ forcats   1.0.0     ✔ stringr   1.5.1
@@ -6069,6 +6110,43 @@ res_obj &lt;- prop_maf_fig(&quot;het&quot;, &quot;Heterozygous Sites&quot;)</cod
 `.groups` argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-35-1">
+Past versions of unnamed-chunk-35-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-35-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-35-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -6169,6 +6247,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 `.groups` argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-36-1">
+Past versions of unnamed-chunk-36-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-36-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-36-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -6183,77 +6298,77 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <tr class="odd">
 <td align="left">AFR</td>
 <td align="left">Rare</td>
-<td align="right">0.1950781</td>
+<td align="right">0.1861816</td>
 </tr>
 <tr class="even">
 <td align="left">AFR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.1958752</td>
+<td align="right">0.1968495</td>
 </tr>
 <tr class="odd">
 <td align="left">AFR</td>
 <td align="left">Common</td>
-<td align="right">0.6090467</td>
+<td align="right">0.6169689</td>
 </tr>
 <tr class="even">
 <td align="left">AMR</td>
 <td align="left">Rare</td>
-<td align="right">0.2215357</td>
+<td align="right">0.2080965</td>
 </tr>
 <tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.1065396</td>
+<td align="right">0.1085269</td>
 </tr>
 <tr class="even">
 <td align="left">AMR</td>
 <td align="left">Common</td>
-<td align="right">0.6719247</td>
+<td align="right">0.6833767</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="left">Rare</td>
-<td align="right">0.2542494</td>
+<td align="right">0.2353436</td>
 </tr>
 <tr class="even">
 <td align="left">EAS</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0718720</td>
+<td align="right">0.0685826</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="left">Common</td>
-<td align="right">0.6738787</td>
+<td align="right">0.6960738</td>
 </tr>
 <tr class="even">
 <td align="left">EUR</td>
 <td align="left">Rare</td>
-<td align="right">0.2047675</td>
+<td align="right">0.1903093</td>
 </tr>
 <tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0947301</td>
+<td align="right">0.0951006</td>
 </tr>
 <tr class="even">
 <td align="left">EUR</td>
 <td align="left">Common</td>
-<td align="right">0.7005024</td>
+<td align="right">0.7145901</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">Rare</td>
-<td align="right">0.2364991</td>
+<td align="right">0.2199657</td>
 </tr>
 <tr class="even">
 <td align="left">SAS</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0639282</td>
+<td align="right">0.0656904</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">Common</td>
-<td align="right">0.6995727</td>
+<td align="right">0.7143439</td>
 </tr>
 </tbody>
 </table>
@@ -6271,105 +6386,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 `.groups` argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>res_obj$tab_prop %&gt;%
-  knitr::kable()</code></pre>
-<table>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-1">
+Past versions of unnamed-chunk-37-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-37-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
 <thead>
-<tr class="header">
-<th align="left">SUPER</th>
-<th align="left">category</th>
-<th align="right">mean_prop</th>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">AFR</td>
-<td align="left">Rare</td>
-<td align="right">0.1556647</td>
-</tr>
-<tr class="even">
-<td align="left">AFR</td>
-<td align="left">Uncommon</td>
-<td align="right">0.2164719</td>
-</tr>
-<tr class="odd">
-<td align="left">AFR</td>
-<td align="left">Common</td>
-<td align="right">0.6278634</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">Rare</td>
-<td align="right">0.1370230</td>
-</tr>
-<tr class="odd">
-<td align="left">AMR</td>
-<td align="left">Uncommon</td>
-<td align="right">0.1207635</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">Common</td>
-<td align="right">0.7422135</td>
-</tr>
-<tr class="odd">
-<td align="left">EAS</td>
-<td align="left">Rare</td>
-<td align="right">0.1823276</td>
-</tr>
-<tr class="even">
-<td align="left">EAS</td>
-<td align="left">Uncommon</td>
-<td align="right">0.0817227</td>
-</tr>
-<tr class="odd">
-<td align="left">EAS</td>
-<td align="left">Common</td>
-<td align="right">0.7359497</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">Rare</td>
-<td align="right">0.1512914</td>
-</tr>
-<tr class="odd">
-<td align="left">EUR</td>
-<td align="left">Uncommon</td>
-<td align="right">0.1130190</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">Common</td>
-<td align="right">0.7356896</td>
-</tr>
-<tr class="odd">
-<td align="left">SAS</td>
-<td align="left">Rare</td>
-<td align="right">0.1617512</td>
-</tr>
-<tr class="even">
-<td align="left">SAS</td>
-<td align="left">Uncommon</td>
-<td align="right">0.0748889</td>
-</tr>
-<tr class="odd">
-<td align="left">SAS</td>
-<td align="left">Common</td>
-<td align="right">0.7633599</td>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-37-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="end" class="section level4">
-<h4>End</h4>
-<pre class="r"><code>cat_type &lt;- &quot;beagle_flip end&quot;
-title_text &lt;- &quot;Beagle Flip Ends&quot;
-
-res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
-<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
-`.groups` argument.</code></pre>
-<pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -6459,19 +6512,53 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 </tbody>
 </table>
 </div>
-</div>
-<div id="eagle-errors" class="section level3">
-<h3>Eagle Errors</h3>
-<div id="switches-1" class="section level4">
-<h4>Switches</h4>
-<pre class="r"><code>cat_type &lt;- &quot;eagle_switch&quot;
-title_text &lt;- &quot;Eagle Switches&quot;
+<div id="end" class="section level4">
+<h4>End</h4>
+<pre class="r"><code>cat_type &lt;- &quot;beagle_flip end&quot;
+title_text &lt;- &quot;Beagle Flip Ends&quot;
 
 res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
 `.groups` argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-38-1">
+Past versions of unnamed-chunk-38-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-38-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-38-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -6486,152 +6573,291 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <tr class="odd">
 <td align="left">AFR</td>
 <td align="left">Rare</td>
-<td align="right">0.2416903</td>
+<td align="right">0.1577653</td>
 </tr>
 <tr class="even">
 <td align="left">AFR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.1911404</td>
+<td align="right">0.2173428</td>
 </tr>
 <tr class="odd">
 <td align="left">AFR</td>
 <td align="left">Common</td>
-<td align="right">0.5671693</td>
+<td align="right">0.6248919</td>
 </tr>
 <tr class="even">
-<td align="left">AFR</td>
-<td align="left">beagle_switch_common</td>
-<td align="right">0.6090467</td>
-</tr>
-<tr class="odd">
-<td align="left">AFR</td>
-<td align="left">beagle_switch_rare</td>
-<td align="right">0.1950781</td>
-</tr>
-<tr class="even">
-<td align="left">AFR</td>
-<td align="left">beagle_switch_uncommon</td>
-<td align="right">0.1958752</td>
-</tr>
-<tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Rare</td>
-<td align="right">0.2583504</td>
+<td align="right">0.1425424</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.1042562</td>
+<td align="right">0.1206680</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">AMR</td>
 <td align="left">Common</td>
-<td align="right">0.6373934</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">beagle_switch_common</td>
-<td align="right">0.6719247</td>
-</tr>
-<tr class="odd">
-<td align="left">AMR</td>
-<td align="left">beagle_switch_rare</td>
-<td align="right">0.2215357</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">beagle_switch_uncommon</td>
-<td align="right">0.1065396</td>
+<td align="right">0.7367897</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="left">Rare</td>
-<td align="right">0.2839739</td>
+<td align="right">0.1929644</td>
 </tr>
 <tr class="even">
 <td align="left">EAS</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0680951</td>
+<td align="right">0.0773941</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="left">Common</td>
-<td align="right">0.6479311</td>
+<td align="right">0.7296415</td>
 </tr>
 <tr class="even">
-<td align="left">EAS</td>
-<td align="left">beagle_switch_common</td>
-<td align="right">0.6738787</td>
-</tr>
-<tr class="odd">
-<td align="left">EAS</td>
-<td align="left">beagle_switch_rare</td>
-<td align="right">0.2542494</td>
-</tr>
-<tr class="even">
-<td align="left">EAS</td>
-<td align="left">beagle_switch_uncommon</td>
-<td align="right">0.0718720</td>
-</tr>
-<tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Rare</td>
-<td align="right">0.2420076</td>
+<td align="right">0.1568062</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0906313</td>
+<td align="right">0.1150621</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">EUR</td>
 <td align="left">Common</td>
-<td align="right">0.6673611</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">beagle_switch_common</td>
-<td align="right">0.7005024</td>
-</tr>
-<tr class="odd">
-<td align="left">EUR</td>
-<td align="left">beagle_switch_rare</td>
-<td align="right">0.2047675</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">beagle_switch_uncommon</td>
-<td align="right">0.0947301</td>
+<td align="right">0.7281317</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">Rare</td>
-<td align="right">0.2767865</td>
+<td align="right">0.1682304</td>
 </tr>
 <tr class="even">
 <td align="left">SAS</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0671165</td>
+<td align="right">0.0741995</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">Common</td>
-<td align="right">0.6560970</td>
+<td align="right">0.7575701</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="eagle-errors" class="section level3">
+<h3>Eagle Errors</h3>
+<div id="switches-1" class="section level4">
+<h4>Switches</h4>
+<pre class="r"><code>cat_type &lt;- &quot;eagle_switch&quot;
+title_text &lt;- &quot;Eagle Switches&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-39-1">
+Past versions of unnamed-chunk-39-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-39-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-39-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.2393168</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1897947</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.5708886</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6169689</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.1861816</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.1968495</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.2576974</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1018827</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.6404199</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6833767</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2080965</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.1085269</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2718612</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0672702</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.6608686</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.6960738</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.2353436</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.0685826</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.2323533</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0927154</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.6749313</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_switch_common</td>
+<td align="right">0.7145901</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">beagle_switch_rare</td>
+<td align="right">0.1903093</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">beagle_switch_uncommon</td>
+<td align="right">0.0951006</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.2695905</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0636908</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.6667187</td>
 </tr>
 <tr class="even">
 <td align="left">SAS</td>
 <td align="left">beagle_switch_common</td>
-<td align="right">0.6995727</td>
+<td align="right">0.7143439</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">beagle_switch_rare</td>
-<td align="right">0.2364991</td>
+<td align="right">0.2199657</td>
 </tr>
 <tr class="even">
 <td align="left">SAS</td>
 <td align="left">beagle_switch_uncommon</td>
-<td align="right">0.0639282</td>
+<td align="right">0.0656904</td>
 </tr>
 </tbody>
 </table>
@@ -6649,6 +6875,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 `.groups` argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-40-1">
+Past versions of unnamed-chunk-40-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-40-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-40-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -6663,152 +6926,152 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <tr class="odd">
 <td align="left">AFR</td>
 <td align="left">Rare</td>
-<td align="right">0.1396991</td>
+<td align="right">0.7007774</td>
 </tr>
 <tr class="even">
 <td align="left">AFR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.2162390</td>
+<td align="right">0.0743881</td>
 </tr>
 <tr class="odd">
 <td align="left">AFR</td>
 <td align="left">Common</td>
-<td align="right">0.6440619</td>
+<td align="right">0.2248345</td>
 </tr>
 <tr class="even">
 <td align="left">AFR</td>
 <td align="left">beagle_flip_common</td>
-<td align="right">0.6278634</td>
+<td align="right">0.1685099</td>
 </tr>
 <tr class="odd">
 <td align="left">AFR</td>
 <td align="left">beagle_flip_rare</td>
-<td align="right">0.1556647</td>
+<td align="right">0.7746888</td>
 </tr>
 <tr class="even">
 <td align="left">AFR</td>
 <td align="left">beagle_flip_uncommon</td>
-<td align="right">0.2164719</td>
+<td align="right">0.0568014</td>
 </tr>
 <tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Rare</td>
-<td align="right">0.1207636</td>
+<td align="right">0.7702335</td>
 </tr>
 <tr class="even">
 <td align="left">AMR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.1176316</td>
+<td align="right">0.0399831</td>
 </tr>
 <tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Common</td>
-<td align="right">0.7616048</td>
+<td align="right">0.1897834</td>
 </tr>
 <tr class="even">
 <td align="left">AMR</td>
 <td align="left">beagle_flip_common</td>
-<td align="right">0.7422135</td>
+<td align="right">0.1500668</td>
 </tr>
 <tr class="odd">
 <td align="left">AMR</td>
 <td align="left">beagle_flip_rare</td>
-<td align="right">0.1370230</td>
+<td align="right">0.8164452</td>
 </tr>
 <tr class="even">
 <td align="left">AMR</td>
 <td align="left">beagle_flip_uncommon</td>
-<td align="right">0.1207635</td>
+<td align="right">0.0334880</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="left">Rare</td>
-<td align="right">0.1620181</td>
+<td align="right">0.7819731</td>
 </tr>
 <tr class="even">
 <td align="left">EAS</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0766328</td>
+<td align="right">0.0276195</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="left">Common</td>
-<td align="right">0.7613491</td>
+<td align="right">0.1904074</td>
 </tr>
 <tr class="even">
 <td align="left">EAS</td>
 <td align="left">beagle_flip_common</td>
-<td align="right">0.7359497</td>
+<td align="right">0.1535346</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="left">beagle_flip_rare</td>
-<td align="right">0.1823276</td>
+<td align="right">0.8226285</td>
 </tr>
 <tr class="even">
 <td align="left">EAS</td>
 <td align="left">beagle_flip_uncommon</td>
-<td align="right">0.0817227</td>
+<td align="right">0.0238369</td>
 </tr>
 <tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Rare</td>
-<td align="right">0.1385810</td>
+<td align="right">0.7636334</td>
 </tr>
 <tr class="even">
 <td align="left">EUR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.1082627</td>
+<td align="right">0.0303916</td>
 </tr>
 <tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Common</td>
-<td align="right">0.7531563</td>
+<td align="right">0.2059750</td>
 </tr>
 <tr class="even">
 <td align="left">EUR</td>
 <td align="left">beagle_flip_common</td>
-<td align="right">0.7356896</td>
+<td align="right">0.1766149</td>
 </tr>
 <tr class="odd">
 <td align="left">EUR</td>
 <td align="left">beagle_flip_rare</td>
-<td align="right">0.1512914</td>
+<td align="right">0.7960008</td>
 </tr>
 <tr class="even">
 <td align="left">EUR</td>
 <td align="left">beagle_flip_uncommon</td>
-<td align="right">0.1130190</td>
+<td align="right">0.0273843</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">Rare</td>
-<td align="right">0.1458126</td>
+<td align="right">0.7752033</td>
 </tr>
 <tr class="even">
 <td align="left">SAS</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0729413</td>
+<td align="right">0.0257629</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">Common</td>
-<td align="right">0.7812461</td>
+<td align="right">0.1990338</td>
 </tr>
 <tr class="even">
 <td align="left">SAS</td>
 <td align="left">beagle_flip_common</td>
-<td align="right">0.7633599</td>
+<td align="right">0.1706479</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">beagle_flip_rare</td>
-<td align="right">0.1617512</td>
+<td align="right">0.8075328</td>
 </tr>
 <tr class="even">
 <td align="left">SAS</td>
 <td align="left">beagle_flip_uncommon</td>
-<td align="right">0.0748889</td>
+<td align="right">0.0218194</td>
 </tr>
 </tbody>
 </table>
@@ -6832,6 +7095,43 @@ Caused by warning:
 `.groups` argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-41-1">
+Past versions of unnamed-chunk-41-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-41-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-41-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -6859,6 +7159,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 `.groups` argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-42-1">
+Past versions of unnamed-chunk-42-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-42-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-42-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -6873,77 +7210,77 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <tr class="odd">
 <td align="left">AFR</td>
 <td align="left">Rare</td>
-<td align="right">0.2064054</td>
+<td align="right">0.1964939</td>
 </tr>
 <tr class="even">
 <td align="left">AFR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.1889627</td>
+<td align="right">0.1911659</td>
 </tr>
 <tr class="odd">
 <td align="left">AFR</td>
 <td align="left">Common</td>
-<td align="right">0.6046319</td>
+<td align="right">0.6123402</td>
 </tr>
 <tr class="even">
 <td align="left">AMR</td>
 <td align="left">Rare</td>
-<td align="right">0.2305346</td>
+<td align="right">0.2209119</td>
 </tr>
 <tr class="odd">
 <td align="left">AMR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.1070104</td>
+<td align="right">0.1071165</td>
 </tr>
 <tr class="even">
 <td align="left">AMR</td>
 <td align="left">Common</td>
-<td align="right">0.6624550</td>
+<td align="right">0.6719715</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="left">Rare</td>
-<td align="right">0.2630830</td>
+<td align="right">0.2438019</td>
 </tr>
 <tr class="even">
 <td align="left">EAS</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0680281</td>
+<td align="right">0.0665161</td>
 </tr>
 <tr class="odd">
 <td align="left">EAS</td>
 <td align="left">Common</td>
-<td align="right">0.6688889</td>
+<td align="right">0.6896819</td>
 </tr>
 <tr class="even">
 <td align="left">EUR</td>
 <td align="left">Rare</td>
-<td align="right">0.2169089</td>
+<td align="right">0.1919166</td>
 </tr>
 <tr class="odd">
 <td align="left">EUR</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0903980</td>
+<td align="right">0.0922758</td>
 </tr>
 <tr class="even">
 <td align="left">EUR</td>
 <td align="left">Common</td>
-<td align="right">0.6926931</td>
+<td align="right">0.7158076</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">Rare</td>
-<td align="right">0.2498901</td>
+<td align="right">0.2353663</td>
 </tr>
 <tr class="even">
 <td align="left">SAS</td>
 <td align="left">Uncommon</td>
-<td align="right">0.0632847</td>
+<td align="right">0.0648991</td>
 </tr>
 <tr class="odd">
 <td align="left">SAS</td>
 <td align="left">Common</td>
-<td align="right">0.6868252</td>
+<td align="right">0.6997346</td>
 </tr>
 </tbody>
 </table>
@@ -6961,105 +7298,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 `.groups` argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>res_obj$tab_prop %&gt;%
-  knitr::kable()</code></pre>
-<table>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-43-1">
+Past versions of unnamed-chunk-43-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-43-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
 <thead>
-<tr class="header">
-<th align="left">SUPER</th>
-<th align="left">category</th>
-<th align="right">mean_prop</th>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">AFR</td>
-<td align="left">Rare</td>
-<td align="right">0.1545896</td>
-</tr>
-<tr class="even">
-<td align="left">AFR</td>
-<td align="left">Uncommon</td>
-<td align="right">0.2158893</td>
-</tr>
-<tr class="odd">
-<td align="left">AFR</td>
-<td align="left">Common</td>
-<td align="right">0.6295210</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">Rare</td>
-<td align="right">0.1343152</td>
-</tr>
-<tr class="odd">
-<td align="left">AMR</td>
-<td align="left">Uncommon</td>
-<td align="right">0.1202959</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="left">Common</td>
-<td align="right">0.7453890</td>
-</tr>
-<tr class="odd">
-<td align="left">EAS</td>
-<td align="left">Rare</td>
-<td align="right">0.1796116</td>
-</tr>
-<tr class="even">
-<td align="left">EAS</td>
-<td align="left">Uncommon</td>
-<td align="right">0.0830709</td>
-</tr>
-<tr class="odd">
-<td align="left">EAS</td>
-<td align="left">Common</td>
-<td align="right">0.7373175</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">Rare</td>
-<td align="right">0.1471702</td>
-</tr>
-<tr class="odd">
-<td align="left">EUR</td>
-<td align="left">Uncommon</td>
-<td align="right">0.1136741</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="left">Common</td>
-<td align="right">0.7391556</td>
-</tr>
-<tr class="odd">
-<td align="left">SAS</td>
-<td align="left">Rare</td>
-<td align="right">0.1568169</td>
-</tr>
-<tr class="even">
-<td align="left">SAS</td>
-<td align="left">Uncommon</td>
-<td align="right">0.0775049</td>
-</tr>
-<tr class="odd">
-<td align="left">SAS</td>
-<td align="left">Common</td>
-<td align="right">0.7656782</td>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-43-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="end-2" class="section level4">
-<h4>End</h4>
-<pre class="r"><code>cat_type &lt;- &quot;shapeit_flip end&quot;
-title_text &lt;- &quot;SHAPEIT Flip Ends&quot;
-
-res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
-<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
-`.groups` argument.</code></pre>
-<pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -7145,6 +7420,142 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <td align="left">SAS</td>
 <td align="left">Common</td>
 <td align="right">0.1766877</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="end-2" class="section level4">
+<h4>End</h4>
+<pre class="r"><code>cat_type &lt;- &quot;shapeit_flip end&quot;
+title_text &lt;- &quot;SHAPEIT Flip Ends&quot;
+
+res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/trio_phasing_results.Rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-44-1">
+Past versions of unnamed-chunk-44-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-44-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/trio_phasing_results.Rmd/unnamed-chunk-44-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>res_obj$tab_prop %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SUPER</th>
+<th align="left">category</th>
+<th align="right">mean_prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Rare</td>
+<td align="right">0.1587097</td>
+</tr>
+<tr class="even">
+<td align="left">AFR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.2148009</td>
+</tr>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="left">Common</td>
+<td align="right">0.6264893</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Rare</td>
+<td align="right">0.1426588</td>
+</tr>
+<tr class="odd">
+<td align="left">AMR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1210553</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="left">Common</td>
+<td align="right">0.7362859</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1888239</td>
+</tr>
+<tr class="even">
+<td align="left">EAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0825999</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="left">Common</td>
+<td align="right">0.7285762</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Rare</td>
+<td align="right">0.1554461</td>
+</tr>
+<tr class="odd">
+<td align="left">EUR</td>
+<td align="left">Uncommon</td>
+<td align="right">0.1141021</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="left">Common</td>
+<td align="right">0.7304519</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Rare</td>
+<td align="right">0.1640648</td>
+</tr>
+<tr class="even">
+<td align="left">SAS</td>
+<td align="left">Uncommon</td>
+<td align="right">0.0756569</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="left">Common</td>
+<td align="right">0.7602782</td>
 </tr>
 </tbody>
 </table>
