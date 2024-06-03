@@ -16,8 +16,16 @@
 # This version uses all samples not used in the generation of the PD as the reference panel (males and females)
 # Here we do not do any downsampling to make reference panels of a comparable size to male-only reference panels
 
-VCF="/net/snowwhite/home/beckandy/research/phasing_clean/data/1kgp/chrX_2504_snps_noPAR_noSing.bcf"
+base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
+VCF="${base_dir}/data/1kgp/chrX_2504_snps_noPAR_noSing.bcf"
 shapeit_dir="/net/snowwhite/home/beckandy/software/shapeit5/shapeit5"
+shapeit_map="${shapeit_dir}/resources/maps/b38/chrX.b38.gmap.gz"
+
+beagle_map="${base_dir}/data/ref_maps/beagle/plink.chrX.GRCh38.map"
+beagle_jar="/net/snowwhite/home/beckandy/bin/beagle.05May22.33a.jar"
+
+eagle_map="/net/snowwhite/home/beckandy/software/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz"
+
 out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors"
 # Read line from sample_pairs.csv
 line=$(awk -v id=${SLURM_ARRAY_TASK_ID} 'NR==id{ print; exit }' /net/snowwhite/home/beckandy/research/phasing_clean/data/sample_pairs.csv)
@@ -89,7 +97,7 @@ echo -e "${SLURM_ARRAY_TASK_ID}\t$n_ref" > $out_dir/vcf_n_sites/pair_${SLURM_ARR
 ### PHASING
 eagle --vcfTarget /tmp/andy_input_${SLURM_ARRAY_TASK_ID}_test.vcf.gz \
   --vcfRef /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf \
-  --geneticMapFile=/net/snowwhite/home/beckandy/software/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz \
+  --geneticMapFile=$eagle_map \
   --vcfOutFormat v \
   --chrom chrX \
   --numThreads 4 \
@@ -99,7 +107,7 @@ echo "EAGLE done"
 
 $shapeit_dir/phase_common/bin/phase_common \
   --input /tmp/andy_input_${SLURM_ARRAY_TASK_ID}_test.vcf.gz \
-  --map /net/snowwhite/home/beckandy/research/phasing/data/shapeit/chrX.b38.gmap.gz \
+  --map $shapeit_map \
   --reference /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf \
   --region chrX \
   --thread 4 \
@@ -111,10 +119,10 @@ echo "SHAPEIT done"
 
 bcftools view /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf -Ov > /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.vcf
 
-java -Xmx7g -jar /net/snowwhite/home/beckandy/bin/beagle.05May22.33a.jar \
+java -Xmx7g -jar $beagle_jar \
   gt=/tmp/andy_input_${SLURM_ARRAY_TASK_ID}_test.vcf.gz \
   ref=/tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.vcf \
-  map=/net/snowwhite/home/beckandy/research/phasing/data/ref/plink.chrX.map \
+  map=$beagle_map \
   nthreads=4 \
   impute=false \
   out=/tmp/andy_beagle_${SLURM_ARRAY_TASK_ID}

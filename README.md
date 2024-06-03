@@ -25,8 +25,38 @@ bedtools makewindows -g data/chr15.sizes -w 10000 > chr15_10k.bed
 bedtools makewindows -g data/chr22.sizes -w 10000 > chr22_10k.bed
 ```
 
-TO-DO:
-Downloading genetic maps for phasing (adding "chr" to beginning of each line for Beagle's)
+DeCODE sex averaged genetic maps
+
+```
+bigWigToBedGraph -chrom=chrX http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chrX_recomb.bed
+
+bigWigToBedGraph -chrom=chr15 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chr15_recomb.bed
+```
+
+### Genetic maps for phasing
+
+#### Beagle
+
+For this map, we need to append the string 'chr' to the beginning of each row to match the chromosome naming convention of the VCF and fasta files. Note: these come from HapMap
+
+```
+mkdir -p data/ref_maps/beagle
+wget https://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh38.map.zip
+unzip plink.GRCh38.map.zip
+rm README.txt plink.GRCh38.map.zip
+
+mv plink*.GRCh38.map data/ref_maps/beagle/
+sed -i -e 's/^/chr/' data/ref_maps/beagle/plink*.GRCh38.map
+```
+
+#### Eagle
+
+The eagle software includes the map in a directory named `tables`. It also is from HapMap, but has been reformatted.
+
+#### SHAPEIT
+
+SHAPEIT5 provides a map in the directory under which it is installed in the subdirectory `resources/maps/b38`
+
 
 ## Downloading and Processing X Chromosome Reference Data
 
@@ -273,6 +303,16 @@ awk 'NR>1 {split($5,a,":");split($6,b,":");c = (a[2]<b[2])?a[2]:b[2]; print($1"\
 ## Phasing Trio Children
 
 For each of the 602 children of the trios, we need to identify which samples need to be excluded from the reference panel when phasing (i.e., either removing the parents, the child themselves, or no one in the case neither the parents nor the child were part of the 2,504 phase 3 samples). The script in `code/trio_exclude_lists.R` generates a file for each child with a list of IDs to exclude from the reference panel for the children.
+
+### Count hets at CpG in each trio
+
+```
+for i in `seq 1 602`; do
+awk -F',' '{n_cpg += $3}END{print(n_cpg)}' output/trio_phase_15/het_loc/annotated/pair_${i}.csv  >> output/trio_phase_15/het_cpg_count.tmp
+done
+
+awk '{print(NR"\t"$1)}' output/trio_phase_15/het_cpg_count.tmp > output/trio_phase_15/het_cpg_count.tsv
+```
 
 ## Phasing chromosome 15
 

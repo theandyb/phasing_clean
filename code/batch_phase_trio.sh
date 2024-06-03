@@ -13,8 +13,18 @@
 #SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/sample.%A.%a.out
 
 # Code for phasing 602 child samples against a panel with their parents removed
+
+eagle_map="/net/snowwhite/home/beckandy/software/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz"
+
+
 base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
-shapeit_dir="/net/snowwhite/home/beckandy/software/shapeit5/shapeit5"
+
+shapeit_dir="/net/snowwhite/home/beckandy/software/shapeit5/shapeit5" #location where shapeit is compiled
+shapeit_map="${shapeit_dir}/resources/maps/b38/chr22.b38.gmap.gz"
+
+beagle_map="${base_dir}/data/ref_maps/beagle/plink.chr22.GRCh38.map"
+beagle_jar="/net/snowwhite/home/beckandy/bin/beagle.05May22.33a.jar" # location of beagle executive
+
 panel_vcf="${base_dir}/data/1kgp/chr22/chr22_phased_overlap_2504.bcf"
 phased_vcf="${base_dir}/data/1kgp/chr22/chr22_phased_overlap.bcf"
 source_vcf="${base_dir}/data/1kgp/chr22/chr22_unphased_overlap.bcf"
@@ -72,7 +82,7 @@ if ! test -f $out_dir/truth/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz; then
   ## Phasing!
   eagle --vcfTarget ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.bcf \
     --vcfRef ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.bcf \
-    --geneticMapFile=/net/snowwhite/home/beckandy/software/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz \
+    --geneticMapFile=${eagle_map} \
     --vcfOutFormat v \
     --chrom chr22 \
     --numThreads 4 \
@@ -80,16 +90,16 @@ if ! test -f $out_dir/truth/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz; then
 
   $shapeit_dir/phase_common/bin/phase_common \
     --input ${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.bcf \
-    --map /net/snowwhite/home/beckandy/research/phasing/data/shapeit/chr22.b38.gmap.gz \
+    --map ${shapeit_map} \
     --reference ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.bcf \
     --region chr22 \
     --thread 4 \
     --output ${working_dir}andy_shapeit_${SLURM_ARRAY_TASK_ID}.bcf
 
-  java -Xmx8g -jar /net/snowwhite/home/beckandy/bin/beagle.05May22.33a.jar \
+  java -Xmx8g -jar $beagle_jar \
     gt=${working_dir}andy_target_${SLURM_ARRAY_TASK_ID}.vcf.gz \
     ref=${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.vcf.gz \
-    map=/net/snowwhite/home/beckandy/research/phasing/data/ref/plink.chr22.map \
+    map=${beagle_map} \
     nthreads=4 \
     impute=false \
     out=${working_dir}andy_beagle_${SLURM_ARRAY_TASK_ID}
