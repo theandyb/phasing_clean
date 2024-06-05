@@ -1,6 +1,6 @@
 # Phasing Algorithm Evaluation with Synthetic Diploids
 
-This repository is an accompaniment to the paper "SUGAR TEA COFFEE FOR FREE"
+This repository is an accompaniment to the paper ""
 
 ## Data included in this repository
 
