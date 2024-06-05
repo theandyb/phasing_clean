@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree51f6e3c561bb95dc774c9be8316223e5bb43b860targetblank51f6e3ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree82df23da2e8790248cf13cb75c3acc4f00d770d6targetblank82df23da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/51f6e3c561bb95dc774c9be8316223e5bb43b860" target="_blank">51f6e3c</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/82df23da2e8790248cf13cb75c3acc4f00d770d6" target="_blank">82df23d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree51f6e3c561bb95dc774c9be8316223e5bb43b860targetblank51f6e3ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree82df23da2e8790248cf13cb75c3acc4f00d770d6targetblank82df23da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/51f6e3c561bb95dc774c9be8316223e5bb43b860" target="_blank">51f6e3c</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/82df23da2e8790248cf13cb75c3acc4f00d770d6" target="_blank">82df23d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -646,6 +646,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/82df23da2e8790248cf13cb75c3acc4f00d770d6/analysis/synthetic_diploid_results.Rmd" target="_blank">82df23d</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+<td>
+wflow_publish("analysis/synthetic_diploid_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/synthetic_diploid_results.html" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1239,140 +1273,14 @@ dbl (43): pair_id, n_switch_eagle, n_switch_beagle, n_switch_shapeit, n_flip...
 </div>
 <div id="tables" class="section level2">
 <h2>Tables</h2>
-<div id="mean-number-of-switches-and-flips" class="section level3">
-<h3>Mean number of switches and flips</h3>
+<div id="mean-error-rates" class="section level3">
+<h3>Mean error rates</h3>
+<p>Total errors:</p>
 <pre class="r"><code>df_vcftools %&gt;%
-  summarize(mean_switch_eagle = mean(n_other_eagle),
-            mean_switch_beagle = mean(n_other_beagle),
-            mean_switch_shapeit = mean(n_other_shapeit),
-            mean_flip_eagle = mean(n_flip_eagle),
-            mean_flip_beagle = mean(n_flip_beagle),
-            mean_flip_shapeit = mean(n_flip_shapeit)) %&gt;%
-  knitr::kable()</code></pre>
-<table style="width:100%;">
-<colgroup>
-<col width="16%" />
-<col width="17%" />
-<col width="18%" />
-<col width="14%" />
-<col width="15%" />
-<col width="16%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="right">mean_switch_eagle</th>
-<th align="right">mean_switch_beagle</th>
-<th align="right">mean_switch_shapeit</th>
-<th align="right">mean_flip_eagle</th>
-<th align="right">mean_flip_beagle</th>
-<th align="right">mean_flip_shapeit</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">146.344</td>
-<td align="right">107.367</td>
-<td align="right">98.313</td>
-<td align="right">90.187</td>
-<td align="right">90.367</td>
-<td align="right">102.891</td>
-</tr>
-</tbody>
-</table>
-<div id="by-population" class="section level4">
-<h4>By population</h4>
-<pre class="r"><code>df_vcftools %&gt;%
-  group_by(pop) %&gt;%
-  summarize(mean_switch_eagle = mean(n_other_eagle),
-            mean_switch_beagle = mean(n_other_beagle),
-            mean_switch_shapeit = mean(n_other_shapeit),
-            mean_flip_eagle = mean(n_flip_eagle),
-            mean_flip_beagle = mean(n_flip_beagle),
-            mean_flip_shapeit = mean(n_flip_shapeit)) %&gt;%
-  knitr::kable()</code></pre>
-<table>
-<colgroup>
-<col width="3%" />
-<col width="16%" />
-<col width="16%" />
-<col width="17%" />
-<col width="14%" />
-<col width="15%" />
-<col width="16%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">pop</th>
-<th align="right">mean_switch_eagle</th>
-<th align="right">mean_switch_beagle</th>
-<th align="right">mean_switch_shapeit</th>
-<th align="right">mean_flip_eagle</th>
-<th align="right">mean_flip_beagle</th>
-<th align="right">mean_flip_shapeit</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">AFR</td>
-<td align="right">135.285</td>
-<td align="right">88.580</td>
-<td align="right">76.900</td>
-<td align="right">99.790</td>
-<td align="right">100.670</td>
-<td align="right">119.285</td>
-</tr>
-<tr class="even">
-<td align="left">AMR</td>
-<td align="right">102.735</td>
-<td align="right">73.810</td>
-<td align="right">68.585</td>
-<td align="right">68.440</td>
-<td align="right">69.220</td>
-<td align="right">80.545</td>
-</tr>
-<tr class="odd">
-<td align="left">EAS</td>
-<td align="right">197.965</td>
-<td align="right">153.140</td>
-<td align="right">143.360</td>
-<td align="right">105.165</td>
-<td align="right">105.800</td>
-<td align="right">114.190</td>
-</tr>
-<tr class="even">
-<td align="left">EUR</td>
-<td align="right">125.060</td>
-<td align="right">91.635</td>
-<td align="right">84.570</td>
-<td align="right">74.620</td>
-<td align="right">75.255</td>
-<td align="right">86.300</td>
-</tr>
-<tr class="odd">
-<td align="left">SAS</td>
-<td align="right">170.675</td>
-<td align="right">129.670</td>
-<td align="right">118.150</td>
-<td align="right">102.920</td>
-<td align="right">100.890</td>
-<td align="right">114.135</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="mean-number-of-switches-and-flips-per-mb"
-class="section level3">
-<h3>Mean number of switches and flips per MB</h3>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle_switch = n_other_beagle / size_mb,
-         Eagle_switch = n_other_eagle / size_mb,
-         SHAPEIT_switch = n_other_shapeit / size_mb,
-         Beagle_flip = n_other_beagle / size_mb,
-         Eagle_flip = n_other_eagle / size_mb,
-         SHAPEIT_flip = n_other_shapeit / size_mb) %&gt;%
-  tbl_summary(include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
-                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) ,
+         Eagle = (n_other_eagle + n_flip_eagle) ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) ) %&gt;%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
               statistic = list(
                 all_continuous() ~ &quot;{mean} ({sd})&quot;,
                 all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
@@ -1825,18 +1733,12 @@ class="section level3">
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">Beagle_switch</td>
-<td headers="stat_0" class="gt_row gt_center">0.72 (0.29)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Eagle_switch</td>
-<td headers="stat_0" class="gt_row gt_center">0.98 (0.33)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_switch</td>
-<td headers="stat_0" class="gt_row gt_center">0.66 (0.28)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Beagle_flip</td>
-<td headers="stat_0" class="gt_row gt_center">0.72 (0.29)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Eagle_flip</td>
-<td headers="stat_0" class="gt_row gt_center">0.98 (0.33)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_flip</td>
-<td headers="stat_0" class="gt_row gt_center">0.66 (0.28)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Beagle</td>
+<td headers="stat_0" class="gt_row gt_center">198 (66)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle</td>
+<td headers="stat_0" class="gt_row gt_center">237 (72)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT</td>
+<td headers="stat_0" class="gt_row gt_center">201 (65)</td></tr>
   </tbody>
   
   <tfoot class="gt_footnotes">
@@ -1846,18 +1748,13 @@ class="section level3">
   </tfoot>
 </table>
 </div>
-<div id="by-population-1" class="section level4">
-<h4>By population</h4>
+<p>By population:</p>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle_switch = n_other_beagle / size_mb,
-         Eagle_switch = n_other_eagle / size_mb,
-         SHAPEIT_switch = n_other_shapeit / size_mb,
-         Beagle_flip = n_other_beagle / size_mb,
-         Eagle_flip = n_other_eagle / size_mb,
-         SHAPEIT_flip = n_other_shapeit / size_mb) %&gt;%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) ,
+         Eagle = (n_other_eagle + n_flip_eagle) ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) ) %&gt;%
   tbl_summary(by = pop,
-    include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
-                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              include = c(Beagle, Eagle, SHAPEIT),
               statistic = list(
                 all_continuous() ~ &quot;{mean} ({sd})&quot;,
                 all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
@@ -2314,42 +2211,24 @@ class="section level3">
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">Beagle_switch</td>
-<td headers="stat_1" class="gt_row gt_center">0.59 (0.18)</td>
-<td headers="stat_2" class="gt_row gt_center">0.49 (0.25)</td>
-<td headers="stat_3" class="gt_row gt_center">1.02 (0.17)</td>
-<td headers="stat_4" class="gt_row gt_center">0.61 (0.18)</td>
-<td headers="stat_5" class="gt_row gt_center">0.87 (0.25)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Eagle_switch</td>
-<td headers="stat_1" class="gt_row gt_center">0.90 (0.26)</td>
-<td headers="stat_2" class="gt_row gt_center">0.69 (0.28)</td>
-<td headers="stat_3" class="gt_row gt_center">1.32 (0.19)</td>
-<td headers="stat_4" class="gt_row gt_center">0.83 (0.22)</td>
-<td headers="stat_5" class="gt_row gt_center">1.14 (0.28)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_switch</td>
-<td headers="stat_1" class="gt_row gt_center">0.51 (0.17)</td>
-<td headers="stat_2" class="gt_row gt_center">0.46 (0.27)</td>
-<td headers="stat_3" class="gt_row gt_center">0.96 (0.17)</td>
-<td headers="stat_4" class="gt_row gt_center">0.56 (0.18)</td>
-<td headers="stat_5" class="gt_row gt_center">0.79 (0.24)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Beagle_flip</td>
-<td headers="stat_1" class="gt_row gt_center">0.59 (0.18)</td>
-<td headers="stat_2" class="gt_row gt_center">0.49 (0.25)</td>
-<td headers="stat_3" class="gt_row gt_center">1.02 (0.17)</td>
-<td headers="stat_4" class="gt_row gt_center">0.61 (0.18)</td>
-<td headers="stat_5" class="gt_row gt_center">0.87 (0.25)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Eagle_flip</td>
-<td headers="stat_1" class="gt_row gt_center">0.90 (0.26)</td>
-<td headers="stat_2" class="gt_row gt_center">0.69 (0.28)</td>
-<td headers="stat_3" class="gt_row gt_center">1.32 (0.19)</td>
-<td headers="stat_4" class="gt_row gt_center">0.83 (0.22)</td>
-<td headers="stat_5" class="gt_row gt_center">1.14 (0.28)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_flip</td>
-<td headers="stat_1" class="gt_row gt_center">0.51 (0.17)</td>
-<td headers="stat_2" class="gt_row gt_center">0.46 (0.27)</td>
-<td headers="stat_3" class="gt_row gt_center">0.96 (0.17)</td>
-<td headers="stat_4" class="gt_row gt_center">0.56 (0.18)</td>
-<td headers="stat_5" class="gt_row gt_center">0.79 (0.24)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Beagle</td>
+<td headers="stat_1" class="gt_row gt_center">189 (52)</td>
+<td headers="stat_2" class="gt_row gt_center">143 (58)</td>
+<td headers="stat_3" class="gt_row gt_center">259 (37)</td>
+<td headers="stat_4" class="gt_row gt_center">167 (44)</td>
+<td headers="stat_5" class="gt_row gt_center">231 (60)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle</td>
+<td headers="stat_1" class="gt_row gt_center">235 (64)</td>
+<td headers="stat_2" class="gt_row gt_center">171 (57)</td>
+<td headers="stat_3" class="gt_row gt_center">303 (38)</td>
+<td headers="stat_4" class="gt_row gt_center">200 (48)</td>
+<td headers="stat_5" class="gt_row gt_center">274 (61)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT</td>
+<td headers="stat_1" class="gt_row gt_center">196 (52)</td>
+<td headers="stat_2" class="gt_row gt_center">149 (59)</td>
+<td headers="stat_3" class="gt_row gt_center">258 (39)</td>
+<td headers="stat_4" class="gt_row gt_center">171 (48)</td>
+<td headers="stat_5" class="gt_row gt_center">232 (60)</td></tr>
   </tbody>
   
   <tfoot class="gt_footnotes">
@@ -2359,20 +2238,12 @@ class="section level3">
   </tfoot>
 </table>
 </div>
-</div>
-</div>
-<div id="mean-number-of-switches-and-flips-per-heterozygous-site"
-class="section level3">
-<h3>Mean number of switches and flips per heterozygous site</h3>
+<p>Errors per het:</p>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle_switch = n_other_beagle / n_hets,
-         Eagle_switch = n_other_eagle / n_hets,
-         SHAPEIT_switch = n_other_shapeit / n_hets,
-         Beagle_flip = n_other_beagle / n_hets,
-         Eagle_flip = n_other_eagle / n_hets,
-         SHAPEIT_flip = n_other_shapeit / n_hets) %&gt;%
-  tbl_summary(include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
-                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %&gt;%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
               statistic = list(
                 all_continuous() ~ &quot;{mean} ({sd})&quot;,
                 all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
@@ -2825,18 +2696,12 @@ class="section level3">
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">Beagle_switch</td>
-<td headers="stat_0" class="gt_row gt_center">0.0017 (0.0009)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Eagle_switch</td>
-<td headers="stat_0" class="gt_row gt_center">0.0023 (0.0010)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_switch</td>
-<td headers="stat_0" class="gt_row gt_center">0.0016 (0.0009)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Beagle_flip</td>
-<td headers="stat_0" class="gt_row gt_center">0.0017 (0.0009)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Eagle_flip</td>
-<td headers="stat_0" class="gt_row gt_center">0.0023 (0.0010)</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_flip</td>
-<td headers="stat_0" class="gt_row gt_center">0.0016 (0.0009)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Beagle</td>
+<td headers="stat_0" class="gt_row gt_center">0.0031 (0.0014)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle</td>
+<td headers="stat_0" class="gt_row gt_center">0.0037 (0.0015)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT</td>
+<td headers="stat_0" class="gt_row gt_center">0.0031 (0.0013)</td></tr>
   </tbody>
   
   <tfoot class="gt_footnotes">
@@ -2846,18 +2711,12 @@ class="section level3">
   </tfoot>
 </table>
 </div>
-<div id="by-population-2" class="section level4">
-<h4>By population</h4>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle_switch = n_other_beagle / n_hets,
-         Eagle_switch = n_other_eagle / n_hets,
-         SHAPEIT_switch = n_other_shapeit / n_hets,
-         Beagle_flip = n_other_beagle / n_hets,
-         Eagle_flip = n_other_eagle / n_hets,
-         SHAPEIT_flip = n_other_shapeit / n_hets) %&gt;%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %&gt;%
   tbl_summary(by = pop,
-    include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
-                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              include = c(Beagle, Eagle, SHAPEIT),
               statistic = list(
                 all_continuous() ~ &quot;{mean} ({sd})&quot;,
                 all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
@@ -3299,6 +3158,3071 @@ class="section level3">
 }
 
 #cklekptuvn .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;AFR&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>AFR</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;AMR&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>AMR</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;EAS&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>EAS</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;EUR&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>EUR</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;SAS&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>SAS</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">Beagle</td>
+<td headers="stat_1" class="gt_row gt_center">0.0019 (0.0005)</td>
+<td headers="stat_2" class="gt_row gt_center">0.0023 (0.0013)</td>
+<td headers="stat_3" class="gt_row gt_center">0.0048 (0.0008)</td>
+<td headers="stat_4" class="gt_row gt_center">0.0028 (0.0007)</td>
+<td headers="stat_5" class="gt_row gt_center">0.0036 (0.0010)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle</td>
+<td headers="stat_1" class="gt_row gt_center">0.0024 (0.0006)</td>
+<td headers="stat_2" class="gt_row gt_center">0.0028 (0.0013)</td>
+<td headers="stat_3" class="gt_row gt_center">0.0056 (0.0008)</td>
+<td headers="stat_4" class="gt_row gt_center">0.0033 (0.0008)</td>
+<td headers="stat_5" class="gt_row gt_center">0.0043 (0.0010)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT</td>
+<td headers="stat_1" class="gt_row gt_center">0.0020 (0.0005)</td>
+<td headers="stat_2" class="gt_row gt_center">0.0024 (0.0013)</td>
+<td headers="stat_3" class="gt_row gt_center">0.0048 (0.0008)</td>
+<td headers="stat_4" class="gt_row gt_center">0.0028 (0.0008)</td>
+<td headers="stat_5" class="gt_row gt_center">0.0037 (0.0010)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="6"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<p>Errors per MB:</p>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
+         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %&gt;%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ &quot;{mean} ({sd})&quot;,
+                all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
+              )</code></pre>
+<div id="mmcyasigjg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mmcyasigjg table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#mmcyasigjg thead, #mmcyasigjg tbody, #mmcyasigjg tfoot, #mmcyasigjg tr, #mmcyasigjg td, #mmcyasigjg th {
+  border-style: none;
+}
+
+#mmcyasigjg p {
+  margin: 0;
+  padding: 0;
+}
+
+#mmcyasigjg .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#mmcyasigjg .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#mmcyasigjg .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#mmcyasigjg .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#mmcyasigjg .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#mmcyasigjg .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#mmcyasigjg .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#mmcyasigjg .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#mmcyasigjg .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#mmcyasigjg .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#mmcyasigjg .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#mmcyasigjg .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#mmcyasigjg .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#mmcyasigjg .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#mmcyasigjg .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mmcyasigjg .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#mmcyasigjg .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#mmcyasigjg .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#mmcyasigjg .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mmcyasigjg .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#mmcyasigjg .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mmcyasigjg .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#mmcyasigjg .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mmcyasigjg .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mmcyasigjg .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mmcyasigjg .gt_left {
+  text-align: left;
+}
+
+#mmcyasigjg .gt_center {
+  text-align: center;
+}
+
+#mmcyasigjg .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#mmcyasigjg .gt_font_normal {
+  font-weight: normal;
+}
+
+#mmcyasigjg .gt_font_bold {
+  font-weight: bold;
+}
+
+#mmcyasigjg .gt_font_italic {
+  font-style: italic;
+}
+
+#mmcyasigjg .gt_super {
+  font-size: 65%;
+}
+
+#mmcyasigjg .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#mmcyasigjg .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#mmcyasigjg .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#mmcyasigjg .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#mmcyasigjg .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#mmcyasigjg .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#mmcyasigjg .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;N = 1,000&lt;/strong&gt;&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>N = 1,000</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">Beagle</td>
+<td headers="stat_0" class="gt_row gt_center">1.32 (0.44)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle</td>
+<td headers="stat_0" class="gt_row gt_center">1.58 (0.48)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT</td>
+<td headers="stat_0" class="gt_row gt_center">1.34 (0.44)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="2"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
+         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %&gt;%
+  tbl_summary(by = pop,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ &quot;{mean} ({sd})&quot;,
+                all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
+              )</code></pre>
+<div id="zdfxptpcpr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zdfxptpcpr table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zdfxptpcpr thead, #zdfxptpcpr tbody, #zdfxptpcpr tfoot, #zdfxptpcpr tr, #zdfxptpcpr td, #zdfxptpcpr th {
+  border-style: none;
+}
+
+#zdfxptpcpr p {
+  margin: 0;
+  padding: 0;
+}
+
+#zdfxptpcpr .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zdfxptpcpr .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zdfxptpcpr .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zdfxptpcpr .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zdfxptpcpr .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zdfxptpcpr .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zdfxptpcpr .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zdfxptpcpr .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zdfxptpcpr .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zdfxptpcpr .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zdfxptpcpr .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zdfxptpcpr .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zdfxptpcpr .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zdfxptpcpr .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zdfxptpcpr .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdfxptpcpr .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zdfxptpcpr .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zdfxptpcpr .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zdfxptpcpr .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdfxptpcpr .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zdfxptpcpr .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdfxptpcpr .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zdfxptpcpr .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdfxptpcpr .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zdfxptpcpr .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdfxptpcpr .gt_left {
+  text-align: left;
+}
+
+#zdfxptpcpr .gt_center {
+  text-align: center;
+}
+
+#zdfxptpcpr .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zdfxptpcpr .gt_font_normal {
+  font-weight: normal;
+}
+
+#zdfxptpcpr .gt_font_bold {
+  font-weight: bold;
+}
+
+#zdfxptpcpr .gt_font_italic {
+  font-style: italic;
+}
+
+#zdfxptpcpr .gt_super {
+  font-size: 65%;
+}
+
+#zdfxptpcpr .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zdfxptpcpr .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zdfxptpcpr .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zdfxptpcpr .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zdfxptpcpr .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zdfxptpcpr .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zdfxptpcpr .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;AFR&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>AFR</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;AMR&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>AMR</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;EAS&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>EAS</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;EUR&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>EUR</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;SAS&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>SAS</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">Beagle</td>
+<td headers="stat_1" class="gt_row gt_center">1.26 (0.35)</td>
+<td headers="stat_2" class="gt_row gt_center">0.95 (0.39)</td>
+<td headers="stat_3" class="gt_row gt_center">1.73 (0.25)</td>
+<td headers="stat_4" class="gt_row gt_center">1.11 (0.30)</td>
+<td headers="stat_5" class="gt_row gt_center">1.54 (0.40)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle</td>
+<td headers="stat_1" class="gt_row gt_center">1.57 (0.43)</td>
+<td headers="stat_2" class="gt_row gt_center">1.14 (0.38)</td>
+<td headers="stat_3" class="gt_row gt_center">2.02 (0.26)</td>
+<td headers="stat_4" class="gt_row gt_center">1.33 (0.32)</td>
+<td headers="stat_5" class="gt_row gt_center">1.83 (0.40)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT</td>
+<td headers="stat_1" class="gt_row gt_center">1.31 (0.35)</td>
+<td headers="stat_2" class="gt_row gt_center">1.00 (0.39)</td>
+<td headers="stat_3" class="gt_row gt_center">1.72 (0.26)</td>
+<td headers="stat_4" class="gt_row gt_center">1.14 (0.32)</td>
+<td headers="stat_5" class="gt_row gt_center">1.55 (0.40)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="6"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+<div id="mean-number-of-switches-and-flips" class="section level3">
+<h3>Mean number of switches and flips</h3>
+<pre class="r"><code>df_vcftools %&gt;%
+  summarize(mean_switch_eagle = mean(n_other_eagle),
+            mean_switch_beagle = mean(n_other_beagle),
+            mean_switch_shapeit = mean(n_other_shapeit),
+            mean_flip_eagle = mean(n_flip_eagle),
+            mean_flip_beagle = mean(n_flip_beagle),
+            mean_flip_shapeit = mean(n_flip_shapeit)) %&gt;%
+  knitr::kable()</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="16%" />
+<col width="17%" />
+<col width="18%" />
+<col width="14%" />
+<col width="15%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">mean_switch_eagle</th>
+<th align="right">mean_switch_beagle</th>
+<th align="right">mean_switch_shapeit</th>
+<th align="right">mean_flip_eagle</th>
+<th align="right">mean_flip_beagle</th>
+<th align="right">mean_flip_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">146.344</td>
+<td align="right">107.367</td>
+<td align="right">98.313</td>
+<td align="right">90.187</td>
+<td align="right">90.367</td>
+<td align="right">102.891</td>
+</tr>
+</tbody>
+</table>
+<div id="by-population" class="section level4">
+<h4>By population</h4>
+<pre class="r"><code>df_vcftools %&gt;%
+  group_by(pop) %&gt;%
+  summarize(mean_switch_eagle = mean(n_other_eagle),
+            mean_switch_beagle = mean(n_other_beagle),
+            mean_switch_shapeit = mean(n_other_shapeit),
+            mean_flip_eagle = mean(n_flip_eagle),
+            mean_flip_beagle = mean(n_flip_beagle),
+            mean_flip_shapeit = mean(n_flip_shapeit)) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="3%" />
+<col width="16%" />
+<col width="16%" />
+<col width="17%" />
+<col width="14%" />
+<col width="15%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">pop</th>
+<th align="right">mean_switch_eagle</th>
+<th align="right">mean_switch_beagle</th>
+<th align="right">mean_switch_shapeit</th>
+<th align="right">mean_flip_eagle</th>
+<th align="right">mean_flip_beagle</th>
+<th align="right">mean_flip_shapeit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFR</td>
+<td align="right">135.285</td>
+<td align="right">88.580</td>
+<td align="right">76.900</td>
+<td align="right">99.790</td>
+<td align="right">100.670</td>
+<td align="right">119.285</td>
+</tr>
+<tr class="even">
+<td align="left">AMR</td>
+<td align="right">102.735</td>
+<td align="right">73.810</td>
+<td align="right">68.585</td>
+<td align="right">68.440</td>
+<td align="right">69.220</td>
+<td align="right">80.545</td>
+</tr>
+<tr class="odd">
+<td align="left">EAS</td>
+<td align="right">197.965</td>
+<td align="right">153.140</td>
+<td align="right">143.360</td>
+<td align="right">105.165</td>
+<td align="right">105.800</td>
+<td align="right">114.190</td>
+</tr>
+<tr class="even">
+<td align="left">EUR</td>
+<td align="right">125.060</td>
+<td align="right">91.635</td>
+<td align="right">84.570</td>
+<td align="right">74.620</td>
+<td align="right">75.255</td>
+<td align="right">86.300</td>
+</tr>
+<tr class="odd">
+<td align="left">SAS</td>
+<td align="right">170.675</td>
+<td align="right">129.670</td>
+<td align="right">118.150</td>
+<td align="right">102.920</td>
+<td align="right">100.890</td>
+<td align="right">114.135</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="mean-number-of-switches-and-flips-per-mb"
+class="section level3">
+<h3>Mean number of switches and flips per MB</h3>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle_switch = n_other_beagle / size_mb,
+         Eagle_switch = n_other_eagle / size_mb,
+         SHAPEIT_switch = n_other_shapeit / size_mb,
+         Beagle_flip = n_other_beagle / size_mb,
+         Eagle_flip = n_other_eagle / size_mb,
+         SHAPEIT_flip = n_other_shapeit / size_mb) %&gt;%
+  tbl_summary(include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
+                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              statistic = list(
+                all_continuous() ~ &quot;{mean} ({sd})&quot;,
+                all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
+              )</code></pre>
+<div id="gkyrljuwin" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#gkyrljuwin table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#gkyrljuwin thead, #gkyrljuwin tbody, #gkyrljuwin tfoot, #gkyrljuwin tr, #gkyrljuwin td, #gkyrljuwin th {
+  border-style: none;
+}
+
+#gkyrljuwin p {
+  margin: 0;
+  padding: 0;
+}
+
+#gkyrljuwin .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#gkyrljuwin .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#gkyrljuwin .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#gkyrljuwin .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#gkyrljuwin .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#gkyrljuwin .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#gkyrljuwin .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#gkyrljuwin .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#gkyrljuwin .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#gkyrljuwin .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#gkyrljuwin .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#gkyrljuwin .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#gkyrljuwin .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#gkyrljuwin .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#gkyrljuwin .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gkyrljuwin .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#gkyrljuwin .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#gkyrljuwin .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#gkyrljuwin .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gkyrljuwin .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#gkyrljuwin .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gkyrljuwin .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#gkyrljuwin .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gkyrljuwin .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#gkyrljuwin .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gkyrljuwin .gt_left {
+  text-align: left;
+}
+
+#gkyrljuwin .gt_center {
+  text-align: center;
+}
+
+#gkyrljuwin .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#gkyrljuwin .gt_font_normal {
+  font-weight: normal;
+}
+
+#gkyrljuwin .gt_font_bold {
+  font-weight: bold;
+}
+
+#gkyrljuwin .gt_font_italic {
+  font-style: italic;
+}
+
+#gkyrljuwin .gt_super {
+  font-size: 65%;
+}
+
+#gkyrljuwin .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#gkyrljuwin .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#gkyrljuwin .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#gkyrljuwin .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#gkyrljuwin .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#gkyrljuwin .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#gkyrljuwin .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;N = 1,000&lt;/strong&gt;&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>N = 1,000</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">Beagle_switch</td>
+<td headers="stat_0" class="gt_row gt_center">0.72 (0.29)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle_switch</td>
+<td headers="stat_0" class="gt_row gt_center">0.98 (0.33)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_switch</td>
+<td headers="stat_0" class="gt_row gt_center">0.66 (0.28)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Beagle_flip</td>
+<td headers="stat_0" class="gt_row gt_center">0.72 (0.29)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle_flip</td>
+<td headers="stat_0" class="gt_row gt_center">0.98 (0.33)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_flip</td>
+<td headers="stat_0" class="gt_row gt_center">0.66 (0.28)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="2"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<div id="by-population-1" class="section level4">
+<h4>By population</h4>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle_switch = n_other_beagle / size_mb,
+         Eagle_switch = n_other_eagle / size_mb,
+         SHAPEIT_switch = n_other_shapeit / size_mb,
+         Beagle_flip = n_other_beagle / size_mb,
+         Eagle_flip = n_other_eagle / size_mb,
+         SHAPEIT_flip = n_other_shapeit / size_mb) %&gt;%
+  tbl_summary(by = pop,
+    include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
+                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              statistic = list(
+                all_continuous() ~ &quot;{mean} ({sd})&quot;,
+                all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
+              )</code></pre>
+<div id="nuoszkcmtw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nuoszkcmtw table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#nuoszkcmtw thead, #nuoszkcmtw tbody, #nuoszkcmtw tfoot, #nuoszkcmtw tr, #nuoszkcmtw td, #nuoszkcmtw th {
+  border-style: none;
+}
+
+#nuoszkcmtw p {
+  margin: 0;
+  padding: 0;
+}
+
+#nuoszkcmtw .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#nuoszkcmtw .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#nuoszkcmtw .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#nuoszkcmtw .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#nuoszkcmtw .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#nuoszkcmtw .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#nuoszkcmtw .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#nuoszkcmtw .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#nuoszkcmtw .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#nuoszkcmtw .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#nuoszkcmtw .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#nuoszkcmtw .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#nuoszkcmtw .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#nuoszkcmtw .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#nuoszkcmtw .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nuoszkcmtw .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#nuoszkcmtw .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#nuoszkcmtw .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#nuoszkcmtw .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nuoszkcmtw .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#nuoszkcmtw .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nuoszkcmtw .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#nuoszkcmtw .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nuoszkcmtw .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nuoszkcmtw .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nuoszkcmtw .gt_left {
+  text-align: left;
+}
+
+#nuoszkcmtw .gt_center {
+  text-align: center;
+}
+
+#nuoszkcmtw .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#nuoszkcmtw .gt_font_normal {
+  font-weight: normal;
+}
+
+#nuoszkcmtw .gt_font_bold {
+  font-weight: bold;
+}
+
+#nuoszkcmtw .gt_font_italic {
+  font-style: italic;
+}
+
+#nuoszkcmtw .gt_super {
+  font-size: 65%;
+}
+
+#nuoszkcmtw .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#nuoszkcmtw .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#nuoszkcmtw .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#nuoszkcmtw .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#nuoszkcmtw .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#nuoszkcmtw .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#nuoszkcmtw .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;AFR&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>AFR</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;AMR&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>AMR</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;EAS&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>EAS</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;EUR&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>EUR</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;SAS&lt;/strong&gt;, N = 200&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>SAS</strong>, N = 200<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">Beagle_switch</td>
+<td headers="stat_1" class="gt_row gt_center">0.59 (0.18)</td>
+<td headers="stat_2" class="gt_row gt_center">0.49 (0.25)</td>
+<td headers="stat_3" class="gt_row gt_center">1.02 (0.17)</td>
+<td headers="stat_4" class="gt_row gt_center">0.61 (0.18)</td>
+<td headers="stat_5" class="gt_row gt_center">0.87 (0.25)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle_switch</td>
+<td headers="stat_1" class="gt_row gt_center">0.90 (0.26)</td>
+<td headers="stat_2" class="gt_row gt_center">0.69 (0.28)</td>
+<td headers="stat_3" class="gt_row gt_center">1.32 (0.19)</td>
+<td headers="stat_4" class="gt_row gt_center">0.83 (0.22)</td>
+<td headers="stat_5" class="gt_row gt_center">1.14 (0.28)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_switch</td>
+<td headers="stat_1" class="gt_row gt_center">0.51 (0.17)</td>
+<td headers="stat_2" class="gt_row gt_center">0.46 (0.27)</td>
+<td headers="stat_3" class="gt_row gt_center">0.96 (0.17)</td>
+<td headers="stat_4" class="gt_row gt_center">0.56 (0.18)</td>
+<td headers="stat_5" class="gt_row gt_center">0.79 (0.24)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Beagle_flip</td>
+<td headers="stat_1" class="gt_row gt_center">0.59 (0.18)</td>
+<td headers="stat_2" class="gt_row gt_center">0.49 (0.25)</td>
+<td headers="stat_3" class="gt_row gt_center">1.02 (0.17)</td>
+<td headers="stat_4" class="gt_row gt_center">0.61 (0.18)</td>
+<td headers="stat_5" class="gt_row gt_center">0.87 (0.25)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle_flip</td>
+<td headers="stat_1" class="gt_row gt_center">0.90 (0.26)</td>
+<td headers="stat_2" class="gt_row gt_center">0.69 (0.28)</td>
+<td headers="stat_3" class="gt_row gt_center">1.32 (0.19)</td>
+<td headers="stat_4" class="gt_row gt_center">0.83 (0.22)</td>
+<td headers="stat_5" class="gt_row gt_center">1.14 (0.28)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_flip</td>
+<td headers="stat_1" class="gt_row gt_center">0.51 (0.17)</td>
+<td headers="stat_2" class="gt_row gt_center">0.46 (0.27)</td>
+<td headers="stat_3" class="gt_row gt_center">0.96 (0.17)</td>
+<td headers="stat_4" class="gt_row gt_center">0.56 (0.18)</td>
+<td headers="stat_5" class="gt_row gt_center">0.79 (0.24)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="6"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+<div id="mean-number-of-switches-and-flips-per-heterozygous-site"
+class="section level3">
+<h3>Mean number of switches and flips per heterozygous site</h3>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle_switch = n_other_beagle / n_hets,
+         Eagle_switch = n_other_eagle / n_hets,
+         SHAPEIT_switch = n_other_shapeit / n_hets,
+         Beagle_flip = n_other_beagle / n_hets,
+         Eagle_flip = n_other_eagle / n_hets,
+         SHAPEIT_flip = n_other_shapeit / n_hets) %&gt;%
+  tbl_summary(include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
+                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              statistic = list(
+                all_continuous() ~ &quot;{mean} ({sd})&quot;,
+                all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
+              )</code></pre>
+<div id="qkyvkxsleh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qkyvkxsleh table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qkyvkxsleh thead, #qkyvkxsleh tbody, #qkyvkxsleh tfoot, #qkyvkxsleh tr, #qkyvkxsleh td, #qkyvkxsleh th {
+  border-style: none;
+}
+
+#qkyvkxsleh p {
+  margin: 0;
+  padding: 0;
+}
+
+#qkyvkxsleh .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qkyvkxsleh .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qkyvkxsleh .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qkyvkxsleh .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qkyvkxsleh .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qkyvkxsleh .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qkyvkxsleh .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qkyvkxsleh .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qkyvkxsleh .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qkyvkxsleh .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qkyvkxsleh .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qkyvkxsleh .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qkyvkxsleh .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qkyvkxsleh .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qkyvkxsleh .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qkyvkxsleh .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qkyvkxsleh .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#qkyvkxsleh .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#qkyvkxsleh .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qkyvkxsleh .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qkyvkxsleh .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qkyvkxsleh .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qkyvkxsleh .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qkyvkxsleh .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qkyvkxsleh .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qkyvkxsleh .gt_left {
+  text-align: left;
+}
+
+#qkyvkxsleh .gt_center {
+  text-align: center;
+}
+
+#qkyvkxsleh .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qkyvkxsleh .gt_font_normal {
+  font-weight: normal;
+}
+
+#qkyvkxsleh .gt_font_bold {
+  font-weight: bold;
+}
+
+#qkyvkxsleh .gt_font_italic {
+  font-style: italic;
+}
+
+#qkyvkxsleh .gt_super {
+  font-size: 65%;
+}
+
+#qkyvkxsleh .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qkyvkxsleh .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qkyvkxsleh .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qkyvkxsleh .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qkyvkxsleh .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qkyvkxsleh .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qkyvkxsleh .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;N = 1,000&lt;/strong&gt;&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>N = 1,000</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">Beagle_switch</td>
+<td headers="stat_0" class="gt_row gt_center">0.0017 (0.0009)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle_switch</td>
+<td headers="stat_0" class="gt_row gt_center">0.0023 (0.0010)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_switch</td>
+<td headers="stat_0" class="gt_row gt_center">0.0016 (0.0009)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Beagle_flip</td>
+<td headers="stat_0" class="gt_row gt_center">0.0017 (0.0009)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Eagle_flip</td>
+<td headers="stat_0" class="gt_row gt_center">0.0023 (0.0010)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">SHAPEIT_flip</td>
+<td headers="stat_0" class="gt_row gt_center">0.0016 (0.0009)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="2"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<div id="by-population-2" class="section level4">
+<h4>By population</h4>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle_switch = n_other_beagle / n_hets,
+         Eagle_switch = n_other_eagle / n_hets,
+         SHAPEIT_switch = n_other_shapeit / n_hets,
+         Beagle_flip = n_other_beagle / n_hets,
+         Eagle_flip = n_other_eagle / n_hets,
+         SHAPEIT_flip = n_other_shapeit / n_hets) %&gt;%
+  tbl_summary(by = pop,
+    include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
+                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              statistic = list(
+                all_continuous() ~ &quot;{mean} ({sd})&quot;,
+                all_categorical() ~ &quot;{n} / {N} ({p}%)&quot;)
+              )</code></pre>
+<div id="vxuqdkqfmi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vxuqdkqfmi table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#vxuqdkqfmi thead, #vxuqdkqfmi tbody, #vxuqdkqfmi tfoot, #vxuqdkqfmi tr, #vxuqdkqfmi td, #vxuqdkqfmi th {
+  border-style: none;
+}
+
+#vxuqdkqfmi p {
+  margin: 0;
+  padding: 0;
+}
+
+#vxuqdkqfmi .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#vxuqdkqfmi .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vxuqdkqfmi .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vxuqdkqfmi .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vxuqdkqfmi .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vxuqdkqfmi .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vxuqdkqfmi .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vxuqdkqfmi .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vxuqdkqfmi .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#vxuqdkqfmi .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#vxuqdkqfmi .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vxuqdkqfmi .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vxuqdkqfmi .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vxuqdkqfmi .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vxuqdkqfmi .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vxuqdkqfmi .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#vxuqdkqfmi .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#vxuqdkqfmi .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#vxuqdkqfmi .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vxuqdkqfmi .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#vxuqdkqfmi .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vxuqdkqfmi .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vxuqdkqfmi .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vxuqdkqfmi .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vxuqdkqfmi .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vxuqdkqfmi .gt_left {
+  text-align: left;
+}
+
+#vxuqdkqfmi .gt_center {
+  text-align: center;
+}
+
+#vxuqdkqfmi .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vxuqdkqfmi .gt_font_normal {
+  font-weight: normal;
+}
+
+#vxuqdkqfmi .gt_font_bold {
+  font-weight: bold;
+}
+
+#vxuqdkqfmi .gt_font_italic {
+  font-style: italic;
+}
+
+#vxuqdkqfmi .gt_super {
+  font-size: 65%;
+}
+
+#vxuqdkqfmi .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#vxuqdkqfmi .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#vxuqdkqfmi .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#vxuqdkqfmi .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#vxuqdkqfmi .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#vxuqdkqfmi .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#vxuqdkqfmi .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -3926,13 +6850,13 @@ proportion of heterozygous locations that are at CpGs.</p>
   labs(colour = &quot;Population&quot;) +
   scale_color_manual(values = cbPalette) +
   geom_hline(yintercept = 1, linetype=2)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-1">
-Past versions of unnamed-chunk-19-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-1">
+Past versions of unnamed-chunk-23-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-19-1" class="collapse">
+<div id="fig-unnamed-chunk-23-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -3951,7 +6875,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">cabf05d</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
 Andy Beck
@@ -3962,7 +6897,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -3973,7 +6908,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -3984,7 +6919,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -4017,7 +6952,7 @@ Andy Beck
   theme_classic() +
   scale_color_manual(values = cbPalette) +
   geom_hline(yintercept = 1, linetype=2)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-19-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>And flips:</p>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate( prop_cpg_beagle =  n_flip_cpg_beagle / n_flip_beagle,
@@ -4040,13 +6975,13 @@ Andy Beck
   labs(colour = &quot;Population&quot;) +
   scale_color_manual(values = cbPalette) +
   geom_hline(yintercept = 1, linetype=2)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-1">
-Past versions of unnamed-chunk-20-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-1">
+Past versions of unnamed-chunk-24-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-20-1" class="collapse">
+<div id="fig-unnamed-chunk-24-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -4065,7 +7000,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">cabf05d</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
 Andy Beck
@@ -4076,7 +7022,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">7f7e2da</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">7f7e2da</a>
 </td>
 <td>
 Andy Beck
@@ -4087,7 +7033,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">f08aad3</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">f08aad3</a>
 </td>
 <td>
 Andy Beck
@@ -4098,7 +7044,7 @@ Andy Beck
 </tr>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-1.png" target="_blank">0e0d172</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">0e0d172</a>
 </td>
 <td>
 Andy Beck
@@ -4131,7 +7077,7 @@ Andy Beck
   theme_classic() +
   scale_color_manual(values = cbPalette) +
   geom_hline(yintercept = 1, linetype=2)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-20-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-2.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="by-population-5" class="section level5">
 <h5>By Population</h5>
 <pre class="r"><code>df_vcftools %&gt;%
@@ -4231,332 +7177,6 @@ Andy Beck
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette) +
   labs(color = &quot;Population&quot;)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-1">
-Past versions of unnamed-chunk-22-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-22-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">cabf05d</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">7f7e2da</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">f08aad3</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-22-1.png" target="_blank">0e0d172</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = n_other_beagle + n_flip_beagle,
-         Eagle = n_other_eagle + n_flip_eagle, 
-         SHAPEIT = n_other_shapeit + n_flip_shapeit) %&gt;%
-  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
-  geom_point() +
-  ggtitle(&quot;Total Errors&quot;) +
-  theme_classic() +
-  geom_abline(slope = 1, intercept = 0) +
-  scale_color_manual(values = cbPalette)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-1">
-Past versions of unnamed-chunk-23-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-23-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">cabf05d</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">7f7e2da</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">f08aad3</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-23-1.png" target="_blank">0e0d172</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = n_other_beagle + n_flip_beagle,
-         Eagle = n_other_eagle + n_flip_eagle, 
-         SHAPEIT = n_other_shapeit + n_flip_shapeit) %&gt;%
-  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
-  geom_point() +
-  ggtitle(&quot;Total Errors&quot;) +
-  theme_classic() +
-  geom_abline(slope = 1, intercept = 0) +
-  scale_color_manual(values = cbPalette)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-1">
-Past versions of unnamed-chunk-24-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-24-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">cabf05d</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">7f7e2da</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">f08aad3</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-24-1.png" target="_blank">0e0d172</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="error-rates-per-heterozygous-site" class="section level4">
-<h4>Error rates (per heterozygous site)</h4>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
-         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
-  geom_point() +
-  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
-  theme_classic() +
-  geom_abline(slope = 1, intercept = 0) +
-  scale_color_manual(values = cbPalette)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-1">
-Past versions of unnamed-chunk-25-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-25-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">cabf05d</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/7f7e2da6f25f457b0fe9eb8b6b6b22b03f3be64e/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">7f7e2da</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/f08aad384c913bead6cd6e38f457e223f33ad7ec/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">f08aad3</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/0e0d17276b9bf7d37f7876f92a57bafb98d9ab15/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-25-1.png" target="_blank">0e0d172</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
-         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
-  geom_point() +
-  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
-  theme_classic() +
-  geom_abline(slope = 1, intercept = 0) +
-  scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-26-1">
@@ -4580,6 +7200,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-26-1.png" target="_blank">cabf05d</a>
@@ -4629,12 +7260,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
-         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %&gt;%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
+  ggtitle(&quot;Total Errors&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -4661,6 +7292,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-27-1.png" target="_blank">cabf05d</a>
@@ -4709,17 +7351,13 @@ Andy Beck
 </table>
 </div>
 </div>
-</div>
-</div>
-<div id="non-flip-switches" class="section level3">
-<h3>Non-flip switches</h3>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle),
-         Eagle = (n_other_eagle ), 
-         SHAPEIT = (n_other_shapeit)) %&gt;%
-  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %&gt;%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches&quot;) +
+  ggtitle(&quot;Total Errors&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -4746,6 +7384,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-28-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-28-1.png" target="_blank">cabf05d</a>
@@ -4783,13 +7432,15 @@ Andy Beck
 </table>
 </div>
 </div>
+<div id="error-rates-per-heterozygous-site" class="section level4">
+<h4>Error rates (per heterozygous site)</h4>
 <pre class="r"><code>df_vcftools %&gt;%
-   mutate(Beagle = (n_other_beagle),
-         Eagle = (n_other_eagle ), 
-         SHAPEIT = (n_other_shapeit)) %&gt;%
-  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches&quot;) +
+  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -4818,6 +7469,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-29-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-29-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
@@ -4843,12 +7505,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-   mutate(Beagle = (n_other_beagle),
-         Eagle = (n_other_eagle ), 
-         SHAPEIT = (n_other_shapeit)) %&gt;%
-  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches&quot;) +
+  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -4877,6 +7539,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-30-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-30-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
@@ -4901,15 +7574,13 @@ Andy Beck
 </table>
 </div>
 </div>
-<div id="per-het.-site" class="section level4">
-<h4>Per het. site</h4>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle) / n_hets,
-         Eagle = (n_other_eagle ) / n_hets, 
-         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
+  ggtitle(&quot;Total Errors per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -4938,6 +7609,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-31-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-31-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
@@ -4962,13 +7644,17 @@ Andy Beck
 </table>
 </div>
 </div>
+</div>
+</div>
+<div id="non-flip-switches" class="section level3">
+<h3>Non-flip switches</h3>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle) / n_hets,
-         Eagle = (n_other_eagle ) / n_hets, 
-         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %&gt;%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
+  ggtitle(&quot;Switches&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -4997,6 +7683,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-32-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
@@ -5022,12 +7719,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_beagle) / n_hets,
-         Eagle = (n_other_eagle ) / n_hets, 
-         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+   mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %&gt;%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
+  ggtitle(&quot;Switches&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -5054,6 +7751,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-33-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-33-1.png" target="_blank">cabf05d</a>
@@ -5091,17 +7799,13 @@ Andy Beck
 </table>
 </div>
 </div>
-</div>
-</div>
-<div id="flips" class="section level3">
-<h3>Flips</h3>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_flip_beagle),
-         Eagle = (n_flip_eagle ), 
-         SHAPEIT = (n_flip_shapeit)) %&gt;%
-  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+   mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %&gt;%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips&quot;) +
+  ggtitle(&quot;Switches&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -5128,6 +7832,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-34-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-34-1.png" target="_blank">cabf05d</a>
@@ -5176,13 +7891,15 @@ Andy Beck
 </table>
 </div>
 </div>
+<div id="per-het.-site" class="section level4">
+<h4>Per het. site</h4>
 <pre class="r"><code>df_vcftools %&gt;%
-   mutate(Beagle = (n_flip_beagle),
-         Eagle = (n_flip_eagle ), 
-         SHAPEIT = (n_flip_shapeit)) %&gt;%
-  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -5209,6 +7926,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-35-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-35-1.png" target="_blank">cabf05d</a>
@@ -5258,12 +7986,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-   mutate(Beagle = (n_flip_beagle),
-         Eagle = (n_flip_eagle ), 
-         SHAPEIT = (n_flip_shapeit)) %&gt;%
-  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -5290,6 +8018,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-36-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-36-1.png" target="_blank">cabf05d</a>
@@ -5338,15 +8077,13 @@ Andy Beck
 </table>
 </div>
 </div>
-<div id="per-het.-site-1" class="section level4">
-<h4>Per het. site</h4>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_flip_beagle) / n_hets,
-         Eagle = (n_flip_eagle ) / n_hets, 
-         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
+  ggtitle(&quot;Switches per Heterozygous Site&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -5373,6 +8110,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-37-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-37-1.png" target="_blank">cabf05d</a>
@@ -5421,13 +8169,17 @@ Andy Beck
 </table>
 </div>
 </div>
+</div>
+</div>
+<div id="flips" class="section level3">
+<h3>Flips</h3>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_flip_beagle) / n_hets,
-         Eagle = (n_flip_eagle ) / n_hets, 
-         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %&gt;%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
+  ggtitle(&quot;Flips&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -5454,6 +8206,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-38-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-38-1.png" target="_blank">cabf05d</a>
@@ -5503,12 +8266,12 @@ Andy Beck
 </div>
 </div>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_flip_beagle) / n_hets,
-         Eagle = (n_flip_eagle ) / n_hets, 
-         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
-  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+   mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %&gt;%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
-  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
+  ggtitle(&quot;Flips&quot;) +
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)</code></pre>
@@ -5535,6 +8298,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-39-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-39-1.png" target="_blank">cabf05d</a>
@@ -5583,23 +8357,16 @@ Andy Beck
 </table>
 </div>
 </div>
-</div>
-</div>
-<div id="proportion-of-errors-at-cpg" class="section level3">
-<h3>Proportion of errors at CpG</h3>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
-         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
-         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %&gt;%
-  select(Beagle, Eagle, SHAPEIT) %&gt;%
-  pivot_longer(everything(), names_to = &quot;method&quot;, values_to = &quot;enrich&quot;) %&gt;%
-  ggplot(aes(x = method, y = enrich)) +
-  geom_boxplot() +
-  ggtitle(&quot;Enrichment of Switches at CpG Sites&quot;) +
-  xlab(&quot;Method&quot;) +
-  ylab(&quot;Enrichment&quot;) +
+   mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %&gt;%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle(&quot;Flips&quot;) +
   theme_classic() +
-  geom_hline(yintercept = 1)</code></pre>
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-40-1">
@@ -5623,6 +8390,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-40-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-40-1.png" target="_blank">cabf05d</a>
@@ -5671,94 +8449,18 @@ Andy Beck
 </table>
 </div>
 </div>
+<div id="per-het.-site-1" class="section level4">
+<h4>Per het. site</h4>
 <pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
-         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
-         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %&gt;%
-  select(Beagle, Eagle, SHAPEIT) %&gt;%
-  pivot_longer(everything(), names_to = &quot;method&quot;, values_to = &quot;enrich&quot;) %&gt;%
-  ggplot(aes(x = method, y = enrich)) +
-  geom_boxplot() +
-  ggtitle(&quot;Enrichment of Flips at CpG Sites&quot;) +
-  xlab(&quot;Method&quot;) +
-  ylab(&quot;Enrichment&quot;) +
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+  geom_point() +
+  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
   theme_classic() +
-  geom_hline(yintercept = 1)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-40-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
-         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
-         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %&gt;%
-  select(pop, Beagle, Eagle, SHAPEIT) %&gt;%
-  pivot_longer(-pop, names_to = &quot;method&quot;, values_to = &quot;enrich&quot;) %&gt;%
-  ggplot(aes(x = method, y = enrich, colour = pop)) +
-  geom_boxplot() +
-  ggtitle(&quot;Enrichment of Switches at CpG Sites&quot;) +
-  xlab(&quot;Method&quot;) +
-  ylab(&quot;Enrichment&quot;) +
-  theme_classic() +
-  geom_hline(yintercept = 1) +
-  scale_color_manual(values=cbPalette) +
-  labs(color = &quot;Population&quot;)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-40-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>df_vcftools %&gt;%
-  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
-         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
-         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %&gt;%
-  select(pop, Beagle, Eagle, SHAPEIT) %&gt;%
-  pivot_longer(-pop, names_to = &quot;method&quot;, values_to = &quot;enrich&quot;) %&gt;%
-  ggplot(aes(x = method, y = enrich, color = pop)) +
-  geom_boxplot() +
-  ggtitle(&quot;Enrichment of Flips at CpG Sites&quot;) +
-  xlab(&quot;Method&quot;) +
-  ylab(&quot;Enrichment&quot;) +
-  theme_classic() +
-  geom_hline(yintercept = 1) +
-  scale_color_manual(values=cbPalette) +
-  labs(color = &quot;Population&quot;)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-40-4.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
-</div>
-<div id="maf-bins" class="section level2">
-<h2>MAF Bins</h2>
-<p>In the <code>maf_prop_df</code> data frame, we have for each
-synthetic diploid the proportion of heterozygous sites that are: rare
-variants (maf &lt; 0.01); uncommon variants (0.01 &lt; maf &lt; 0.05);
-and common variants (maf &gt; 0.05). We also have these proportions for
-each type of error for each method (switch; flip start; flip end;
-correct).</p>
-<p>Let’s first look at the distributions of these proportions for all
-heterozygous positions within each individual:</p>
-<pre class="r"><code>prop_maf_fig &lt;- function(cat_type, title_text){
-  df &lt;- maf_prop_df %&gt;%
-    filter(str_detect(category, paste0(&quot;^&quot;,cat_type, &quot;_[rcu]&quot;))) %&gt;%
-    mutate(category = factor(category)) %&gt;%
-    mutate(category = fct_recode(category, &quot;Rare&quot; = paste0(cat_type, &quot;_rare&quot;),
-                               &quot;Uncommon&quot; = paste0(cat_type, &quot;_uncommon&quot;),
-                               &quot;Common&quot; = paste0(cat_type, &quot;_common&quot;))) %&gt;%
-    mutate(category = fct_relevel(category, c(&quot;Rare&quot;, &quot;Uncommon&quot;, &quot;Common&quot;)))
-  
-  p &lt;- df %&gt;%
-    ggplot(aes(x = category, y = proportion, color = SP)) +
-    geom_boxplot() +
-    ggtitle(paste0(title_text, &quot; in MAF Bins&quot;)) +
-    xlab(&quot;&quot;) +
-    ylab(&quot;Proportion of Sites&quot;) +
-    theme_classic() +
-    labs(color = &quot;Population&quot;) +
-    scale_color_manual(values = cbPalette)
-  
-  tab_prop &lt;- df %&gt;%
-    group_by(SP, category) %&gt;%
-    summarize(mean_prop = mean(proportion))
-  
-  return(list(p = p, tab_prop = tab_prop))
-}
-
-res_obj &lt;- prop_maf_fig(&quot;het&quot;, &quot;Heterozygous Sites&quot;)</code></pre>
-<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
-argument.</code></pre>
-<pre class="r"><code>print(res_obj$p)</code></pre>
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-41-1">
@@ -5782,6 +8484,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-41-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-41-1.png" target="_blank">cabf05d</a>
@@ -5824,6 +8537,382 @@ Andy Beck
 </td>
 <td>
 2024-05-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-42-1">
+Past versions of unnamed-chunk-42-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-42-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" target="_blank">cabf05d</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/6172512f57cc03f295aefc7978f0e9f6439169c9/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" target="_blank">6172512</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" target="_blank">8041a90</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/aa8704bbf7c47c6b3b4c265552120bc446fa974a/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" target="_blank">aa8704b</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %&gt;%
+  ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
+  geom_point() +
+  ggtitle(&quot;Flips per Heterozygous Site&quot;) +
+  theme_classic() +
+  geom_abline(slope = 1, intercept = 0) +
+  scale_color_manual(values = cbPalette)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-43-1">
+Past versions of unnamed-chunk-43-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-43-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-43-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-43-1.png" target="_blank">cabf05d</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/101156547ea5cf5ab7d26907d94ac857ff87c51a/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-43-1.png" target="_blank">1011565</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="proportion-of-errors-at-cpg" class="section level3">
+<h3>Proportion of errors at CpG</h3>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %&gt;%
+  select(Beagle, Eagle, SHAPEIT) %&gt;%
+  pivot_longer(everything(), names_to = &quot;method&quot;, values_to = &quot;enrich&quot;) %&gt;%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  ggtitle(&quot;Enrichment of Switches at CpG Sites&quot;) +
+  xlab(&quot;Method&quot;) +
+  ylab(&quot;Enrichment&quot;) +
+  theme_classic() +
+  geom_hline(yintercept = 1)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-44-1">
+Past versions of unnamed-chunk-44-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-44-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-1.png" target="_blank">cabf05d</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/101156547ea5cf5ab7d26907d94ac857ff87c51a/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-1.png" target="_blank">1011565</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %&gt;%
+  select(Beagle, Eagle, SHAPEIT) %&gt;%
+  pivot_longer(everything(), names_to = &quot;method&quot;, values_to = &quot;enrich&quot;) %&gt;%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  ggtitle(&quot;Enrichment of Flips at CpG Sites&quot;) +
+  xlab(&quot;Method&quot;) +
+  ylab(&quot;Enrichment&quot;) +
+  theme_classic() +
+  geom_hline(yintercept = 1)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %&gt;%
+  select(pop, Beagle, Eagle, SHAPEIT) %&gt;%
+  pivot_longer(-pop, names_to = &quot;method&quot;, values_to = &quot;enrich&quot;) %&gt;%
+  ggplot(aes(x = method, y = enrich, colour = pop)) +
+  geom_boxplot() +
+  ggtitle(&quot;Enrichment of Switches at CpG Sites&quot;) +
+  xlab(&quot;Method&quot;) +
+  ylab(&quot;Enrichment&quot;) +
+  theme_classic() +
+  geom_hline(yintercept = 1) +
+  scale_color_manual(values=cbPalette) +
+  labs(color = &quot;Population&quot;)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_vcftools %&gt;%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %&gt;%
+  select(pop, Beagle, Eagle, SHAPEIT) %&gt;%
+  pivot_longer(-pop, names_to = &quot;method&quot;, values_to = &quot;enrich&quot;) %&gt;%
+  ggplot(aes(x = method, y = enrich, color = pop)) +
+  geom_boxplot() +
+  ggtitle(&quot;Enrichment of Flips at CpG Sites&quot;) +
+  xlab(&quot;Method&quot;) +
+  ylab(&quot;Enrichment&quot;) +
+  theme_classic() +
+  geom_hline(yintercept = 1) +
+  scale_color_manual(values=cbPalette) +
+  labs(color = &quot;Population&quot;)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="maf-bins" class="section level2">
+<h2>MAF Bins</h2>
+<p>In the <code>maf_prop_df</code> data frame, we have for each
+synthetic diploid the proportion of heterozygous sites that are: rare
+variants (maf &lt; 0.01); uncommon variants (0.01 &lt; maf &lt; 0.05);
+and common variants (maf &gt; 0.05). We also have these proportions for
+each type of error for each method (switch; flip start; flip end;
+correct).</p>
+<p>Let’s first look at the distributions of these proportions for all
+heterozygous positions within each individual:</p>
+<pre class="r"><code>prop_maf_fig &lt;- function(cat_type, title_text){
+  df &lt;- maf_prop_df %&gt;%
+    filter(str_detect(category, paste0(&quot;^&quot;,cat_type, &quot;_[rcu]&quot;))) %&gt;%
+    mutate(category = factor(category)) %&gt;%
+    mutate(category = fct_recode(category, &quot;Rare&quot; = paste0(cat_type, &quot;_rare&quot;),
+                               &quot;Uncommon&quot; = paste0(cat_type, &quot;_uncommon&quot;),
+                               &quot;Common&quot; = paste0(cat_type, &quot;_common&quot;))) %&gt;%
+    mutate(category = fct_relevel(category, c(&quot;Rare&quot;, &quot;Uncommon&quot;, &quot;Common&quot;)))
+  
+  p &lt;- df %&gt;%
+    ggplot(aes(x = category, y = proportion, color = SP)) +
+    geom_boxplot() +
+    ggtitle(paste0(title_text, &quot; in MAF Bins&quot;)) +
+    xlab(&quot;&quot;) +
+    ylab(&quot;Proportion of Sites&quot;) +
+    theme_classic() +
+    labs(color = &quot;Population&quot;) +
+    scale_color_manual(values = cbPalette)
+  
+  tab_prop &lt;- df %&gt;%
+    group_by(SP, category) %&gt;%
+    summarize(mean_prop = mean(proportion))
+  
+  return(list(p = p, tab_prop = tab_prop))
+}
+
+res_obj &lt;- prop_maf_fig(&quot;het&quot;, &quot;Heterozygous Sites&quot;)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
+argument.</code></pre>
+<pre class="r"><code>print(res_obj$p)</code></pre>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-45-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-45-1">
+Past versions of unnamed-chunk-45-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-45-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-45-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-45-1.png" target="_blank">cabf05d</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-05-29
 </td>
 </tr>
 </tbody>
@@ -5929,13 +9018,13 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-42-1">
-Past versions of unnamed-chunk-42-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-46-1">
+Past versions of unnamed-chunk-46-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-42-1" class="collapse">
+<div id="fig-unnamed-chunk-46-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -5954,46 +9043,24 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" target="_blank">cabf05d</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-46-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-46-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
 Andy Beck
 </td>
 <td>
 2024-05-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/6172512f57cc03f295aefc7978f0e9f6439169c9/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" target="_blank">6172512</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/8041a90f4735210b3ffd2e9a1231fd4b9735a442/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" target="_blank">8041a90</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/aa8704bbf7c47c6b3b4c265552120bc446fa974a/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-42-1.png" target="_blank">aa8704b</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-28
 </td>
 </tr>
 </tbody>
@@ -6101,13 +9168,13 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-47-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-43-1">
-Past versions of unnamed-chunk-43-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-47-1">
+Past versions of unnamed-chunk-47-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-43-1" class="collapse">
+<div id="fig-unnamed-chunk-47-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -6126,18 +9193,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-43-1.png" target="_blank">cabf05d</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-47-1.png" target="_blank">ad73e9a</a>
 </td>
 <td>
 Andy Beck
 </td>
 <td>
-2024-05-29
+2024-06-05
 </td>
 </tr>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/101156547ea5cf5ab7d26907d94ac857ff87c51a/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-43-1.png" target="_blank">1011565</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-47-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
 Andy Beck
@@ -6248,13 +9315,13 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-48-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-44-1">
-Past versions of unnamed-chunk-44-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-48-1">
+Past versions of unnamed-chunk-48-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-44-1" class="collapse">
+<div id="fig-unnamed-chunk-48-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -6273,18 +9340,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-1.png" target="_blank">cabf05d</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-48-1.png" target="_blank">ad73e9a</a>
 </td>
 <td>
 Andy Beck
 </td>
 <td>
-2024-05-29
+2024-06-05
 </td>
 </tr>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/101156547ea5cf5ab7d26907d94ac857ff87c51a/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-1.png" target="_blank">1011565</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-48-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
 Andy Beck
@@ -6398,13 +9465,13 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-45-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-49-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-45-1">
-Past versions of unnamed-chunk-45-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-49-1">
+Past versions of unnamed-chunk-49-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-45-1" class="collapse">
+<div id="fig-unnamed-chunk-49-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -6423,7 +9490,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-45-1.png" target="_blank">cabf05d</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-49-1.png" target="_blank">ad73e9a</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-49-1.png" target="_blank">cabf05d</a>
 </td>
 <td>
 Andy Beck
@@ -6537,13 +9615,13 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-50-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-46-1">
-Past versions of unnamed-chunk-46-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-50-1">
+Past versions of unnamed-chunk-50-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-46-1" class="collapse">
+<div id="fig-unnamed-chunk-50-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -6562,13 +9640,13 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-46-1.png" target="_blank">cabf05d</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-50-1.png" target="_blank">ad73e9a</a>
 </td>
 <td>
 Andy Beck
 </td>
 <td>
-2024-05-29
+2024-06-05
 </td>
 </tr>
 </tbody>
@@ -6673,13 +9751,13 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-47-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-51-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-47-1">
-Past versions of unnamed-chunk-47-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-51-1">
+Past versions of unnamed-chunk-51-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-47-1" class="collapse">
+<div id="fig-unnamed-chunk-51-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -6698,13 +9776,13 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-47-1.png" target="_blank">cabf05d</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-51-1.png" target="_blank">ad73e9a</a>
 </td>
 <td>
 Andy Beck
 </td>
 <td>
-2024-05-29
+2024-06-05
 </td>
 </tr>
 </tbody>
@@ -6812,13 +9890,13 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-48-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-48-1">
-Past versions of unnamed-chunk-48-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-52-1">
+Past versions of unnamed-chunk-52-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-48-1" class="collapse">
+<div id="fig-unnamed-chunk-52-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -6837,13 +9915,13 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-48-1.png" target="_blank">cabf05d</a>
+<a href="https://github.com/theandyb/phasing_clean/blob/ad73e9a00064ec15c092ac0eb4976e4ffdc5a96d/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-52-1.png" target="_blank">ad73e9a</a>
 </td>
 <td>
 Andy Beck
 </td>
 <td>
-2024-05-29
+2024-06-05
 </td>
 </tr>
 </tbody>
@@ -6951,44 +10029,7 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-49-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-49-1">
-Past versions of unnamed-chunk-49-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-49-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/theandyb/phasing_clean/blob/cabf05d98f63c1eca6f73f3cc1cab9f97fd439d7/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-49-1.png" target="_blank">cabf05d</a>
-</td>
-<td>
-Andy Beck
-</td>
-<td>
-2024-05-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-53-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -7087,7 +10128,7 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SP&#39;. You can override using the `.groups`
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-50-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-54-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -7202,7 +10243,7 @@ individual.</p>
   theme_classic() +
   labs(colour = &quot;Population&quot;) +
   geom_hline(yintercept = 1, linetype = 2)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-51-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-55-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>maf_prop_df %&gt;%
   select(category, proportion, id, SP) %&gt;%
   pivot_wider(names_from = category, values_from = proportion) %&gt;%
@@ -7222,7 +10263,7 @@ individual.</p>
   theme_classic() +
   labs(colour = &quot;Population&quot;) +
   geom_hline(yintercept = 1, linetype = 2)</code></pre>
-<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-56-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
