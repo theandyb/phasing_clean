@@ -1226,7 +1226,8 @@ prop_maf_fig <- function(cat_type, title_text){
   
   tab_prop <- df %>%
     group_by(SP, category) %>%
-    summarize(mean_prop = mean(proportion))
+    summarize(mean_prop = mean(proportion)) %>%
+    pivot_wider(id_cols = SP, names_from = category, values_from = mean_prop)
   
   return(list(p = p, tab_prop = tab_prop))
 }
@@ -1391,6 +1392,39 @@ maf_prop_df %>%
   theme_classic() +
   labs(colour = "Population") +
   geom_hline(yintercept = 1, linetype = 2)
+
+maf_prop_df %>%
+  select(category, proportion, id, SP) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(or_het = het_rare / (1 - het_rare),
+         or_b_s = beagle_switch_rare / (1 - beagle_switch_rare),
+         or_e_s = eagle_switch_rare / (1 - eagle_switch_rare),
+         or_s_s = shapeit_switch_rare / (1 - shapeit_switch_rare)) %>%
+  mutate(Beagle = or_b_s / or_het,
+         Eagle = or_e_s / or_het,
+         SHAPEIT = or_s_s / or_het) %>%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+maf_prop_df %>%
+  select(category, proportion, id, SP) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(or_het = het_rare / (1 - het_rare),
+         or_b_s = beagle_switch_rare / (1 - beagle_switch_rare),
+         or_e_s = eagle_switch_rare / (1 - eagle_switch_rare),
+         or_s_s = shapeit_switch_rare / (1 - shapeit_switch_rare)) %>%
+  mutate(Beagle = or_b_s / or_het,
+         Eagle = or_e_s / or_het,
+         SHAPEIT = or_s_s / or_het) %>%
+  tbl_summary(by = SP,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
 ```
 
 ```{r}
@@ -1413,5 +1447,38 @@ maf_prop_df %>%
   theme_classic() +
   labs(colour = "Population") +
   geom_hline(yintercept = 1, linetype = 2)
+
+maf_prop_df %>%
+  select(category, proportion, id, SP) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(or_het = het_rare / (1 - het_rare),
+         or_b_s = beagle_flip_rare / (1 - beagle_flip_rare),
+         or_e_s = eagle_flip_rare / (1 - beagle_flip_rare),
+         or_s_s = shapeit_flip_rare / (1 - beagle_flip_rare)) %>%
+  mutate(Beagle = or_b_s / or_het,
+         Eagle = or_e_s / or_het,
+         SHAPEIT = or_s_s / or_het) %>%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+maf_prop_df %>%
+  select(category, proportion, id, SP) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(or_het = het_rare / (1 - het_rare),
+         or_b_s = beagle_flip_rare / (1 - beagle_flip_rare),
+         or_e_s = eagle_flip_rare / (1 - beagle_flip_rare),
+         or_s_s = shapeit_flip_rare / (1 - beagle_flip_rare)) %>%
+  mutate(Beagle = or_b_s / or_het,
+         Eagle = or_e_s / or_het,
+         SHAPEIT = or_s_s / or_het) %>%
+  tbl_summary(by = SP,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
 ```
 
