@@ -499,10 +499,26 @@ s_l_e <- df_vcftools %>%
   mutate(b_l_e = SHAPEIT < Eagle) %>%
   pull(b_l_e) %>%
   sum()
+
+s_l_b <- df_vcftools %>%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  mutate(b_l_e = SHAPEIT < Beagle) %>%
+  pull(b_l_e) %>%
+  sum()
+
+b_l_s <- df_vcftools %>%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  mutate(b_l_s = SHAPEIT > Beagle) %>%
+  pull(b_l_s) %>%
+  sum()
 ```
 
 
-Comparing Eagle to Beagle, we observed a higher number of errors in Eagle in `r b_l_e` synthetic diploids, while for SHAPEIT and Eagle we see more errors in Eagle than in SHAPEIT in `r s_l_e`` synthetic diploids.
+Comparing Eagle to Beagle, we observed a higher number of errors in Eagle in `r b_l_e` synthetic diploids, while for SHAPEIT and Eagle we see more errors in Eagle than in SHAPEIT in `r s_l_e` synthetic diploids.
 
 ```{r}
 df_vcftools %>%
@@ -955,6 +971,74 @@ df_vcftools %>%
   geom_hline(yintercept = 1) +
   scale_color_manual(values=cbPalette) +
   labs(color = "Population")
+```
+
+We observe a mild enrichment of switches and a more profound enrichment of flips at CpGs across all methods. We also observe some variation across populations within each method, for example: AFR has almost no enrichment for switches in both Beagle and SHAPEIT.
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %>%
+  cross_meth_plot(p_title = "CpG Enrichment: Switches")
+
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %>%
+  cross_meth_plot(p_title = "CpG Enrichment: Flips")
+```
+
+#### Tables
+
+##### Switches
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %>%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %>%
+  tbl_summary(by = pop,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+```
+
+##### Flips
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %>%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %>%
+  tbl_summary(by = pop,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
 ```
 
 ## MAF Bins
