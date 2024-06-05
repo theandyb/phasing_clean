@@ -17,6 +17,9 @@ source("code/common_functions.R")
 library(yaml)
 library(gtsummary)
 
+library(grid)
+library(gridExtra) 
+
 config_obj <- yaml::read_yaml("_config.yaml")
 
 eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/eagle/annotated/")
@@ -480,6 +483,27 @@ df_vcftools %>%
 
 ### Total Errors
 
+```{r include=FALSE}
+b_l_e <- df_vcftools %>%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  mutate(b_l_e = Beagle < Eagle) %>%
+  pull(b_l_e) %>%
+  sum()
+
+s_l_e <- df_vcftools %>%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  mutate(b_l_e = SHAPEIT < Eagle) %>%
+  pull(b_l_e) %>%
+  sum()
+```
+
+
+Comparing Eagle to Beagle, we observed a higher number of errors in Eagle in `r b_l_e` synthetic diploids, while for SHAPEIT and Eagle we see more errors in Eagle than in SHAPEIT in `r s_l_e`` synthetic diploids.
+
 ```{r}
 df_vcftools %>%
   mutate(Beagle = n_other_beagle + n_flip_beagle,
@@ -518,6 +542,48 @@ df_vcftools %>%
   theme_classic() +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
+```
+
+All in one figure:
+
+```{r}
+cross_meth_plot <- function(df, p_title) {
+  p1 <- df %>%
+    ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
+    geom_point() +
+    theme_classic() +
+    geom_abline(slope = 1, intercept = 0) +
+    scale_color_manual(values = cbPalette) +
+    labs(color = "Population")
+  
+  p_legend <- cowplot::get_legend(p1)
+  
+  p1 <- p1 + guides(colour="none")
+  
+  p2 <- df %>%
+    ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
+    geom_point() +
+    ggtitle(p_title) +
+    theme_classic() +
+    geom_abline(slope = 1, intercept = 0) +
+    scale_color_manual(values = cbPalette) +
+    guides(colour="none")
+  
+  p3 <- df %>%
+    ggplot(aes(x = SHAPEIT, y = Eagle, color = pop)) +
+    geom_point() +
+    theme_classic() +
+    geom_abline(slope = 1, intercept = 0) +
+    scale_color_manual(values = cbPalette) +
+    guides(colour="none")
+  
+  return(grid.arrange(p2, p_legend, p1, p3, ncol = 2))
+  }
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  cross_meth_plot(p_title = "Total Errors")
 ```
 
 #### Error rates (per heterozygous site)
@@ -561,7 +627,46 @@ df_vcftools %>%
   scale_color_manual(values = cbPalette)
 ```
 
+All in one figure:
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  cross_meth_plot(p_title = "Total Error Rates")
+```
+
+
 ### Non-flip switches
+
+```{r include=FALSE}
+s_l_b <- df_vcftools %>%
+  mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %>%
+  mutate(s_l_b = SHAPEIT < Beagle) %>%
+  pull(s_l_b) %>%
+  sum()
+
+s_l_e<- df_vcftools %>%
+  mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %>%
+  mutate(s_l_e = SHAPEIT < Eagle) %>%
+  pull(s_l_e) %>%
+  sum()
+
+b_l_e<- df_vcftools %>%
+  mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %>%
+  mutate(b_l_e = Beagle < Eagle) %>%
+  pull(b_l_e) %>%
+  sum()
+```
+
+For switches, we observe fewer errors in SHAPEIT than in Beagle in `r s_l_b` synthetic diploids, and in `r s_l_e` synthetic diploids we observe fewer errors in SHAPEIT than in Eagle. Comparing Beagle to Eagle, we observe fewer errors in Beagle than in Eagle in `r b_l_e` synthetic diploids.
 
 ```{r}
 df_vcftools %>%
@@ -602,6 +707,15 @@ df_vcftools %>%
   scale_color_manual(values = cbPalette)
 ```
 
+```{r}
+df_vcftools %>%
+   mutate(Beagle = (n_other_beagle),
+         Eagle = (n_other_eagle ), 
+         SHAPEIT = (n_other_shapeit)) %>%
+  cross_meth_plot(p_title = "Switches")
+```
+
+
 #### Per het. site
 
 ```{r}
@@ -643,7 +757,44 @@ df_vcftools %>%
   scale_color_manual(values = cbPalette)
 ```
 
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %>%
+  cross_meth_plot(p_title = "Switch Rate")
+```
+
+
 ### Flips
+
+```{r include=FALSE}
+b_l_s <- df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %>%
+  mutate(b_l_s = SHAPEIT > Beagle) %>%
+  pull(b_l_s) %>%
+  sum()
+
+e_l_s<- df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %>%
+  mutate(e_l_s = SHAPEIT > Eagle) %>%
+  pull(e_l_s) %>%
+  sum()
+
+e_l_b<- df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit)) %>%
+  mutate(e_l_b = Beagle > Eagle) %>%
+  pull(e_l_b) %>%
+  sum()
+```
+
+For switches, we observe fewer errors in Beagle than in SHAPEIT in `r b_l_s` synthetic diploids, and in `r e_l_s` synthetic diploids we observe fewer errors in Eagle than in SHAPEIT Comparing Beagle to Eagle, we observe fewer errors in Eagle than in Beagle in `r e_l_b` synthetic diploids.
 
 ```{r}
 df_vcftools %>%
@@ -684,6 +835,14 @@ df_vcftools %>%
   scale_color_manual(values = cbPalette)
 ```
 
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle),
+         Eagle = (n_flip_eagle ), 
+         SHAPEIT = (n_flip_shapeit))  %>%
+  cross_meth_plot(p_title = "Flip Errors")
+```
+
 #### Per het. site
 
 ```{r}
@@ -724,6 +883,15 @@ df_vcftools %>%
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  cross_meth_plot(p_title = "Flip Error Rates")
+```
+
 
 ### Proportion of errors at CpG
 
