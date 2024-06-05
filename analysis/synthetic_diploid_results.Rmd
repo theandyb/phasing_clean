@@ -913,6 +913,45 @@ df_vcftools %>%
 
 ```{r}
 df_vcftools %>%
+  mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle),
+         Eagle = (n_switch_cpg_eagle / n_switch_eagle),
+         SHAPEIT = (n_switch_cpg_shapeit / n_switch_shapeit)) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(everything(), names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  ggtitle("Errors at CpG Sites") +
+  xlab("Method") +
+  ylab("Proportion") +
+  theme_classic()
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle),
+         Eagle = (n_other_cpg_eagle / n_other_eagle),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit)) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(everything(), names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  ggtitle("Switches at CpG Sites") +
+  xlab("Method") +
+  ylab("Proportion") +
+  theme_classic()
+
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit)) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(everything(), names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  ggtitle("Flips at CpG Sites") +
+  xlab("Method") +
+  ylab("Proportion") +
+  theme_classic()
+
+df_vcftools %>%
   mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_switch_cpg_eagle / n_switch_eagle) / (n_het_cpg / n_hets),
          SHAPEIT = (n_switch_cpg_shapeit / n_switch_shapeit) / (n_het_cpg / n_hets)) %>%
@@ -1021,9 +1060,30 @@ df_vcftools %>%
 
 #### Tables
 
-#### Total errors
+##### Total errors
 
 ```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle),
+         Eagle = (n_switch_cpg_eagle / n_switch_eagle),
+         SHAPEIT = (n_switch_cpg_shapeit / n_switch_shapeit)) %>%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+df_vcftools %>%
+  mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle),
+         Eagle = (n_switch_cpg_eagle / n_switch_eagle),
+         SHAPEIT = (n_switch_cpg_shapeit / n_switch_shapeit)) %>%
+  tbl_summary(by = pop,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
 df_vcftools %>%
   mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_switch_cpg_eagle / n_switch_eagle) / (n_het_cpg / n_hets),
@@ -1050,6 +1110,27 @@ df_vcftools %>%
 
 ```{r}
 df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle),
+         Eagle = (n_other_cpg_eagle / n_other_eagle),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit)) %>%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle),
+         Eagle = (n_other_cpg_eagle / n_other_eagle),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit)) %>%
+  tbl_summary(by = pop,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+df_vcftools %>%
   mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
          SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %>%
@@ -1074,6 +1155,27 @@ df_vcftools %>%
 ##### Flips
 
 ```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit)) %>%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit)) %>%
+  tbl_summary(by = pop,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
 df_vcftools %>%
   mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
