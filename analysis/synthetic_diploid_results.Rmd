@@ -15,6 +15,7 @@ library(janitor)
 library(reactable)
 source("code/common_functions.R")
 library(yaml)
+library(gtsummary)
 
 config_obj <- yaml::read_yaml("_config.yaml")
 
@@ -64,6 +65,19 @@ df_vcftools <- read_csv(paste0(config_obj$base_dir,"/output/switch_errors/switch
 
 ```{r}
 df_vcftools %>%
+  summarize(mean_switch_eagle = mean(n_other_eagle),
+            mean_switch_beagle = mean(n_other_beagle),
+            mean_switch_shapeit = mean(n_other_shapeit),
+            mean_flip_eagle = mean(n_flip_eagle),
+            mean_flip_beagle = mean(n_flip_beagle),
+            mean_flip_shapeit = mean(n_flip_shapeit)) %>%
+  knitr::kable()
+```
+
+#### By population
+
+```{r}
+df_vcftools %>%
   group_by(pop) %>%
   summarize(mean_switch_eagle = mean(n_other_eagle),
             mean_switch_beagle = mean(n_other_beagle),
@@ -78,29 +92,77 @@ df_vcftools %>%
 
 ```{r}
 df_vcftools %>%
-  group_by(pop) %>%
-  summarize(mean_switch_eagle = mean(n_other_eagle / size_mb),
-            mean_switch_beagle = mean(n_other_beagle / size_mb),
-            mean_switch_shapeit = mean(n_other_shapeit / size_mb),
-            mean_flip_eagle = mean(n_flip_eagle / size_mb),
-            mean_flip_beagle = mean(n_flip_beagle / size_mb),
-            mean_flip_shapeit = mean(n_flip_shapeit / size_mb)) %>%
-  knitr::kable()
+  mutate(Beagle_switch = n_other_beagle / size_mb,
+         Eagle_switch = n_other_eagle / size_mb,
+         SHAPEIT_switch = n_other_shapeit / size_mb,
+         Beagle_flip = n_other_beagle / size_mb,
+         Eagle_flip = n_other_eagle / size_mb,
+         SHAPEIT_flip = n_other_shapeit / size_mb) %>%
+  tbl_summary(include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
+                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
 ```
+
+#### By population
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle_switch = n_other_beagle / size_mb,
+         Eagle_switch = n_other_eagle / size_mb,
+         SHAPEIT_switch = n_other_shapeit / size_mb,
+         Beagle_flip = n_other_beagle / size_mb,
+         Eagle_flip = n_other_eagle / size_mb,
+         SHAPEIT_flip = n_other_shapeit / size_mb) %>%
+  tbl_summary(by = pop,
+    include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
+                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+```
+
 
 ### Mean number of switches and flips per heterozygous site
 
 ```{r}
 df_vcftools %>%
-  group_by(pop) %>%
-  summarize(mean_switch_eagle = mean(n_other_eagle / n_hets),
-            mean_switch_beagle = mean(n_other_beagle / n_hets),
-            mean_switch_shapeit = mean(n_other_shapeit / n_hets),
-            mean_flip_eagle = mean(n_flip_eagle / n_hets),
-            mean_flip_beagle = mean(n_flip_beagle / n_hets),
-            mean_flip_shapeit = mean(n_flip_shapeit / n_hets)) %>%
-  knitr::kable()
+  mutate(Beagle_switch = n_other_beagle / n_hets,
+         Eagle_switch = n_other_eagle / n_hets,
+         SHAPEIT_switch = n_other_shapeit / n_hets,
+         Beagle_flip = n_other_beagle / n_hets,
+         Eagle_flip = n_other_eagle / n_hets,
+         SHAPEIT_flip = n_other_shapeit / n_hets) %>%
+  tbl_summary(include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
+                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
 ```
+
+#### By population
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle_switch = n_other_beagle / n_hets,
+         Eagle_switch = n_other_eagle / n_hets,
+         SHAPEIT_switch = n_other_shapeit / n_hets,
+         Beagle_flip = n_other_beagle / n_hets,
+         Eagle_flip = n_other_eagle / n_hets,
+         SHAPEIT_flip = n_other_shapeit / n_hets) %>%
+  tbl_summary(by = pop,
+    include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
+                          Beagle_flip, Eagle_flip, SHAPEIT_flip),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+```
+
 
 ### Mean median number of heterozygous sites between errors
 
