@@ -18,6 +18,10 @@ library(tidyverse)
 library(pander)
 library(reactable)
 library(yaml)
+library(gtsummary)
+
+library(grid)
+library(gridExtra) 
 
 config_obj <- yaml::read_yaml("_config.yaml")
 
@@ -25,10 +29,16 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 
 df_subj <- read_csv("data/1kgp/subject_info.csv")
 ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt")
+
 child_ids <- ped_df %>% filter(fatherID != "0" & motherID != "0") %>% pull(sampleID)
+unrel_ids <- scan("data/1kgp/unrelated_subjects.txt", what = character())
+
 df_subj_rel <- df_subj %>%
   filter(SAMPLE_NAME %in% child_ids)
 df_subj_rel$id2 <- 1:602
+
+df_subj_unrel <- df_subj %>%
+  filter(SAMPLE_NAME %in% unrel_ids)
 
 df_switch_trio <- read_csv(paste0(config_obj$base_dir,"/",
                                   config_obj$trio_result_dir, "/switch_errors/summary.csv"))
@@ -40,6 +50,7 @@ df_het <- read_tsv(paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, 
                    col_names = c("id", "n_het"))
 df_het_22 <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_22/het_pos_count.tsv"),
                    col_names = c("id", "n_het22"))
+
 
 n_var_site <- 1627002
 n_var_site_22 <- 767007
@@ -117,12 +128,32 @@ df_subj_rel %>%
               N = colDef(aggregate = "sum")),
     bordered = TRUE,
     defaultExpanded = TRUE)
+
+df_subj_unrel %>%
+  group_by(SUPER, POPULATION) %>%
+  summarize(N = n()) %>%
+  reactable( 
+            groupBy = c("SUPER"),
+            columns = list(
+              N = colDef(aggregate = "sum")),
+    bordered = TRUE,
+    defaultExpanded = TRUE)
 ```
 
 For completeness, we also tabulate other summary information about the 602 trios (which is just sex; 1 - male, 2 - female):
 
 ```{r}
 df_subj_rel %>%
+  group_by(sex) %>%
+  summarize(N = n()) %>%
+  reactable( 
+            groupBy = c("sex"),
+            columns = list(
+              N = colDef(aggregate = "sum")),
+    bordered = TRUE,
+    defaultExpanded = TRUE)
+
+df_subj_unrel %>%
   group_by(sex) %>%
   summarize(N = n()) %>%
   reactable( 
@@ -143,6 +174,13 @@ Things I'd like:
 First let's look at the density of heterozygous positions in each sample, i.e. what fraction of the sites are heterozygous.
 
 ```{r}
+df_subj_rel %>%
+  tbl_summary(
+    by = SUPER,
+    include = c(frac_het, frac_het22),
+    statistic = list(all_continuous() ~ "{mean} ({sd})", 
+                     all_categorical() ~ "{n} / {N} ({p}%)"))
+
 df_subj_rel %>%
   ggplot() +
   stat_density(aes(x = frac_het, colour = SUPER),
@@ -177,6 +215,13 @@ df_subj_rel %>%
 How does this compare to what we observe in the X chromosome?
 
 ```{r}
+sd_pair_info_df %>%
+  tbl_summary(
+    by = SP,
+    include = c(frac_het),
+    statistic = list(all_continuous() ~ "{mean} ({sd})", 
+                     all_categorical() ~ "{n} / {N} ({p}%)"))
+
 sd_pair_info_df %>%
   ggplot() +
   stat_density(aes(x = frac_het, colour = SP),
