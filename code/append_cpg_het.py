@@ -34,7 +34,7 @@ print("Reference read!")
 output_list = []
 
 with open(input_file) as fp:
-    line = fp.readline() # header
+    #line = fp.readline() # header
     line = fp.readline() # first line of data
     while line:
         data = line.strip().split("\t") # CHR POS GT

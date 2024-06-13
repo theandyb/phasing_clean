@@ -17,6 +17,11 @@ source("code/common_functions.R")
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 library(yaml)
 
+library(gtsummary)
+
+library(grid)
+library(gridExtra) 
+
 config_obj <- yaml::read_yaml("_config.yaml")
 
 eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/eagle/annotated/")

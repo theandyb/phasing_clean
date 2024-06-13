@@ -3,7 +3,7 @@ library(yaml)
 
 config_obj <- yaml::read_yaml("_config.yaml")
 
-out_dir <- paste0(config_obj$base_dir, "/data/1kgp/chr15/triple_het/trio_lists/")
+out_dir <- paste0(config_obj$base_dir, "/data/1kgp/chr1/triple_het/trio_lists/")
 
 # load the subject information
 subj_df <- read_csv(paste0(config_obj$base_dir, "/data/1kgp/subject_info.csv"))

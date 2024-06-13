@@ -4,11 +4,13 @@ source("code/common_functions.R")
 
 config_obj <- yaml::read_yaml("_config.yaml")
 
-eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/eagle/annotated/")
-shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/shapeit/annotated/")
-beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/beagle/annotated/")
+chrom=22
 
-maf_df <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chr15/chr15_freq.tsv"),
+eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom ,"/switch_errors/eagle/annotated/")
+shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/shapeit/annotated/")
+beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/beagle/annotated/")
+
+maf_df <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chr", chrom, "/chr", chrom, "_freq.tsv"),
                    col_names = c("chrom", "pos", "maf"))
 
 df_subj <- read_csv(paste0(config_obj$base_dir,"/data/1kgp/subject_info.csv"))

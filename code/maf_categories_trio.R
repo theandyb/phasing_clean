@@ -3,13 +3,14 @@ library(yaml)
 source("code/common_functions.R")
 
 config_obj <- yaml::read_yaml("_config.yaml")
+chrom=22
 
-eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/eagle/annotated/")
-shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/shapeit/annotated/")
-beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/beagle/annotated/")
-het_dir <-  paste0(config_obj$base_dir,"/output/trio_phase_15/het_loc/annotated/")
+eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/eagle/annotated/")
+shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/shapeit/annotated/")
+beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/beagle/annotated/")
+het_dir <-  paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/het_loc/annotated/")
 
-maf_df <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chr15/chr15_freq.tsv"),
+maf_df <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chr", chrom, "/chr", chrom, "_freq.tsv"),
                    col_names = c("chrom", "pos", "maf"))
 
 maf_df <- maf_df %>%
@@ -17,28 +18,7 @@ maf_df <- maf_df %>%
          maf_quin = ntile(maf, 5),
          maf_dec = ntile(maf,10))
 
-# plot distribution of categories and mafs
-# maf_df %>%
-#   ggplot(aes(x = maf_cat)) +
-#   geom_bar(aes(y = (..count..)/sum(..count..))) +
-#   xlab("MAF Category") +
-#   ylab("Proportion") +
-#   ggtitle("Chromosome 15 Variant Distribution")
-#
-#
-# maf_df %>%
-#   pull(maf_cat) %>%
-#   table()
-#
-# maf_df %>%
-#   ggplot(aes(x = maf)) +
-#   geom_density() +
-#   xlab("Log10 MAF") +
-#   ylab("Density") +
-#   scale_x_log10() +
-#   ggtitle("Chromosome 15 MAF Distribution")
 
-# single example
 ## load het locations and error locations
 get_df_het <- function(id){
   df_beagle <- read_csv(paste0(beagle_switch_dir, "switch_", id, ".csv"), show_col_types = FALSE)
@@ -151,7 +131,7 @@ for(i in 2:602){
   df_prop <- bind_rows(df_prop, df_het_summary(i))
 }
 
-write_csv(df_prop, paste0(config_obj$base_dir,"/output/trio_phase_15/maf_props.csv"))
+write_csv(df_prop, paste0(config_obj$base_dir,"/output/trio_phase_",22,"/maf_props.csv"))
 
 # df_het <- get_df_het(1)
 # # Simple tables and figures

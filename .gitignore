@@ -1,3 +1,4 @@
+data/1kgp/chr1
 .Rproj.user
 .Rhistory
 .RData
@@ -21,3 +22,6 @@ data/1kgp/chr8/
 data/1kgp/chr22/
 data/1kgp/*.tsv
 data/ref_maps
+data/1kgp/exclude_samples
+scratch/
+data/decode
