@@ -82,6 +82,30 @@ maf_prop_df <- left_join(maf_prop_df,
                          {df_subj_rel %>% 
                              select(id2, POPULATION, SUPER, sex, n_het, n_t_het)},
                          by = c("id" = "id2"))
+
+maf_prop_df_22 <- read_csv(paste0(config_obj$base_dir,"/output/trio_phase_22/maf_props.csv"))
+
+maf_prop_df_22 <- left_join(maf_prop_df_22, 
+                         {df_subj_rel %>% 
+                             select(id2, POPULATION, SUPER, sex, n_het, n_t_het)},
+                         by = c("id" = "id2"))
+
+### Triple het error counts
+df_th_b_15 <- read_csv("output/trio_phase_15/switch_errors/beagle_triple_het.csv") %>%
+  rename(beagle_switch_th = n_switch_th, beagle_flip_th = n_flip_th)
+
+df_th_e_15 <- read_csv("output/trio_phase_15/switch_errors/eagle_triple_het.csv") %>%
+  rename(eagle_switch_th = n_switch_th, eagle_flip_th = n_flip_th)
+
+df_th_s_15 <- read_csv("output/trio_phase_15/switch_errors/shapeit_triple_het.csv") %>%
+  rename(shapeit_switch_th = n_switch_th, shapeit_flip_th = n_flip_th)
+
+df_switch_trio <- left_join(df_switch_trio, df_th_b_15, by=c("pair_id" = "id"))
+df_switch_trio <- left_join(df_switch_trio, df_th_e_15, by=c("pair_id" = "id"))
+df_switch_trio <- left_join(df_switch_trio, df_th_s_15, by=c("pair_id" = "id"))
+
+# deCODE genetic maps (cM/MB)
+df_decode <- read_tsv("data/decode/chr15_recomb.bed", col_names = c("chr", "start", "end", "cM_MB"))
 ```
 
 ### Chr X Results
@@ -101,6 +125,8 @@ df_het_x$frac_het <- df_het_x$n_het / n_var_site_x
 
 sd_pair_info_df$n_het <-df_het_x$n_het
 sd_pair_info_df$frac_het <-df_het_x$frac_het
+
+df_decode_x <- read_tsv("data/decode/chrX_recomb.bed", col_names = c("chr", "start", "end", "cM_MB"))
 ```
 
 
@@ -193,9 +219,29 @@ df_subj_rel %>%
 
 df_subj_rel %>%
   ggplot() +
+  stat_density(aes(x = frac_het22, colour = SUPER),
+                  geom="line",position="identity") +
+  theme_classic() +
+  ggtitle("Fraction of Sites Heterozygous", "Chromosome 22") +
+  labs(colour="Population") +
+  xlab("Fraction of Sites Heterozygous") +
+  scale_colour_manual(values=cbPalette)
+
+df_subj_rel %>%
+  ggplot() +
   geom_boxplot(aes(x = frac_het, y = SUPER , fill = SUPER), show.legend = FALSE) +
   theme_classic() +
   ggtitle("Fraction of Sites Heterozygous", "Chromosome 15") +
+  labs(fill="Population") +
+  xlab("Fraction of Sites Heterozygous") +
+  ylab("Population") +
+  scale_fill_manual(values=cbPalette)
+
+df_subj_rel %>%
+  ggplot() +
+  geom_boxplot(aes(x = frac_het22, y = SUPER , fill = SUPER), show.legend = FALSE) +
+  theme_classic() +
+  ggtitle("Fraction of Sites Heterozygous", "Chromosome 22") +
   labs(fill="Population") +
   xlab("Fraction of Sites Heterozygous") +
   ylab("Population") +
@@ -258,12 +304,15 @@ And for another comparison, we'll summarize heterozygosity by super population:
 ```{r}
 df_subj_rel %>%
   group_by(SUPER) %>%
-  summarize(mean_het_15 = mean(frac_het)) %>%
+  summarize(mean_het_15 = mean(frac_het),
+            mean_het_22 = mean(frac_het22)) %>%
   left_join({ sd_pair_info_df %>%
       group_by(SP) %>%
       summarize(mean_het_x = mean(frac_het))
   }, by = c("SUPER" = "SP")) %>%
-  mutate(x_15_ratio = mean_het_x/mean_het_15) %>%
+  mutate(x_15_ratio = mean_het_x/mean_het_15,
+         x_22_ratio = mean_het_x / mean_het_22,
+         c15_22_ratio = mean_het_15 / mean_het_22) %>%
   knitr::kable()
 ```
 
@@ -842,6 +891,69 @@ plot_th_sr <- function(df, m1, chrom = 15){
 plot_th_sr(df_switch_trio, "Beagle")
 ```
 
+And comparing the fraction of triple hets that are errors to frac of all sites that are errors:
+
+```{r}
+df_switch_trio %>%
+  mutate(frac_t_het = (n_t_het / n_hets)) %>%
+  ggplot(aes(x = frac_t_het, color = SUPER)) +
+    geom_density() +
+    xlab("Fraction of TH Het Sites") +
+    scale_color_manual(values = cbPalette) +
+    theme_classic() 
+
+df_switch_trio %>%
+  mutate(Beagle = (beagle_switch_th / n_other_beagle),
+         Eagle = (eagle_switch_th / n_other_eagle),
+         SHAPEIT = (shapeit_switch_th / n_other_shapeit)) %>%
+  select(SUPER, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+  ggplot(aes(x = enrich, color = SUPER)) +
+    geom_density() +
+    ylab("Frac. switches at TH") +
+    scale_color_manual(values = cbPalette) +
+    theme_classic()
+
+df_switch_trio %>%
+  mutate(Beagle = (beagle_flip_th / n_flip_beagle),
+         Eagle = (eagle_flip_th / n_flip_eagle),
+         SHAPEIT = (shapeit_flip_th / n_flip_shapeit)) %>%
+  select(SUPER, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+  ggplot(aes(x = enrich, color = SUPER)) +
+    geom_density() +
+    ylab("Frac. flips at TH") +
+    scale_color_manual(values = cbPalette) +
+    theme_classic()
+
+df_switch_trio %>%
+  mutate(Beagle = (beagle_switch_th / n_other_beagle) / (n_t_het / n_hets),
+         Eagle = (eagle_switch_th / n_other_eagle) / (n_t_het / n_hets),
+         SHAPEIT = (shapeit_switch_th / n_other_shapeit) / (n_t_het / n_hets)) %>%
+  select(SUPER, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+  ggplot(aes(x = Method, y = enrich, color = SUPER)) +
+    geom_boxplot() +
+    ylab("Frac. switches at TH / Frac. Het. at TH") +
+    scale_color_manual(values = cbPalette) +
+    theme_classic() +
+  geom_hline(yintercept = 1)
+
+df_switch_trio %>%
+  mutate(Beagle = (beagle_flip_th / n_flip_beagle) / (n_t_het / n_hets),
+         Eagle = (eagle_flip_th / n_flip_eagle) / (n_t_het / n_hets),
+         SHAPEIT = (shapeit_flip_th / n_flip_shapeit) / (n_t_het / n_hets)) %>%
+  select(SUPER, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+  ggplot(aes(x = Method, y = enrich, color = SUPER)) +
+    geom_boxplot() +
+    ylab("Frac. flips at TH / Frac. Het. at TH") +
+    scale_color_manual(values = cbPalette) +
+    theme_classic() +
+  geom_hline(yintercept = 1)
+```
+
+
 #### Eagle
 
 ```{r}
@@ -1241,6 +1353,46 @@ maf_prop_df %>%
   geom_boxplot() +
   ggtitle("Odds Ratio of Rare Variant") +
   ylab("Odds Rare Flip / Odds Rare Heterozygous") +
+  theme_classic() +
+  labs(colour = "Population") +
+  geom_hline(yintercept = 1, linetype = 2)
+```
+
+### Enrichment
+
+Instead of odds ratios, we compare the ratio of switches that are rare to the ratio of total heterozygous positions that are rare
+
+```{r}
+maf_prop_df %>%
+  select(category, proportion, id, SUPER) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_switch_rare / het_rare,
+         Eagle = eagle_switch_rare / het_rare,
+         SHAPEIT = shapeit_switch_rare / het_rare) %>%
+  select(id, SUPER, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(!id & !SUPER, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
+  geom_boxplot() +
+  ggtitle("Ratio of Proportions Rare") +
+  ylab("Fraction Switch Rare / Fraction Het Rare") +
+  theme_classic() +
+  labs(colour = "Population") +
+  geom_hline(yintercept = 1, linetype = 2)
+```
+
+```{r}
+maf_prop_df %>%
+  select(category, proportion, id, SUPER) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_flip_rare / het_rare,
+         Eagle = eagle_flip_rare / het_rare,
+         SHAPEIT = shapeit_flip_rare / het_rare) %>%
+  select(id, SUPER, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(!id & !SUPER, names_to = "Method", values_to = "OR") %>%
+  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
+  geom_boxplot() +
+  ggtitle("Ratio of Proportions Rare") +
+  ylab("Fraction Flip Rare / Fraction Het Rare") +
   theme_classic() +
   labs(colour = "Population") +
   geom_hline(yintercept = 1, linetype = 2)
