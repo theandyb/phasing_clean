@@ -77,7 +77,8 @@ cross_df_plots <- function(df, df_th, metric = "other"){
     ylab("With TH") +
     ggtitle("SHAPEIT") +
     labs(color="Population") +
-    scale_color_manual(values = cbPalette)
+    scale_color_manual(values = cbPalette) +
+    theme(legend.position.inside = c(.85, .2))
   
   return(grid.arrange(p1, p2, p3, nrow = 1))
 }
