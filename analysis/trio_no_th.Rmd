@@ -1,0 +1,211 @@
+---
+title: "trio_no_th"
+author: "Andy Beck"
+date: "2024-06-17"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(reactable)
+library(yaml)
+library(gtsummary)
+
+library(grid)
+library(gridExtra) 
+
+config_obj <- yaml::read_yaml("_config.yaml")
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+cross_df_plots <- function(df, df_th, metric = "other"){
+  beagle_var <- paste0("n_", metric, "_beagle")
+  eagle_var <- paste0("n_", metric, "_eagle")
+  shapeit_var <- paste0("n_", metric, "_shapeit")
+  df_tmp <- df_th %>%
+    rename(Beagle_th = !! sym(beagle_var),
+           Eagle_th = !! sym(eagle_var),
+           SHAPEIT_th = !! sym(shapeit_var)) %>%
+    mutate(Beagle_th = Beagle_th / n_hets,
+           Eagle_th = Eagle_th / n_hets,
+           SHAPEIT_th = SHAPEIT_th / n_hets) %>%
+    select(pair_id, SUPER, Beagle_th, Eagle_th, SHAPEIT_th) %>%
+    inner_join({
+      df %>%
+        rename(Beagle = !! sym(beagle_var),
+               Eagle = !! sym(eagle_var),
+               SHAPEIT = !! sym(shapeit_var)) %>%
+        mutate(Beagle = Beagle / n_hets,
+               Eagle = Eagle / n_hets,
+               SHAPEIT = SHAPEIT / n_hets) %>%
+        select(pair_id, Beagle, Eagle, SHAPEIT)
+    }, by = "pair_id")
+  
+  p1 <- df_tmp %>%
+    ggplot(aes(x = Beagle, y = Beagle_th, colour = SUPER)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    theme_classic() +
+    xlab("Without TH") +
+    ylab("With TH") +
+    ggtitle("Beagle") +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette) +
+    guides(color = "none")
+  
+  p2 <- df_tmp %>%
+    ggplot(aes(x = Eagle, y = Eagle_th, colour = SUPER)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    theme_classic() +
+    xlab("Without TH") +
+    ylab("With TH") +
+    ggtitle("Eagle") +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette) +
+    guides(color = "none")
+  
+  p3 <- df_tmp %>%
+    ggplot(aes(x = SHAPEIT, y = SHAPEIT_th, colour = SUPER)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    theme_classic() +
+    xlab("Without TH") +
+    ylab("With TH") +
+    ggtitle("SHAPEIT") +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  
+  return(grid.arrange(p1, p2, p3, nrow = 1))
+}
+
+
+cross_meth_plot <- function(df, p_title, p_func, pop, chrom="15") {
+  p1 <- p_func(df, "Beagle", "SHAPEIT", pop, chrom = chrom)
+  p_legend <- cowplot::get_legend(p1)
+  
+  p1 <- p1 + guides(colour="none") + ggtitle(p_title, paste0("Chromosome ", chrom))
+  
+  p2 <- p_func(df, "Beagle", "Eagle", pop, chrom = chrom) +
+    guides(colour="none") + ggtitle("", "")
+  
+  p3 <- p_func(df, "SHAPEIT", "Eagle", pop, chrom = chrom) +
+    guides(colour="none") + ggtitle("", "")
+  
+  return(grid.arrange(p1, p_legend, p2, p3, ncol = 2))
+}
+
+plot_total_rate <- function(df, m1, m2, pop, chrom="15"){
+  p <- df %>%
+    mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Error Rate", paste0("Chromosome ", chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_switch_rate <- function(df, m1, m2, pop, chrom="15"){
+  p <- df %>%
+    mutate(Beagle = ( n_other_beagle ) / n_hets,
+         Eagle = ( n_other_eagle ) / n_hets,
+         SHAPEIT = ( n_other_shapeit ) / n_hets) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Error Rate", paste0("Chromosome ", chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
+plot_flip_rate <- function(df, m1, m2, pop, chrom="15"){
+  p <- df %>%
+    mutate(Beagle = ( n_flip_beagle ) / n_hets,
+         Eagle = ( n_flip_eagle ) / n_hets,
+         SHAPEIT = ( n_flip_shapeit ) / n_hets) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Error Rate", paste0("Chromosome ", chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+```
+
+## Introduction
+
+The purpose of this document is to compare the rates of phasing errors on probands when triple heterozygotes are removed to what we observed when phasing all sites.
+
+### Subject information
+
+```{r}
+df_subj <- read_csv("data/1kgp/subject_info.csv")
+ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt")
+
+child_ids <- ped_df %>% filter(fatherID != "0" & motherID != "0") %>% pull(sampleID)
+unrel_ids <- scan("data/1kgp/unrelated_subjects.txt", what = character())
+
+df_subj_rel <- df_subj %>%
+  filter(SAMPLE_NAME %in% child_ids)
+df_subj_rel$id2 <- 1:602
+
+df_subj_unrel <- df_subj %>%
+  filter(SAMPLE_NAME %in% unrel_ids)
+```
+
+
+## Chromosome 15
+
+```{r}
+df_switch_th <- read_csv("output/trio_phase_15/switch_errors/summary.csv", show_col_types = FALSE) # with triple hets
+df_switch <- read_csv("output/trio_phase_15/no_th/switch_errors/summary.csv", show_col_types = FALSE) # without th
+```
+
+As a reminder, here are what the error distribution patterns looked like with the triple heterozygous sites included:
+
+```{r}
+cross_meth_plot(df_switch_th, "Switch Rate: With Triple Het", plot_switch_rate, "SUPER", 15)
+```
+
+For the same cross-method comparison, we observe the following figure:
+
+```{r}
+cross_meth_plot(df_switch, "Switch Rate: Without Triple Het", plot_switch_rate, "SUPER", 15)
+```
+
+Visually, we observe the same general ranking of methods with respect to the switch rate between the two figures. For flips, we observe the following:
+
+```{r}
+cross_meth_plot(df_switch_th, "Flip Rate: With Triple Het", plot_flip_rate, "SUPER", 15)
+```
+
+```{r}
+cross_meth_plot(df_switch, "Flip Rate: Without Triple Het", plot_flip_rate, "SUPER", 15)
+```
+
+Again, we observe the same qualitative ranking of the methods: SHAPEIT generally introduces more flips than the other two methods, while more most probands we observe more flips in Beagle than in Eagle. Now, if we plot the error rates for each method acrss the datasets, we observe:
+
+```{r fig.dim = c(9, 6)}
+cross_df_plots(df_switch, df_switch_th, "other")
+
+cross_df_plots(df_switch, df_switch_th, "flip")
+```
+
