@@ -204,7 +204,7 @@ cross_meth_plot(df_switch, "Flip Rate: Without Triple Het", plot_flip_rate, "SUP
 
 Again, we observe the same qualitative ranking of the methods: SHAPEIT generally introduces more flips than the other two methods, while more most probands we observe more flips in Beagle than in Eagle. Now, if we plot the error rates for each method acrss the datasets, we observe:
 
-```{r fig.dim = c(12, 4)}
+```{r fig.dim = c(11, 4)}
 cross_df_plots(df_switch, df_switch_th, "other")
 
 cross_df_plots(df_switch, df_switch_th, "flip")
