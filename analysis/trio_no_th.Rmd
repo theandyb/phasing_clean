@@ -79,7 +79,7 @@ cross_df_plots <- function(df, df_th, metric = "other"){
     labs(color="Population") +
     scale_color_manual(values = cbPalette) +
     guides(color = guide_legend(position = "inside")) +
-    theme(legend.position.inside = c(.85, .2))
+    theme(legend.position.inside = c(.85, .25))
   
   return(grid.arrange(p1, p2, p3, nrow = 1))
 }
