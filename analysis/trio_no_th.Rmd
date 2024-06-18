@@ -181,6 +181,28 @@ df_switch_th <- read_csv("output/trio_phase_15/switch_errors/summary.csv", show_
 df_switch <- read_csv("output/trio_phase_15/no_th/switch_errors/summary.csv", show_col_types = FALSE) # without th
 ```
 
+For a sanity check, let's plot the number of heterozygous positions per proband by data set (there should uniformly be more in the dataset which includes triple heterozygous positions):
+
+```{r}
+df_switch_th %>%
+  rename(n_het_th = n_hets) %>%
+  select(pair_id, SUPER, n_het_th) %>%
+  inner_join({
+    df_switch %>%
+      select(pair_id, n_hets)
+  }, by = "pair_id") %>%
+  ggplot(aes(x = n_hets, y = n_het_th, colour = SUPER)) +
+  geom_point() +
+  theme_classic() +
+  ggtitle("Heterozygous Positions") +
+  xlab("Without Triple Hets") +
+  ylab("With Triple Hets") +
+  scale_color_manual(values = cbPalette) +
+  labs(colour = "Population") +
+  geom_abline(slope = 1, intercept = 0)
+```
+
+
 As a reminder, here are what the error distribution patterns looked like with the triple heterozygous sites included:
 
 ```{r}
@@ -203,7 +225,7 @@ cross_meth_plot(df_switch_th, "Flip Rate: With Triple Het", plot_flip_rate, "SUP
 cross_meth_plot(df_switch, "Flip Rate: Without Triple Het", plot_flip_rate, "SUPER", 15)
 ```
 
-Again, we observe the same qualitative ranking of the methods: SHAPEIT generally introduces more flips than the other two methods, while more most probands we observe more flips in Beagle than in Eagle. Now, if we plot the error rates for each method acrss the datasets, we observe:
+Again, we observe the same qualitative ranking of the methods: SHAPEIT generally introduces more flips than the other two methods, while more most probands we observe more flips in Beagle than in Eagle. Now, if we plot the error rates for each method across the data sets, we observe:
 
 ```{r fig.dim = c(12, 4)}
 cross_df_plots(df_switch, df_switch_th, "other")
@@ -213,3 +235,63 @@ cross_df_plots(df_switch, df_switch_th, "other")
 cross_df_plots(df_switch, df_switch_th, "flip")
 ```
 
+## Chromosome 22
+
+```{r}
+df_switch_th <- read_csv("output/trio_phase_22/switch_errors/summary.csv", show_col_types = FALSE) # with triple hets
+df_switch <- read_csv("output/trio_phase_22/no_th/switch_errors/summary.csv", show_col_types = FALSE) # without th
+```
+
+For a sanity check, let's plot the number of heterozygous positions per proband by data set (there should uniformly be more in the dataset which includes triple heterozygous positions):
+
+```{r}
+df_switch_th %>%
+  rename(n_het_th = n_hets) %>%
+  select(pair_id, SUPER, n_het_th) %>%
+  inner_join({
+    df_switch %>%
+      select(pair_id, n_hets)
+  }, by = "pair_id") %>%
+  ggplot(aes(x = n_hets, y = n_het_th, colour = SUPER)) +
+  geom_point() +
+  theme_classic() +
+  ggtitle("Heterozygous Positions") +
+  xlab("Without Triple Hets") +
+  ylab("With Triple Hets") +
+  scale_color_manual(values = cbPalette) +
+  labs(colour = "Population") +
+  geom_abline(slope = 1, intercept = 0)
+```
+
+
+As a reminder, here are what the error distribution patterns looked like with the triple heterozygous sites included:
+
+```{r}
+cross_meth_plot(df_switch_th, "Switch Rate: With Triple Het", plot_switch_rate, "SUPER", 22)
+```
+
+For the same cross-method comparison, we observe the following figure:
+
+```{r}
+cross_meth_plot(df_switch, "Switch Rate: Without Triple Het", plot_switch_rate, "SUPER", 22)
+```
+
+Visually, we observe the same general ranking of methods with respect to the switch rate between the two figures. For flips, we observe the following:
+
+```{r}
+cross_meth_plot(df_switch_th, "Flip Rate: With Triple Het", plot_flip_rate, "SUPER", 22)
+```
+
+```{r}
+cross_meth_plot(df_switch, "Flip Rate: Without Triple Het", plot_flip_rate, "SUPER", 22)
+```
+
+Again, we observe the same qualitative ranking of the methods: SHAPEIT generally introduces more flips than the other two methods, while more most probands we observe more flips in Beagle than in Eagle. Now, if we plot the error rates for each method across the data sets, we observe:
+
+```{r fig.dim = c(12, 4)}
+cross_df_plots(df_switch, df_switch_th, "other")
+```
+
+```{r fig.dim = c(12,4)}
+cross_df_plots(df_switch, df_switch_th, "flip")
+```
