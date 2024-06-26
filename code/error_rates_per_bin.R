@@ -10,8 +10,16 @@ beagle_switch_dir <-   paste0(config_obj$base_dir,"/",config_obj$trio_result_dir
 eagle_switch_dir <-   paste0(config_obj$base_dir,"/",config_obj$trio_result_dir,"/switch_errors/eagle/annotated/")
 shapeit_switch_dir <-   paste0(config_obj$base_dir,"/",config_obj$trio_result_dir,"/switch_errors/shapeit/annotated/")
 het_loc_dir <- paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/het_loc/annotated/")
-
 out_dir <- paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/mb_error_rate/")
+
+# beagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/beagle/annotated/")
+# eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/eagle/annotated/")
+# shapeit_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/shapeit/annotated/")
+# het_loc_dir <- paste0(config_obj$base_dir, "/output/switch_errors/het_loc/annotated/")
+
+
+#out_dir <- paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/mb_error_rate/")
+#out_dir <- paste0(config_obj$base_dir, "/output/switch_errors/mb_error_rate/")
 
 
 # function for reading in switch error file for 1 sd for 1 method
@@ -70,13 +78,14 @@ annotate_het_df <- function(het_loc_dir, beagle_switch_dir, eagle_switch_dir, sh
 }
 
 # annotated het position files for all subjects
-for(i in 1:602){
+for(i in 1:1000){
+  print(i)
   het_df <- annotate_het_df(het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, i)
   write_csv(het_df, paste0(het_loc_dir, "errors_", i, ".csv"))
 }
 
 
-# error rates per MB bin
+# errors per MB bin
 for(i in 1:602){
   print(i)
   het_df <- annotate_het_df(het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, i)
@@ -90,13 +99,7 @@ for(i in 1:602){
               n_flip_beagle = sum(beagle_flip),
               n_flip_eagle = sum(eagle_flip),
               n_flip_shapeit = sum(shapeit_flip)) %>%
-    mutate(beagle_switch_rate = n_switch_beagle /(n_het - 2*n_flip_beagle),
-           eagle_switch_rate = n_switch_eagle /(n_het - 2*n_flip_eagle),
-           shapeit_switch_rate = n_switch_shapeit /(n_het - 2*n_flip_shapeit),
-           beagle_flip_rate = n_flip_beagle /(n_het - n_switch_beagle),
-           eagle_flip_rate = n_flip_eagle /(n_het - n_switch_eagle),
-           shapeit_flip_rate = n_flip_shapeit /(n_het - n_switch_shapeit)) %>%
-    select(bin,contains("switch_rate"), contains("flip_rate"))
+    select(bin, n_het,contains("n_switch"), contains("n_flip"))
   write_csv(het_df, paste0(out_dir, "sample_", i, ".csv"))
 
 }

@@ -9,13 +9,13 @@
 #SBATCH --mail-user=beckandy@umich.edu
 #SBATCH --array=1-602
 #SBATCH --constraint=avx2
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/sample.%A.%a.err
-#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/sample.%A.%a.out
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/sample_noTH.%A.%a.err
+#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/sample_noTH.%A.%a.out
 
 # Code for phasing 602 child samples against a panel with their parents removed
 # also remove triple heterozygous sites
 
-chrom=15
+chrom=22
 eagle_map="/net/snowwhite/home/beckandy/software/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz"
 base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
 shapeit_dir="/net/snowwhite/home/beckandy/software/shapeit5/shapeit5" #location where shapeit is compiled
@@ -41,8 +41,6 @@ if ! test -f $out_dir/truth/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz; then
   # generate reference panel for phasing
   if ! test -f ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.vcf.gz; then
   bcftools view  -S ^${exclude_samples} -T ^${triple_het_file} -Oz $panel_vcf  > ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}_noTH.vcf.gz #| \
-    #bcftools norm --no-version -m -any | \
-    #bcftools norm --no-version -Oz -d none -f /net/snowwhite/home/beckandy/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna> ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}.vcf.gz
   bcftools index ${working_dir}andy_ref_${SLURM_ARRAY_TASK_ID}_noTH.vcf.gz
   fi
 

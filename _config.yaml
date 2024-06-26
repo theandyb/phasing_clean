@@ -2,4 +2,5 @@
 
 # location of project on your computer/server
 base_dir: "/net/snowwhite/home/beckandy/research/phasing_clean"
-trio_result_dir: "output/trio_phase_22"
+trio_result_dir: "output/trio_phase_22/no_th"
+chrom: "22"

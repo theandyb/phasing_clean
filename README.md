@@ -37,6 +37,22 @@ bigWigToBedGraph -chrom=chr8 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate
 bigWigToBedGraph -chrom=chr15 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chr15_recomb.bed
 
 bigWigToBedGraph -chrom=chr1 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chr1_recomb.bed
+
+bigWigToBedGraph -chrom=chr22 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chr22_recomb.bed
+```
+
+1kGP genetic maps
+
+```
+bigWigToBedGraph -chrom=chrX  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chrX_recomb.bed
+
+bigWigToBedGraph -chrom=chr1  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chr1_recomb.bed
+
+bigWigToBedGraph -chrom=chr8  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chr8_recomb.bed
+
+bigWigToBedGraph -chrom=chr15  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chr15_recomb.bed
+
+bigWigToBedGraph -chrom=chr22  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chr22_recomb.bed
 ```
 
 1kgp pilot mask:
@@ -47,6 +63,10 @@ curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_proj
 curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr1\s" > data/1kgp/chr1/chr1_pilot_mask.bed
 
 curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr15" > data/1kgp/chr15/chr15_pilot_mask.bed
+
+curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr8" > data/1kgp/chr22/chr8_pilot_mask.bed
+
+curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr22" > data/1kgp/chr22/chr22_pilot_mask.bed
 ```
 
 ### Genetic maps for phasing
@@ -149,12 +169,15 @@ fastaindex -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in
 fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chrX" > data/chrX.fasta
 fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr15" > data/chr15.fasta
 fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr1" > data/chr1.fasta
+fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr8" > data/chr8.fasta
+fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr22" > data/chr22.fasta
 
 bedtools complement -i data/1kgp/chrX_pilot_mask.bed -g data/chrX.sizes | bedtools sort > data/mask_pilot_X_fasta.bed
-
 bedtools complement -i data/1kgp/chr15/chr15_pilot_mask.bed -g data/chr15.sizes | bedtools sort > data/mask_pilot_15_fasta.bed
-
 bedtools complement -i data/1kgp/chr1/chr1_pilot_mask.bed -g data/chr1.sizes | bedtools sort > data/mask_pilot_1_fasta.bed
+bedtools complement -i data/1kgp/chr8/chr8_pilot_mask.bed -g data/chr8.sizes | bedtools sort > data/mask_pilot_8_fasta.bed
+bedtools complement -i data/1kgp/chr22/chr22_pilot_mask.bed -g data/chr22.sizes | bedtools sort > data/mask_pilot_22_fasta.bed
+
 
 bedtools maskfasta -fi data/chrX.fasta -bed data/mask_pilot_X_fasta.bed -fo data/chrX_mask.fasta
 samtools faidx data/chrX_mask.fasta
@@ -165,14 +188,24 @@ samtools faidx data/chr15_mask.fasta
 bedtools maskfasta -fi data/chr1.fasta -bed data/mask_pilot_1_fasta.bed -fo data/chr1_mask.fasta
 samtools faidx data/chr1_mask.fasta
 
+bedtools maskfasta -fi data/chr8.fasta -bed data/mask_pilot_8_fasta.bed -fo data/chr8_mask.fasta
+samtools faidx data/chr8_mask.fasta
+
+bedtools maskfasta -fi data/chr22.fasta -bed data/mask_pilot_22_fasta.bed -fo data/chr22_mask.fasta
+samtools faidx data/chr22_mask.fasta
+
 
 bedtools makewindows -g data/chrX.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chrX.1kb.sorted.bed
 bedtools makewindows -g data/chr15.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chr15.1kb.sorted.bed
 bedtools makewindows -g data/chr1.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chr1.1kb.sorted.bed
+bedtools makewindows -g data/chr8.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chr8.1kb.sorted.bed
+bedtools makewindows -g data/chr22.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chr22.1kb.sorted.bed
 
 bedtools nuc -fi data/chrX_mask.fasta -bed data/chrX.1kb.sorted.bed > data/chrX_gc1kb_pilot.bed
 bedtools nuc -fi data/chr15_mask.fasta -bed data/chr15.1kb.sorted.bed > data/chr15_gc1kb_pilot.bed
 bedtools nuc -fi data/chr1_mask.fasta -bed data/chr1.1kb.sorted.bed > data/chr1_gc1kb_pilot.bed
+bedtools nuc -fi data/chr8_mask.fasta -bed data/chr8.1kb.sorted.bed > data/chr8_gc1kb_pilot.bed
+bedtools nuc -fi data/chr22_mask.fasta -bed data/chr22.1kb.sorted.bed > data/chr22_gc1kb_pilot.bed
 ```
 
 ## Downloading and processing Chromosome 15
@@ -333,8 +366,9 @@ For each of the 602 children of the trios, we need to identify which samples nee
 ## Phasing chromosome 15
 
 ```
-chrom=1
-out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_${chrom}"
+chrom=22
+out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_${chrom}/no_th"
+mkdir -p $out_dir/mb_error_rate
 mkdir -p $out_dir/beagle
 mkdir $out_dir/eagle
 mkdir $out_dir/shapeit
@@ -349,7 +383,7 @@ The batch script `code/batch_phase_trios.sh` submits a job to SLURM for each of 
 
 ```
 for i in `seq 1 602`; do
-wc -l output/trio_phase15/het_pos/sample_${i}.bed >> output/trio_phase_15/het_pos_count.tmp 
+wc -l output/trio_phase_22/no_th/het_pos/sample_${i}.bed >> output/trio_phase_22/no_th/het_pos_count.tmp 
 done
 
 awk '{print(NR"\t"$1)}' output/trio_phase_15/het_pos_count.tmp > output/trio_phase_15/het_pos_count.tsv
@@ -358,12 +392,12 @@ awk '{print(NR"\t"$1)}' output/trio_phase_15/het_pos_count.tmp > output/trio_pha
 ### Count hets at CpG in each trio
 
 ```
-chrom=1
+chrom="15/no_th"
 for i in `seq 1 602`; do
-awk -F',' '{n_cpg += $3}END{print(n_cpg)}' "output/trio_phase_${chrom}/het_loc/annotated/pair_${i}.csv " >> "output/trio_phase_${chrom}/het_cpg_count.tmp"
+awk -F',' '{n_cpg += $3}END{print(n_cpg)}' "output/trio_phase_${chrom}/het_loc/annotated/pair_${i}.csv" >> "output/trio_phase_${chrom}/het_cpg_count.tmp"
 done
 
-awk '{print(NR"\t"$1)}' output/trio_phase_15/het_cpg_count.tmp > output/trio_phase_15/het_cpg_count.tsv
+awk '{print(NR"\t"$1)}' output/trio_phase_${chrom}/het_cpg_count.tmp > output/trio_phase_${chrom}/het_cpg_count.tsv
 ```
 
 ### Get maf at variant sites
@@ -374,3 +408,11 @@ bcftools +fill-tags "data/1kgp/chr${chrom}/chr${chrom}_phased_overlap.bcf" -- -t
   bcftools query -f "%CHROM\t%POS\t%AF\n" | \
   awk '{maf = (1-$3 < $3 ? 1-$3 : $3); print($1"\t"$2"\t"maf)}' > "data/1kgp/chr${chrom}/chr${chrom}_freq.tsv"
 ```
+
+* `code/get_maf_at_errors_trio.R`: gets a list of all postions where an error occurs, with count of times it appears, along with maf
+* `code/maf_categories_trio.R`: for each proband, get proportions of all error types by bin (output: `maf_props.csv`)
+* `error_rates_per_bin.R`: gets rate of each error type in MB bin
+
+## Voting Approach
+
+The scripts for submitting the SLURM job for the voting approach are `code/batch_vote_phase.sh` and `code/batch_vote_phase_trio.sh`. The switch errors are annotated using the SLURM job in `code/batch_annotate_switch_vote.sh`. A summary is generated by `code/vote_summary.R`

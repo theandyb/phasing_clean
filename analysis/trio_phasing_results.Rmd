@@ -1398,3 +1398,11 @@ maf_prop_df %>%
   geom_hline(yintercept = 1, linetype = 2)
 ```
 
+## deCODE recombination rates
+
+```{r}
+df_decode %>%
+  mutate(bin = ceiling(start / 1e6)) %>%
+  group_by(bin) %>%
+  summarize(cM_MB = mean(cM_MB))
+```

@@ -3,7 +3,7 @@ library(yaml)
 source("code/common_functions.R")
 
 config_obj <- yaml::read_yaml("_config.yaml")
-chrom=22
+chrom <- 22
 
 eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/eagle/annotated/")
 shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/shapeit/annotated/")
@@ -131,63 +131,4 @@ for(i in 2:602){
   df_prop <- bind_rows(df_prop, df_het_summary(i))
 }
 
-write_csv(df_prop, paste0(config_obj$base_dir,"/output/trio_phase_",22,"/maf_props.csv"))
-
-# df_het <- get_df_het(1)
-# # Simple tables and figures
-#
-# # what is the distribution of maf_cat across all hets?
-# df_het %>%
-#   ggplot(aes(x = maf_cat)) +
-#   geom_bar(aes(y = (..count..)/sum(..count..) * 100)) +
-#   ggtitle("Heterozygous Sites by MAF Bin") +
-#   xlab("MAF Category") +
-#   ylab("% of Sites")
-#
-# df_het %>%
-#   ggplot(aes(x = maf_quin)) +
-#   geom_bar(aes(y = (..count..)/sum(..count..) * 100)) +
-#   ggtitle("Heterozygous Sites by MAF Quintile") +
-#   xlab("MAF Quintile") +
-#   ylab("% of Sites")
-#
-# # what is the distribution at different kinds of errors?
-# df_het %>%
-#   filter(shapeit_status != "correct") %>%
-#   ggplot(aes(x = maf_cat)) +
-#   geom_bar(aes(y = (..count..)/sum(..count..) * 100)) +
-#   ggtitle("SHAPEIT Error Sites by MAF Bin") +
-#   xlab("MAF Category") +
-#   ylab("% of Sites")
-#
-# df_het %>%
-#   filter(shapeit_status == "switch") %>%
-#   ggplot(aes(x = maf_cat)) +
-#   geom_bar(aes(y = (..count..)/sum(..count..) * 100)) +
-#   ggtitle("SHAPEIT Switch Sites by MAF Bin") +
-#   xlab("MAF Category") +
-#   ylab("% of Sites")
-#
-# df_het %>%
-#   filter(str_detect(shapeit_status, "flip")) %>%
-#   ggplot(aes(x = maf_cat)) +
-#   geom_bar(aes(y = (..count..)/sum(..count..) * 100)) +
-#   ggtitle("SHAPEIT Flip Sites by MAF Bin") +
-#   xlab("MAF Category") +
-#   ylab("% of Sites")
-#
-# df_het %>%
-#   filter(shapeit_status == "flip") %>%
-#   ggplot(aes(x = maf_cat)) +
-#   geom_bar(aes(y = (..count..)/sum(..count..) * 100)) +
-#   ggtitle("SHAPEIT Flip Starts by MAF Bin") +
-#   xlab("MAF Category") +
-#   ylab("% of Sites")
-#
-# df_het %>%
-#   filter(shapeit_status == "flip end") %>%
-#   ggplot(aes(x = maf_cat)) +
-#   geom_bar(aes(y = (..count..)/sum(..count..) * 100)) +
-#   ggtitle("SHAPEIT Flip Ends by MAF Bin") +
-#   xlab("MAF Category") +
-#   ylab("% of Sites")
+write_csv(df_prop, paste0(config_obj$base_dir,"/output/trio_phase_",chrom,"/maf_props.csv"))

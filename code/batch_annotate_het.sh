@@ -8,11 +8,11 @@
 #SBATCH --job-name=annHet
 #SBATCH --array=1-602
 #SBATCH --requeue
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_15/slurm/het_annT-%A_%a.err
-#SBATCH -o /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_15/slurm/het_annT-%A_%a.out
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/het_annT-%A_%a.err
+#SBATCH -o /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/het_annT-%A_%a.out
 
-chrom=15
-input_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_${chrom}/het_loc"
+chrom=22
+input_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_${chrom}/no_th/het_loc"
 output_dir="${input_dir}/annotated/"
 
 python /net/snowwhite/home/beckandy/research/phasing_clean/code/append_cpg_het.py -c ${chrom} \

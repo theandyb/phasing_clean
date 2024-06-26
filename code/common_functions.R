@@ -342,6 +342,8 @@ switch_summary_trio <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_
     mutate(pos_next = lead(pos)) %>%
     drop_na()
 
+  size_mb <- (max(het_df$pos) - min(het_df$pos)) / 1e6
+
   switch_err_eagle <- switch_err_eagle %>%
     left_join({gc_content_1kb %>% select(bin_id, GC)}, by = "bin_id")
 
@@ -631,7 +633,8 @@ switch_summary_trio <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_
                     mean_hets_flip_beagle = mean_hets_flip_beagle,
                     mean_hets_flip_eagle = mean_hets_flip_eagle,
                     mean_hets_flip_shapeit = mean_hets_flip_shapeit,
-                    n_hets = length(het_df$pos)
+                    n_hets = length(het_df$pos),
+                    size_mb = size_mb
   ))
 }
 
