@@ -15,3 +15,7 @@ Welcome to my research website.
 [Trio phasing results](trio_phasing_results.html)
 
 [Overlap of errors](sd_error_overlap.html)
+
+[Recombination Rates](recombination_rate.html)
+
+[Trio No Triple Hets](trio_no_th.html)
