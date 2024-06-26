@@ -383,10 +383,10 @@ The batch script `code/batch_phase_trios.sh` submits a job to SLURM for each of 
 
 ```
 for i in `seq 1 602`; do
-wc -l output/trio_phase_22/no_th/het_pos/sample_${i}.bed >> output/trio_phase_22/no_th/het_pos_count.tmp 
+wc -l output/trio_phase_15/no_th/het_loc/pair_${i}_het_loc.txt  >> output/trio_phase_15/no_th/het_pos_count.tmp 
 done
 
-awk '{print(NR"\t"$1)}' output/trio_phase_15/het_pos_count.tmp > output/trio_phase_15/het_pos_count.tsv
+awk '{print(NR"\t"$1)}' output/trio_phase_15/no_th/het_pos_count.tmp > output/trio_phase_15/no_th/het_pos_count.tsv
 ```
 
 ### Count hets at CpG in each trio
