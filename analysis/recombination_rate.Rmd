@@ -1,0 +1,747 @@
+---
+title: "recombination_rate"
+author: "Andy Beck"
+date: "2024-06-18"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(data.table)
+library(gridExtra)
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+sd_het_dir <- "output/switch_errors/het_loc/annotated/"
+trio22_het_dir <- "output/trio_phase_22/het_loc/annotated/"
+trio15_het_dir <- "output/trio_phase_15/het_loc/annotated/"
+
+df_rr_x <- read_tsv("data/decode/chrX_recomb.bed", col_names = c("chrom", "start", "end", "cM_MB"))
+df_rr_15 <- read_tsv("data/decode/chr15_recomb.bed", col_names = c("chrom", "start", "end", "cM_MB")) 
+df_rr_22 <- read_tsv("data/decode/chr22_recomb.bed", col_names = c("chrom", "start", "end", "cM_MB"))
+df_rr_8 <- read_tsv("data/decode/chr8_recomb.bed", col_names = c("chrom", "start", "end", "cM_MB"))
+
+df_rr_1kgp_x <- read_tsv("data/1kgp/chrX_recomb.bed", col_names = c("chrom", "start", "end", "cM_MB"))
+df_rr_1kgp_15 <- read_tsv("data/1kgp/chr15_recomb.bed", col_names = c("chrom", "start", "end", "cM_MB")) 
+df_rr_1kgp_22 <- read_tsv("data/1kgp/chr22_recomb.bed", col_names = c("chrom", "start", "end", "cM_MB"))
+df_rr_1kgp_8 <- read_tsv("data/1kgp/chr8_recomb.bed", col_names = c("chrom", "start", "end", "cM_MB"))
+```
+
+Additional information on the trio probands:
+
+```{r}
+df_subj <- read_csv("data/1kgp/subject_info.csv")
+ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt")
+
+child_ids <- ped_df %>% filter(fatherID != "0" & motherID != "0") %>% pull(sampleID)
+unrel_ids <- scan("data/1kgp/unrelated_subjects.txt", what = character())
+
+df_subj_rel <- df_subj %>%
+  filter(SAMPLE_NAME %in% child_ids)
+df_subj_rel$id2 <- 1:602
+```
+
+
+## Introduction
+
+Here in this document we will evaluate the relationship between recombination rate and switch/flip error rates.
+
+## Single Synthetic Diploid Example
+
+```{r}
+load_het_pos <- function(res_dir, id){
+  f_name <- paste0(res_dir, "errors_", id, ".csv")
+  df <- read_csv(f_name)
+  return(df)
+}
+
+df_het <- load_het_pos(sd_het_dir, 1)
+
+# option 1: interval join
+df_het <- setDT(df_het)[setDT(df_rr_x),
+              on = .(pos >= start, pos < end), 
+             cM_MB := cM_MB][] %>%
+  setDF()
+
+df_het %>%
+  filter(is.na(cM_MB)) %>%
+  pull(shapeit_switch) %>%
+  sum()
+
+# option 2: closest end position
+df_het <- load_het_pos(sd_het_dir, 1)
+
+df_het <- left_join(df_het, df_rr_x, by = join_by(closest(pos <= end)))
+
+df_het$cM_MB %>% summary()
+
+df_het %>%
+  filter(is.na(cM_MB)) %>%
+  pull(eagle_flip) %>%
+  sum()
+```
+
+If we roll with the closest end position approach, here is what the background distribution of cM_MB values at heterozygous positions looks like:
+
+```{r}
+df_het %>%
+  filter(!is.na(cM_MB)) %>%
+  ggplot(aes(x = cM_MB)) +
+  geom_boxplot()
+```
+
+Welp, hard to see anything; let's look at flips:
+
+```{r}
+df_het %>%
+  filter(!is.na(cM_MB)) %>%
+  select(pos, cM_MB, beagle_flip, eagle_flip, shapeit_flip) %>%
+  rename(Beagle = beagle_flip, Eagle = eagle_flip, SHAPEIT = shapeit_flip) %>%
+  pivot_longer(Beagle:SHAPEIT, values_to = "flips", names_to = "method") %>%
+  filter(flips == 1) %>%
+  ggplot(aes(x = cM_MB, color = method)) +
+  geom_boxplot() +
+  scale_color_manual(values = cbPalette)
+```
+
+And switches:
+
+```{r}
+df_het %>%
+  filter(!is.na(cM_MB)) %>%
+  select(pos, cM_MB, beagle_switch, eagle_switch, shapeit_switch) %>%
+  rename(Beagle = beagle_switch, Eagle = eagle_switch, SHAPEIT = shapeit_switch) %>%
+  pivot_longer(Beagle:SHAPEIT, values_to = "flips", names_to = "method") %>%
+  filter(flips == 1) %>%
+  ggplot(aes(x = cM_MB, color = method)) +
+  geom_boxplot() +
+  scale_color_manual(values = cbPalette)
+```
+
+## MB Bin Summary
+
+Let's first get weighted average values for recombination in MB bins:
+
+```{r}
+df_rr_x <- df_rr_x %>%
+  mutate(bin = ceiling( (end - ((end - start)/2)) / 1e6),
+         width = end - start)
+
+df_rr_15 <- df_rr_15 %>%
+  mutate(bin = ceiling( (end - ((end - start)/2)) / 1e6),
+         width = end - start)
+
+df_rr_22 <- df_rr_22 %>%
+  mutate(bin = ceiling( (end - ((end - start)/2)) / 1e6),
+         width = end - start)
+
+df_rr_8 <- df_rr_8 %>%
+  mutate(bin = ceiling( (end - ((end - start)/2)) / 1e6),
+         width = end - start)
+
+# 1kgp
+df_rr_1kgp_x <- df_rr_1kgp_x %>%
+  mutate(bin = ceiling( (end - ((end - start)/2)) / 1e6),
+         width = end - start)
+
+df_rr_1kgp_8 <- df_rr_1kgp_8 %>%
+  mutate(bin = ceiling( (end - ((end - start)/2)) / 1e6),
+         width = end - start)
+
+df_rr_1kgp_15 <- df_rr_1kgp_15 %>%
+  mutate(bin = ceiling( (end - ((end - start)/2)) / 1e6),
+         width = end - start)
+
+df_rr_1kgp_22 <- df_rr_1kgp_22 %>%
+  mutate(bin = ceiling( (end - ((end - start)/2)) / 1e6),
+         width = end - start)
+# summary by bin
+df_rr_x_bin <- df_rr_x %>%
+  group_by(bin) %>%
+  summarise(cM_MB_w = weighted.mean(cM_MB, width, na.rm = T),
+            cM_MB_max = max(cM_MB, na.rm = T),
+            cM_var = sqrt(sum(width * ((cM_MB - cM_MB_w)^2), na.rm = T)/(sum(width)-1)),
+            n_obs = n())
+
+df_rr_15_bin <- df_rr_15 %>%
+  group_by(bin) %>%
+  summarise(cM_MB_w = weighted.mean(cM_MB, width, na.rm = T),
+            cM_MB_max = max(cM_MB, na.rm = T),
+            cM_var = sqrt(sum(width * ((cM_MB - cM_MB_w)^2), na.rm = T)/(sum(width)-1)),
+            n_obs = n())
+
+df_rr_22_bin <- df_rr_22 %>%
+  group_by(bin) %>%
+  summarise(cM_MB_w = weighted.mean(cM_MB, width, na.rm = T),
+            cM_MB_max = max(cM_MB, na.rm = T),
+            cM_var = sqrt(sum(width * ((cM_MB - cM_MB_w)^2), na.rm = T)/(sum(width)-1)),
+            n_obs = n())
+
+df_rr_8_bin <- df_rr_8 %>%
+  group_by(bin) %>%
+  summarise(cM_MB_w = weighted.mean(cM_MB, width, na.rm = T),
+            cM_MB_max = max(cM_MB, na.rm = T),
+            cM_var = sqrt(sum(width * ((cM_MB - cM_MB_w)^2), na.rm = T)/(sum(width)-1)),
+            n_obs = n())
+
+# 1kgp
+df_rr_1kgp_x_bin <- df_rr_1kgp_x %>%
+  group_by(bin) %>%
+  summarise(cM_MB_w = weighted.mean(cM_MB, width, na.rm = T),
+            cM_MB_max = max(cM_MB, na.rm = T),
+            cM_var = sqrt(sum(width * ((cM_MB - cM_MB_w)^2), na.rm = T)/(sum(width)-1)),
+            n_obs = n())
+
+df_rr_1kgp_15_bin <- df_rr_1kgp_15 %>%
+  group_by(bin) %>%
+  summarise(cM_MB_w = weighted.mean(cM_MB, width, na.rm = T),
+            cM_MB_max = max(cM_MB, na.rm = T),
+            cM_var = sqrt(sum(width * ((cM_MB - cM_MB_w)^2), na.rm = T)/(sum(width)-1)),
+            n_obs = n())
+
+df_rr_1kgp_22_bin <- df_rr_1kgp_22 %>%
+  group_by(bin) %>%
+  summarise(cM_MB_w = weighted.mean(cM_MB, width, na.rm = T),
+            cM_MB_max = max(cM_MB, na.rm = T),
+            cM_var = sqrt(sum(width * ((cM_MB - cM_MB_w)^2), na.rm = T)/(sum(width)-1)),
+            n_obs = n())
+
+df_rr_1kgp_8_bin <- df_rr_1kgp_8 %>%
+  group_by(bin) %>%
+  summarise(cM_MB_w = weighted.mean(cM_MB, width, na.rm = T),
+            cM_MB_max = max(cM_MB, na.rm = T),
+            cM_var = sqrt(sum(width * ((cM_MB - cM_MB_w)^2), na.rm = T)/(sum(width)-1)),
+            n_obs = n())
+
+```
+
+Aside: let's compare the deCODE and 1kGP recombination rates:
+
+```{r}
+df_rr_x_bin %>%
+  full_join(df_rr_1kgp_x_bin, by = "bin", suffix = c("_deCODE", "_1kGP")) %>%
+  select(bin, contains("cM_MB_w")) %>%
+  pivot_longer(-bin, names_to = "data_source", values_to = "cM_MB") %>%
+  ggplot(aes(x = bin, y = cM_MB, color = data_source)) +
+  geom_point() +
+  geom_line() +
+  scale_color_manual(values = cbPalette)
+
+df_rr_15_bin %>%
+  full_join(df_rr_1kgp_15_bin, by = "bin", suffix = c("_deCODE", "_1kGP")) %>%
+  select(bin, contains("cM_MB_w")) %>%
+  pivot_longer(-bin, names_to = "data_source", values_to = "cM_MB") %>%
+  ggplot(aes(x = bin, y = cM_MB, color = data_source)) +
+  geom_point() +
+  geom_line() +
+  scale_color_manual(values = cbPalette)
+```
+
+
+To do: plot some of these distributions
+
+### Load in MB binned results
+
+```{r}
+
+x_mb_dir <- "/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/mb_error_rate/"
+chr15_mb_dir <- "/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_15/mb_error_rate/"
+chr22_mb_dir <- "/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/mb_error_rate/"
+
+load_mb_switch <- function(res_dir, id){
+  f_name <- paste0(res_dir, "sample_", id, ".csv")
+  return(read_csv(f_name, show_col_types = F))
+}
+
+
+```
+
+
+### Single SD Example
+
+```{r}
+df_mb_switch <- load_mb_switch(x_mb_dir, 1)
+
+df_mb_switch <- df_mb_switch %>%
+  left_join(df_rr_x_bin, by = "bin")
+
+df_mb_switch %>%
+  select(bin,cM_MB_w, n_switch_beagle, n_switch_eagle, n_switch_shapeit) %>%
+  rename(Beagle = n_switch_beagle, Eagle = n_switch_eagle, SHAPEIT = n_switch_shapeit) %>%
+  pivot_longer( Beagle:SHAPEIT, names_to = "method", values_to = "Switches") %>%
+  filter(!is.na(cM_MB_w)) %>%
+  ggplot(aes(x = cM_MB_w, y = Switches, colour = method)) +
+  geom_point() +
+  scale_color_manual(values = cbPalette)
+
+p1 <- df_mb_switch %>%
+  select(bin,cM_MB_w, n_switch_beagle, n_switch_eagle, n_switch_shapeit) %>%
+  rename(Beagle = n_switch_beagle, Eagle = n_switch_eagle, SHAPEIT = n_switch_shapeit) %>%
+  pivot_longer( Beagle:SHAPEIT, names_to = "method", values_to = "Switches") %>%
+  ggplot(aes(x = bin, y = Switches, colour = method)) +
+  geom_point() +
+  geom_line() +
+  scale_color_manual(values = cbPalette) +
+  theme(legend.position = "top")
+
+p2 <- df_mb_switch %>%
+  ggplot(aes(x = bin, y = cM_MB_w)) +
+  geom_point() +
+  geom_line()
+
+p3 <- df_mb_switch %>%
+  select(bin,cM_MB_w, n_flip_beagle, n_flip_eagle, n_flip_shapeit) %>%
+  rename(Beagle = n_flip_beagle, Eagle = n_flip_eagle, SHAPEIT = n_flip_shapeit) %>%
+  pivot_longer( Beagle:SHAPEIT, names_to = "method", values_to = "Flips") %>%
+  ggplot(aes(x = bin, y = Flips, colour = method)) +
+  geom_point() +
+  geom_line() +
+  scale_color_manual(values = cbPalette) +
+  guides(color="none")
+
+grid.arrange(p1, p2, p3, ncol = 1)
+```
+
+### Summarizing Errors by Population
+
+```{r}
+df_mb_switch_eur <- load_mb_switch(x_mb_dir, 1)
+
+for(i in 2:200){
+  df_mb_switch_2 <- load_mb_switch(x_mb_dir, i)
+  df_mb_switch_eur <- df_mb_switch_eur %>%
+    inner_join(df_mb_switch_2, by = "bin", suffix = c("", "2"))
+  df_mb_switch_eur[is.na(df_mb_switch_eur)] <- 0
+  df_mb_switch_eur <- df_mb_switch_eur %>%
+    mutate(n_het = n_het + n_het2,
+           n_switch_beagle = n_switch_beagle + n_switch_beagle2,
+           n_switch_eagle = n_switch_eagle + n_switch_eagle2,
+           n_switch_shapeit = n_switch_shapeit + n_switch_shapeit2,
+           n_flip_beagle = n_flip_beagle + n_flip_beagle2,
+           n_flip_eagle = n_flip_eagle + n_flip_eagle2,
+           n_flip_shapeit = n_flip_shapeit + n_flip_shapeit2) %>%
+    select(!contains("2"))
+}
+```
+
+```{r}
+df_mb_switch_afr <- load_mb_switch(x_mb_dir, 201)
+
+for(i in 201:400){
+  df_mb_switch_2 <- load_mb_switch(x_mb_dir, i)
+  df_mb_switch_afr <- df_mb_switch_afr %>%
+    inner_join(df_mb_switch_2, by = "bin", suffix = c("", "2"))
+  df_mb_switch_afr[is.na(df_mb_switch_afr)] <- 0
+  df_mb_switch_afr <- df_mb_switch_afr %>%
+    mutate(n_het = n_het + n_het2,
+           n_switch_beagle = n_switch_beagle + n_switch_beagle2,
+           n_switch_eagle = n_switch_eagle + n_switch_eagle2,
+           n_switch_shapeit = n_switch_shapeit + n_switch_shapeit2,
+           n_flip_beagle = n_flip_beagle + n_flip_beagle2,
+           n_flip_eagle = n_flip_eagle + n_flip_eagle2,
+           n_flip_shapeit = n_flip_shapeit + n_flip_shapeit2) %>%
+    select(!contains("2"))
+}
+```
+
+Aside: what does the variation of `cM_MB` look like per-bin? Let's plot all values for a single bin in chromosome X (bin 6):
+
+```{r}
+df_rr_x %>%
+  filter(bin == 6) %>%
+  ggplot(aes(x = start, y = cM_MB)) +
+  geom_point() + 
+  geom_hline(yintercept = mean({df_rr_x %>% filter(bin==6) %>% pull(cM_MB)}, na.rm = T), colour = "red")
+  geom_hline(yintercept = median({df_rr_x %>% filter(bin==6) %>% pull(cM_MB)}, na.rm = T), colour = "blue")
+```
+
+```{r}
+df_rr_x_bin %>%
+  select(bin, cM_MB_w, cM_MB_max) %>%
+  pivot_longer(-bin, names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin, y = val, color = stat)) +
+    geom_point()
+
+df_rr_x_bin %>%
+  ggplot(aes(x = bin, y = cM_MB_w)) +
+  geom_point()
+
+df_rr_x_bin %>%
+  ggplot(aes(x = bin, y = cM_MB_max)) +
+  geom_point()
+```
+
+
+Plot EUR and AFR counts in each bin against average recombination rate:
+
+```{r}
+df_mb_switch_eur <- left_join(df_mb_switch_eur, df_rr_x_bin, by = "bin")
+
+p1 <- df_mb_switch_eur %>%
+  select(bin, contains("switch")) %>%
+  pivot_longer(-bin, names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin, y = val, color = stat)) +
+  geom_point() +
+  geom_line() +
+  theme(legend.position = "bottom")
+
+p2 <- df_mb_switch_eur %>%
+  ggplot(aes(x = bin, y = cM_MB_w)) +
+  geom_point() +
+  geom_line()
+
+grid.arrange(p1, p2, ncol = 1)
+
+coeff <-  max(df_mb_switch_eur$n_switch_eagle) / max(df_mb_switch_eur$cM_MB_w, na.rm = T)
+
+df_mb_switch_eur %>%
+  select(bin, contains("switch"), cM_MB_w) %>%
+  pivot_longer(contains("switch"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Switches")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("switch"), cM_MB_w)})
+
+df_mb_switch_eur %>%
+  select(bin, contains("flip"), cM_MB_w) %>%
+  pivot_longer(contains("flip"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Flips")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("flip"), cM_MB_w)})
+```
+
+Let's see if this is robust to choice of recombination rate estimate:
+
+```{r}
+df_mb_switch_eur <- left_join(df_mb_switch_eur, df_rr_1kgp_x_bin, by = "bin", suffix = c("", "_1kGP"))
+
+p1 <- df_mb_switch_eur %>%
+  select(bin, contains("switch")) %>%
+  pivot_longer(-bin, names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin, y = val, color = stat)) +
+  geom_point() +
+  geom_line() +
+  theme(legend.position = "bottom")
+
+p2 <- df_mb_switch_eur %>%
+  ggplot(aes(x = bin, y = cM_MB_w_1kGP)) +
+  geom_point() +
+  geom_line()
+
+grid.arrange(p1, p2, ncol = 1)
+
+coeff <-  max(df_mb_switch_eur$n_switch_eagle) / max(df_mb_switch_eur$cM_MB_w_1kGP, na.rm = T)
+
+df_mb_switch_eur %>%
+  select(bin, contains("switch"), cM_MB_w_1kGP) %>%
+  pivot_longer(contains("switch"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w_1kGP)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Switches")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("switch"), cM_MB_w_1kGP)})
+
+df_mb_switch_eur %>%
+  select(bin, contains("flip"), cM_MB_w_1kGP) %>%
+  pivot_longer(contains("flip"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w_1kGP)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Flips")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("flip"), cM_MB_w_1kGP)})
+```
+
+And now AFR:
+
+```{r}
+df_mb_switch_afr <- left_join(df_mb_switch_afr, df_rr_x_bin, by = "bin")
+df_mb_switch_afr <- left_join(df_mb_switch_afr, df_rr_1kgp_x_bin, by = "bin", suffix = c("", "_1kGP"))
+
+coeff <-  max(df_mb_switch_afr$n_switch_eagle) / max(df_mb_switch_afr$cM_MB_w, na.rm = T)
+
+df_mb_switch_afr %>%
+  select(bin, contains("switch"), cM_MB_w) %>%
+  pivot_longer(contains("switch"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Switches")
+    )
+
+corrr::correlate({df_mb_switch_afr %>% select(contains("switch"), cM_MB_w)})
+
+coeff <-  max(df_mb_switch_afr$n_flip_shapeit) / max(df_mb_switch_afr$cM_MB_w, na.rm = T)
+
+df_mb_switch_afr %>%
+  select(bin, contains("flip"), cM_MB_w) %>%
+  pivot_longer(contains("flip"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Flips")
+    )
+
+corrr::correlate({df_mb_switch_afr %>% select(contains("flip"), cM_MB_w)})
+```
+
+#### Chromosome 15
+
+```{r}
+eur_proband_ids <- df_subj_rel %>% filter(SUPER == "EUR") %>% pull(id2)
+
+df_mb_switch_eur <- load_mb_switch(chr15_mb_dir, eur_proband_ids[1])
+
+for(i in 2:length(eur_proband_ids)){
+  id <- eur_proband_ids[i]
+  df_mb_switch_2 <- load_mb_switch(chr15_mb_dir, id)
+  df_mb_switch_eur <- df_mb_switch_eur %>%
+    inner_join(df_mb_switch_2, by = "bin", suffix = c("", "2"))
+  df_mb_switch_eur[is.na(df_mb_switch_eur)] <- 0
+  df_mb_switch_eur <- df_mb_switch_eur %>%
+    mutate(n_het = n_het + n_het2,
+           n_switch_beagle = n_switch_beagle + n_switch_beagle2,
+           n_switch_eagle = n_switch_eagle + n_switch_eagle2,
+           n_switch_shapeit = n_switch_shapeit + n_switch_shapeit2,
+           n_flip_beagle = n_flip_beagle + n_flip_beagle2,
+           n_flip_eagle = n_flip_eagle + n_flip_eagle2,
+           n_flip_shapeit = n_flip_shapeit + n_flip_shapeit2) %>%
+    select(!contains("2"))
+}
+```
+
+```{r}
+df_mb_switch_eur <- left_join(df_mb_switch_eur, df_rr_15_bin, by = "bin")
+df_mb_switch_eur <- left_join(df_mb_switch_eur, df_rr_1kgp_15_bin, by = "bin", suffix = c("", "_1kGP"))
+
+coeff <-  max({df_mb_switch_eur %>% select(contains("switch"))}) / max(df_mb_switch_eur$cM_MB_w, na.rm = T)
+
+df_mb_switch_eur %>%
+  select(bin, contains("switch"), cM_MB_w) %>%
+  pivot_longer(contains("switch"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Switches")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("switch"), cM_MB_w)})
+
+coeff <-  max({df_mb_switch_eur %>% select(contains("flip"))}) / max(df_mb_switch_eur$cM_MB_w, na.rm = T)
+
+df_mb_switch_eur %>%
+  select(bin, contains("flip"), cM_MB_w) %>%
+  pivot_longer(contains("flip"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Flips")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("flip"), cM_MB_w)})
+```
+
+It looks like RR and error rates are much less correlated here. 
+
+## Triple Het Rates
+
+Let's instead compare the chromosome 15 error rates to the rate of triple hets in MB bins. First, let's sum the number of triple het sites in each trio in each MB bin
+
+```{r}
+triple_het_dir <- "data/1kgp/chr15/triple_het/"
+
+df_th_eur <- read_tsv(paste0(triple_het_dir, 
+                             "sample_", 
+                             eur_proband_ids[1],
+                             ".tsv"), 
+                      col_names = c("chr", "pos"),
+                      show_col_types = FALSE) %>%
+  mutate(bin = ceiling(pos / 1e6)) %>%
+  group_by(bin) %>%
+  summarize(n_th = n()) %>%
+  select(bin, n_th)
+
+for(i in 2:length(eur_proband_ids)){
+  df_th_eur2 <- read_tsv(paste0(triple_het_dir, 
+                             "sample_", 
+                             eur_proband_ids[i],
+                             ".tsv"), 
+                      col_names = c("chr", "pos"),
+                      show_col_types = FALSE) %>%
+    mutate(bin = ceiling(pos / 1e6)) %>%
+    group_by(bin) %>%
+    summarize(n_th = n()) %>%
+    select(bin, n_th)
+  
+  df_th_eur <- full_join(df_th_eur, df_th_eur2, by = "bin", suffix = c("","2")) %>%
+    replace_na(list("n_th" = 0, "n_th2" = 0)) %>%
+    mutate(n_th = n_th + n_th2) %>%
+    select(-n_th2)
+
+}
+```
+
+Let's see how error counts per bin looks like plotted along with triple het counts per bin:
+
+```{r}
+df_mb_switch_eur <- full_join(df_mb_switch_eur, df_th_eur, by = "bin")
+
+coeff <-  max(df_mb_switch_eur$n_th, na.rm = T) / 
+  max({df_mb_switch_eur %>% select(contains("switch"))}, na.rm=T)
+
+df_mb_switch_eur %>%
+  select(bin, contains("switch"), n_th) %>%
+  pivot_longer(contains("switch"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = n_th / coeff)) +
+    geom_line(aes(y = val, color = stat)) +
+    scale_y_continuous(
+      name = "Switches", 
+      sec.axis = sec_axis(~.*coeff, name = "Count Triple Hets")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("switch"), n_th)})
+
+coeff <-  max(df_mb_switch_eur$n_th, na.rm = T) / max(df_mb_switch_eur$n_flip_shapeit, na.rm=T)
+
+df_mb_switch_eur %>%
+  select(bin, contains("flip"), cM_MB_w) %>%
+  pivot_longer(contains("flip"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Flips")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("flip"), cM_MB_w)})
+```
+
+### Chr 22
+
+```{r}
+triple_het_dir <- "data/1kgp/chr22/triple_het/"
+
+df_th_eur <- read_tsv(paste0(triple_het_dir, 
+                             "sample_", 
+                             eur_proband_ids[1],
+                             ".tsv"), 
+                      col_names = c("chr", "pos"),
+                      show_col_types = FALSE) %>%
+  mutate(bin = ceiling(pos / 1e6)) %>%
+  group_by(bin) %>%
+  summarize(n_th = n()) %>%
+  select(bin, n_th)
+
+for(i in 2:length(eur_proband_ids)){
+  df_th_eur2 <- read_tsv(paste0(triple_het_dir, 
+                             "sample_", 
+                             eur_proband_ids[i],
+                             ".tsv"), 
+                      col_names = c("chr", "pos"),
+                      show_col_types = FALSE) %>%
+    mutate(bin = ceiling(pos / 1e6)) %>%
+    group_by(bin) %>%
+    summarize(n_th = n()) %>%
+    select(bin, n_th)
+  
+  df_th_eur <- full_join(df_th_eur, df_th_eur2, by = "bin", suffix = c("","2")) %>%
+    replace_na(list("n_th" = 0, "n_th2" = 0)) %>%
+    mutate(n_th = n_th + n_th2) %>%
+    select(-n_th2)
+
+}
+
+eur_proband_ids <- df_subj_rel %>% filter(SUPER == "EUR") %>% pull(id2)
+
+df_mb_switch_eur <- load_mb_switch(chr22_mb_dir, eur_proband_ids[1])
+
+for(i in 2:length(eur_proband_ids)){
+  id <- eur_proband_ids[i]
+  df_mb_switch_2 <- load_mb_switch(chr22_mb_dir, id)
+  df_mb_switch_eur <- df_mb_switch_eur %>%
+    inner_join(df_mb_switch_2, by = "bin", suffix = c("", "2"))
+  df_mb_switch_eur[is.na(df_mb_switch_eur)] <- 0
+  df_mb_switch_eur <- df_mb_switch_eur %>%
+    mutate(n_het = n_het + n_het2,
+           n_switch_beagle = n_switch_beagle + n_switch_beagle2,
+           n_switch_eagle = n_switch_eagle + n_switch_eagle2,
+           n_switch_shapeit = n_switch_shapeit + n_switch_shapeit2,
+           n_flip_beagle = n_flip_beagle + n_flip_beagle2,
+           n_flip_eagle = n_flip_eagle + n_flip_eagle2,
+           n_flip_shapeit = n_flip_shapeit + n_flip_shapeit2) %>%
+    select(!contains("2"))
+}
+```
+
+```{r}
+df_mb_switch_eur <- left_join(df_mb_switch_eur, df_rr_22_bin, by = "bin")
+df_mb_switch_eur <- left_join(df_mb_switch_eur, df_rr_1kgp_22_bin, by = "bin", suffix = c("", "_1kGP"))
+
+coeff <-  max({df_mb_switch_eur %>% select(contains("switch"))}, na.rm = T) /
+  max(df_mb_switch_eur$cM_MB_w_1kGP, na.rm = T)
+
+df_mb_switch_eur %>%
+  select(bin, contains("switch"), cM_MB_w_1kGP) %>%
+  pivot_longer(contains("switch"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = cM_MB_w_1kGP)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Switches")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("switch"), cM_MB_w_1kGP)})
+```
+
+
+```{r}
+df_mb_switch_eur <- full_join(df_mb_switch_eur, df_th_eur, by = "bin")
+
+coeff <-  max(df_mb_switch_eur$n_th, na.rm = T) / 
+  max({df_mb_switch_eur %>% select(contains("switch"))}, na.rm=T)
+
+df_mb_switch_eur %>%
+  select(bin, contains("switch"), n_th) %>%
+  pivot_longer(contains("switch"), names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = n_th / coeff)) +
+    geom_line(aes(y = val, color = stat)) +
+    scale_y_continuous(
+      name = "Switches", 
+      sec.axis = sec_axis(~.*coeff, name = "Count Triple Hets")
+    )
+
+corrr::correlate({df_mb_switch_eur %>% select(contains("switch"), n_th)})
+```
+

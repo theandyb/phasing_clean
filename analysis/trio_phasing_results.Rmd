@@ -40,13 +40,12 @@ df_subj_rel$id2 <- 1:602
 df_subj_unrel <- df_subj %>%
   filter(SAMPLE_NAME %in% unrel_ids)
 
-df_switch_trio <- read_csv(paste0(config_obj$base_dir,"/",
-                                  config_obj$trio_result_dir, "/switch_errors/summary.csv"))
+df_switch_trio <- read_csv(paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/summary.csv"))
 
 df_switch_trio_22 <- read_csv(paste0(config_obj$base_dir,
                                      "/output/trio_phase_22/switch_errors/summary.csv"))
 
-df_het <- read_tsv(paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/het_pos_count.tsv"),
+df_het <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_15/het_pos_count.tsv"),
                    col_names = c("id", "n_het"))
 df_het_22 <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_22/het_pos_count.tsv"),
                    col_names = c("id", "n_het22"))
@@ -61,14 +60,16 @@ df_het_22$frac_het22 <- df_het_22$n_het22 / n_var_site_22
 df_subj_rel <- left_join(df_subj_rel, df_het, by = c("id2" = "id")) %>%
   left_join(df_het_22, by = c("id2" = "id"))
 
-df_triple_het <- read_tsv(paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/triple_het.tsv"),
+df_triple_het <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_15/triple_het.tsv"),
                    col_names = c("id", "n_t_het"))
+
 df_subj_rel <- left_join(df_subj_rel, df_triple_het, by = c("id2" = "id"))
 
 df_subj_rel$frac_t_het <- df_subj_rel$n_t_het / df_subj_rel$n_het
 
 df_triple_het22 <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_22/triple_het.tsv"),
                    col_names = c("id", "n_t_het22"))
+
 df_subj_rel <- left_join(df_subj_rel, df_triple_het22, by = c("id2" = "id"))
 
 df_subj_rel$frac_t_het22 <- df_subj_rel$n_t_het22 / df_subj_rel$n_het22
