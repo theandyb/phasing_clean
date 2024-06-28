@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreefd770352959cc2b53c6aa66b6dc7273cf171bb86targetblankfd77035a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreeb153519443b81b640955729f72e41a0b30b28b14targetblankb153519a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/fd770352959cc2b53c6aa66b6dc7273cf171bb86" target="_blank">fd77035</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/b153519443b81b640955729f72e41a0b30b28b14" target="_blank">b153519</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreefd770352959cc2b53c6aa66b6dc7273cf171bb86targetblankfd77035a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreeb153519443b81b640955729f72e41a0b30b28b14targetblankb153519a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/fd770352959cc2b53c6aa66b6dc7273cf171bb86" target="_blank">fd77035</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/b153519443b81b640955729f72e41a0b30b28b14" target="_blank">b153519</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -630,6 +630,12 @@ Ignored files:
     Ignored:    output/vote_x/
     Ignored:    scratch/
 
+Unstaged changes:
+    Modified:   code/batch_annotate_switch_vote.sh
+    Modified:   code/batch_vote_phase_trio.sh
+    Modified:   code/vote_phase_trio.R
+    Modified:   code/vote_summary.R
+
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not
@@ -673,6 +679,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/b153519443b81b640955729f72e41a0b30b28b14/analysis/vote.Rmd" target="_blank">b153519</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-28
+</td>
+<td>
+wflow_publish(c("analysis/index.Rmd", "analysis/vote.Rmd"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/33d94a8ecec367b6586a1d50cf29e0a95afee683/docs/vote.html" target="_blank">33d94a8</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1105,6 +1145,43 @@ df_15 &lt;- df_15 %&gt;%
   scale_color_manual(values = cbPalette) +
   labs(color = &quot;Method&quot;)</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/33d94a8ecec367b6586a1d50cf29e0a95afee683/docs/figure/vote.Rmd/unnamed-chunk-11-1.png" target="_blank">33d94a8</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Let’s see if there are population-level differences:</p>
 <pre class="r"><code>df_15 %&gt;%
   ggplot(aes(x = method, y = switches, colour = SP)) +
@@ -1114,6 +1191,43 @@ df_15 &lt;- df_15 %&gt;%
   labs(colour = &quot;Population&quot;) +
   scale_colour_manual(values = cbPalette)</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/33d94a8ecec367b6586a1d50cf29e0a95afee683/docs/figure/vote.Rmd/unnamed-chunk-12-1.png" target="_blank">33d94a8</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_15 %&gt;%
   ggplot(aes(x = method, y = flip, colour = SP)) +
   geom_boxplot() +
@@ -1122,14 +1236,186 @@ df_15 &lt;- df_15 %&gt;%
   labs(colour = &quot;Population&quot;) +
   scale_colour_manual(values = cbPalette)</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-2">
+Past versions of unnamed-chunk-12-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/33d94a8ecec367b6586a1d50cf29e0a95afee683/docs/figure/vote.Rmd/unnamed-chunk-12-2.png" target="_blank">33d94a8</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>pairwise_plots(df_15, &quot;switches&quot;)</code></pre>
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-13-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/33d94a8ecec367b6586a1d50cf29e0a95afee683/docs/figure/vote.Rmd/unnamed-chunk-13-1.png" target="_blank">33d94a8</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>pairwise_plots(df_15, &quot;flip&quot;)</code></pre>
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-14-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/33d94a8ecec367b6586a1d50cf29e0a95afee683/docs/figure/vote.Rmd/unnamed-chunk-14-1.png" target="_blank">33d94a8</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="chromosome-22" class="section level2">
+<h2>Chromosome 22</h2>
+<pre class="r"><code>df_switch_22 &lt;- read_csv(paste0(config_obj$base_dir, &quot;/output/trio_phase_22/switch_errors/summary.csv&quot;), show_col_types = F)
+
+df_vote_22 &lt;- read_csv(paste0(config_obj$base_dir, &quot;/output/vote_22/summary.csv&quot;), show_col_types = F)
+
+df_22 &lt;- df_switch_22 %&gt;%
+  select(((contains(&quot;n_other&quot;) | contains(&quot;n_flip&quot;)) &amp; !contains(&quot;cpg&quot;)), pair_id) %&gt;%
+  pivot_longer(-pair_id, names_to = c(&quot;drop&quot;,&quot;error&quot;, &quot;method&quot;), names_sep = &quot;_&quot;, values_to = &quot;n&quot;) %&gt;%
+  select(-drop) %&gt;%
+  pivot_wider(names_from = &quot;error&quot;, values_from = &quot;n&quot;, id_cols = c(&quot;pair_id&quot;,&quot;method&quot;)) %&gt;%
+  rename(switches = other) %&gt;%
+  bind_rows({
+    df_vote_22 %&gt;%
+      select(((contains(&quot;n_other&quot;) | contains(&quot;n_flip&quot;)) &amp; !contains(&quot;cpg&quot;)), pair_id) %&gt;%
+      pivot_longer(-pair_id, names_to = c(&quot;drop&quot;,&quot;error&quot;, &quot;method&quot;), names_sep = &quot;_&quot;, values_to = &quot;n&quot;) %&gt;%
+      select(-drop) %&gt;%
+      pivot_wider(names_from = &quot;error&quot;, values_from = &quot;n&quot;, id_cols = c(&quot;pair_id&quot;,&quot;method&quot;)) %&gt;%
+      rename(switches = other)
+  }) %&gt;%
+  arrange(pair_id)
+
+df_22 &lt;- df_22 %&gt;%
+  left_join({df_subj_rel %&gt;% select(id2, SUPER) %&gt;% rename(pair_id = id2, SP = SUPER)})</code></pre>
+<pre><code>Joining with `by = join_by(pair_id)`</code></pre>
+<pre class="r"><code>df_22 %&gt;%
+  pivot_longer(switches:flip, names_to = &quot;error_type&quot;, values_to = &quot;n&quot;) %&gt;%
+  mutate(method = factor(method, levels = c(&quot;beagle&quot;, &quot;eagle&quot;, &quot;shapeit&quot;, &quot;vote&quot;), labels = c(&quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SHAPEIT&quot;, &quot;Vote&quot;))) %&gt;%
+  ggplot(aes(x = error_type, y = n, color = method)) +
+  geom_boxplot() +
+  xlab(&quot;Error Type&quot;) +
+  ylab(&quot;Errors&quot;) +
+  scale_color_manual(values = cbPalette) +
+  labs(color = &quot;Method&quot;)</code></pre>
+<p><img src="figure/vote.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Let’s see if there are population-level differences:</p>
+<pre class="r"><code>df_22 %&gt;%
+  ggplot(aes(x = method, y = switches, colour = SP)) +
+  geom_boxplot() +
+  xlab(&quot;Method&quot;) +
+  ylab(&quot;Switches&quot;) +
+  labs(colour = &quot;Population&quot;) +
+  scale_colour_manual(values = cbPalette)</code></pre>
+<p><img src="figure/vote.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_22 %&gt;%
+  ggplot(aes(x = method, y = flip, colour = SP)) +
+  geom_boxplot() +
+  xlab(&quot;Method&quot;) +
+  ylab(&quot;Flips&quot;) +
+  labs(colour = &quot;Population&quot;) +
+  scale_colour_manual(values = cbPalette)</code></pre>
+<p><img src="figure/vote.Rmd/unnamed-chunk-17-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pairwise_plots(df_22, &quot;switches&quot;)</code></pre>
+<pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
+returning the first one. To return all, use `return_all = TRUE`.</code></pre>
+<p><img src="figure/vote.Rmd/unnamed-chunk-18-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pairwise_plots(df_22, &quot;flip&quot;)</code></pre>
+<pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
+returning the first one. To return all, use `return_all = TRUE`.</code></pre>
+<p><img src="figure/vote.Rmd/unnamed-chunk-19-1.png" width="768" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
