@@ -1,0 +1,168 @@
+---
+title: "Voting Method Results"
+author: "Andy Beck"
+date: "2024-06-27"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r, message=FALSE, warning=FALSE, results = 'hide'}
+library(tidyverse)
+library(grid)
+library(gridExtra) 
+library(yaml)
+
+config_obj <- yaml::read_yaml("_config.yaml")
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000")
+```
+
+
+## Subject Information
+
+### Chromosome X Synthetic Diploids
+
+```{r}
+sample_info_df <- read_csv("data/1kgp/subject_info.csv") %>%
+  select(SAMPLE_NAME, POPULATION, SUPER)
+
+pair_info_df <- read_delim("data/sample_pairs.csv", col_names = c("POP", "ID1", "ID2"))
+pair_info_df <- left_join(pair_info_df, sample_info_df, by = c("ID1"="SAMPLE_NAME")) %>%
+  rename(SP = SUPER) %>%
+  select(-POPULATION)
+
+pair_info_df$pair_id <- 1:1000
+```
+
+### Trio Probands
+
+```{r}
+ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt")
+
+child_ids <- ped_df %>% filter(fatherID != "0" & motherID != "0") %>% pull(sampleID)
+unrel_ids <- scan("data/1kgp/unrelated_subjects.txt", what = character())
+
+df_subj_rel <- sample_info_df %>%
+  filter(SAMPLE_NAME %in% child_ids)
+df_subj_rel$id2 <- 1:602
+
+df_subj_unrel <- sample_info_df %>%
+  filter(SAMPLE_NAME %in% unrel_ids)
+```
+
+
+## Chromosome X Results
+
+```{r}
+df_switch_x <- read_csv(paste0(config_obj$base_dir, "/output/switch_errors/switch_errors/summary.csv"), show_col_types = F)
+
+df_vote_x <- read_csv(paste0(config_obj$base_dir, "/output/vote_x/summary.csv"), show_col_types = F)
+```
+
+Let's first look at the number of switches and flips per synthetic diploid across methods:
+
+```{r}
+df_x <- df_switch_x %>%
+  select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
+  pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
+  select(-drop) %>%
+  pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
+  rename(switches = other) %>%
+  bind_rows({
+    df_vote_x %>%
+      select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
+      pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
+      select(-drop) %>%
+      pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
+      rename(switches = other)
+  }) %>%
+  arrange(pair_id)
+
+df_x %>%
+  pivot_longer(switches:flip, names_to = "error_type", values_to = "n") %>%
+  mutate(method = factor(method, levels = c("beagle", "eagle", "shapeit", "vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
+  ggplot(aes(x = error_type, y = n, color = method)) +
+  geom_boxplot() +
+  xlab("Error Type") +
+  ylab("Errors") +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Method")
+```
+
+Let's see if there are population-level differences:
+
+```{r}
+
+df_x <- df_x %>%
+  left_join({pair_info_df %>% select(pair_id, SP)})
+
+df_x %>%
+  ggplot(aes(x = method, y = switches, colour = SP)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Switches") +
+  labs(colour = "Population") +
+  scale_colour_manual(values = cbPalette)
+
+df_x %>%
+  ggplot(aes(x = method, y = flip, colour = SP)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Flips") +
+  labs(colour = "Population") +
+  scale_colour_manual(values = cbPalette)
+```
+
+And finally, let's look at each pair of methods and each individual synthetic diploid:
+
+```{r}
+sub_plot <- function(df, x, y, x_lab, y_lab){
+  p1 <- df %>%
+    ggplot(aes(x = !! sym(x), y = !! sym(y), colour = SP)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0, linetype = "dotdash") +
+    xlab(x_lab) +
+    ylab(y_lab) +
+    scale_color_manual(values = cbPalette) +
+    labs(colour = "Population") +
+    theme_classic()
+  return(p1)
+}
+
+pairwise_plots <- function(df, type = "switches"){
+  df_plot <- df %>%
+    select(pair_id, SP, method, !! sym(type)) %>%
+    pivot_wider(names_from = method, values_from = !! sym(type), id_cols = c("pair_id", "SP"))
+  
+  p1 <- sub_plot(df_plot, "vote", "beagle", "Vote", "Beagle")
+  p_legend <- cowplot::get_legend(p1)
+  p1 <- p1 + guides(colour="none")
+  
+  p2 <- sub_plot(df_plot, "shapeit", "beagle", "SHAPEIT", "Beagle") + guides(colour="none")
+  p3 <- sub_plot(df_plot, "eagle", "beagle", "Eagle", "Beagle") + guides(colour="none")
+  
+  p4 <- sub_plot(df_plot, "vote", "eagle", "Vote", "Eagle") + guides(colour="none")
+  p5 <- sub_plot(df_plot, "shapeit", "eagle", "SHAPEIT", "Eagle") + guides(colour="none")
+  
+  p6 <- sub_plot(df_plot, "vote", "shapeit", "Vote", "SHAPEIT") + guides(colour="none")
+  
+  return(grid.arrange(p1, p2, p3, p4, p5, p6, p_legend, 
+               layout_matrix = rbind(c(1,2,3), c(4, 5, NA), c(6, NA, 7))))
+}
+```
+
+```{r, fig.width=8, fig.height=8}
+pairwise_plots(df_x, "switches")
+```
+
+```{r, fig.width=8, fig.height=7}
+pairwise_plots(df_x, "flip")
+```
+
+
+## Chromosome 15
+
+```{r}
+
+```
+
