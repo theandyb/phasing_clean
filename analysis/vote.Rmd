@@ -225,3 +225,71 @@ pairwise_plots(df_15, "switches")
 ```{r, fig.width=8, fig.height=7}
 pairwise_plots(df_15, "flip")
 ```
+
+
+## Chromosome 22
+
+```{r}
+df_switch_22 <- read_csv(paste0(config_obj$base_dir, "/output/trio_phase_22/switch_errors/summary.csv"), show_col_types = F)
+
+df_vote_22 <- read_csv(paste0(config_obj$base_dir, "/output/vote_22/summary.csv"), show_col_types = F)
+
+df_22 <- df_switch_22 %>%
+  select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
+  pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
+  select(-drop) %>%
+  pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
+  rename(switches = other) %>%
+  bind_rows({
+    df_vote_22 %>%
+      select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
+      pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
+      select(-drop) %>%
+      pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
+      rename(switches = other)
+  }) %>%
+  arrange(pair_id)
+
+df_22 <- df_22 %>%
+  left_join({df_subj_rel %>% select(id2, SUPER) %>% rename(pair_id = id2, SP = SUPER)})
+```
+
+```{r}
+df_22 %>%
+  pivot_longer(switches:flip, names_to = "error_type", values_to = "n") %>%
+  mutate(method = factor(method, levels = c("beagle", "eagle", "shapeit", "vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
+  ggplot(aes(x = error_type, y = n, color = method)) +
+  geom_boxplot() +
+  xlab("Error Type") +
+  ylab("Errors") +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Method")
+```
+
+Let's see if there are population-level differences:
+
+```{r}
+df_22 %>%
+  ggplot(aes(x = method, y = switches, colour = SP)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Switches") +
+  labs(colour = "Population") +
+  scale_colour_manual(values = cbPalette)
+
+df_22 %>%
+  ggplot(aes(x = method, y = flip, colour = SP)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Flips") +
+  labs(colour = "Population") +
+  scale_colour_manual(values = cbPalette)
+```
+
+```{r, fig.width=8, fig.height=8}
+pairwise_plots(df_22, "switches")
+```
+
+```{r, fig.width=8, fig.height=7}
+pairwise_plots(df_22, "flip")
+```

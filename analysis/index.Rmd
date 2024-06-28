@@ -19,3 +19,5 @@ Welcome to my research website.
 [Recombination Rates](recombination_rate.html)
 
 [Trio No Triple Hets](trio_no_th.html)
+
+[Vote Results](vote.html)
