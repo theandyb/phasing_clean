@@ -15,7 +15,7 @@
 
 <title>trio_no_th</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-06-19
+<strong>Last updated:</strong> 2024-07-02
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree34235f1c85fc4a25c8ef434201ebf76f803d3ac0targetblank34235f1a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree807c28e3039d403ee5219adfb343222187403a3btargetblank807c28ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/34235f1c85fc4a25c8ef434201ebf76f803d3ac0" target="_blank">34235f1</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/807c28e3039d403ee5219adfb343222187403a3b" target="_blank">807c28e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree34235f1c85fc4a25c8ef434201ebf76f803d3ac0targetblank34235f1a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree807c28e3039d403ee5219adfb343222187403a3btargetblank807c28ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/34235f1c85fc4a25c8ef434201ebf76f803d3ac0" target="_blank">34235f1</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/807c28e3039d403ee5219adfb343222187403a3b" target="_blank">807c28e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -562,8 +562,12 @@ Ignored files:
     Ignored:    data/1kgp/chr1/
     Ignored:    data/1kgp/chr10_pilot_mask.bed
     Ignored:    data/1kgp/chr15/
+    Ignored:    data/1kgp/chr15_recomb.bed
+    Ignored:    data/1kgp/chr1_recomb.bed
     Ignored:    data/1kgp/chr22/
+    Ignored:    data/1kgp/chr22_recomb.bed
     Ignored:    data/1kgp/chr8/
+    Ignored:    data/1kgp/chr8_recomb.bed
     Ignored:    data/1kgp/chrX.vcf.gz
     Ignored:    data/1kgp/chrX.vcf.gz.tbi
     Ignored:    data/1kgp/chrX_2504_snps_noPAR.bcf
@@ -571,6 +575,7 @@ Ignored files:
     Ignored:    data/1kgp/chrX_freq.tsv
     Ignored:    data/1kgp/chrX_maf.tsv
     Ignored:    data/1kgp/chrX_pilot_mask.bed
+    Ignored:    data/1kgp/chrX_recomb.bed
     Ignored:    data/1kgp/exclude_samples/
     Ignored:    data/chr1.1kb.sorted.bed
     Ignored:    data/chr1.fasta
@@ -620,25 +625,22 @@ Ignored files:
     Ignored:    output/trio_phase_15/
     Ignored:    output/trio_phase_22/
     Ignored:    output/trio_phase_8/
+    Ignored:    output/vote_1/
+    Ignored:    output/vote_15/
+    Ignored:    output/vote_22/
+    Ignored:    output/vote_x/
     Ignored:    scratch/
-
-Untracked files:
-    Untracked:  analysis/recombination_rate.Rmd
-    Untracked:  code/batch_compare_noTH.sh
 
 Unstaged changes:
     Modified:   README.md
     Modified:   _config.yaml
-    Modified:   analysis/trio_phasing_results.Rmd
     Modified:   code/batch_annotate_het.sh
-    Modified:   code/batch_annotate_switch.sh
+    Modified:   code/batch_annotate_switch_vote.sh
     Modified:   code/batch_annotate_trio_switch.sh
-    Modified:   code/batch_compare_trio.sh
-    Modified:   code/batch_phase_trio_noTH.sh
-    Modified:   code/common_functions.R
-    Modified:   code/error_rates_per_bin.R
-    Modified:   code/maf_categories_trio.R
-    Modified:   code/trio_phase_results.R
+    Modified:   code/batch_compare_noTH.sh
+    Modified:   code/batch_vote_phase_trio.sh
+    Modified:   code/vote_phase_trio.R
+    Modified:   code/vote_summary.R
 
 </code></pre>
 <p>
@@ -684,6 +686,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/807c28e3039d403ee5219adfb343222187403a3b/analysis/trio_no_th.Rmd" target="_blank">807c28e</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-07-02
+</td>
+<td>
+wflow_publish("analysis/trio_no_th.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/fe17ab1f18447bef0f259c8379019fedb13622b3/docs/trio_no_th.html" target="_blank">fe17ab1</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-06-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1859,6 +1895,60 @@ Andy Beck
 </table>
 </div>
 </div>
+</div>
+<div id="chromosome-1" class="section level2">
+<h2>Chromosome 1</h2>
+<pre class="r"><code>df_switch_th &lt;- read_csv(&quot;output/trio_phase_1/switch_errors/summary.csv&quot;, show_col_types = FALSE) # with triple hets
+df_switch &lt;- read_csv(&quot;output/trio_phase_1/no_th/switch_errors/summary.csv&quot;, show_col_types = FALSE) # without th</code></pre>
+<pre class="r"><code>df_switch_th %&gt;%
+  rename(n_het_th = n_hets) %&gt;%
+  select(pair_id, SUPER, n_het_th) %&gt;%
+  inner_join({
+    df_switch %&gt;%
+      select(pair_id, n_hets)
+  }, by = &quot;pair_id&quot;) %&gt;%
+  ggplot(aes(x = n_hets, y = n_het_th, colour = SUPER)) +
+  geom_point() +
+  theme_classic() +
+  ggtitle(&quot;Heterozygous Positions&quot;) +
+  xlab(&quot;Without Triple Hets&quot;) +
+  ylab(&quot;With Triple Hets&quot;) +
+  scale_color_manual(values = cbPalette) +
+  labs(colour = &quot;Population&quot;) +
+  geom_abline(slope = 1, intercept = 0)</code></pre>
+<p><img src="figure/trio_no_th.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>As a reminder, here are what the error distribution patterns looked
+like with the triple heterozygous sites included:</p>
+<pre class="r"><code>cross_meth_plot(df_switch_th, &quot;Switch Rate: With Triple Het&quot;, plot_switch_rate, &quot;SUPER&quot;, 22)</code></pre>
+<pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
+returning the first one. To return all, use `return_all = TRUE`.</code></pre>
+<p><img src="figure/trio_no_th.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>For the same cross-method comparison, we observe the following
+figure:</p>
+<pre class="r"><code>cross_meth_plot(df_switch, &quot;Switch Rate: Without Triple Het&quot;, plot_switch_rate, &quot;SUPER&quot;, 22)</code></pre>
+<pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
+returning the first one. To return all, use `return_all = TRUE`.</code></pre>
+<p><img src="figure/trio_no_th.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Visually, we observe the same general ranking of methods with respect
+to the switch rate between the two figures. For flips, we observe the
+following:</p>
+<pre class="r"><code>cross_meth_plot(df_switch_th, &quot;Flip Rate: With Triple Het&quot;, plot_flip_rate, &quot;SUPER&quot;, 22)</code></pre>
+<pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
+returning the first one. To return all, use `return_all = TRUE`.</code></pre>
+<p><img src="figure/trio_no_th.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cross_meth_plot(df_switch, &quot;Flip Rate: Without Triple Het&quot;, plot_flip_rate, &quot;SUPER&quot;, 22)</code></pre>
+<pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
+returning the first one. To return all, use `return_all = TRUE`.</code></pre>
+<p><img src="figure/trio_no_th.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Again, we observe the same qualitative ranking of the methods:
+SHAPEIT generally introduces more flips than the other two methods,
+while more most probands we observe more flips in Beagle than in Eagle.
+Now, if we plot the error rates for each method across the data sets, we
+observe:</p>
+<pre class="r"><code>cross_df_plots(df_switch, df_switch_th, &quot;other&quot;)</code></pre>
+<p><img src="figure/trio_no_th.Rmd/unnamed-chunk-25-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cross_df_plots(df_switch, df_switch_th, &quot;flip&quot;)</code></pre>
+<p><img src="figure/trio_no_th.Rmd/unnamed-chunk-26-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1898,24 +1988,24 @@ other attached packages:
 [13] tibble_3.2.1    ggplot2_3.5.0   tidyverse_2.0.0 workflowr_1.7.1
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.4         xfun_0.42            bslib_0.7.0         
+ [1] gtable_0.3.5         xfun_0.42            bslib_0.7.0         
  [4] htmlwidgets_1.6.4    processx_3.8.3       callr_3.7.5         
  [7] tzdb_0.4.0           vctrs_0.6.5          tools_4.4.1         
 [10] ps_1.7.6             generics_0.1.3       parallel_4.4.1      
-[13] fansi_1.0.6          highr_0.10           pkgconfig_2.0.3     
-[16] gt_0.10.1            lifecycle_1.0.4      farver_2.1.1        
+[13] fansi_1.0.6          highr_0.11           pkgconfig_2.0.3     
+[16] gt_0.10.1            lifecycle_1.0.4      farver_2.1.2        
 [19] compiler_4.4.1       git2r_0.33.0         munsell_0.5.1       
 [22] getPass_0.2-4        httpuv_1.6.14        htmltools_0.5.8     
 [25] sass_0.4.9           crayon_1.5.2         later_1.3.2         
 [28] pillar_1.9.0         jquerylib_0.1.4      whisker_0.4.1       
-[31] broom.helpers_1.14.0 cachem_1.0.8         tidyselect_1.2.0    
+[31] broom.helpers_1.15.0 cachem_1.1.0         tidyselect_1.2.0    
 [34] digest_0.6.34        stringi_1.8.3        labeling_0.4.3      
-[37] cowplot_1.1.3        rprojroot_2.0.4      fastmap_1.1.1       
-[40] archive_1.1.7        colorspace_2.1-0     cli_3.6.2           
+[37] cowplot_1.1.3        rprojroot_2.0.4      fastmap_1.2.0       
+[40] archive_1.1.8        colorspace_2.1-0     cli_3.6.2           
 [43] magrittr_2.0.3       utf8_1.2.4           withr_3.0.0         
-[46] scales_1.3.0         promises_1.2.1       bit64_4.0.5         
-[49] timechange_0.3.0     rmarkdown_2.26       httr_1.4.7          
-[52] bit_4.0.5            hms_1.1.3            evaluate_0.23       
+[46] scales_1.3.0         promises_1.3.0       bit64_4.0.5         
+[49] timechange_0.3.0     rmarkdown_2.27       httr_1.4.7          
+[52] bit_4.0.5            hms_1.1.3            evaluate_0.24.0     
 [55] knitr_1.45           rlang_1.1.3          Rcpp_1.0.12         
 [58] glue_1.7.0           xml2_1.3.6           rstudioapi_0.15.0   
 [61] vroom_1.6.5          jsonlite_1.8.8       R6_2.5.1            
