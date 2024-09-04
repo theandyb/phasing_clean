@@ -21,3 +21,5 @@ Welcome to my research website.
 [Trio No Triple Hets](trio_no_th.html)
 
 [Vote Results](vote.html)
+
+[Reference Panel Composition](alt_ref_panel.html)

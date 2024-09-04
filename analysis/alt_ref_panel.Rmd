@@ -1,0 +1,618 @@
+---
+title: "alt_ref_panel"
+author: "Andy Beck"
+date: "2024-09-04"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Here in this document we are going to evaluate differences in the observed switch and flip error rates for our synthetic diploids based on the composition of the reference panel we phase them with. In particular, we phase AFR and EUR synthetic diploids using one of three panels:
+
+1. Only AFR inidividuals
+2. Only EUR individuals
+3. Combined AFR + EUR panel
+
+In any case, we ensure that the source haplotypes for each synthetic diploid are removed from the reference panel before phasing.
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+
+# load the 6 result data.frames
+df_afr_afr <- read_csv("output/alt_ref/summary/afr_afr.csv")
+df_afr_eur <- read_csv("output/alt_ref/summary/afr_eur.csv")
+df_afr_all <- read_csv("output/alt_ref/summary/afr_all.csv")
+df_eur_afr <- read_csv("output/alt_ref/summary/eur_afr.csv")
+df_eur_eur <- read_csv("output/alt_ref/summary/eur_eur.csv")
+df_eur_all <- read_csv("output/alt_ref/summary/eur_all.csv")
+
+# original results
+df_vcftools <- read_csv("output/switch_errors/switch_errors/summary.csv")
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000")
+```
+
+## AFR
+
+### Switches
+
+```{r}
+df_afr_afr %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het,
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_afr_eur %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het,
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_afr_all %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het,
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_vcftools %>%
+  filter(pop == "AFR") %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets,
+         SHAPEIT = n_other_shapeit / n_hets) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+### Flips
+
+```{r}
+df_afr_afr %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het,
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_afr_eur %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het,
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_afr_all %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het,
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_vcftools %>%
+  filter(pop == "AFR") %>%
+  mutate(Beagle = n_flip_beagle / n_hets,
+         Eagle = n_flip_eagle / n_hets,
+         SHAPEIT = n_flip_shapeit / n_hets) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+## EUR
+
+### Switches
+
+```{r}
+df_eur_afr %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het,
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_eur_eur %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het,
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_eur_all %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het,
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_vcftools %>%
+  filter(pop == "EUR") %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets,
+         SHAPEIT = n_other_shapeit / n_hets) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+### Flips
+
+```{r}
+df_eur_afr %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het,
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_eur_eur %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het,
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_eur_all %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het,
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+df_vcftools %>%
+  filter(pop == "EUR") %>%
+  mutate(Beagle = n_flip_beagle / n_hets,
+         Eagle = n_flip_eagle / n_hets,
+         SHAPEIT = n_flip_shapeit / n_hets) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+## Figures
+
+### AFR
+
+#### Switches
+
+```{r}
+df <- df_afr_afr %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het, 
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  select(id, Beagle, Eagle, SHAPEIT) %>% 
+  mutate(panel = "AFR") %>%
+  bind_rows({
+    df_afr_eur %>%
+      mutate(Beagle = n_switch_beagle / n_het,
+             Eagle = n_switch_eagle / n_het, 
+             SHAPEIT = n_switch_shapeit / n_het) %>%
+      select(id, Beagle, Eagle, SHAPEIT) %>% 
+      mutate(panel = "EUR")}) %>%
+  pivot_wider(id_cols = id, names_from = panel, values_from = Beagle:SHAPEIT)
+
+df %>%
+  ggplot(aes(x = Beagle_AFR, y = Beagle_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.07)) +
+  ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: AFR Synthetic Diploids", "Beagle") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+
+df %>%
+  ggplot(aes(x = Eagle_AFR, y = Eagle_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.07)) +
+  ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: AFR Synthetic Diploids", "Eagle") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+
+df %>%
+  ggplot(aes(x = SHAPEIT_AFR, y = SHAPEIT_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.07)) +
+  ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: AFR Synthetic Diploids", "SHAPEIT") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+```
+
+```{r}
+df <- df_afr_afr %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het, 
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  select(id, Beagle, Eagle, SHAPEIT) %>% 
+  mutate(panel = "AFR") %>%
+  bind_rows({
+    df_afr_all %>%
+      mutate(Beagle = n_switch_beagle / n_het,
+             Eagle = n_switch_eagle / n_het, 
+             SHAPEIT = n_switch_shapeit / n_het) %>%
+      select(id, Beagle, Eagle, SHAPEIT) %>% 
+      mutate(panel = "ALL")}) %>%
+  pivot_wider(id_cols = id, names_from = panel, values_from = Beagle:SHAPEIT)
+
+df %>%
+  ggplot(aes(x = Beagle_AFR, y = Beagle_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: AFR Synthetic Diploids", "Beagle") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+
+df %>%
+  ggplot(aes(x = Eagle_AFR, y = Eagle_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: AFR Synthetic Diploids", "Eagle") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+
+df %>%
+  ggplot(aes(x = SHAPEIT_AFR, y = SHAPEIT_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: AFR Synthetic Diploids", "SHAPEIT") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+```
+
+#### Flips
+
+```{r}
+df <- df_afr_afr %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het, 
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  select(id, Beagle, Eagle, SHAPEIT) %>% 
+  mutate(panel = "AFR") %>%
+  bind_rows({
+    df_afr_eur %>%
+      mutate(Beagle = n_flip_beagle / n_het,
+             Eagle = n_flip_eagle / n_het, 
+             SHAPEIT = n_flip_shapeit / n_het) %>%
+      select(id, Beagle, Eagle, SHAPEIT) %>% 
+      mutate(panel = "EUR")}) %>%
+  pivot_wider(id_cols = id, names_from = panel, values_from = Beagle:SHAPEIT)
+
+df %>%
+  ggplot(aes(x = Beagle_AFR, y = Beagle_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.1)) +
+  ylim(c(0, 0.1)) +
+  ggtitle("Flip Rate: AFR Synthetic Diploids", "Beagle") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+
+df %>%
+  ggplot(aes(x = Eagle_AFR, y = Eagle_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.1)) +
+  ylim(c(0, 0.1)) +
+  ggtitle("Flip Rate: AFR Synthetic Diploids", "Eagle") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+
+df %>%
+  ggplot(aes(x = SHAPEIT_AFR, y = SHAPEIT_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.1)) +
+  ylim(c(0, 0.1)) +
+  ggtitle("Flip Rate: AFR Synthetic Diploids", "SHAPEIT") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+```
+
+```{r}
+df <- df_afr_afr %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het, 
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  select(id, Beagle, Eagle, SHAPEIT) %>% 
+  mutate(panel = "AFR") %>%
+  bind_rows({
+    df_afr_all %>%
+      mutate(Beagle = n_flip_beagle / n_het,
+             Eagle = n_flip_eagle / n_het, 
+             SHAPEIT = n_flip_shapeit / n_het) %>%
+      select(id, Beagle, Eagle, SHAPEIT) %>% 
+      mutate(panel = "ALL")}) %>%
+  pivot_wider(id_cols = id, names_from = panel, values_from = Beagle:SHAPEIT)
+
+df %>%
+  ggplot(aes(x = Beagle_AFR, y = Beagle_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Flip Rate: AFR Synthetic Diploids", "Beagle") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+
+df %>%
+  ggplot(aes(x = Eagle_AFR, y = Eagle_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Flip Rate: AFR Synthetic Diploids", "Eagle") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+
+df %>%
+  ggplot(aes(x = SHAPEIT_AFR, y = SHAPEIT_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Flip Rate: AFR Synthetic Diploids", "SHAPEIT") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+```
+
+
+### EUR
+
+#### Switches
+
+```{r}
+df <- df_eur_afr %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het, 
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  select(id, Beagle, Eagle, SHAPEIT) %>% 
+  mutate(panel = "AFR") %>%
+  bind_rows({
+    df_eur_eur %>%
+      mutate(Beagle = n_switch_beagle / n_het,
+             Eagle = n_switch_eagle / n_het, 
+             SHAPEIT = n_switch_shapeit / n_het) %>%
+      select(id, Beagle, Eagle, SHAPEIT) %>% 
+      mutate(panel = "EUR")}) %>%
+  pivot_wider(id_cols = id, names_from = panel, values_from = Beagle:SHAPEIT)
+
+df %>%
+  ggplot(aes(x = Beagle_AFR, y = Beagle_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.07)) +
+  ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: EUR Synthetic Diploids", "Beagle") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+
+df %>%
+  ggplot(aes(x = Eagle_AFR, y = Eagle_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.07)) +
+  ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: EUR Synthetic Diploids", "Eagle") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+
+df %>%
+  ggplot(aes(x = SHAPEIT_AFR, y = SHAPEIT_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.07)) +
+  ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: EUR Synthetic Diploids", "SHAPEIT") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+```
+
+```{r}
+df <- df_eur_eur %>%
+  mutate(Beagle = n_switch_beagle / n_het,
+         Eagle = n_switch_eagle / n_het, 
+         SHAPEIT = n_switch_shapeit / n_het) %>%
+  select(id, Beagle, Eagle, SHAPEIT) %>% 
+  mutate(panel = "EUR") %>%
+  bind_rows({
+    df_eur_all %>%
+      mutate(Beagle = n_switch_beagle / n_het,
+             Eagle = n_switch_eagle / n_het, 
+             SHAPEIT = n_switch_shapeit / n_het) %>%
+      select(id, Beagle, Eagle, SHAPEIT) %>% 
+      mutate(panel = "ALL")}) %>%
+  pivot_wider(id_cols = id, names_from = panel, values_from = Beagle:SHAPEIT)
+
+df %>%
+  ggplot(aes(x = Beagle_EUR, y = Beagle_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: EUR Synthetic Diploids", "Beagle") +
+  xlab("EUR Panel") +
+  ylab("AFR + EUR Panel")
+
+df %>%
+  ggplot(aes(x = Eagle_EUR, y = Eagle_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: EUR Synthetic Diploids", "Eagle") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+
+df %>%
+  ggplot(aes(x = SHAPEIT_EUR, y = SHAPEIT_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Switch Rate: EUR Synthetic Diploids", "SHAPEIT") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+```
+
+#### Flips
+
+```{r}
+df <- df_eur_afr %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het, 
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  select(id, Beagle, Eagle, SHAPEIT) %>% 
+  mutate(panel = "AFR") %>%
+  bind_rows({
+    df_eur_eur %>%
+      mutate(Beagle = n_flip_beagle / n_het,
+             Eagle = n_flip_eagle / n_het, 
+             SHAPEIT = n_flip_shapeit / n_het) %>%
+      select(id, Beagle, Eagle, SHAPEIT) %>% 
+      mutate(panel = "EUR")}) %>%
+  pivot_wider(id_cols = id, names_from = panel, values_from = Beagle:SHAPEIT)
+
+df %>%
+  ggplot(aes(x = Beagle_AFR, y = Beagle_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.16)) +
+  ylim(c(0, 0.16)) +
+  ggtitle("Flip Rate: EUR Synthetic Diploids", "Beagle") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+
+df %>%
+  ggplot(aes(x = Eagle_AFR, y = Eagle_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.16)) +
+  ylim(c(0, 0.16)) +
+  ggtitle("Flip Rate: EUR Synthetic Diploids", "Eagle") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+
+df %>%
+  ggplot(aes(x = SHAPEIT_AFR, y = SHAPEIT_EUR)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  xlim(c(0, 0.16)) +
+  ylim(c(0, 0.16)) +
+  ggtitle("Flip Rate: EUR Synthetic Diploids", "SHAPEIT") +
+  xlab("AFR Panel") +
+  ylab("EUR Panel")
+```
+
+```{r}
+df <- df_eur_eur %>%
+  mutate(Beagle = n_flip_beagle / n_het,
+         Eagle = n_flip_eagle / n_het, 
+         SHAPEIT = n_flip_shapeit / n_het) %>%
+  select(id, Beagle, Eagle, SHAPEIT) %>% 
+  mutate(panel = "EUR") %>%
+  bind_rows({
+    df_eur_all %>%
+      mutate(Beagle = n_flip_beagle / n_het,
+             Eagle = n_flip_eagle / n_het, 
+             SHAPEIT = n_flip_shapeit / n_het) %>%
+      select(id, Beagle, Eagle, SHAPEIT) %>% 
+      mutate(panel = "ALL")}) %>%
+  pivot_wider(id_cols = id, names_from = panel, values_from = Beagle:SHAPEIT)
+
+df %>%
+  ggplot(aes(x = Beagle_EUR, y = Beagle_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Flip Rate: EUR Synthetic Diploids", "Beagle") +
+  xlab("EUR Panel") +
+  ylab("AFR + EUR Panel")
+
+df %>%
+  ggplot(aes(x = Eagle_EUR, y = Eagle_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Flip Rate: EUR Synthetic Diploids", "Eagle") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+
+df %>%
+  ggplot(aes(x = SHAPEIT_EUR, y = SHAPEIT_ALL)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  # xlim(c(0, 0.07)) +
+  # ylim(c(0, 0.07)) +
+  ggtitle("Flip Rate: EUR Synthetic Diploids", "SHAPEIT") +
+  xlab("AFR Panel") +
+  ylab("AFR + EUR Panel")
+```
