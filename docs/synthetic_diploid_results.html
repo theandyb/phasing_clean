@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree73227b48b16047129bc0b5471a15c67f40bd0e06targetblank73227b4a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree97fd9a79dc3f7b26e484366523862bb418b3453ftargetblank97fd9a7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/73227b48b16047129bc0b5471a15c67f40bd0e06" target="_blank">73227b4</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/97fd9a79dc3f7b26e484366523862bb418b3453f" target="_blank">97fd9a7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree73227b48b16047129bc0b5471a15c67f40bd0e06targetblank73227b4a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree97fd9a79dc3f7b26e484366523862bb418b3453ftargetblank97fd9a7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/73227b48b16047129bc0b5471a15c67f40bd0e06" target="_blank">73227b4</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/97fd9a79dc3f7b26e484366523862bb418b3453f" target="_blank">97fd9a7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -706,6 +706,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/97fd9a79dc3f7b26e484366523862bb418b3453f/analysis/synthetic_diploid_results.Rmd" target="_blank">97fd9a7</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-09-04
+</td>
+<td>
+wflow_publish("analysis/synthetic_diploid_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/d208878c53929395deff85cb81e6189170407471/docs/synthetic_diploid_results.html" target="_blank">d208878</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-09-04
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -5133,9 +5167,9 @@ class="section level3">
   mutate(Beagle_switch = n_other_beagle / size_mb,
          Eagle_switch = n_other_eagle / size_mb,
          SHAPEIT_switch = n_other_shapeit / size_mb,
-         Beagle_flip = n_other_beagle / size_mb,
-         Eagle_flip = n_other_eagle / size_mb,
-         SHAPEIT_flip = n_other_shapeit / size_mb) %&gt;%
+         Beagle_flip = n_flip_beagle / size_mb,
+         Eagle_flip = n_flip_eagle / size_mb,
+         SHAPEIT_flip = n_flip_shapeit / size_mb) %&gt;%
   tbl_summary(by = pop,
     include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
                           Beagle_flip, Eagle_flip, SHAPEIT_flip),
@@ -5628,23 +5662,23 @@ N = 200</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 <td headers="stat_4" class="gt_row gt_center">0.56 (0.18)</td>
 <td headers="stat_5" class="gt_row gt_center">0.79 (0.24)</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Beagle_flip</td>
-<td headers="stat_1" class="gt_row gt_center">0.59 (0.18)</td>
-<td headers="stat_2" class="gt_row gt_center">0.49 (0.25)</td>
-<td headers="stat_3" class="gt_row gt_center">1.02 (0.17)</td>
-<td headers="stat_4" class="gt_row gt_center">0.61 (0.18)</td>
-<td headers="stat_5" class="gt_row gt_center">0.87 (0.25)</td></tr>
+<td headers="stat_1" class="gt_row gt_center">0.67 (0.18)</td>
+<td headers="stat_2" class="gt_row gt_center">0.46 (0.15)</td>
+<td headers="stat_3" class="gt_row gt_center">0.71 (0.11)</td>
+<td headers="stat_4" class="gt_row gt_center">0.50 (0.13)</td>
+<td headers="stat_5" class="gt_row gt_center">0.67 (0.17)</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Eagle_flip</td>
-<td headers="stat_1" class="gt_row gt_center">0.90 (0.26)</td>
-<td headers="stat_2" class="gt_row gt_center">0.69 (0.28)</td>
-<td headers="stat_3" class="gt_row gt_center">1.32 (0.19)</td>
-<td headers="stat_4" class="gt_row gt_center">0.83 (0.22)</td>
-<td headers="stat_5" class="gt_row gt_center">1.14 (0.28)</td></tr>
+<td headers="stat_1" class="gt_row gt_center">0.67 (0.18)</td>
+<td headers="stat_2" class="gt_row gt_center">0.46 (0.13)</td>
+<td headers="stat_3" class="gt_row gt_center">0.70 (0.10)</td>
+<td headers="stat_4" class="gt_row gt_center">0.50 (0.11)</td>
+<td headers="stat_5" class="gt_row gt_center">0.69 (0.14)</td></tr>
     <tr><td headers="label" class="gt_row gt_left">SHAPEIT_flip</td>
-<td headers="stat_1" class="gt_row gt_center">0.51 (0.17)</td>
-<td headers="stat_2" class="gt_row gt_center">0.46 (0.27)</td>
-<td headers="stat_3" class="gt_row gt_center">0.96 (0.17)</td>
-<td headers="stat_4" class="gt_row gt_center">0.56 (0.18)</td>
-<td headers="stat_5" class="gt_row gt_center">0.79 (0.24)</td></tr>
+<td headers="stat_1" class="gt_row gt_center">0.80 (0.20)</td>
+<td headers="stat_2" class="gt_row gt_center">0.54 (0.16)</td>
+<td headers="stat_3" class="gt_row gt_center">0.76 (0.12)</td>
+<td headers="stat_4" class="gt_row gt_center">0.58 (0.15)</td>
+<td headers="stat_5" class="gt_row gt_center">0.76 (0.18)</td></tr>
   </tbody>
   
   <tfoot class="gt_footnotes">
@@ -5663,9 +5697,9 @@ class="section level3">
   mutate(Beagle_switch = n_other_beagle / n_hets,
          Eagle_switch = n_other_eagle / n_hets,
          SHAPEIT_switch = n_other_shapeit / n_hets,
-         Beagle_flip = n_other_beagle / n_hets,
-         Eagle_flip = n_other_eagle / n_hets,
-         SHAPEIT_flip = n_other_shapeit / n_hets) %&gt;%
+         Beagle_flip = n_flip_beagle / n_hets,
+         Eagle_flip = n_flip_eagle / n_hets,
+         SHAPEIT_flip = n_flip_shapeit / n_hets) %&gt;%
   tbl_summary(include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
                           Beagle_flip, Eagle_flip, SHAPEIT_flip),
               statistic = list(
@@ -6136,11 +6170,11 @@ class="section level3">
     <tr><td headers="label" class="gt_row gt_left">SHAPEIT_switch</td>
 <td headers="stat_0" class="gt_row gt_center">0.0016 (0.0009)</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Beagle_flip</td>
-<td headers="stat_0" class="gt_row gt_center">0.0017 (0.0009)</td></tr>
+<td headers="stat_0" class="gt_row gt_center">0.0014 (0.0005)</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Eagle_flip</td>
-<td headers="stat_0" class="gt_row gt_center">0.0023 (0.0010)</td></tr>
+<td headers="stat_0" class="gt_row gt_center">0.0014 (0.0005)</td></tr>
     <tr><td headers="label" class="gt_row gt_left">SHAPEIT_flip</td>
-<td headers="stat_0" class="gt_row gt_center">0.0016 (0.0009)</td></tr>
+<td headers="stat_0" class="gt_row gt_center">0.0016 (0.0005)</td></tr>
   </tbody>
   
   <tfoot class="gt_footnotes">
@@ -6156,9 +6190,9 @@ class="section level3">
   mutate(Beagle_switch = n_other_beagle / n_hets,
          Eagle_switch = n_other_eagle / n_hets,
          SHAPEIT_switch = n_other_shapeit / n_hets,
-         Beagle_flip = n_other_beagle / n_hets,
-         Eagle_flip = n_other_eagle / n_hets,
-         SHAPEIT_flip = n_other_shapeit / n_hets) %&gt;%
+         Beagle_flip = n_flip_beagle / n_hets,
+         Eagle_flip = n_flip_eagle / n_hets,
+         SHAPEIT_flip = n_flip_shapeit / n_hets) %&gt;%
   tbl_summary(by = pop,
     include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
                           Beagle_flip, Eagle_flip, SHAPEIT_flip),
@@ -6651,23 +6685,23 @@ N = 200</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 <td headers="stat_4" class="gt_row gt_center">0.0014 (0.0004)</td>
 <td headers="stat_5" class="gt_row gt_center">0.0019 (0.0006)</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Beagle_flip</td>
-<td headers="stat_1" class="gt_row gt_center">0.0009 (0.0003)</td>
-<td headers="stat_2" class="gt_row gt_center">0.0012 (0.0008)</td>
-<td headers="stat_3" class="gt_row gt_center">0.0028 (0.0005)</td>
-<td headers="stat_4" class="gt_row gt_center">0.0015 (0.0004)</td>
-<td headers="stat_5" class="gt_row gt_center">0.0020 (0.0006)</td></tr>
+<td headers="stat_1" class="gt_row gt_center">0.0010 (0.0003)</td>
+<td headers="stat_2" class="gt_row gt_center">0.0011 (0.0005)</td>
+<td headers="stat_3" class="gt_row gt_center">0.0020 (0.0003)</td>
+<td headers="stat_4" class="gt_row gt_center">0.0012 (0.0003)</td>
+<td headers="stat_5" class="gt_row gt_center">0.0016 (0.0004)</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Eagle_flip</td>
-<td headers="stat_1" class="gt_row gt_center">0.0014 (0.0004)</td>
-<td headers="stat_2" class="gt_row gt_center">0.0017 (0.0009)</td>
-<td headers="stat_3" class="gt_row gt_center">0.0037 (0.0006)</td>
-<td headers="stat_4" class="gt_row gt_center">0.0021 (0.0005)</td>
-<td headers="stat_5" class="gt_row gt_center">0.0027 (0.0007)</td></tr>
+<td headers="stat_1" class="gt_row gt_center">0.0010 (0.0003)</td>
+<td headers="stat_2" class="gt_row gt_center">0.0011 (0.0004)</td>
+<td headers="stat_3" class="gt_row gt_center">0.0019 (0.0003)</td>
+<td headers="stat_4" class="gt_row gt_center">0.0012 (0.0003)</td>
+<td headers="stat_5" class="gt_row gt_center">0.0016 (0.0004)</td></tr>
     <tr><td headers="label" class="gt_row gt_left">SHAPEIT_flip</td>
-<td headers="stat_1" class="gt_row gt_center">0.0008 (0.0003)</td>
-<td headers="stat_2" class="gt_row gt_center">0.0011 (0.0008)</td>
-<td headers="stat_3" class="gt_row gt_center">0.0027 (0.0005)</td>
+<td headers="stat_1" class="gt_row gt_center">0.0012 (0.0003)</td>
+<td headers="stat_2" class="gt_row gt_center">0.0013 (0.0005)</td>
+<td headers="stat_3" class="gt_row gt_center">0.0021 (0.0004)</td>
 <td headers="stat_4" class="gt_row gt_center">0.0014 (0.0004)</td>
-<td headers="stat_5" class="gt_row gt_center">0.0019 (0.0006)</td></tr>
+<td headers="stat_5" class="gt_row gt_center">0.0018 (0.0004)</td></tr>
   </tbody>
   
   <tfoot class="gt_footnotes">
