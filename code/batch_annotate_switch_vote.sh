@@ -6,13 +6,13 @@
 #SBATCH --ntasks=1
 #SBATCH --time 01:00:00
 #SBATCH --job-name=SAn
-#SBATCH --array=603-1000
+#SBATCH --array=1-602
 #SBATCH --requeue
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/vote_x/slurm/ann-%A_%a.err
-#SBATCH -o /net/snowwhite/home/beckandy/research/phasing_clean/output/vote_x/slurm/ann-%A_%a.out
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/vote_1/slurm/ann-%A_%a.err
+#SBATCH -o /net/snowwhite/home/beckandy/research/phasing_clean/output/vote_1/slurm/ann-%A_%a.out
 
-chrom="X"
-input_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/vote_x/switches"
+chrom="1"
+input_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/vote_1/switches"
 output_dir="${input_dir}/annotated"
 
 python /net/snowwhite/home/beckandy/research/phasing_clean/code/append_cpg.py -c $chrom \

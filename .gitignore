@@ -25,3 +25,4 @@ data/ref_maps
 data/1kgp/exclude_samples
 scratch/
 data/decode
+data/1kgp/chrX_2504_snps_noPAR_noSing.freq

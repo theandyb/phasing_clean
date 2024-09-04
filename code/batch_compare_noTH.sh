@@ -2,17 +2,17 @@
 #
 #SBATCH --job-name=compare
 #SBATCH --ntasks=1
-#SBATCH --time=01:00:00
+#SBATCH --time=02:00:00
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=1GB
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=beckandy@umich.edu
 #SBATCH --array=1-602
 #SBATCH --constraint=avx2
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/check_noTH.%A.%a.err
-#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/check_noTH.%A.%a.out
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/check_noTH.%A.%a.err
+#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/check_noTH.%A.%a.out
 
-chrom=22
+chrom=1
 base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
 out_dir="${base_dir}/output/trio_phase_${chrom}/no_th"
 beagle_vcf="${base_dir}/output/trio_phase_${chrom}/beagle/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz"

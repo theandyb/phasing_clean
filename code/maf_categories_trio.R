@@ -3,7 +3,7 @@ library(yaml)
 source("code/common_functions.R")
 
 config_obj <- yaml::read_yaml("_config.yaml")
-chrom <- 22
+chrom <- 1
 
 eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/eagle/annotated/")
 shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/shapeit/annotated/")

@@ -22,6 +22,8 @@ df_eagle <- vcf_eagle@gt %>% as.data.frame()
 df_beagle <- vcf_beagle@gt %>% as.data.frame()
 df_shapeit <- vcf_shapeit@gt %>% as.data.frame()
 
+trio_name <- names(df_eagle)[2]
+
 #let's split the GT calls into two columns
 df_eagle <- df_eagle %>%
   separate(starts_with(c("NA", "HG")), c("v1", "v2"), sep = "\\|")
@@ -69,6 +71,6 @@ for(i in 1:length(df_shapeit$v1)){
 
 vcf_new <- vcf_eagle
 df_new <- vcf_eagle@gt %>% as.data.frame()
-df_new[ , subj_name] <- paste0(v1, "|", v2)
+df_new[ , trio_name] <- paste0(v1, "|", v2)
 vcf_new@gt <- as.matrix(df_new)
 write.vcf(vcf_new, output_file)

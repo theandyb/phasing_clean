@@ -8,10 +8,10 @@
 #SBATCH --job-name=sAn
 #SBATCH --array=1-602
 #SBATCH --requeue
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/s_ann_noTH-%A_%a.err
-#SBATCH -o /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/s_ann_noTH-%A_%a.out
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/s_ann_noTH-%A_%a.err
+#SBATCH -o /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/s_ann_noTH-%A_%a.out
 
-chrom=22
+chrom=1
 input_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_${chrom}/no_th/switch_errors/beagle"
 output_dir="${input_dir}/annotated"
 
