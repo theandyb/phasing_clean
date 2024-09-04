@@ -60,6 +60,13 @@ In this document, we present summaries and figures for the distributions of erro
 
 ```{r}
 df_vcftools <- read_csv(paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/summary.csv"))
+
+df_vcftools$n_total_beagle <- (df_vcftools$n_flip_beagle + df_vcftools$n_other_beagle)
+df_vcftools$n_total_eagle <- (df_vcftools$n_flip_eagle + df_vcftools$n_other_eagle)
+df_vcftools$n_total_shapeit <- (df_vcftools$n_flip_shapeit + df_vcftools$n_other_shapeit)
+
+sum(df_vcftools$n_total_shapeit < df_vcftools$n_total_eagle)
+sum(df_vcftools$n_total_beagle < df_vcftools$n_total_eagle)
 ```
 
 ## Tables
@@ -179,9 +186,9 @@ df_vcftools %>%
   mutate(Beagle_switch = n_other_beagle / size_mb,
          Eagle_switch = n_other_eagle / size_mb,
          SHAPEIT_switch = n_other_shapeit / size_mb,
-         Beagle_flip = n_other_beagle / size_mb,
-         Eagle_flip = n_other_eagle / size_mb,
-         SHAPEIT_flip = n_other_shapeit / size_mb) %>%
+         Beagle_flip = n_flip_beagle / size_mb,
+         Eagle_flip = n_flip_eagle / size_mb,
+         SHAPEIT_flip = n_flip_shapeit / size_mb) %>%
   tbl_summary(include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
                           Beagle_flip, Eagle_flip, SHAPEIT_flip),
               statistic = list(
