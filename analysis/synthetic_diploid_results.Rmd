@@ -204,9 +204,9 @@ df_vcftools %>%
   mutate(Beagle_switch = n_other_beagle / size_mb,
          Eagle_switch = n_other_eagle / size_mb,
          SHAPEIT_switch = n_other_shapeit / size_mb,
-         Beagle_flip = n_other_beagle / size_mb,
-         Eagle_flip = n_other_eagle / size_mb,
-         SHAPEIT_flip = n_other_shapeit / size_mb) %>%
+         Beagle_flip = n_flip_beagle / size_mb,
+         Eagle_flip = n_flip_eagle / size_mb,
+         SHAPEIT_flip = n_flip_shapeit / size_mb) %>%
   tbl_summary(by = pop,
     include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
                           Beagle_flip, Eagle_flip, SHAPEIT_flip),
@@ -224,9 +224,9 @@ df_vcftools %>%
   mutate(Beagle_switch = n_other_beagle / n_hets,
          Eagle_switch = n_other_eagle / n_hets,
          SHAPEIT_switch = n_other_shapeit / n_hets,
-         Beagle_flip = n_other_beagle / n_hets,
-         Eagle_flip = n_other_eagle / n_hets,
-         SHAPEIT_flip = n_other_shapeit / n_hets) %>%
+         Beagle_flip = n_flip_beagle / n_hets,
+         Eagle_flip = n_flip_eagle / n_hets,
+         SHAPEIT_flip = n_flip_shapeit / n_hets) %>%
   tbl_summary(include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
                           Beagle_flip, Eagle_flip, SHAPEIT_flip),
               statistic = list(
@@ -242,9 +242,9 @@ df_vcftools %>%
   mutate(Beagle_switch = n_other_beagle / n_hets,
          Eagle_switch = n_other_eagle / n_hets,
          SHAPEIT_switch = n_other_shapeit / n_hets,
-         Beagle_flip = n_other_beagle / n_hets,
-         Eagle_flip = n_other_eagle / n_hets,
-         SHAPEIT_flip = n_other_shapeit / n_hets) %>%
+         Beagle_flip = n_flip_beagle / n_hets,
+         Eagle_flip = n_flip_eagle / n_hets,
+         SHAPEIT_flip = n_flip_shapeit / n_hets) %>%
   tbl_summary(by = pop,
     include = c(Beagle_switch, Eagle_switch, SHAPEIT_switch,
                           Beagle_flip, Eagle_flip, SHAPEIT_flip),
