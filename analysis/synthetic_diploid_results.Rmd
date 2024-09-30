@@ -16,6 +16,7 @@ library(reactable)
 source("code/common_functions.R")
 library(yaml)
 library(gtsummary)
+library(infer)
 
 library(grid)
 library(gridExtra) 
@@ -151,6 +152,127 @@ df_vcftools %>%
                 all_categorical() ~ "{n} / {N} ({p}%)")
               )
 ```
+
+#### T tests for differences
+
+Errors per het
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
+         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(diff = Beagle - Eagle) %>%
+  t_test(response = diff, mu = 0)
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
+         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(diff = SHAPEIT - Eagle) %>%
+  t_test(response = diff, mu = 0)
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
+         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(diff = SHAPEIT - Beagle) %>%
+  t_test(response = diff, mu = 0)
+
+mean_diff <- df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
+         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(diff = SHAPEIT - Eagle) %>%
+  pull(diff) 
+
+mean(mean_diff) / (sd(mean_diff)/sqrt(1000))
+BSDA::z.test(mean_diff, sigma.x = sd(mean_diff))
+
+mean_diff <- df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
+         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(diff = Beagle - Eagle) %>%
+  pull(diff) 
+
+mean(mean_diff) / (sd(mean_diff)/sqrt(1000))
+BSDA::z.test(mean_diff, sigma.x = sd(mean_diff))
+```
+
+Difference Table:
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
+         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(B_E = Beagle - Eagle,
+         B_S = Beagle - SHAPEIT,
+         E_S = Eagle - SHAPEIT) %>%
+  select(pop, B_E, B_S, E_S) %>%
+  tbl_summary(by = pop,
+              include = c(B_E, B_S, E_S),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+```
+
+Population-specific T Tests
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
+         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(B_E = Beagle - Eagle,
+         B_S = Beagle - SHAPEIT,
+         E_S = Eagle - SHAPEIT) %>%
+  select(pop, B_E, B_S, E_S) %>%
+  group_by(pop) %>%
+  summarize(m_B_E = mean(B_E), 
+            m_B_S = mean(B_S), 
+            m_E_S = mean(E_S),
+            s_B_E = sd(B_E),
+            s_B_S = sd(B_S),
+            s_E_S = sd(E_S)) %>%
+  rowwise() %>%
+  mutate(z_B_E = m_B_E / (s_B_E / sqrt(200)),
+         z_B_S = m_B_S / (s_B_S / sqrt(200)),
+         z_E_S = m_E_S / (s_E_S / sqrt(200))) %>%
+  mutate(p_B_E = 2 * pnorm(-abs(z_B_E)),
+         p_B_S = 2 * pnorm(-abs(z_B_S)),
+         p_E_S = 2 * pnorm(-abs(z_E_S)))
+```
+
+
+
+### Accuracy
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_hets - n_other_beagle - n_flip_beagle) / n_hets ,
+         Eagle = (n_hets - n_other_eagle - n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_hets - n_other_shapeit - n_flip_shapeit) / n_hets ) %>%
+  tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+df_vcftools %>%
+  mutate(Beagle = (n_hets - n_other_beagle - n_flip_beagle) / n_hets ,
+         Eagle = (n_hets - n_other_eagle - n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_hets - n_other_shapeit - n_flip_shapeit) / n_hets ) %>%
+  tbl_summary(by = pop,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+```
+
 
 ### Mean number of switches and flips
 

@@ -15,16 +15,13 @@ Chromosome sizes and windows:
 ```         
 curl https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.chrom.sizes > data/hg38.chrom.sizes
 cat data/hg38.chrom.sizes | grep 'chrX\s' > data/chrX.sizes
-cat data/hg38.chrom.sizes | grep 'chr8\s' > data/chr8.sizes
-cat data/hg38.chrom.sizes | grep 'chr15\s' > data/chr15.sizes
-cat data/hg38.chrom.sizes | grep 'chr22\s' > data/chr22.sizes
-cat data/hg38.chrom.sizes | grep 'chr1\s' > data/chr1.sizes
 
-bedtools makewindows -g data/chrX.sizes -w 10000 > chrX_10k.bed
-bedtools makewindows -g data/chr8.sizes -w 10000 > chr8_10k.bed
-bedtools makewindows -g data/chr15.sizes -w 10000 > chr15_10k.bed
-bedtools makewindows -g data/chr22.sizes -w 10000 > chr22_10k.bed
-bedtools makewindows -g data/chr1.sizes -w 10000 > chr1_10k.bed
+for i in `seq 1 22`; do
+echo $i
+cat data/hg38.chrom.sizes | grep "chr${i}\s" > data/chr${i}.sizes
+bedtools makewindows -g data/chr${i}.sizes -w 10000 > data/chr${i}_10k.bed
+done
+
 ```
 
 DeCODE sex averaged genetic maps
@@ -32,13 +29,11 @@ DeCODE sex averaged genetic maps
 ```
 bigWigToBedGraph -chrom=chrX http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chrX_recomb.bed
 
-bigWigToBedGraph -chrom=chr8 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chr8_recomb.bed
+for i in `seq 1 22`; do
+echo $i
+bigWigToBedGraph -chrom=chr${i} http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chr${i}_recomb.bed
+done
 
-bigWigToBedGraph -chrom=chr15 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chr15_recomb.bed
-
-bigWigToBedGraph -chrom=chr1 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chr1_recomb.bed
-
-bigWigToBedGraph -chrom=chr22 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recombAvg.bw stdout > data/decode/chr22_recomb.bed
 ```
 
 1kGP genetic maps
@@ -46,27 +41,24 @@ bigWigToBedGraph -chrom=chr22 http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRat
 ```
 bigWigToBedGraph -chrom=chrX  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chrX_recomb.bed
 
-bigWigToBedGraph -chrom=chr1  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chr1_recomb.bed
-
-bigWigToBedGraph -chrom=chr8  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chr8_recomb.bed
-
-bigWigToBedGraph -chrom=chr15  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chr15_recomb.bed
-
-bigWigToBedGraph -chrom=chr22  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chr22_recomb.bed
+for i in `seq 1 22`; do
+echo $i
+bigWigToBedGraph -chrom=chr${i}  http://hgdownload.soe.ucsc.edu/gbdb/hg38/recombRate/recomb1000GAvg.bw stdout > data/1kgp/chr${i}_recomb.bed
+done
 ```
 
 1kgp pilot mask:
 
 ```
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chrX" > data/1kgp/chrX_pilot_mask.bed
+curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed > data/1kgp/pilot_mask.bed
 
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr1\s" > data/1kgp/chr1/chr1_pilot_mask.bed
+cat data/1kgp/pilot_mask.bed | grep "chrX" > data/1kgp/chrX_pilot_mask.bed
 
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr15" > data/1kgp/chr15/chr15_pilot_mask.bed
-
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr8" > data/1kgp/chr22/chr8_pilot_mask.bed
-
-curl ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/working/20160622_genome_mask_GRCh38/PilotMask/20160622.allChr.pilot_mask.bed | grep "chr22" > data/1kgp/chr22/chr22_pilot_mask.bed
+for i in `seq 1 22`; do
+echo $i
+#mkdir -p data/1kgp/chr${i}
+cat data/1kgp/pilot_mask.bed | grep "chr${i}\s" > data/1kgp/chr${i}/chr${i}_pilot_mask.bed
+done
 ```
 
 ### Genetic maps for phasing
@@ -160,52 +152,30 @@ bcftools query -f "%CHROM\t%POS\t%AF\n" | \
   awk '{maf = (1-$3 < $3 ? 1-$3 : $3); print($1"\t"$2"\t"maf)}' > data/1kgp/chrX_freq.tsv
 ```
 
-### GC Content in Windows on X and 15
+### GC Content in Windows on X and autosomes
 
 ```
 curl ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz > data/ref_GRCh38.fna.gz
 gunzip data/ref_GRCh38.fna.gz
 fastaindex -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in
 fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chrX" > data/chrX.fasta
-fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr15" > data/chr15.fasta
-fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr1" > data/chr1.fasta
-fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr8" > data/chr8.fasta
-fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr22" > data/chr22.fasta
 
-bedtools complement -i data/1kgp/chrX_pilot_mask.bed -g data/chrX.sizes | bedtools sort > data/mask_pilot_X_fasta.bed
-bedtools complement -i data/1kgp/chr15/chr15_pilot_mask.bed -g data/chr15.sizes | bedtools sort > data/mask_pilot_15_fasta.bed
-bedtools complement -i data/1kgp/chr1/chr1_pilot_mask.bed -g data/chr1.sizes | bedtools sort > data/mask_pilot_1_fasta.bed
-bedtools complement -i data/1kgp/chr8/chr8_pilot_mask.bed -g data/chr8.sizes | bedtools sort > data/mask_pilot_8_fasta.bed
-bedtools complement -i data/1kgp/chr22/chr22_pilot_mask.bed -g data/chr22.sizes | bedtools sort > data/mask_pilot_22_fasta.bed
+for i in `seq 1 22`; do
+echo $i
+fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr${i}" > data/chr${i}.fasta
+bedtools complement -i data/1kgp/chr${i}/chr${i}_pilot_mask.bed -g data/chr${i}.sizes | bedtools sort > data/mask_pilot_${i}_fasta.bed
+bedtools maskfasta -fi data/chr${i}.fasta -bed data/mask_pilot_${i}_fasta.bed -fo data/chr${i}_mask.fasta
+samtools faidx data/chr${i}_mask.fasta
+bedtools makewindows -g data/chr${i}.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chr${i}.1kb.sorted.bed
+bedtools nuc -fi data/chr${i}_mask.fasta -bed data/chr${i}.1kb.sorted.bed > data/chr${i}_gc1kb_pilot.bed
+done
 
 
 bedtools maskfasta -fi data/chrX.fasta -bed data/mask_pilot_X_fasta.bed -fo data/chrX_mask.fasta
 samtools faidx data/chrX_mask.fasta
-
-bedtools maskfasta -fi data/chr15.fasta -bed data/mask_pilot_15_fasta.bed -fo data/chr15_mask.fasta
-samtools faidx data/chr15_mask.fasta
-
-bedtools maskfasta -fi data/chr1.fasta -bed data/mask_pilot_1_fasta.bed -fo data/chr1_mask.fasta
-samtools faidx data/chr1_mask.fasta
-
-bedtools maskfasta -fi data/chr8.fasta -bed data/mask_pilot_8_fasta.bed -fo data/chr8_mask.fasta
-samtools faidx data/chr8_mask.fasta
-
-bedtools maskfasta -fi data/chr22.fasta -bed data/mask_pilot_22_fasta.bed -fo data/chr22_mask.fasta
-samtools faidx data/chr22_mask.fasta
-
-
 bedtools makewindows -g data/chrX.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chrX.1kb.sorted.bed
-bedtools makewindows -g data/chr15.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chr15.1kb.sorted.bed
-bedtools makewindows -g data/chr1.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chr1.1kb.sorted.bed
-bedtools makewindows -g data/chr8.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chr8.1kb.sorted.bed
-bedtools makewindows -g data/chr22.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chr22.1kb.sorted.bed
-
 bedtools nuc -fi data/chrX_mask.fasta -bed data/chrX.1kb.sorted.bed > data/chrX_gc1kb_pilot.bed
-bedtools nuc -fi data/chr15_mask.fasta -bed data/chr15.1kb.sorted.bed > data/chr15_gc1kb_pilot.bed
-bedtools nuc -fi data/chr1_mask.fasta -bed data/chr1.1kb.sorted.bed > data/chr1_gc1kb_pilot.bed
-bedtools nuc -fi data/chr8_mask.fasta -bed data/chr8.1kb.sorted.bed > data/chr8_gc1kb_pilot.bed
-bedtools nuc -fi data/chr22_mask.fasta -bed data/chr22.1kb.sorted.bed > data/chr22_gc1kb_pilot.bed
+
 ```
 
 ## Downloading and processing Chromosome 15

@@ -469,6 +469,182 @@ count_to_ven(results_sas[[2]])
 count_to_ven(results_sas[[3]])
 ```
 
+# Percentages
+
+```{r}
+get_single_count <- function(id, het_loc_dir,  beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
+   df <- annotate_het_list(id, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+   
+   # switches
+   ## get counts of each type of overlap (7 categories)
+  n_b_total <- df %>%
+    pull(switch_b) %>%
+    sum()
+  n_e_total <- df %>%
+    pull(switch_e) %>%
+    sum()
+  n_s_total <- df %>%
+    pull(switch_s) %>%
+    sum()
+  ## unique to one method
+  n_b <- df %>%
+    filter(!(switch_e | switch_s)) %>%
+    pull(switch_b) %>%
+    sum()
+  n_e <- df %>%
+    filter(!(switch_b | switch_s)) %>%
+    pull(switch_e) %>%
+    sum()
+  n_s <- df %>%
+    filter(!(switch_b | switch_e)) %>%
+    pull(switch_s) %>%
+    sum()
+  ## shared between two methods
+  n_b_e <- df %>%
+    filter(!switch_s) %>%
+    filter(switch_b & switch_e) %>%
+    pull(switch_b) %>% sum()
+  n_b_s <- df %>%
+    filter(!switch_e) %>%
+    filter(switch_b & switch_s) %>%
+    pull(switch_b) %>% sum()
+  n_e_s <- df %>%
+    filter(!switch_b) %>%
+    filter(switch_e & switch_s) %>%
+    pull(switch_e) %>% sum()
+  ## shared across all three
+  n_b_e_s <- df %>%
+    filter(switch_b & switch_e & switch_s) %>%
+    pull(switch_b) %>% sum()
+  
+  # flips
+   ## get counts of each type of overlap (7 categories)
+  f_b_total <- df %>%
+    pull(flip_b) %>%
+    sum()
+  f_e_total <- df %>%
+    pull(flip_e) %>%
+    sum()
+  f_s_total <- df %>%
+    pull(flip_s) %>%
+    sum()
+  ## unique to one method
+  f_b <- df %>%
+    filter(!(flip_e | flip_s)) %>%
+    pull(flip_b) %>%
+    sum()
+  f_e <- df %>%
+    filter(!(flip_b | flip_s)) %>%
+    pull(flip_e) %>%
+    sum()
+  f_s <- df %>%
+    filter(!(flip_b | flip_e)) %>%
+    pull(flip_s) %>%
+    sum()
+  ## shared between two methods
+  f_b_e <- df %>%
+    filter(!flip_s) %>%
+    filter(flip_b & flip_e) %>%
+    pull(flip_b) %>% sum()
+  f_b_s <- df %>%
+    filter(!flip_e) %>%
+    filter(flip_b & flip_s) %>%
+    pull(flip_b) %>% sum()
+  f_e_s <- df %>%
+    filter(!flip_b) %>%
+    filter(flip_e & flip_s) %>%
+    pull(flip_e) %>% sum()
+  ## shared across all three
+  f_b_e_s <- df %>%
+    filter(flip_b & flip_e & flip_s) %>%
+    pull(flip_b) %>% sum()
+  
+  # return data frame with counts
+  return(data.frame(id = id,
+                    s_b_total = n_b_total,
+                    s_e_total = n_e_total,
+                    s_s_total = n_s_total,
+                    s_b = n_b,
+                    s_e = n_e,
+                    s_s = n_s,
+                    s_b_e = n_b_e,
+                    s_b_s = n_b_s,
+                    s_e_s = n_e_s,
+                    s_b_e_s = n_b_e_s,
+                    f_b_total = f_b_total,
+                    f_e_total = f_e_total,
+                    f_s_total = f_s_total,
+                    f_b = f_b,
+                    f_e = f_e,
+                    f_s = f_s,
+                    f_b_e = f_b_e,
+                    f_b_s = f_b_s,
+                    f_e_s = f_e_s,
+                    f_b_e_s = f_b_e_s))
+}
+
+get_error_pct <- function(ids, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
+  n <- length(ids)
+  
+  results <- vector(mode = "list", length = n)
+  
+  for(i in 1:n){
+    results[[i]] <- get_single_count(ids[i], het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+  }
+  return(bind_rows(results))
+}
+
+df_err_pct <- get_error_pct(1:1000, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+df_err_pct$pop <- rep(c("EUR", "AFR", "AMR", "EAS", "SAS"), each = 200)
+
+df_err_pct <- df_err_pct %>%
+  mutate(s_unique = s_b + s_e + s_s + s_b_e + s_b_s + s_e_s + s_b_e_s,
+         f_unique = f_b + f_e + f_s + f_b_e + f_b_s + f_e_s + f_b_e_s)
+```
+
+Now we can answer questions such as: for each method, what fractions of its switches are not observed in the other three methods?:
+
+```{r}
+df_err_pct %>%
+  mutate(Beagle = s_b / s_b_total,
+         Eagle = s_e / s_e_total,
+         SHAPEIT = s_s / s_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "alg", values_to = "prop") %>%
+  ggplot(aes(x = alg, y = prop, colour = pop)) +
+  geom_boxplot() +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Population") +
+  xlab("Method") +
+  ylab("Proportion of Unique Switches")
+
+df_err_pct %>%
+  mutate(Beagle = s_b / s_b_total,
+         Eagle = s_e / s_e_total,
+         SHAPEIT = s_s / s_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  tbl_summary(by = pop)
+```
+
+Conversely, what fraction are observed in at least one of the other two methods?:
+
+```{r}
+df_err_pct %>%
+  mutate(Beagle = (s_b_total - s_b ) / s_b_total,
+         Eagle = (s_e_total - s_e) / s_e_total,
+         SHAPEIT = (s_s_total - s_s) / s_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "alg", values_to = "prop") %>%
+  ggplot(aes(x = alg, y = prop, colour = pop)) +
+  geom_boxplot() +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Population") +
+  xlab("Method") +
+  ylab("Proportion of Shared Switches")
+```
+
+
 # Errors in Bins
 
 To get the sense of how much the methods overlap in a larger scale, we'll look at the aggregate number of errors in bins across the genome for both switches and flips. First, let's take a look at what this overlap looks like within a single synthetic diploid:
