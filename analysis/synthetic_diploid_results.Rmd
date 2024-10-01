@@ -159,30 +159,30 @@ Errors per het
 
 ```{r}
 df_vcftools %>%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
-         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
   mutate(diff = Beagle - Eagle) %>%
   t_test(response = diff, mu = 0)
 
 df_vcftools %>%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
-         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
   mutate(diff = SHAPEIT - Eagle) %>%
   t_test(response = diff, mu = 0)
 
 df_vcftools %>%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
-         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
   mutate(diff = SHAPEIT - Beagle) %>%
   t_test(response = diff, mu = 0)
 
 mean_diff <- df_vcftools %>%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
-         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
   mutate(diff = SHAPEIT - Eagle) %>%
   pull(diff) 
 
@@ -204,9 +204,9 @@ Difference Table:
 
 ```{r}
 df_vcftools %>%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
-         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
   mutate(B_E = Beagle - Eagle,
          B_S = Beagle - SHAPEIT,
          E_S = Eagle - SHAPEIT) %>%
@@ -223,9 +223,9 @@ Population-specific T Tests
 
 ```{r}
 df_vcftools %>%
-  mutate(Beagle = (n_other_beagle + n_flip_beagle) / size_mb ,
-         Eagle = (n_other_eagle + n_flip_eagle) / size_mb ,
-         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / size_mb ) %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
   mutate(B_E = Beagle - Eagle,
          B_S = Beagle - SHAPEIT,
          E_S = Eagle - SHAPEIT) %>%
@@ -243,7 +243,12 @@ df_vcftools %>%
          z_E_S = m_E_S / (s_E_S / sqrt(200))) %>%
   mutate(p_B_E = 2 * pnorm(-abs(z_B_E)),
          p_B_S = 2 * pnorm(-abs(z_B_S)),
-         p_E_S = 2 * pnorm(-abs(z_E_S)))
+         p_E_S = 2 * pnorm(-abs(z_E_S))) %>%
+  select(pop,
+         m_B_E, z_B_E, p_B_E, 
+         m_B_S, z_B_S, p_B_S,
+         m_E_S, z_E_S, p_E_S) %>%
+  knitr::kable()
 ```
 
 
@@ -285,6 +290,18 @@ df_vcftools %>%
             mean_flip_beagle = mean(n_flip_beagle),
             mean_flip_shapeit = mean(n_flip_shapeit)) %>%
   knitr::kable()
+
+df_vcftools %>%
+  mutate(B_E = n_other_beagle - n_other_eagle,
+         B_S = n_other_beagle - n_other_shapeit,
+         E_S = n_other_eagle - n_other_shapeit) %>%
+  select(B_E, B_S, E_S) %>%
+  as.matrix() %>%
+  apply(MARGIN = 2, FUN = t.test)
+
+df_vcftools %>%
+  select(n_other_beagle, n_other_eagle) %>%
+  {t.test(.$n_other_beagle, .$n_other_eagle, paired = T)}
 ```
 
 #### By population
@@ -356,6 +373,47 @@ df_vcftools %>%
                 all_categorical() ~ "{n} / {N} ({p}%)")
               )
 ```
+
+T-tests:
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle_switch = n_other_beagle / n_hets,
+         Eagle_switch = n_other_eagle / n_hets,
+         SHAPEIT_switch = n_other_shapeit / n_hets) %>%
+  {t.test(.$Beagle_switch, .$Eagle_switch, paired = T)}
+
+df_vcftools %>%
+  mutate(Beagle_switch = n_other_beagle / n_hets,
+         Eagle_switch = n_other_eagle / n_hets,
+         SHAPEIT_switch = n_other_shapeit / n_hets) %>%
+  {t.test(.$Beagle_switch, .$SHAPEIT_switch, paired = T)}
+
+df_vcftools %>%
+  mutate(Beagle_switch = n_other_beagle / n_hets,
+         Eagle_switch = n_other_eagle / n_hets,
+         SHAPEIT_switch = n_other_shapeit / n_hets) %>%
+  {t.test(.$Eagle_switch, .$SHAPEIT_switch, paired = T)}
+
+df_vcftools %>%
+  mutate(Beagle_flip = n_flip_beagle / n_hets,
+         Eagle_flip = n_flip_eagle / n_hets,
+         SHAPEIT_flip = n_flip_shapeit / n_hets) %>%
+  {t.test(.$Beagle_flip, .$Eagle_flip, paired = T)}
+
+df_vcftools %>%
+  mutate(Beagle_flip = n_flip_beagle / n_hets,
+         Eagle_flip = n_flip_eagle / n_hets,
+         SHAPEIT_flip = n_flip_shapeit / n_hets) %>%
+  {t.test(.$Beagle_flip, .$SHAPEIT_flip, paired = T)}
+
+df_vcftools %>%
+  mutate(Beagle_flip = n_flip_beagle / n_hets,
+         Eagle_flip = n_flip_eagle / n_hets,
+         SHAPEIT_flip = n_flip_shapeit / n_hets) %>%
+  {t.test(.$Eagle_flip, .$SHAPEIT_flip, paired = T)}
+```
+
 
 #### By population
 
@@ -1495,6 +1553,48 @@ print(res_obj$p)
 
 res_obj$tab_prop %>%
   knitr::kable()
+```
+
+### Enrichment of Rare
+
+#### Enrichment of Switches at Rare
+
+```{r}
+maf_prop_df %>%
+  filter(category == "het_rare" | str_detect(category, "switch_rare")) %>%
+  select(id, category, proportion,SP) %>%
+  pivot_wider(id_cols = c("id", "SP"), names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_switch_rare / het_rare,
+         Eagle = eagle_switch_rare / het_rare,
+         SHAPEIT = shapeit_switch_rare / het_rare) %>%
+  select(id, SP, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich, color = SP)) +
+  geom_boxplot() +
+  theme_classic() +
+  ggtitle("Enrichment of Switches at Rare Variants") + 
+  xlab("Method") +
+  ylab("Prop. rare switches / Prop. rare heterozygous sites")
+```
+
+#### Enrichment of Flips at Rare
+
+```{r}
+maf_prop_df %>%
+  filter(category == "het_rare" | str_detect(category, "flip_rare")) %>%
+  select(id, category, proportion,SP) %>%
+  pivot_wider(id_cols = c("id", "SP"), names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_flip_rare / het_rare,
+         Eagle = eagle_flip_rare / het_rare,
+         SHAPEIT = shapeit_flip_rare / het_rare) %>%
+  select(id, SP, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich, color = SP)) +
+  geom_boxplot() +
+  theme_classic() +
+  ggtitle("Enrichment of Flips at Rare Variants") + 
+  xlab("Method") +
+  ylab("Prop. rare flips / Prop. rare heterozygous sites")
 ```
 
 ### Odds Ratios
