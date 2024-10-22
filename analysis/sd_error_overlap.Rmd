@@ -758,7 +758,20 @@ get_pct_sample <- function(id, het_loc_dir, beagle_switch_dir, eagle_switch_dir,
     rename(count_cat = ".")  %>%
     mutate(prop = Freq / sum(Freq))
   
+  df_total <- df %>%
+    filter(switch_b | switch_e | switch_s | flip_b | flip_e | flip_s) %>%
+    mutate(beagle = ifelse((switch_b | flip_b), "Y", "N"),
+           eagle = ifelse((switch_e | flip_e), "Y", "N"),
+           shapeit = ifelse((switch_s | flip_s), "Y", "N")) %>%
+    mutate(count_cat = paste(beagle, eagle, shapeit, "error", sep="_")) %>%
+    pull(count_cat) %>%
+    table() %>%
+    as.data.frame() %>%
+    rename(count_cat = ".")  %>%
+    mutate(prop = Freq / sum(Freq))
+  
   df_res <- bind_rows(df_switch, df_flip) %>%
+    bind_rows(df_total) %>%
     select(count_cat, prop) %>%
     pivot_wider(names_from = count_cat, values_from = prop)
   
@@ -769,6 +782,10 @@ get_pct_sample <- function(id, het_loc_dir, beagle_switch_dir, eagle_switch_dir,
   df_res$beagle_flip <- sum(df$flip_b)
   df_res$eagle_flip <- sum(df$flip_e)
   df_res$shapeit_flip <- sum(df$flip_s)
+  
+  df_res$beagle_total <-  df_res$beagle_switch + df_res$beagle_flip
+  df_res$eagle_total <-  df_res$eagle_switch + df_res$eagle_flip
+  df_res$shapeit_total <-  df_res$shapeit_switch + df_res$shapeit_flip
   
   df_res$id <- id
   return(df_res)
@@ -819,6 +836,69 @@ df_pct %>%
   theme_classic() +
   labs(color = "Population")
 ```
+
+What about flips?:
+
+```{r}
+df_pct %>%
+  ggplot(aes(x = pop, y = Y_N_N_flip, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent flips unique to Beagle") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population")
+
+df_pct %>%
+  ggplot(aes(x = pop, y = N_Y_N_flip, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent flips unique to Eagle") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population")
+
+df_pct %>%
+  ggplot(aes(x = pop, y = N_N_Y_flip, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent flips unique to SHAPEIT") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population")
+```
+
+Any error in general?:
+
+```{r}
+df_pct %>%
+  ggplot(aes(x = pop, y = Y_N_N_error, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent errors unique to Beagle") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population")
+
+df_pct %>%
+  ggplot(aes(x = pop, y = N_Y_N_error, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent errors unique to Eagle") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population")
+
+df_pct %>%
+  ggplot(aes(x = pop, y = N_N_Y_error, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent errors unique to SHAPEIT") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population")
+```
+
 
 Or how about what proportion of errors are shared across at least two methods?:
 
@@ -893,6 +973,45 @@ df_pct %>%
          Beagle_Eagle = Y_Y_N_flip, Beagle_SHAPEIT = Y_N_Y_flip, Eagle_SHAPEIT = N_Y_Y_flip,
          Beagle_Eagle_SHAPEIT = Y_Y_Y_flip) %>%
   tbl_summary(include = c(shared_flip, unique_flip, 
+                          Beagle, Eagle, SHAPEIT,
+                          Beagle_Eagle, Beagle_SHAPEIT, Eagle_SHAPEIT,
+                          Beagle_Eagle_SHAPEIT), statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)"))
+```
+
+```{r}
+df_pct %>%
+  mutate(shared_error = Y_Y_N_error + Y_Y_Y_error + Y_N_Y_error + N_Y_Y_error) %>%
+  ggplot(aes(x = pop, y = shared_error, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent error overlap") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population") +
+  ggtitle("Proportion of Non-unique Errors")
+
+df_pct %>%
+  mutate(shared_error = Y_Y_N_error + Y_Y_Y_error + Y_N_Y_error + N_Y_Y_error,
+         unique_error = Y_N_N_error + N_Y_N_error + N_N_Y_error) %>%
+  rename(Beagle = Y_N_N_error, Eagle = N_Y_N_error, SHAPEIT = N_N_Y_error,
+         Beagle_Eagle = Y_Y_N_error, Beagle_SHAPEIT = Y_N_Y_error, Eagle_SHAPEIT = N_Y_Y_error,
+         Beagle_Eagle_SHAPEIT = Y_Y_Y_error) %>%
+  tbl_summary(include = c(shared_error, unique_error, 
+                          Beagle, Eagle, SHAPEIT,
+                          Beagle_Eagle, Beagle_SHAPEIT, Eagle_SHAPEIT,
+                          Beagle_Eagle_SHAPEIT), by = pop, statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)"))
+
+df_pct %>%
+  mutate(shared_error = Y_Y_N_error + Y_Y_Y_error + Y_N_Y_error + N_Y_Y_error,
+         unique_error = Y_N_N_error + N_Y_N_error + N_N_Y_error) %>%
+  rename(Beagle = Y_N_N_error, Eagle = N_Y_N_error, SHAPEIT = N_N_Y_error,
+         Beagle_Eagle = Y_Y_N_error, Beagle_SHAPEIT = Y_N_Y_error, Eagle_SHAPEIT = N_Y_Y_error,
+         Beagle_Eagle_SHAPEIT = Y_Y_Y_error) %>%
+  tbl_summary(include = c(shared_error, unique_error, 
                           Beagle, Eagle, SHAPEIT,
                           Beagle_Eagle, Beagle_SHAPEIT, Eagle_SHAPEIT,
                           Beagle_Eagle_SHAPEIT), statistic = list(
