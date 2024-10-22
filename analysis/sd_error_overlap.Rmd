@@ -112,6 +112,8 @@ x <- list(beagle = {df %>% filter(switch_b | flip_b | flip2_b) %>% pull(pos)},
 ggVennDiagram(x, label = "count") + scale_fill_gradient(low="grey90",high = "red")
 ```
 
+It's interesting to note here that the least populated categories in this venn diagram are those that count the overlap between two methods, with more observations in the all methods category and the individual methods ccategories. But, this venn diagram also double counts flips.
+
 Another way to do this would be to simply consider switches and flips separately, not worrying about cases where a switch in one method overlaps a flip in another.
 
 ```{r}
@@ -130,8 +132,10 @@ p2 <- ggVennDiagram(x, label = "count") + scale_fill_gradient(low="grey90",high 
 gridExtra::grid.arrange(p1, p2, ncol=2)
 ```
 
+Here we observe for switches that the least represented categories are the overlaps between any two categories, while the individual methods categories and the three methods overlap categories have the higher counts. On the otherhand, we see a higher degree of sharing between beagle and shapeit for flips, while shapeit dominates for the most unique flips.
 
-Or, hear me out: we say nuts to the above, and just do the very simple criteria of:
+
+Ok, hear me out: we say nuts to the above, and just do the very simple criteria of:
 
 1. Switches are shared only with switches that occur at the same position
 2. Flips are shared only with flips that start at the same position
@@ -179,6 +183,8 @@ p2 <- ggVennDiagram(x, label = "count") + scale_fill_gradient(low="grey90",high 
 gridExtra::grid.arrange(p1,p2,ncol=2)
 ```
 
+Here, we see that only 12 of the 92 BEAGLE switches (~13%) overlap flips from the other two methods.
+
 ```{r}
 x <- list(beagle_flip = {df %>% filter(flip_b | flip2_b) %>% pull(pos)},
           beagle_switch = {df %>% filter(switch_b) %>% pull(pos)},
@@ -196,6 +202,8 @@ p2 <- ggVennDiagram(x, label = "count") + scale_fill_gradient(low="grey90",high 
 
 gridExtra::grid.arrange(p1,p2,ncol=2)
 ```
+
+For Eagle, around 22% of its switches overlap a SHAPEIT or Beagle flip.
 
 ```{r}
 x <- list(beagle_flip = {df %>% filter(flip_b | flip2_b) %>% pull(pos)},
@@ -215,8 +223,9 @@ p2 <- ggVennDiagram(x, label = "count") + scale_fill_gradient(low="grey90",high 
 gridExtra::grid.arrange(p1,p2,ncol=2)
 ```
 
+And finally, for SHAPEIT, only 5 (~6%) of its switches overlap flips from either of the other two methods.
 
-So, if we wanted to aggregate these counts across multiple SDs, we'd have to generate 14 numbers per SD. Is there a quick way of doing this?
+If we wanted to aggregate these counts across multiple SDs, we'd have to generate 14 numbers per SD. Is there a quick way of doing this?
 
 ```{r}
 df_switch <- df %>%
@@ -253,6 +262,38 @@ df_switch_noflip <- df %>%
   rename(count_cat = ".")
 ```
 
+Here, we've generated three data frames: `df_switch` only considers the overlap of switches across the three methods:
+
+```{r}
+df_switch %>%
+  knitr::kable()
+```
+
+The categories are Y/N in order: Beagle, Eagle, SHAPEIT (e.g., Y_Y_N has the count of Beagle switches that oveerlap with Eagle but not SHAPEIT). 
+
+The second data frame considers flips, but only counts as overlap if the flip start matches between methods:
+
+```{r}
+df_flip %>%
+  knitr::kable()
+```
+
+The final data frame again looks at the overlap of switches, but excludes switches that overlap flips in any other method:
+
+```{r}
+df_switch_noflip %>%
+  knitr::kable()
+```
+
+The two switch tables allow us to get a sense of the overlap of switches and flips by subtracting the second from the first:
+
+```{r}
+df_switch_flip <- df_switch %>%
+  left_join(df_switch_noflip, by = "count_cat") %>%
+  mutate(flip_overlap = Freq.x - Freq.y) %>%
+  select(count_cat, flip_overlap)
+```
+
 
 
 # Simple Overlap
@@ -261,7 +302,7 @@ df_switch_noflip <- df %>%
 # Version which only does exact matches of flips and switches
 get_error_counts <- function(ids, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
   n <- length(ids)
-  results <- vector(mode = "list", length = 2)
+  results <- vector(mode = "list", length = 4)
   
   df <- annotate_het_list(ids[1], het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
   df_switch <- df %>%
@@ -296,6 +337,11 @@ get_error_counts <- function(ids, het_loc_dir, beagle_switch_dir, eagle_switch_d
     table() %>%
     as.data.frame() %>%
     rename(count_cat = ".")
+  
+  df_switch_flip <- df_switch %>%
+    left_join(df_switch_noflip, by = "count_cat") %>%
+    mutate(Freq = Freq.x - Freq.y) %>%
+    select(count_cat, Freq)
   
   for(i in 2:n){
     df <- annotate_het_list(ids[i], het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
@@ -350,10 +396,22 @@ get_error_counts <- function(ids, het_loc_dir, beagle_switch_dir, eagle_switch_d
       replace_na(list("Freq" = 0, "Freq2" = 0)) %>%
       mutate(Freq = Freq + Freq2) %>%
       select(-Freq2)
+    
+    df_switch_flip2 <- df_switch2 %>%
+      left_join(df_switch_noflip2, by = "count_cat") %>%
+      mutate(Freq2 = Freq2.x - Freq2.y) %>%
+      select(count_cat, Freq2)
+    
+    df_switch_flip <- df_switch_flip %>%
+      full_join(df_switch_flip2, by="count_cat") %>%
+      replace_na(list("Freq" = 0, "Freq2" = 0)) %>%
+      mutate(Freq = Freq + Freq2) %>%
+      select(-Freq2)
   }
   results[[1]] <- df_switch
   results[[2]] <- df_flip
   results[[3]] <- df_switch_noflip
+  results[[4]] <- df_switch_flip
   return(results)
 }
 ```
@@ -512,6 +570,7 @@ get_single_count <- function(id, het_loc_dir,  beagle_switch_dir, eagle_switch_d
     filter(!switch_b) %>%
     filter(switch_e & switch_s) %>%
     pull(switch_e) %>% sum()
+  
   ## shared across all three
   n_b_e_s <- df %>%
     filter(switch_b & switch_e & switch_s) %>%
@@ -623,6 +682,13 @@ df_err_pct %>%
   mutate(Beagle = s_b / s_b_total,
          Eagle = s_e / s_e_total,
          SHAPEIT = s_s / s_s_total) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  tbl_summary()
+
+df_err_pct %>%
+  mutate(Beagle = s_b / s_b_total,
+         Eagle = s_e / s_e_total,
+         SHAPEIT = s_s / s_s_total) %>%
   select(pop, Beagle, Eagle, SHAPEIT) %>%
   tbl_summary(by = pop)
 ```
@@ -644,6 +710,197 @@ df_err_pct %>%
   ylab("Proportion of Shared Switches")
 ```
 
+Now, considering each method in full:
+
+## Beagle
+
+```{r}
+df_err_pct %>% 
+  mutate(Beagle = s_b / s_b_total,
+         Beagle_Eagle = s_b_e / s_b_total,
+         Beagle_SHAPEIT = s_b_s / s_b_total,
+         Beagle_Eagle_SHAPEIT = s_b_e_s / s_b_total) %>%
+  select(starts_with("Beagle")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+```
+
+
+In Beagle, on average we observe that blank % of its switches are unique to Beagle
+
+## Alternate: percentages in each individual
+
+```{r}
+get_pct_sample <- function(id, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
+
+  df <- annotate_het_list(id, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+  
+  df_switch <- df %>%
+    filter(switch_b | switch_e | switch_s) %>%
+    mutate(beagle = ifelse(switch_b, "Y", "N"),
+           eagle = ifelse(switch_e, "Y", "N"),
+           shapeit = ifelse(switch_s, "Y", "N")) %>%
+    mutate(count_cat = paste(beagle, eagle, shapeit, "switch", sep="_")) %>%
+    pull(count_cat) %>%
+    table() %>%
+    as.data.frame() %>%
+    rename(count_cat = ".") %>%
+    mutate(prop = Freq / sum(Freq))
+  
+  df_flip <- df %>%
+    filter(flip_b | flip_e | flip_s) %>%
+    mutate(beagle = ifelse(flip_b, "Y", "N"),
+           eagle = ifelse(flip_e, "Y", "N"),
+           shapeit = ifelse(flip_s, "Y", "N")) %>%
+    mutate(count_cat = paste(beagle, eagle, shapeit, "flip", sep="_")) %>%
+    pull(count_cat) %>%
+    table() %>%
+    as.data.frame() %>%
+    rename(count_cat = ".")  %>%
+    mutate(prop = Freq / sum(Freq))
+  
+  df_res <- bind_rows(df_switch, df_flip) %>%
+    select(count_cat, prop) %>%
+    pivot_wider(names_from = count_cat, values_from = prop)
+  
+  df_res$beagle_switch <- sum(df$switch_b)
+  df_res$eagle_switch <- sum(df$switch_e)
+  df_res$shapeit_switch <- sum(df$switch_s)
+  
+  df_res$beagle_flip <- sum(df$flip_b)
+  df_res$eagle_flip <- sum(df$flip_e)
+  df_res$shapeit_flip <- sum(df$flip_s)
+  
+  df_res$id <- id
+  return(df_res)
+}
+
+get_pct_df <- function(ids, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
+  results <- vector(mode = "list", length = length(ids))
+  
+  for(i in 1:length(ids)){
+    results[[i]] <- get_pct_sample(ids[i], het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+  }
+  return(bind_rows(results))
+}
+
+df_pct <- get_pct_df(1:1000, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+df_pct[is.na(df_pct)] <- 0
+
+df_pct$pop <- rep(c("EUR", "AFR", "AMR", "EAS", "SAS"), each = 200)
+```
+
+With this re-formulation, we can answer questions about the distributions of proportions of error categories across individuals. For example, in a typical individual, what percent of the switches observed in that sample are unique to each of the methods?:
+
+```{r}
+df_pct %>%
+  ggplot(aes(x = pop, y = Y_N_N_switch, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent switches unique to Beagle") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population")
+
+df_pct %>%
+  ggplot(aes(x = pop, y = N_Y_N_switch, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent switches unique to Eagle") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population")
+
+df_pct %>%
+  ggplot(aes(x = pop, y = N_N_Y_switch, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent switches unique to SHAPEIT") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population")
+```
+
+Or how about what proportion of errors are shared across at least two methods?:
+
+```{r}
+df_pct %>%
+  mutate(shared_switch = Y_Y_N_switch + Y_Y_Y_switch + Y_N_Y_switch + N_Y_Y_switch) %>%
+  ggplot(aes(x = pop, y = shared_switch, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent switches overlap") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population") +
+  ggtitle("Proportion of Non-unique Switches")
+
+df_pct %>%
+  mutate(shared_switch = Y_Y_N_switch + Y_Y_Y_switch + Y_N_Y_switch + N_Y_Y_switch,
+         unique_switch = Y_N_N_switch + N_Y_N_switch + N_N_Y_switch) %>%
+  rename(Beagle = Y_N_N_switch, Eagle = N_Y_N_switch, SHAPEIT = N_N_Y_switch,
+         Beagle_Eagle = Y_Y_N_switch, Beagle_SHAPEIT = Y_N_Y_switch, Eagle_SHAPEIT = N_Y_Y_switch,
+         Beagle_Eagle_SHAPEIT = Y_Y_Y_switch) %>%
+  tbl_summary(include = c(shared_switch, unique_switch, 
+                          Beagle, Eagle, SHAPEIT,
+                          Beagle_Eagle, Beagle_SHAPEIT, Eagle_SHAPEIT,
+                          Beagle_Eagle_SHAPEIT), by = pop, statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)"))
+
+df_pct %>%
+  mutate(shared_switch = Y_Y_N_switch + Y_Y_Y_switch + Y_N_Y_switch + N_Y_Y_switch,
+         unique_switch = Y_N_N_switch + N_Y_N_switch + N_N_Y_switch) %>%
+  rename(Beagle = Y_N_N_switch, Eagle = N_Y_N_switch, SHAPEIT = N_N_Y_switch,
+         Beagle_Eagle = Y_Y_N_switch, Beagle_SHAPEIT = Y_N_Y_switch, Eagle_SHAPEIT = N_Y_Y_switch,
+         Beagle_Eagle_SHAPEIT = Y_Y_Y_switch) %>%
+  tbl_summary(include = c(shared_switch, unique_switch, 
+                          Beagle, Eagle, SHAPEIT,
+                          Beagle_Eagle, Beagle_SHAPEIT, Eagle_SHAPEIT,
+                          Beagle_Eagle_SHAPEIT), statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)"))
+```
+
+```{r}
+df_pct %>%
+  mutate(shared_switch = Y_Y_N_flip + Y_Y_Y_flip + Y_N_Y_flip + N_Y_Y_flip) %>%
+  ggplot(aes(x = pop, y = shared_switch, colour = pop)) +
+  geom_boxplot() +
+  xlab("Super population") +
+  ylab("Percent flips overlap") +
+  scale_colour_manual(values = cbPalette) +
+  theme_classic() +
+  labs(color = "Population") +
+  ggtitle("Proportion of Non-unique Flips")
+
+df_pct %>%
+  mutate(shared_flip = Y_Y_N_flip + Y_Y_Y_flip + Y_N_Y_flip + N_Y_Y_flip,
+         unique_flip = Y_N_N_flip + N_Y_N_flip + N_N_Y_flip) %>%
+  rename(Beagle = Y_N_N_flip, Eagle = N_Y_N_flip, SHAPEIT = N_N_Y_flip,
+         Beagle_Eagle = Y_Y_N_flip, Beagle_SHAPEIT = Y_N_Y_flip, Eagle_SHAPEIT = N_Y_Y_flip,
+         Beagle_Eagle_SHAPEIT = Y_Y_Y_flip) %>%
+  tbl_summary(include = c(shared_flip, unique_flip, 
+                          Beagle, Eagle, SHAPEIT,
+                          Beagle_Eagle, Beagle_SHAPEIT, Eagle_SHAPEIT,
+                          Beagle_Eagle_SHAPEIT), by = pop, statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)"))
+
+df_pct %>%
+  mutate(shared_flip = Y_Y_N_flip + Y_Y_Y_flip + Y_N_Y_flip + N_Y_Y_flip,
+         unique_flip = Y_N_N_flip + N_Y_N_flip + N_N_Y_flip) %>%
+  rename(Beagle = Y_N_N_flip, Eagle = N_Y_N_flip, SHAPEIT = N_N_Y_flip,
+         Beagle_Eagle = Y_Y_N_flip, Beagle_SHAPEIT = Y_N_Y_flip, Eagle_SHAPEIT = N_Y_Y_flip,
+         Beagle_Eagle_SHAPEIT = Y_Y_Y_flip) %>%
+  tbl_summary(include = c(shared_flip, unique_flip, 
+                          Beagle, Eagle, SHAPEIT,
+                          Beagle_Eagle, Beagle_SHAPEIT, Eagle_SHAPEIT,
+                          Beagle_Eagle_SHAPEIT), statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)"))
+```
+
+HERE ANDY
 
 # Errors in Bins
 
