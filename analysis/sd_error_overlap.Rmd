@@ -1019,7 +1019,12 @@ df_pct %>%
                 all_categorical() ~ "{n} / {N} ({p}%)"))
 ```
 
-HERE ANDY
+I believe that this material should be enough to write up a paragraph or two for the draft paper. Namely, I'd like to have a summary of
+
+1. How often are the same errors observed across methods
+2. To what extent are errors unique to a particular method
+
+With regards to the latter point, I'd like to dig in more into the differences across methods: is their anything regarding the genomic context around errors unique to a particular method that would allow us to explain the difference in performance between the methods?
 
 # Errors in Bins
 
@@ -2390,6 +2395,256 @@ df %>%
   select(-bin_id) %>% 
   cor(method = "spearman") %>%
   knitr::kable()
+```
+
+# Alternate: distributions of percents in bins
+
+Instead of returning a single number per bin for each superpopulation, let's instead get values for each individual x bin (there's so much unused memory on the cluster anyways).
+
+```{r}
+get_errors_bin <- function(id, bin_size, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
+  
+  final_df <- annotate_het_list(id, 
+                                het_loc_dir, 
+                                beagle_switch_dir, 
+                                eagle_switch_dir, 
+                                shapeit_switch_dir, 
+                                df_freq) %>%
+    mutate(bin_id = ceiling(pos / bin_size)) %>%
+    group_by(bin_id) %>%
+    summarize(beagle_s = sum(switch_b),
+              eagle_s = sum(switch_e),
+              shapeit_s = sum(switch_s),
+              beagle_f = sum(flip_b),
+              eagle_f = sum(flip_e),
+              shapeit_f = sum(flip_s),
+              hets = n())
+  final_df$id <- id
+  return(final_df)
+}
+
+get_errors_bin_df <- function(ids, bin_size, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
+  results <- vector(mode = "list", length = length(ids))
+  for(i in 1:length(ids)){
+    results[[i]] <- get_errors_bin(ids[i], bin_size, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+  }
+  return(bind_rows(results))
+}
+```
+
+
+## MB Scale
+
+```{r}
+df_eur <- get_errors_bin_df(1:200, 1e6, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+```
+
+Let's take a look at what our data looks like at the MB scale. First, let's look at our EUR synthetic diploids:
+
+```{r}
+df_eur %>%
+  mutate(beagle_het = beagle_s / hets,
+         eagle_het = eagle_s / hets,
+         shapeit_het = shapeit_s/ hets) %>%
+  group_by(bin_id) %>%
+  summarise(beagle = mean(beagle_het),
+            eagle = mean(eagle_het),
+            shapeit = mean(shapeit_het)) %>%
+  pivot_longer(-bin_id, names_to = "method", values_to = "switch_per_het") %>%
+  ggplot(aes(x = bin_id, y = switch_per_het, color = method)) +
+  geom_point() +
+  geom_line() +
+  xlab("Bin MB") +
+  ylab("Mean Switches per Het") +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)
+
+df_eur %>%
+  mutate(beagle_het = beagle_f / hets,
+         eagle_het = eagle_f / hets,
+         shapeit_het = shapeit_f/ hets) %>%
+  group_by(bin_id) %>%
+  summarise(beagle = mean(beagle_het),
+            eagle = mean(eagle_het),
+            shapeit = mean(shapeit_het)) %>%
+  pivot_longer(-bin_id, names_to = "method", values_to = "switch_per_het") %>%
+  ggplot(aes(x = bin_id, y = switch_per_het, color = method)) +
+  geom_point() +
+  geom_line() +
+  xlab("Bin MB") +
+  ylab("Mean Flips per Het") +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)
+```
+
+We see that for our EUR sds, there are several bins with elevated switches/het values for Eagle; these regions are also higher for the other two methods, but not to the same extent to which they are in EUR. With our data frame, we can evaluate across individuals what this trend looks like for Eagle:
+
+```{r}
+df_eur %>%
+  mutate(beagle_het = beagle_s / hets,
+         eagle_het = eagle_s / hets,
+         shapeit_het = shapeit_s/ hets) %>%
+  ggplot(aes(x = bin_id, y = eagle_het, group = id)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  xlab("Bin (MB)") +
+  ylab("Switches per het (Eagle)")
+
+df_eur %>%
+  mutate(beagle_het = beagle_s / hets,
+         eagle_het = eagle_s / hets,
+         shapeit_het = shapeit_s/ hets) %>%
+  ggplot(aes(x = factor(bin_id), y = eagle_het)) +
+  geom_boxplot() + 
+  theme_classic() +
+  xlab("Bin (MB)") +
+  ylab("Switches per het (Eagle)")
+
+df_eur %>%
+  mutate(beagle_het = beagle_s / hets,
+         eagle_het = eagle_s / hets,
+         shapeit_het = shapeit_s/ hets) %>%
+  select(bin_id, id, ends_with("_het")) %>%
+  pivot_longer(ends_with("_het"), names_to = "method", values_to = "switches") %>%
+  ggplot(aes(x = factor(bin_id), y = switches, color = method)) +
+  geom_boxplot() + 
+  theme_classic() +
+  xlab("Bin (MB)") +
+  ylab("Switches per het (Eagle)") +
+  scale_color_manual(values = cbPalette)
+```
+
+And for flips, we can evaluate what the distribution of flips in each bin looks like for SHAPEIT:
+
+```{r}
+df_eur %>%
+  mutate(beagle_het = beagle_f / hets,
+         eagle_het = eagle_f / hets,
+         shapeit_het = shapeit_f/ hets) %>%
+  ggplot(aes(x = bin_id, y = shapeit_het, group = id)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  xlab("Bin (MB)") +
+  ylab("Flips per het (SHAPEIT)")
+
+df_eur %>%
+  mutate(beagle_het = beagle_f / hets,
+         eagle_het = eagle_f / hets,
+         shapeit_het = shapeit_f/ hets) %>%
+  ggplot(aes(x = factor(bin_id), y = shapeit_het)) +
+  geom_boxplot() +
+  theme_classic() +
+  xlab("Bin (MB)") +
+  ylab("Flips per het (SHAPEIT)")
+```
+
+
+Hard to see anything with these figures; the outliers for switches look to be individuals with perhaps few (1) heterozygous positions in a bin, and the switch happened to occur at that position. Let's instead look at the raw counts per bin for each SD:
+
+```{r}
+df_eur %>%
+  ggplot(aes(x = bin_id, y = eagle_s, group = id)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() + 
+  xlab("Bin (MB)") +
+  ylab("Switches per bin (Eagle)")
+```
+
+Now, this might be quite the mess, but let's see if we can produce this figure with all three methods at once:
+
+```{r}
+df_eur %>%
+  select(bin_id, id, ends_with("_s")) %>%
+  pivot_longer(ends_with("_s"), names_to = "method", values_to = "switches") %>%
+  ggplot(aes(x = bin_id, y = switches, group = id, color = method)) +
+  geom_point() +
+  geom_line()
+```
+
+## 10 MB Scale
+
+Let's zoom out and see if we can get a better glimpse at chromosome-wide patterns
+
+```{r}
+df_eur <- get_errors_bin_df(1:200, 1e7, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+```
+
+```{r}
+df_eur %>%
+  mutate(beagle_het = beagle_s / hets,
+         eagle_het = eagle_s / hets,
+         shapeit_het = shapeit_s/ hets) %>%
+  group_by(bin_id) %>%
+  summarise(beagle = mean(beagle_het),
+            eagle = mean(eagle_het),
+            shapeit = mean(shapeit_het)) %>%
+  pivot_longer(-bin_id, names_to = "method", values_to = "switch_per_het") %>%
+  ggplot(aes(x = bin_id, y = switch_per_het, color = method)) +
+  geom_point() +
+  geom_line() +
+  xlab("Bin (10MB)") +
+  ylab("Mean Switches per Het") +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_eur %>%
+  mutate(beagle_het = beagle_s / hets,
+         eagle_het = eagle_s / hets,
+         shapeit_het = shapeit_s/ hets) %>%
+  ggplot(aes(x = bin_id, y = eagle_het, group = id)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  xlab("Bin (10MB)") +
+  ylab("Switches per het (Eagle)")
+
+df_eur %>%
+  mutate(beagle_het = beagle_s / hets,
+         eagle_het = eagle_s / hets,
+         shapeit_het = shapeit_s/ hets) %>%
+  ggplot(aes(x = bin_id, y = eagle_het, group = bin_id)) +
+  geom_boxplot()
+
+df_eur %>%
+  mutate(beagle_het = beagle_s / hets,
+         eagle_het = eagle_s / hets,
+         shapeit_het = shapeit_s/ hets) %>%
+  select(bin_id, ends_with("_het")) %>%
+  pivot_longer(-bin_id, names_to = "method", values_to = "switch_rate") %>%
+  ggplot(aes(x = factor(bin_id), y = switch_rate, color = method)) +
+  geom_boxplot() +
+  theme_classic() +
+  xlab("Bin (10MB)") +
+  ylab("Switch rate") +
+  labs(color = "Method")
+```
+
+```{r}
+df_eur %>%
+  mutate(beagle_het = beagle_f / hets,
+         eagle_het = eagle_f / hets,
+         shapeit_het = shapeit_f/ hets) %>%
+  ggplot(aes(x = bin_id, y = shapeit_het, group = id)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  xlab("Bin (MB)") +
+  ylab("Flips per het (SHAPEIT)")
+
+df_eur %>%
+  mutate(beagle_het = beagle_f / hets,
+         eagle_het = eagle_f / hets,
+         shapeit_het = shapeit_f/ hets) %>%
+  ggplot(aes(x = factor(bin_id), y = shapeit_het)) +
+  geom_boxplot() +
+  theme_classic() +
+  xlab("Bin (MB)") +
+  ylab("Flips per het (SHAPEIT)")
 ```
 
 # Recombination Rate
