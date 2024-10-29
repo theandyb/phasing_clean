@@ -700,14 +700,14 @@ df_err_pct %>%
          Eagle = s_e / s_e_total,
          SHAPEIT = s_s / s_s_total) %>%
   select(Beagle, Eagle, SHAPEIT) %>%
-  tbl_summary()
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
 
 df_err_pct %>%
   mutate(Beagle = s_b / s_b_total,
          Eagle = s_e / s_e_total,
          SHAPEIT = s_s / s_s_total) %>%
   select(pop, Beagle, Eagle, SHAPEIT) %>%
-  tbl_summary(by = pop)
+  tbl_summary(by = pop, statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
 ```
 
 Conversely, what fraction are observed in at least one of the other two methods?:
@@ -968,6 +968,8 @@ df_err_pct %>%
 
 ## Alternate: percentages in each individual
 
+Here, our denominator will be the total number of errors observed in a synthetic diploid across all three methods (i.e. count of unique switch and flip locations).
+
 ```{r}
 get_pct_sample <- function(id, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq){
 
@@ -1049,6 +1051,23 @@ With this re-formulation, we can answer questions about the distributions of pro
 
 ```{r}
 df_pct %>%
+  select(pop, Y_N_N_switch, N_Y_N_switch, N_N_Y_switch) %>%
+  rename(Beagle = Y_N_N_switch,
+         Eagle = N_Y_N_switch,
+         SHAPEIT = N_N_Y_switch) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+
+df_pct %>%
+  select(Y_N_N_switch, N_Y_N_switch, N_N_Y_switch) %>%
+  rename(Beagle = Y_N_N_switch,
+         Eagle = N_Y_N_switch,
+         SHAPEIT = N_N_Y_switch) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+```
+
+
+```{r}
+df_pct %>%
   ggplot(aes(x = pop, y = Y_N_N_switch, colour = pop)) +
   geom_boxplot() +
   xlab("Super population") +
@@ -1076,7 +1095,34 @@ df_pct %>%
   labs(color = "Population")
 ```
 
+```{r}
+df_pct %>%
+  select(contains("N_switch"), contains("Y_switch")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_pct %>%
+  select(pop, contains("N_switch"), contains("Y_switch")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+```
+
+
 What about flips?:
+
+```{r}
+df_pct %>%
+  select(pop, Y_N_N_flip, N_Y_N_flip, N_N_Y_flip) %>%
+  rename(Beagle = Y_N_N_flip,
+         Eagle = N_Y_N_flip,
+         SHAPEIT = N_N_Y_flip) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+
+df_pct %>%
+  select(Y_N_N_flip, N_Y_N_flip, N_N_Y_flip) %>%
+  rename(Beagle = Y_N_N_flip,
+         Eagle = N_Y_N_flip,
+         SHAPEIT = N_N_Y_flip) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+```
 
 ```{r}
 df_pct %>%
@@ -1107,7 +1153,33 @@ df_pct %>%
   labs(color = "Population")
 ```
 
+```{r}
+df_pct %>%
+  select(contains("N_flip"), contains("Y_flip")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_pct %>%
+  select(pop, contains("N_flip"), contains("Y_flip")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+```
+
 Any error in general?:
+
+```{r}
+df_pct %>%
+  select(pop, Y_N_N_error, N_Y_N_error, N_N_Y_error) %>%
+  rename(Beagle = Y_N_N_error,
+         Eagle = N_Y_N_error,
+         SHAPEIT = N_N_Y_error) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+
+df_pct %>%
+  select(Y_N_N_error, N_Y_N_error, N_N_Y_error) %>%
+  rename(Beagle = Y_N_N_error,
+         Eagle = N_Y_N_error,
+         SHAPEIT = N_N_Y_error) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+```
 
 ```{r}
 df_pct %>%
@@ -1138,6 +1210,15 @@ df_pct %>%
   labs(color = "Population")
 ```
 
+```{r}
+df_pct %>%
+  select(contains("N_error"), contains("Y_error")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_pct %>%
+  select(pop, contains("N_error"), contains("Y_error")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+```
 
 Or how about what proportion of errors are shared across at least two methods?:
 
