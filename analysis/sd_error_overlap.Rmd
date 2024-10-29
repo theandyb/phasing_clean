@@ -427,6 +427,8 @@ results_eur[[2]] %>%
   knitr::kable()
 results_eur[[3]] %>%
   knitr::kable()
+results_eur[[4]] %>%
+  knitr::kable()
 ```
 
 ```{r}
@@ -456,7 +458,9 @@ count_to_ven <- function(x){
 count_to_ven(results_eur[[1]])
 count_to_ven(results_eur[[2]])
 count_to_ven(results_eur[[3]])
+count_to_ven(results_eur[[4]])
 ```
+
 
 
 ## AFR
@@ -662,6 +666,8 @@ df_err_pct <- df_err_pct %>%
          f_unique = f_b + f_e + f_s + f_b_e + f_b_s + f_e_s + f_b_e_s)
 ```
 
+## Switches
+
 Now we can answer questions such as: for each method, what fractions of its switches are not observed in the other three methods?:
 
 ```{r}
@@ -675,6 +681,17 @@ df_err_pct %>%
   geom_boxplot() +
   scale_color_manual(values = cbPalette) +
   labs(color = "Population") +
+  xlab("Method") +
+  ylab("Proportion of Unique Switches")
+
+df_err_pct %>%
+  mutate(Beagle = s_b / s_b_total,
+         Eagle = s_e / s_e_total,
+         SHAPEIT = s_s / s_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "alg", values_to = "prop") %>%
+  ggplot(aes(x = alg, y = prop)) +
+  geom_boxplot() +
   xlab("Method") +
   ylab("Proportion of Unique Switches")
 
@@ -708,11 +725,36 @@ df_err_pct %>%
   labs(color = "Population") +
   xlab("Method") +
   ylab("Proportion of Shared Switches")
+
+df_err_pct %>%
+  mutate(Beagle = (s_b_total - s_b ) / s_b_total,
+         Eagle = (s_e_total - s_e) / s_e_total,
+         SHAPEIT = (s_s_total - s_s) / s_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "alg", values_to = "prop") %>%
+  ggplot(aes(x = alg, y = prop)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Proportion of Shared Switches")
+
+df_err_pct %>%
+  mutate(Beagle = (s_b_total - s_b ) / s_b_total,
+         Eagle = (s_e_total - s_e) / s_e_total,
+         SHAPEIT = (s_s_total - s_s) / s_s_total) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_err_pct %>%
+  mutate(Beagle = (s_b_total - s_b ) / s_b_total,
+         Eagle = (s_e_total - s_e) / s_e_total,
+         SHAPEIT = (s_s_total - s_s) / s_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  tbl_summary(by = pop, statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
 ```
 
 Now, considering each method in full:
 
-## Beagle
+### Beagle
 
 ```{r}
 df_err_pct %>% 
@@ -722,10 +764,207 @@ df_err_pct %>%
          Beagle_Eagle_SHAPEIT = s_b_e_s / s_b_total) %>%
   select(starts_with("Beagle")) %>%
   tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_err_pct %>% 
+  mutate(Beagle = s_b / s_b_total,
+         Beagle_Eagle = s_b_e / s_b_total,
+         Beagle_SHAPEIT = s_b_s / s_b_total,
+         Beagle_Eagle_SHAPEIT = s_b_e_s / s_b_total) %>%
+  select(pop, starts_with("Beagle")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
 ```
 
 
-In Beagle, on average we observe that blank % of its switches are unique to Beagle
+In Beagle, on average we observe that 40.5% of its switches are unique to Beagle, while on average 14% are shared with Eagle, 16.9% are shared with SHAPEIT, and 28.6% of Beagle's switches are shared with both Eagle and SHAPEIT.
+
+### Eagle
+
+```{r}
+df_err_pct %>% 
+  mutate(Eagle = s_e / s_e_total,
+         Beagle_Eagle = s_b_e / s_e_total,
+         Eagle_SHAPEIT = s_e_s / s_e_total,
+         Beagle_Eagle_SHAPEIT = s_b_e_s / s_e_total) %>%
+  select(contains("Eagle")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_err_pct %>% 
+  mutate(Eagle = s_e / s_e_total,
+         Beagle_Eagle = s_b_e / s_e_total,
+         Eagle_SHAPEIT = s_e_s / s_e_total,
+         Beagle_Eagle_SHAPEIT = s_b_e_s / s_e_total) %>%
+  select(pop, contains("Eagle")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+```
+
+In Eagle, on average 60.4% of switches are unique to Eagle, 10.1% are shared with Beagle, 8.9% are shared with SHAPEIT, and 20.6% are shared with both Beagle and SHAPEIT.
+
+### SHAPEIT
+
+```{r}
+df_err_pct %>% 
+  mutate(SHAPEIT = s_s / s_s_total,
+         Beagle_SHAPEIT = s_b_s / s_s_total,
+         Eagle_SHAPEIT = s_e_s / s_s_total,
+         Beagle_Eagle_SHAPEIT = s_b_e_s / s_s_total) %>%
+  select(contains("SHAPEIT")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_err_pct %>% 
+  mutate(SHAPEIT = s_s / s_s_total,
+         Beagle_SHAPEIT = s_b_s / s_s_total,
+         Eagle_SHAPEIT = s_e_s / s_s_total,
+         Beagle_Eagle_SHAPEIT = s_b_e_s / s_s_total) %>%
+  select(pop, contains("SHAPEIT")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+```
+
+In SHAPEIT, on average 36.1% of switches are unique to SHAPEIT, 18.7% are shared with Beagle, 13.6% are shared with Eagle, and 31.6% are shared with both Beagle and Eagle.
+
+## Flips
+
+```{r}
+df_err_pct %>%
+  mutate(Beagle = f_b / f_b_total,
+         Eagle = f_e / f_e_total,
+         SHAPEIT = f_s / f_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "alg", values_to = "prop") %>%
+  ggplot(aes(x = alg, y = prop, colour = pop)) +
+  geom_boxplot() +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Population") +
+  xlab("Method") +
+  ylab("Proportion of Unique Flips")
+
+df_err_pct %>%
+  mutate(Beagle = f_b / f_b_total,
+         Eagle = f_e / f_e_total,
+         SHAPEIT = f_s / f_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "alg", values_to = "prop") %>%
+  ggplot(aes(x = alg, y = prop)) +
+  geom_boxplot() +
+  scale_color_manual(values = cbPalette) +
+  xlab("Method") +
+  ylab("Proportion of Unique Flips")
+
+df_err_pct %>%
+  mutate(Beagle = f_b / f_b_total,
+         Eagle = f_e / f_e_total,
+         SHAPEIT = f_s / f_s_total) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  tbl_summary()
+
+df_err_pct %>%
+  mutate(Beagle = f_b / f_b_total,
+         Eagle = f_e / f_e_total,
+         SHAPEIT = f_s / f_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  tbl_summary(by = pop)
+```
+
+Conversely, what fraction are observed in at least one of the other two methods?:
+
+```{r}
+df_err_pct %>%
+  mutate(Beagle = (f_b_total - f_b ) / f_b_total,
+         Eagle = (f_e_total - f_e) / f_e_total,
+         SHAPEIT = (f_s_total - f_s) / f_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "alg", values_to = "prop") %>%
+  ggplot(aes(x = alg, y = prop, colour = pop)) +
+  geom_boxplot() +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Population") +
+  xlab("Method") +
+  ylab("Proportion of Shared Flips")
+
+df_err_pct %>%
+  mutate(Beagle = (f_b_total - f_b ) / f_b_total,
+         Eagle = (f_e_total - f_e) / f_e_total,
+         SHAPEIT = (f_s_total - f_s) / f_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "alg", values_to = "prop") %>%
+  ggplot(aes(x = alg, y = prop)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Proportion of Shared Flips")
+
+df_err_pct %>%
+   mutate(Beagle = (f_b_total - f_b ) / f_b_total,
+         Eagle = (f_e_total - f_e) / f_e_total,
+         SHAPEIT = (f_s_total - f_s) / f_s_total) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_err_pct %>%
+   mutate(Beagle = (f_b_total - f_b ) / f_b_total,
+         Eagle = (f_e_total - f_e) / f_e_total,
+         SHAPEIT = (f_s_total - f_s) / f_s_total) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  tbl_summary(by = pop, statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+```
+
+### Beagle
+
+```{r}
+df_err_pct %>% 
+  mutate(Beagle = f_b / f_b_total,
+         Beagle_Eagle = f_b_e / f_b_total,
+         Beagle_SHAPEIT = f_b_s / f_b_total,
+         Beagle_Eagle_SHAPEIT = f_b_e_s / f_b_total) %>%
+  select(starts_with("Beagle")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_err_pct %>% 
+  mutate(Beagle = f_b / f_b_total,
+         Beagle_Eagle = f_b_e / f_b_total,
+         Beagle_SHAPEIT = f_b_s / f_b_total,
+         Beagle_Eagle_SHAPEIT = f_b_e_s / f_b_total) %>%
+  select(pop, starts_with("Beagle")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+```
+
+### Eagle
+
+```{r}
+df_err_pct %>% 
+  mutate(Eagle = f_e / f_e_total,
+         Beagle_Eagle = f_b_e / f_e_total,
+         Eagle_SHAPEIT = f_e_s / f_e_total,
+         Beagle_Eagle_SHAPEIT = f_b_e_s / f_e_total) %>%
+  select(contains("Eagle")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_err_pct %>% 
+  mutate(Eagle = f_e / f_e_total,
+         Beagle_Eagle = f_b_e / f_e_total,
+         Eagle_SHAPEIT = f_e_s / f_e_total,
+         Beagle_Eagle_SHAPEIT = f_b_e_s / f_e_total) %>%
+  select(pop, contains("Eagle")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+```
+
+### SHAPEIT
+
+```{r}
+df_err_pct %>% 
+  mutate(SHAPEIT = f_s / f_s_total,
+         Beagle_SHAPEIT = f_b_s / f_s_total,
+         Eagle_SHAPEIT = f_e_s / f_s_total,
+         Beagle_Eagle_SHAPEIT = f_b_e_s / f_s_total) %>%
+  select(contains("SHAPEIT")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4)
+
+df_err_pct %>% 
+  mutate(SHAPEIT = f_s / f_s_total,
+         Beagle_SHAPEIT = f_b_s / f_s_total,
+         Eagle_SHAPEIT = f_e_s / f_s_total,
+         Beagle_Eagle_SHAPEIT = f_b_e_s / f_s_total) %>%
+  select(pop, contains("SHAPEIT")) %>%
+  tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})"), digits = all_continuous() ~ 4, by = pop)
+```
 
 ## Alternate: percentages in each individual
 
