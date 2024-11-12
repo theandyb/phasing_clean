@@ -216,7 +216,29 @@ ggplotify::as.ggplot(switch_v_flip("X"))
 
 ```{r message=FALSE, warning=FALSE}
 for(c_name in c(as.character(1:22), "X")){
-  ggplotify::as.ggplot(switch_v_flip(c_name))
+  print(c_name)
+  print(ggplotify::as.ggplot(switch_v_flip(c_name)))
 }
+```
+
+So we see a largely consistent pattern in the comparison of flip rates to switch rates along the autosomes, with the except of chromosome 2, which looks more like chromosome X. What's going on here? First, let's grab numeric summaries of this phenomenon:
+
+```{r}
+df_tmp <- df_all %>%
+  mutate(Beagle_switch = n_other_beagle / n_hets,
+         Eagle_switch = n_other_eagle / n_hets,
+         SHAPEIT_switch = n_other_shapeit / n_hets,
+         Beagle_flip = n_flip_beagle / n_hets,
+         Eagle_flip = n_flip_eagle / n_hets,
+         SHAPEIT_flip = n_flip_shapeit / n_hets) %>%
+  mutate(Beagle = Beagle_flip / Beagle_switch,
+         Eagle = Eagle_flip / Eagle_switch,
+         SHAPEIT = SHAPEIT_flip / SHAPEIT_switch) %>%
+  group_by(chrom) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>% as.data.frame()
+rownames(df_tmp) <- df_tmp$chrom
+df_tmp[c(as.character(1:22), "X"),2:4] %>% knitr::kable()
 ```
 
