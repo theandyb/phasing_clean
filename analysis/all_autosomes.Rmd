@@ -206,17 +206,17 @@ switch_v_flip <- function(c_name){
     ylab("Flip Rate") +
     ggtitle("SHAPEIT")
   
-  final <- grid.arrange(p1, p2, p3, p_legend, layout_matrix = rbind(c(1,2), c(3, 4)))
+  final <- arrangeGrob(p1, p2, p3, p_legend, layout_matrix = rbind(c(1,2), c(3, 4)))
   return(final)
 }
 
-print(switch_v_flip("1"))
-print(switch_v_flip("X"))
+ggplotify::as.ggplot(switch_v_flip("1"))
+ggplotify::as.ggplot(switch_v_flip("X"))
 ```
 
 ```{r message=FALSE, warning=FALSE}
 for(c_name in c(as.character(1:22), "X")){
-  print(switch_v_flip(c_name))
+  ggplotify::as.ggplot(switch_v_flip(c_name))
 }
 ```
 
