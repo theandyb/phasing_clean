@@ -1,0 +1,222 @@
+---
+title: "all_autosomes"
+author: "Andy Beck"
+date: "2024-11-12"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Here in this document we will generate results for the rephrasing of probands from 602 trios along all 22 autosomes. We'll also compare rates of errors in the autosomes to what we observe in phasing 2000 X chromsome synthetic diploids.
+
+```{r}
+library(tidyverse)
+library(yaml)
+library(gtsummary)
+
+library(grid)
+library(gridExtra)
+
+config_obj <- yaml::read_yaml("_config.yaml")
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+df_subj <- read_csv("data/1kgp/subject_info.csv")
+ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt")
+
+child_ids <- ped_df %>% filter(fatherID != "0" & motherID != "0") %>% pull(sampleID)
+unrel_ids <- scan("data/1kgp/unrelated_subjects.txt", what = character())
+
+df_subj_rel <- df_subj %>%
+  filter(SAMPLE_NAME %in% child_ids)
+df_subj_rel$id2 <- 1:602
+
+df_subj_unrel <- df_subj %>%
+  filter(SAMPLE_NAME %in% unrel_ids)
+```
+
+## Data Reading
+
+```{r}
+# Load the heterozygous positions for a single individual
+load_het_pos <- function(id, het_loc){
+  f_name <- paste0(het_loc, "errors_", id, ".csv")
+  df <- read_csv(f_name, show_col_types = F)
+  df
+}
+
+# get error rates for individual subject
+single_summary <- function(id, het_loc){
+  df <- load_het_pos(id, het_loc)
+  
+  df %>%
+    summarize(n_het = n(),
+              n_het_cpg = sum(cpg),
+              switch_b = sum(beagle_switch),
+              switch_e = sum(eagle_switch),
+              switch_s = sum(shapeit_switch),
+              flip_b = sum(beagle_flip),
+              flip_e = sum(eagle_flip),
+              flip_s = sum(shapeit_flip),
+              cpg_switch_b = sum(beagle_switch * cpg),
+              cpg_switch_e = sum(eagle_switch * cpg),
+              cpg_switch_s = sum(shapeit_switch * cpg),
+              cpg_flip_b = sum(beagle_flip * cpg),
+              cpg_flip_e = sum(eagle_flip * cpg),
+              cpg_flip_s = sum(shapeit_flip * cpg)) %>%
+    mutate(r_switch_b = switch_b / n_het,
+           r_switch_e = switch_e / n_het,
+           r_switch_s = switch_s / n_het,
+           r_flip_b = flip_b / n_het,
+           r_flip_e = flip_e / n_het,
+           r_flip_s = flip_s / n_het,
+           r_cpg_switch_b = cpg_switch_b / n_het_cpg,
+           r_cpg_switch_e = cpg_switch_e / n_het_cpg,
+           r_cpg_switch_s = cpg_switch_s / n_het_cpg,
+           r_cpg_flip_b = cpg_flip_b / n_het_cpg,
+           r_cpg_flip_e = cpg_flip_e / n_het_cpg,
+           r_cpg_flip_s = cpg_flip_s / n_het_cpg
+           )
+}
+
+all_summary <- function(ids, het_loc){
+  results <- vector(mode = "list", length = length(ids))
+  for(i in 1:length(ids)){
+    results[[i]] <- single_summary(ids[i], het_loc)
+    results[[i]]$id <- ids[i]
+  }
+  return(bind_rows(results))
+}
+
+load_premade_summary <- function(res_dir){
+  f_name <- paste0(res_dir, "switch_errors/summary.csv")
+  read_csv(f_name, show_col_types = F)
+}
+```
+
+## Summary of all autosomes
+
+```{r}
+# df_1 <- all_summary(1:602, "output/trio_phase_1/het_loc/annotated/")
+# df_1 <- df_1 %>%
+#   left_join({df_subj_rel %>% select(SUPER, sex, id2) %>% rename(id=id2, pop = SUPER)})
+
+df_1 <- load_premade_summary("output/trio_phase_1/")
+df_2 <- load_premade_summary("output/trio_phase_2/")
+df_3 <- load_premade_summary("output/trio_phase_3/")
+df_4 <- load_premade_summary("output/trio_phase_4/")
+df_5 <- load_premade_summary("output/trio_phase_5/")
+df_6 <- load_premade_summary("output/trio_phase_6/")
+df_7 <- load_premade_summary("output/trio_phase_7/")
+df_8 <- load_premade_summary("output/trio_phase_8/")
+df_9 <- load_premade_summary("output/trio_phase_9/")
+df_10 <- load_premade_summary("output/trio_phase_10/")
+df_11 <- load_premade_summary("output/trio_phase_11/")
+df_12 <- load_premade_summary("output/trio_phase_12/")
+df_13 <- load_premade_summary("output/trio_phase_13/")
+df_14 <- load_premade_summary("output/trio_phase_14/")
+df_15 <- load_premade_summary("output/trio_phase_15/")
+df_16 <- load_premade_summary("output/trio_phase_16/")
+df_17 <- load_premade_summary("output/trio_phase_17/")
+df_18 <- load_premade_summary("output/trio_phase_18/")
+df_19 <- load_premade_summary("output/trio_phase_19/")
+df_20 <- load_premade_summary("output/trio_phase_20/")
+df_21 <- load_premade_summary("output/trio_phase_21/")
+df_22 <- load_premade_summary("output/trio_phase_22/")
+
+df_1$chrom <- "1"
+df_2$chrom <- "2"
+df_3$chrom <- "3"
+df_4$chrom <- "4"
+df_5$chrom <- "5"
+df_6$chrom <- "6"
+df_7$chrom <- "7"
+df_8$chrom <- "8"
+df_9$chrom <- "9"
+df_10$chrom <- "10"
+df_11$chrom <- "11"
+df_12$chrom <- "12"
+df_13$chrom <- "13"
+df_14$chrom <- "14"
+df_15$chrom <- "15"
+df_16$chrom <- "16"
+df_17$chrom <- "17"
+df_18$chrom <- "18"
+df_19$chrom <- "19"
+df_20$chrom <- "20"
+df_21$chrom <- '21'
+df_22$chrom <- "22"
+
+df_x <- load_premade_summary("output/switch_errors/") %>% rename(SUPER = pop)
+df_x$chrom <- "X"
+
+df_all <- bind_rows(df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9, df_10,
+                    df_11, df_12, df_13, df_14, df_15, df_16, df_17, df_18, df_19, df_20,
+                    df_21, df_22, df_x)
+
+```
+
+
+Is it true that in general we observe a higher flip rate than switch rate in chromosome 1?
+
+```{r}
+switch_v_flip <- function(c_name){
+  p1 <- df_all %>%
+    filter(chrom == c_name) %>%
+    mutate(r_switch_b = n_other_beagle / n_hets,
+           r_flip_b = n_flip_beagle / n_hets) %>%
+    ggplot(aes(x = r_switch_b, y = r_flip_b, color = SUPER)) +
+    geom_point() +
+    scale_colour_manual(values = cbPalette) +
+    theme_classic() +
+    geom_abline(slope = 1, intercept = 0) +
+    xlab("Switch Rate") +
+    ylab("Flip Rate") +
+    ggtitle("Beagle")
+  
+  p_legend <- cowplot::get_legend(p1)
+    
+  p1 <- p1 + guides(colour="none")
+  
+  p2 <- df_all %>%
+    filter(chrom == c_name) %>%
+    mutate(r_switch_e = n_other_eagle / n_hets,
+           r_flip_e = n_flip_eagle / n_hets) %>%
+    ggplot(aes(x = r_switch_e, y = r_flip_e, color = SUPER)) +
+    geom_point() +
+    scale_colour_manual(values = cbPalette) +
+    theme_classic() +
+    geom_abline(slope = 1, intercept = 0) + guides(colour="none") +
+    xlab("Switch Rate") +
+    ylab("Flip Rate") +
+    ggtitle("Eagle")
+  
+  p3 <- df_all %>%
+    filter(chrom == c_name) %>%
+    mutate(r_switch_s = n_other_shapeit / n_hets,
+           r_flip_s = n_flip_shapeit / n_hets) %>%
+    ggplot(aes(x = r_switch_s, y = r_flip_s, color = SUPER)) +
+    geom_point() +
+    scale_colour_manual(values = cbPalette) +
+    theme_classic() +
+    geom_abline(slope = 1, intercept = 0) + guides(colour="none") +
+    xlab("Switch Rate") +
+    ylab("Flip Rate") +
+    ggtitle("SHAPEIT")
+  
+  final <- grid.arrange(p1, p2, p3, p_legend, layout_matrix = rbind(c(1,2), c(3, 4)))
+  return(final)
+}
+
+print(switch_v_flip("1"))
+print(switch_v_flip("X"))
+```
+
+```{r message=FALSE, warning=FALSE}
+for(c_name in c(as.character(1:22), "X")){
+  print(switch_v_flip(c_name))
+}
+```
+
