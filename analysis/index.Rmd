@@ -23,3 +23,5 @@ Welcome to my research website.
 [Vote Results](vote.html)
 
 [Reference Panel Composition](alt_ref_panel.html)
+
+[More autosome/X comparisons](all_autosomes.html)

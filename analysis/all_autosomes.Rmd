@@ -23,6 +23,8 @@ config_obj <- yaml::read_yaml("_config.yaml")
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
+theme_set(theme_linedraw())
+
 df_subj <- read_csv("data/1kgp/subject_info.csv")
 ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt")
 
@@ -35,6 +37,8 @@ df_subj_rel$id2 <- 1:602
 
 df_subj_unrel <- df_subj %>%
   filter(SAMPLE_NAME %in% unrel_ids)
+
+df_chrom_size <- read_tsv("data/hg38.chrom.sizes", n_max = 24, col_names = c("chrom", "bases"))
 ```
 
 ## Data Reading
@@ -156,6 +160,15 @@ df_all <- bind_rows(df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9, df_10,
                     df_11, df_12, df_13, df_14, df_15, df_16, df_17, df_18, df_19, df_20,
                     df_21, df_22, df_x)
 
+df_all$chrom <- factor(df_all$chrom, levels = c(as.character(1:22), "X"))
+
+df_all <-df_all %>%  
+  mutate(Beagle_switch = n_other_beagle / n_hets,
+         Eagle_switch = n_other_eagle / n_hets,
+         SHAPEIT_switch = n_other_shapeit / n_hets,
+         Beagle_flip = n_flip_beagle / n_hets,
+         Eagle_flip = n_flip_eagle / n_hets,
+         SHAPEIT_flip = n_flip_shapeit / n_hets)
 ```
 
 
@@ -221,24 +234,134 @@ for(c_name in c(as.character(1:22), "X")){
 }
 ```
 
-So we see a largely consistent pattern in the comparison of flip rates to switch rates along the autosomes, with the except of chromosome 2, which looks more like chromosome X. What's going on here? First, let's grab numeric summaries of this phenomenon:
+So we see a largely consistent pattern in the comparison of flip rates to switch rates along the autosomes. What's going on here? First, let's grab numeric summaries of this phenomenon:
 
 ```{r}
-df_tmp <- df_all %>%
-  mutate(Beagle_switch = n_other_beagle / n_hets,
-         Eagle_switch = n_other_eagle / n_hets,
-         SHAPEIT_switch = n_other_shapeit / n_hets,
-         Beagle_flip = n_flip_beagle / n_hets,
-         Eagle_flip = n_flip_eagle / n_hets,
-         SHAPEIT_flip = n_flip_shapeit / n_hets) %>%
+df_all  %>%
   mutate(Beagle = Beagle_flip / Beagle_switch,
          Eagle = Eagle_flip / Eagle_switch,
          SHAPEIT = SHAPEIT_flip / SHAPEIT_switch) %>%
   group_by(chrom) %>%
   summarize(Beagle = mean(Beagle),
             Eagle = mean(Eagle),
-            SHAPEIT = mean(SHAPEIT)) %>% as.data.frame()
-rownames(df_tmp) <- df_tmp$chrom
-df_tmp[c(as.character(1:22), "X"),2:4] %>% knitr::kable()
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+We see that for all the autosomes, the average ratio of the flip rate over the switch rate is greater than one for all three methods (this is also the case in chromosome X for SHAPEIT). Let's get a look at this by population:
+
+```{r}
+df_all %>%
+  mutate(Beagle = Beagle_flip / Beagle_switch,
+         Eagle = Eagle_flip / Eagle_switch,
+         SHAPEIT = SHAPEIT_flip / SHAPEIT_switch) %>%
+  group_by(chrom, SUPER) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+
+df_all %>%
+  mutate(Beagle = Beagle_flip / Beagle_switch,
+         Eagle = Eagle_flip / Eagle_switch,
+         SHAPEIT = SHAPEIT_flip / SHAPEIT_switch) %>%
+  group_by(chrom, SUPER) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "flip_switch_ratio") %>%
+  ggplot(aes(x = chrom, y = flip_switch_ratio, color = method)) +
+  geom_point() +
+  facet_grid(rows = vars(SUPER)) +
+  ylab("Flip Rate / Switch Rate") +
+  xlab("Chromosome") +
+  scale_colour_manual(values = cbPalette) +
+  labs(color = "Method") +
+  theme_linedraw()
+```
+
+## Chromosome Comparisons
+
+### Mean number of heterozygous sites
+
+```{r}
+df_all %>%
+  group_by(chrom, SUPER) %>%
+  summarize(hets = mean(n_hets),
+            hets_cpg = mean(n_het_cpg)) %>%
+  ggplot(aes(x = chrom, y = hets, colour = SUPER)) +
+  geom_point() +
+  scale_colour_manual(values = cbPalette) +
+  xlab("Chromosome") +
+  ylab("Mean Size (# Het.)") +
+  labs(color = "Population")
+```
+
+### Recombination rates
+
+```{r}
+plot_rr_window <- function(chrom, bin_size = 1e6){
+  df_rr <- read_tsv(paste0("data/decode/chr", chrom, "_recomb.bed"),
+                    show_col_types = F,
+                    col_names = c("chrom", "begin", "end", "rr"))
+  df_rr <- df_rr %>%
+    mutate(bin = ceiling(begin / bin_size)) %>%
+    group_by(bin) %>%
+    summarize(rr= mean(rr))
+  
+  p <- df_rr %>%
+    ggplot(aes(x = bin, y = rr)) +
+    geom_point() +
+    xlab("Bin") +
+    ylab("Recombination Rate")
+  
+  return(p)
+}
+```
+
+```{r}
+for(i in c(1:22, "X")){
+  print(plot_rr_window(i) + ggtitle(paste0("Chromosome ", i)))
+}
+```
+
+
+## Switch Error Rates
+
+Considering only switch errors, what do the rates we observe in the autosomes look like compared to what we observe in X?
+
+```{r}
+df_all %>%
+  group_by(SUPER, chrom) %>%
+  summarize(Beagle = mean(Beagle_switch),
+            Eagle = mean(Eagle_switch),
+            SHAPEIT = mean(SHAPEIT_switch)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "switch") %>%
+  ggplot(aes(x = chrom, y = switch, color = Method)) +
+  geom_point() +
+  theme_linedraw() +
+  scale_colour_manual(values = cbPalette) +
+  ylab("Mean Switch Rate") +
+  facet_grid(rows = vars(SUPER)) +
+  xlab("Chromosome")
+```
+
+## Flip Error Rates
+
+What do the flip error rates look like in the autosomes (compared to X)?
+
+```{r}
+df_all %>%
+  group_by(SUPER, chrom) %>%
+  summarize(Beagle = mean(Beagle_flip),
+            Eagle = mean(Eagle_flip),
+            SHAPEIT = mean(SHAPEIT_flip)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "flip") %>%
+  ggplot(aes(x = chrom, y = flip, color = Method)) +
+  geom_point() +
+  scale_colour_manual(values = cbPalette) +
+  ylab("Mean Flip Rate") +
+  facet_grid(rows = vars(SUPER)) +
+  xlab("Chromosome")
 ```
 
