@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-12
+<strong>Last updated:</strong> 2024-11-14
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreeeb2d0613d30707eb9f574301b4ef8ca049c1f0c3targetblankeb2d061a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree311032c788e8e302087b98ff0e67494eaa726d81targetblank311032ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/eb2d0613d30707eb9f574301b4ef8ca049c1f0c3" target="_blank">eb2d061</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/311032c788e8e302087b98ff0e67494eaa726d81" target="_blank">311032c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreeeb2d0613d30707eb9f574301b4ef8ca049c1f0c3targetblankeb2d061a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree311032c788e8e302087b98ff0e67494eaa726d81targetblank311032ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/eb2d0613d30707eb9f574301b4ef8ca049c1f0c3" target="_blank">eb2d061</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/311032c788e8e302087b98ff0e67494eaa726d81" target="_blank">311032c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -916,6 +916,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/311032c788e8e302087b98ff0e67494eaa726d81/analysis/all_autosomes.Rmd" target="_blank">311032c</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+<td>
+wflow_publish("analysis/all_autosomes.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/751e6f606ebd2d1158e90c0687661dd016f97220/docs/all_autosomes.html" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/eb2d0613d30707eb9f574301b4ef8ca049c1f0c3/analysis/all_autosomes.Rmd" target="_blank">eb2d061</a>
 </td>
 <td>
@@ -1094,7 +1128,7 @@ unrel_ids &lt;- scan(&quot;data/1kgp/unrelated_subjects.txt&quot;, what = charac
 
 df_subj_rel &lt;- df_subj %&gt;%
   filter(SAMPLE_NAME %in% child_ids)
-df_subj_rel$id2 &lt;- 1:602
+df_subj_rel$id &lt;- 1:602
 
 df_subj_unrel &lt;- df_subj %&gt;%
   filter(SAMPLE_NAME %in% unrel_ids)
@@ -1108,6 +1142,17 @@ dbl (1): bases
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>pair_info_df &lt;- read_delim(&quot;data/sample_pairs.csv&quot;, col_names = c(&quot;POP&quot;, &quot;ID1&quot;, &quot;ID2&quot;))</code></pre>
+<pre><code>Rows: 1000 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (3): POP, ID1, ID2
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>pair_info_df &lt;- left_join(pair_info_df, {df_subj %&gt;% select(SAMPLE_NAME, POPULATION, SUPER)}, by = c(&quot;ID1&quot;=&quot;SAMPLE_NAME&quot;)) %&gt;%
+  select(-POPULATION)
+pair_info_df$id &lt;- 1:1000</code></pre>
 </div>
 <div id="data-reading" class="section level2">
 <h2>Data Reading</h2>
@@ -3788,6 +3833,43 @@ population:</p>
 <pre><code>`summarise()` has grouped output by &#39;chrom&#39;. You can override using the
 `.groups` argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-7-1.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="chromosome-comparisons" class="section level2">
 <h2>Chromosome Comparisons</h2>
@@ -3806,6 +3888,43 @@ population:</p>
 <pre><code>`summarise()` has grouped output by &#39;chrom&#39;. You can override using the
 `.groups` argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-8-1.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="recombination-rates" class="section level3">
 <h3>Recombination rates</h3>
@@ -3826,10 +3945,976 @@ population:</p>
   
   return(p)
 }</code></pre>
+<div id="mb-scale" class="section level4">
+<h4>MB Scale</h4>
 <pre class="r"><code>for(i in c(1:22, &quot;X&quot;)){
   print(plot_rr_window(i) + ggtitle(paste0(&quot;Chromosome &quot;, i)))
 }</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-17.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-18.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-19.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-20.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-21.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-22.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-23.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-1.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-2">
+Past versions of unnamed-chunk-10-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-2.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-3">
+Past versions of unnamed-chunk-10-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-3.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-4">
+Past versions of unnamed-chunk-10-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-4.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-5">
+Past versions of unnamed-chunk-10-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-5.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-6">
+Past versions of unnamed-chunk-10-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-6.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-7">
+Past versions of unnamed-chunk-10-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-7.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-8">
+Past versions of unnamed-chunk-10-8.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-8.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-9">
+Past versions of unnamed-chunk-10-9.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-9.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-10">
+Past versions of unnamed-chunk-10-10.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-10.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-11">
+Past versions of unnamed-chunk-10-11.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-11.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-12">
+Past versions of unnamed-chunk-10-12.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-12.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-13">
+Past versions of unnamed-chunk-10-13.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-13.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-14.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-14">
+Past versions of unnamed-chunk-10-14.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-14.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-15.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-15">
+Past versions of unnamed-chunk-10-15.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-15.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-16.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-16">
+Past versions of unnamed-chunk-10-16.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-16.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-17.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-17">
+Past versions of unnamed-chunk-10-17.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-17.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-18.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-18">
+Past versions of unnamed-chunk-10-18.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-18.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-19.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-19">
+Past versions of unnamed-chunk-10-19.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-19.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-20.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-20">
+Past versions of unnamed-chunk-10-20.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-20" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-20.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-21.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-21">
+Past versions of unnamed-chunk-10-21.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-21" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-21.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-22.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-22">
+Past versions of unnamed-chunk-10-22.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-22" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-22.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-10-23.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-23">
+Past versions of unnamed-chunk-10-23.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-23" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-10-23.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="kb" class="section level4">
+<h4>100KB</h4>
+<pre class="r"><code>for(i in c(1:22, &quot;X&quot;)){
+  print(plot_rr_window(i, bin_size = 1e5) + ggtitle(paste0(&quot;Chromosome &quot;, i)))
+}</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-11-1.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-17.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-18.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-19.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-20.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-21.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-22.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-23.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="no-bins" class="section level4">
+<h4>No bins</h4>
+<pre class="r"><code>for(i in c(1:22, &quot;X&quot;)){
+  print(plot_rr_window(i, bin_size = 1) + ggtitle(paste0(&quot;Chromosome &quot;, i)))
+}</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/751e6f606ebd2d1158e90c0687661dd016f97220/docs/figure/all_autosomes.Rmd/unnamed-chunk-12-1.png" target="_blank">751e6f6</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-17.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-18.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-19.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-20.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-21.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-22.png" width="672" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-23.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 </div>
 </div>
 <div id="switch-error-rates" class="section level2">
@@ -3851,7 +4936,833 @@ autosomes look like compared to what we observe in X?</p>
   xlab(&quot;Chromosome&quot;)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
 `.groups` argument.</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_all %&gt;%
+  group_by(chrom, SUPER) %&gt;%
+  summarize(Beagle = mean(Beagle_switch),
+            Eagle = mean(Eagle_switch),
+            SHAPEIT = mean(SHAPEIT_switch)) %&gt;%
+  knitr::kable()</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;chrom&#39;. You can override using the
+`.groups` argument.</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">chrom</th>
+<th align="left">SUPER</th>
+<th align="right">Beagle</th>
+<th align="right">Eagle</th>
+<th align="right">SHAPEIT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">AFR</td>
+<td align="right">0.0012290</td>
+<td align="right">0.0017007</td>
+<td align="right">0.0011519</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">AMR</td>
+<td align="right">0.0015750</td>
+<td align="right">0.0021111</td>
+<td align="right">0.0015591</td>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">EAS</td>
+<td align="right">0.0027856</td>
+<td align="right">0.0036676</td>
+<td align="right">0.0028065</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">EUR</td>
+<td align="right">0.0015758</td>
+<td align="right">0.0020906</td>
+<td align="right">0.0015269</td>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">SAS</td>
+<td align="right">0.0022946</td>
+<td align="right">0.0029804</td>
+<td align="right">0.0022447</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">AFR</td>
+<td align="right">0.0011231</td>
+<td align="right">0.0016238</td>
+<td align="right">0.0010564</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">AMR</td>
+<td align="right">0.0015160</td>
+<td align="right">0.0020531</td>
+<td align="right">0.0015069</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">EAS</td>
+<td align="right">0.0025900</td>
+<td align="right">0.0034508</td>
+<td align="right">0.0025950</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">EUR</td>
+<td align="right">0.0014084</td>
+<td align="right">0.0019275</td>
+<td align="right">0.0013746</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">SAS</td>
+<td align="right">0.0021399</td>
+<td align="right">0.0028715</td>
+<td align="right">0.0021215</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">AFR</td>
+<td align="right">0.0010279</td>
+<td align="right">0.0014914</td>
+<td align="right">0.0009724</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">AMR</td>
+<td align="right">0.0013726</td>
+<td align="right">0.0018821</td>
+<td align="right">0.0013713</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">EAS</td>
+<td align="right">0.0024075</td>
+<td align="right">0.0032403</td>
+<td align="right">0.0024359</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">EUR</td>
+<td align="right">0.0013643</td>
+<td align="right">0.0018298</td>
+<td align="right">0.0013222</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">SAS</td>
+<td align="right">0.0019918</td>
+<td align="right">0.0026378</td>
+<td align="right">0.0019915</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">AFR</td>
+<td align="right">0.0009105</td>
+<td align="right">0.0013319</td>
+<td align="right">0.0008382</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">AMR</td>
+<td align="right">0.0012937</td>
+<td align="right">0.0017689</td>
+<td align="right">0.0012797</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">EAS</td>
+<td align="right">0.0020814</td>
+<td align="right">0.0028497</td>
+<td align="right">0.0020882</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">EUR</td>
+<td align="right">0.0011948</td>
+<td align="right">0.0016632</td>
+<td align="right">0.0011402</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">SAS</td>
+<td align="right">0.0018169</td>
+<td align="right">0.0024353</td>
+<td align="right">0.0017864</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">AFR</td>
+<td align="right">0.0010232</td>
+<td align="right">0.0014780</td>
+<td align="right">0.0009641</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="left">AMR</td>
+<td align="right">0.0013522</td>
+<td align="right">0.0018261</td>
+<td align="right">0.0013487</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">EAS</td>
+<td align="right">0.0023965</td>
+<td align="right">0.0031799</td>
+<td align="right">0.0023905</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="left">EUR</td>
+<td align="right">0.0013116</td>
+<td align="right">0.0017788</td>
+<td align="right">0.0012747</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">SAS</td>
+<td align="right">0.0020231</td>
+<td align="right">0.0026263</td>
+<td align="right">0.0019993</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">AFR</td>
+<td align="right">0.0009051</td>
+<td align="right">0.0013489</td>
+<td align="right">0.0008467</td>
+</tr>
+<tr class="odd">
+<td align="left">6</td>
+<td align="left">AMR</td>
+<td align="right">0.0012215</td>
+<td align="right">0.0016422</td>
+<td align="right">0.0011988</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">EAS</td>
+<td align="right">0.0020411</td>
+<td align="right">0.0027630</td>
+<td align="right">0.0020638</td>
+</tr>
+<tr class="odd">
+<td align="left">6</td>
+<td align="left">EUR</td>
+<td align="right">0.0011162</td>
+<td align="right">0.0015099</td>
+<td align="right">0.0010804</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">SAS</td>
+<td align="right">0.0017706</td>
+<td align="right">0.0023640</td>
+<td align="right">0.0017531</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">AFR</td>
+<td align="right">0.0013827</td>
+<td align="right">0.0018770</td>
+<td align="right">0.0012726</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">AMR</td>
+<td align="right">0.0015955</td>
+<td align="right">0.0020947</td>
+<td align="right">0.0015916</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">EAS</td>
+<td align="right">0.0026492</td>
+<td align="right">0.0034465</td>
+<td align="right">0.0026748</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">EUR</td>
+<td align="right">0.0015944</td>
+<td align="right">0.0020632</td>
+<td align="right">0.0015224</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">SAS</td>
+<td align="right">0.0022754</td>
+<td align="right">0.0029179</td>
+<td align="right">0.0022362</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">AFR</td>
+<td align="right">0.0004706</td>
+<td align="right">0.0008347</td>
+<td align="right">0.0004077</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">AMR</td>
+<td align="right">0.0006278</td>
+<td align="right">0.0011011</td>
+<td align="right">0.0005919</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">EAS</td>
+<td align="right">0.0003361</td>
+<td align="right">0.0009789</td>
+<td align="right">0.0002856</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">EUR</td>
+<td align="right">0.0003443</td>
+<td align="right">0.0008143</td>
+<td align="right">0.0002980</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">SAS</td>
+<td align="right">0.0004962</td>
+<td align="right">0.0010222</td>
+<td align="right">0.0004613</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">AFR</td>
+<td align="right">0.0019902</td>
+<td align="right">0.0024836</td>
+<td align="right">0.0018582</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">AMR</td>
+<td align="right">0.0022800</td>
+<td align="right">0.0027676</td>
+<td align="right">0.0022005</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">EAS</td>
+<td align="right">0.0037156</td>
+<td align="right">0.0045684</td>
+<td align="right">0.0036400</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">EUR</td>
+<td align="right">0.0023905</td>
+<td align="right">0.0028565</td>
+<td align="right">0.0022752</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">SAS</td>
+<td align="right">0.0031418</td>
+<td align="right">0.0037776</td>
+<td align="right">0.0030640</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">AFR</td>
+<td align="right">0.0012180</td>
+<td align="right">0.0017038</td>
+<td align="right">0.0011374</td>
+</tr>
+<tr class="odd">
+<td align="left">10</td>
+<td align="left">AMR</td>
+<td align="right">0.0015426</td>
+<td align="right">0.0020904</td>
+<td align="right">0.0015136</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">EAS</td>
+<td align="right">0.0026331</td>
+<td align="right">0.0034228</td>
+<td align="right">0.0026112</td>
+</tr>
+<tr class="odd">
+<td align="left">10</td>
+<td align="left">EUR</td>
+<td align="right">0.0015371</td>
+<td align="right">0.0020395</td>
+<td align="right">0.0014694</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">SAS</td>
+<td align="right">0.0022742</td>
+<td align="right">0.0029520</td>
+<td align="right">0.0022252</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">AFR</td>
+<td align="right">0.0010330</td>
+<td align="right">0.0014924</td>
+<td align="right">0.0009784</td>
+</tr>
+<tr class="even">
+<td align="left">11</td>
+<td align="left">AMR</td>
+<td align="right">0.0014267</td>
+<td align="right">0.0019475</td>
+<td align="right">0.0014198</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">EAS</td>
+<td align="right">0.0024766</td>
+<td align="right">0.0032731</td>
+<td align="right">0.0024552</td>
+</tr>
+<tr class="even">
+<td align="left">11</td>
+<td align="left">EUR</td>
+<td align="right">0.0013617</td>
+<td align="right">0.0018623</td>
+<td align="right">0.0013159</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">SAS</td>
+<td align="right">0.0021050</td>
+<td align="right">0.0028063</td>
+<td align="right">0.0020515</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">AFR</td>
+<td align="right">0.0011218</td>
+<td align="right">0.0015594</td>
+<td align="right">0.0010584</td>
+</tr>
+<tr class="odd">
+<td align="left">12</td>
+<td align="left">AMR</td>
+<td align="right">0.0014898</td>
+<td align="right">0.0019949</td>
+<td align="right">0.0014844</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">EAS</td>
+<td align="right">0.0026543</td>
+<td align="right">0.0034576</td>
+<td align="right">0.0026506</td>
+</tr>
+<tr class="odd">
+<td align="left">12</td>
+<td align="left">EUR</td>
+<td align="right">0.0014964</td>
+<td align="right">0.0019754</td>
+<td align="right">0.0014420</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">SAS</td>
+<td align="right">0.0024097</td>
+<td align="right">0.0030268</td>
+<td align="right">0.0024374</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left">AFR</td>
+<td align="right">0.0011362</td>
+<td align="right">0.0015464</td>
+<td align="right">0.0010736</td>
+</tr>
+<tr class="even">
+<td align="left">13</td>
+<td align="left">AMR</td>
+<td align="right">0.0014409</td>
+<td align="right">0.0019557</td>
+<td align="right">0.0014315</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left">EAS</td>
+<td align="right">0.0026716</td>
+<td align="right">0.0034504</td>
+<td align="right">0.0026150</td>
+</tr>
+<tr class="even">
+<td align="left">13</td>
+<td align="left">EUR</td>
+<td align="right">0.0014426</td>
+<td align="right">0.0019427</td>
+<td align="right">0.0013841</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left">SAS</td>
+<td align="right">0.0022089</td>
+<td align="right">0.0028640</td>
+<td align="right">0.0021644</td>
+</tr>
+<tr class="even">
+<td align="left">14</td>
+<td align="left">AFR</td>
+<td align="right">0.0014672</td>
+<td align="right">0.0019233</td>
+<td align="right">0.0013900</td>
+</tr>
+<tr class="odd">
+<td align="left">14</td>
+<td align="left">AMR</td>
+<td align="right">0.0018496</td>
+<td align="right">0.0024310</td>
+<td align="right">0.0018644</td>
+</tr>
+<tr class="even">
+<td align="left">14</td>
+<td align="left">EAS</td>
+<td align="right">0.0029783</td>
+<td align="right">0.0038021</td>
+<td align="right">0.0029682</td>
+</tr>
+<tr class="odd">
+<td align="left">14</td>
+<td align="left">EUR</td>
+<td align="right">0.0017919</td>
+<td align="right">0.0023271</td>
+<td align="right">0.0017540</td>
+</tr>
+<tr class="even">
+<td align="left">14</td>
+<td align="left">SAS</td>
+<td align="right">0.0025819</td>
+<td align="right">0.0032994</td>
+<td align="right">0.0025844</td>
+</tr>
+<tr class="odd">
+<td align="left">15</td>
+<td align="left">AFR</td>
+<td align="right">0.0020990</td>
+<td align="right">0.0026221</td>
+<td align="right">0.0019901</td>
+</tr>
+<tr class="even">
+<td align="left">15</td>
+<td align="left">AMR</td>
+<td align="right">0.0023207</td>
+<td align="right">0.0029179</td>
+<td align="right">0.0023020</td>
+</tr>
+<tr class="odd">
+<td align="left">15</td>
+<td align="left">EAS</td>
+<td align="right">0.0039176</td>
+<td align="right">0.0048357</td>
+<td align="right">0.0038838</td>
+</tr>
+<tr class="even">
+<td align="left">15</td>
+<td align="left">EUR</td>
+<td align="right">0.0024982</td>
+<td align="right">0.0030235</td>
+<td align="right">0.0024090</td>
+</tr>
+<tr class="odd">
+<td align="left">15</td>
+<td align="left">SAS</td>
+<td align="right">0.0033861</td>
+<td align="right">0.0041352</td>
+<td align="right">0.0033395</td>
+</tr>
+<tr class="even">
+<td align="left">16</td>
+<td align="left">AFR</td>
+<td align="right">0.0017660</td>
+<td align="right">0.0023672</td>
+<td align="right">0.0016572</td>
+</tr>
+<tr class="odd">
+<td align="left">16</td>
+<td align="left">AMR</td>
+<td align="right">0.0022411</td>
+<td align="right">0.0029095</td>
+<td align="right">0.0022428</td>
+</tr>
+<tr class="even">
+<td align="left">16</td>
+<td align="left">EAS</td>
+<td align="right">0.0037282</td>
+<td align="right">0.0047164</td>
+<td align="right">0.0036831</td>
+</tr>
+<tr class="odd">
+<td align="left">16</td>
+<td align="left">EUR</td>
+<td align="right">0.0022704</td>
+<td align="right">0.0029160</td>
+<td align="right">0.0022008</td>
+</tr>
+<tr class="even">
+<td align="left">16</td>
+<td align="left">SAS</td>
+<td align="right">0.0031555</td>
+<td align="right">0.0039683</td>
+<td align="right">0.0031098</td>
+</tr>
+<tr class="odd">
+<td align="left">17</td>
+<td align="left">AFR</td>
+<td align="right">0.0020105</td>
+<td align="right">0.0025968</td>
+<td align="right">0.0018808</td>
+</tr>
+<tr class="even">
+<td align="left">17</td>
+<td align="left">AMR</td>
+<td align="right">0.0023644</td>
+<td align="right">0.0029962</td>
+<td align="right">0.0022602</td>
+</tr>
+<tr class="odd">
+<td align="left">17</td>
+<td align="left">EAS</td>
+<td align="right">0.0040666</td>
+<td align="right">0.0050196</td>
+<td align="right">0.0040636</td>
+</tr>
+<tr class="even">
+<td align="left">17</td>
+<td align="left">EUR</td>
+<td align="right">0.0023671</td>
+<td align="right">0.0029935</td>
+<td align="right">0.0022730</td>
+</tr>
+<tr class="odd">
+<td align="left">17</td>
+<td align="left">SAS</td>
+<td align="right">0.0034000</td>
+<td align="right">0.0042394</td>
+<td align="right">0.0032807</td>
+</tr>
+<tr class="even">
+<td align="left">18</td>
+<td align="left">AFR</td>
+<td align="right">0.0012708</td>
+<td align="right">0.0017284</td>
+<td align="right">0.0011972</td>
+</tr>
+<tr class="odd">
+<td align="left">18</td>
+<td align="left">AMR</td>
+<td align="right">0.0016899</td>
+<td align="right">0.0022098</td>
+<td align="right">0.0016844</td>
+</tr>
+<tr class="even">
+<td align="left">18</td>
+<td align="left">EAS</td>
+<td align="right">0.0030074</td>
+<td align="right">0.0038754</td>
+<td align="right">0.0030264</td>
+</tr>
+<tr class="odd">
+<td align="left">18</td>
+<td align="left">EUR</td>
+<td align="right">0.0017005</td>
+<td align="right">0.0022418</td>
+<td align="right">0.0016662</td>
+</tr>
+<tr class="even">
+<td align="left">18</td>
+<td align="left">SAS</td>
+<td align="right">0.0024687</td>
+<td align="right">0.0031842</td>
+<td align="right">0.0024487</td>
+</tr>
+<tr class="odd">
+<td align="left">19</td>
+<td align="left">AFR</td>
+<td align="right">0.0019230</td>
+<td align="right">0.0025433</td>
+<td align="right">0.0017956</td>
+</tr>
+<tr class="even">
+<td align="left">19</td>
+<td align="left">AMR</td>
+<td align="right">0.0022494</td>
+<td align="right">0.0028922</td>
+<td align="right">0.0021825</td>
+</tr>
+<tr class="odd">
+<td align="left">19</td>
+<td align="left">EAS</td>
+<td align="right">0.0039414</td>
+<td align="right">0.0047723</td>
+<td align="right">0.0038893</td>
+</tr>
+<tr class="even">
+<td align="left">19</td>
+<td align="left">EUR</td>
+<td align="right">0.0021960</td>
+<td align="right">0.0028080</td>
+<td align="right">0.0021444</td>
+</tr>
+<tr class="odd">
+<td align="left">19</td>
+<td align="left">SAS</td>
+<td align="right">0.0032339</td>
+<td align="right">0.0039572</td>
+<td align="right">0.0031093</td>
+</tr>
+<tr class="even">
+<td align="left">20</td>
+<td align="left">AFR</td>
+<td align="right">0.0018446</td>
+<td align="right">0.0023952</td>
+<td align="right">0.0016733</td>
+</tr>
+<tr class="odd">
+<td align="left">20</td>
+<td align="left">AMR</td>
+<td align="right">0.0024426</td>
+<td align="right">0.0030798</td>
+<td align="right">0.0024254</td>
+</tr>
+<tr class="even">
+<td align="left">20</td>
+<td align="left">EAS</td>
+<td align="right">0.0042785</td>
+<td align="right">0.0051236</td>
+<td align="right">0.0041888</td>
+</tr>
+<tr class="odd">
+<td align="left">20</td>
+<td align="left">EUR</td>
+<td align="right">0.0023483</td>
+<td align="right">0.0028844</td>
+<td align="right">0.0022320</td>
+</tr>
+<tr class="even">
+<td align="left">20</td>
+<td align="left">SAS</td>
+<td align="right">0.0034175</td>
+<td align="right">0.0040675</td>
+<td align="right">0.0033066</td>
+</tr>
+<tr class="odd">
+<td align="left">21</td>
+<td align="left">AFR</td>
+<td align="right">0.0028782</td>
+<td align="right">0.0034408</td>
+<td align="right">0.0027688</td>
+</tr>
+<tr class="even">
+<td align="left">21</td>
+<td align="left">AMR</td>
+<td align="right">0.0029082</td>
+<td align="right">0.0034811</td>
+<td align="right">0.0029285</td>
+</tr>
+<tr class="odd">
+<td align="left">21</td>
+<td align="left">EAS</td>
+<td align="right">0.0041380</td>
+<td align="right">0.0048917</td>
+<td align="right">0.0040565</td>
+</tr>
+<tr class="even">
+<td align="left">21</td>
+<td align="left">EUR</td>
+<td align="right">0.0029422</td>
+<td align="right">0.0034283</td>
+<td align="right">0.0028569</td>
+</tr>
+<tr class="odd">
+<td align="left">21</td>
+<td align="left">SAS</td>
+<td align="right">0.0037790</td>
+<td align="right">0.0044525</td>
+<td align="right">0.0036977</td>
+</tr>
+<tr class="even">
+<td align="left">22</td>
+<td align="left">AFR</td>
+<td align="right">0.0031591</td>
+<td align="right">0.0037957</td>
+<td align="right">0.0029395</td>
+</tr>
+<tr class="odd">
+<td align="left">22</td>
+<td align="left">AMR</td>
+<td align="right">0.0034680</td>
+<td align="right">0.0041346</td>
+<td align="right">0.0033479</td>
+</tr>
+<tr class="even">
+<td align="left">22</td>
+<td align="left">EAS</td>
+<td align="right">0.0051743</td>
+<td align="right">0.0061074</td>
+<td align="right">0.0050655</td>
+</tr>
+<tr class="odd">
+<td align="left">22</td>
+<td align="left">EUR</td>
+<td align="right">0.0035231</td>
+<td align="right">0.0040631</td>
+<td align="right">0.0033597</td>
+</tr>
+<tr class="even">
+<td align="left">22</td>
+<td align="left">SAS</td>
+<td align="right">0.0044818</td>
+<td align="right">0.0052986</td>
+<td align="right">0.0043844</td>
+</tr>
+<tr class="odd">
+<td align="left">X</td>
+<td align="left">AFR</td>
+<td align="right">0.0008880</td>
+<td align="right">0.0013558</td>
+<td align="right">0.0007707</td>
+</tr>
+<tr class="even">
+<td align="left">X</td>
+<td align="left">AMR</td>
+<td align="right">0.0012206</td>
+<td align="right">0.0016760</td>
+<td align="right">0.0011439</td>
+</tr>
+<tr class="odd">
+<td align="left">X</td>
+<td align="left">EAS</td>
+<td align="right">0.0028352</td>
+<td align="right">0.0036614</td>
+<td align="right">0.0026536</td>
+</tr>
+<tr class="even">
+<td align="left">X</td>
+<td align="left">EUR</td>
+<td align="right">0.0015108</td>
+<td align="right">0.0020636</td>
+<td align="right">0.0013951</td>
+</tr>
+<tr class="odd">
+<td align="left">X</td>
+<td align="left">SAS</td>
+<td align="right">0.0020451</td>
+<td align="right">0.0026914</td>
+<td align="right">0.0018639</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="flip-error-rates" class="section level2">
 <h2>Flip Error Rates</h2>
@@ -3871,7 +5782,1110 @@ X)?</p>
   xlab(&quot;Chromosome&quot;)</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
 `.groups` argument.</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_all %&gt;%
+  group_by(chrom, SUPER) %&gt;%
+  summarize(Beagle = mean(Beagle_flip),
+            Eagle = mean(Eagle_flip),
+            SHAPEIT = mean(SHAPEIT_flip)) %&gt;%
+  knitr::kable()</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;chrom&#39;. You can override using the
+`.groups` argument.</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">chrom</th>
+<th align="left">SUPER</th>
+<th align="right">Beagle</th>
+<th align="right">Eagle</th>
+<th align="right">SHAPEIT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">AFR</td>
+<td align="right">0.0043179</td>
+<td align="right">0.0035008</td>
+<td align="right">0.0047081</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">AMR</td>
+<td align="right">0.0048625</td>
+<td align="right">0.0044186</td>
+<td align="right">0.0053354</td>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">EAS</td>
+<td align="right">0.0064943</td>
+<td align="right">0.0060201</td>
+<td align="right">0.0069687</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">EUR</td>
+<td align="right">0.0046920</td>
+<td align="right">0.0043042</td>
+<td align="right">0.0050331</td>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">SAS</td>
+<td align="right">0.0061934</td>
+<td align="right">0.0055494</td>
+<td align="right">0.0067790</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">AFR</td>
+<td align="right">0.0043676</td>
+<td align="right">0.0035233</td>
+<td align="right">0.0047718</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">AMR</td>
+<td align="right">0.0050854</td>
+<td align="right">0.0045974</td>
+<td align="right">0.0055469</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">EAS</td>
+<td align="right">0.0066575</td>
+<td align="right">0.0061490</td>
+<td align="right">0.0072058</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">EUR</td>
+<td align="right">0.0046615</td>
+<td align="right">0.0042443</td>
+<td align="right">0.0049814</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">SAS</td>
+<td align="right">0.0063431</td>
+<td align="right">0.0055830</td>
+<td align="right">0.0068800</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">AFR</td>
+<td align="right">0.0040912</td>
+<td align="right">0.0032587</td>
+<td align="right">0.0044672</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">AMR</td>
+<td align="right">0.0046901</td>
+<td align="right">0.0042524</td>
+<td align="right">0.0051574</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">EAS</td>
+<td align="right">0.0063061</td>
+<td align="right">0.0057800</td>
+<td align="right">0.0067423</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">EUR</td>
+<td align="right">0.0044888</td>
+<td align="right">0.0041152</td>
+<td align="right">0.0047752</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">SAS</td>
+<td align="right">0.0059032</td>
+<td align="right">0.0052892</td>
+<td align="right">0.0064124</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">AFR</td>
+<td align="right">0.0037958</td>
+<td align="right">0.0030552</td>
+<td align="right">0.0041551</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">AMR</td>
+<td align="right">0.0045207</td>
+<td align="right">0.0041013</td>
+<td align="right">0.0049672</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">EAS</td>
+<td align="right">0.0057640</td>
+<td align="right">0.0053629</td>
+<td align="right">0.0062107</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">EUR</td>
+<td align="right">0.0041422</td>
+<td align="right">0.0038101</td>
+<td align="right">0.0044492</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">SAS</td>
+<td align="right">0.0055893</td>
+<td align="right">0.0050213</td>
+<td align="right">0.0060619</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">AFR</td>
+<td align="right">0.0041396</td>
+<td align="right">0.0033188</td>
+<td align="right">0.0045363</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="left">AMR</td>
+<td align="right">0.0046725</td>
+<td align="right">0.0042470</td>
+<td align="right">0.0051267</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">EAS</td>
+<td align="right">0.0062725</td>
+<td align="right">0.0057501</td>
+<td align="right">0.0067523</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="left">EUR</td>
+<td align="right">0.0044482</td>
+<td align="right">0.0040573</td>
+<td align="right">0.0047277</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">SAS</td>
+<td align="right">0.0059219</td>
+<td align="right">0.0053242</td>
+<td align="right">0.0064535</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">AFR</td>
+<td align="right">0.0037640</td>
+<td align="right">0.0030594</td>
+<td align="right">0.0041403</td>
+</tr>
+<tr class="odd">
+<td align="left">6</td>
+<td align="left">AMR</td>
+<td align="right">0.0042619</td>
+<td align="right">0.0039315</td>
+<td align="right">0.0046521</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">EAS</td>
+<td align="right">0.0055841</td>
+<td align="right">0.0051829</td>
+<td align="right">0.0060117</td>
+</tr>
+<tr class="odd">
+<td align="left">6</td>
+<td align="left">EUR</td>
+<td align="right">0.0039032</td>
+<td align="right">0.0035868</td>
+<td align="right">0.0041798</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">SAS</td>
+<td align="right">0.0053787</td>
+<td align="right">0.0048180</td>
+<td align="right">0.0058401</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">AFR</td>
+<td align="right">0.0042624</td>
+<td align="right">0.0034889</td>
+<td align="right">0.0046533</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">AMR</td>
+<td align="right">0.0047328</td>
+<td align="right">0.0043395</td>
+<td align="right">0.0052203</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">EAS</td>
+<td align="right">0.0063404</td>
+<td align="right">0.0058289</td>
+<td align="right">0.0067668</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">EUR</td>
+<td align="right">0.0044463</td>
+<td align="right">0.0041223</td>
+<td align="right">0.0047738</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">SAS</td>
+<td align="right">0.0059785</td>
+<td align="right">0.0054015</td>
+<td align="right">0.0065337</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">AFR</td>
+<td align="right">0.0012849</td>
+<td align="right">0.0012409</td>
+<td align="right">0.0014225</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">AMR</td>
+<td align="right">0.0016983</td>
+<td align="right">0.0018882</td>
+<td align="right">0.0018377</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">EAS</td>
+<td align="right">0.0004128</td>
+<td align="right">0.0009804</td>
+<td align="right">0.0004180</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">EUR</td>
+<td align="right">0.0007335</td>
+<td align="right">0.0010069</td>
+<td align="right">0.0008824</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">SAS</td>
+<td align="right">0.0013981</td>
+<td align="right">0.0014565</td>
+<td align="right">0.0017697</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">AFR</td>
+<td align="right">0.0048494</td>
+<td align="right">0.0040106</td>
+<td align="right">0.0052648</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">AMR</td>
+<td align="right">0.0052385</td>
+<td align="right">0.0047921</td>
+<td align="right">0.0057213</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">EAS</td>
+<td align="right">0.0070222</td>
+<td align="right">0.0065176</td>
+<td align="right">0.0075149</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">EUR</td>
+<td align="right">0.0050230</td>
+<td align="right">0.0046626</td>
+<td align="right">0.0053851</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">SAS</td>
+<td align="right">0.0066163</td>
+<td align="right">0.0059190</td>
+<td align="right">0.0071506</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">AFR</td>
+<td align="right">0.0041523</td>
+<td align="right">0.0034008</td>
+<td align="right">0.0045614</td>
+</tr>
+<tr class="odd">
+<td align="left">10</td>
+<td align="left">AMR</td>
+<td align="right">0.0046416</td>
+<td align="right">0.0042381</td>
+<td align="right">0.0050771</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">EAS</td>
+<td align="right">0.0060468</td>
+<td align="right">0.0056353</td>
+<td align="right">0.0065186</td>
+</tr>
+<tr class="odd">
+<td align="left">10</td>
+<td align="left">EUR</td>
+<td align="right">0.0043445</td>
+<td align="right">0.0039654</td>
+<td align="right">0.0046618</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">SAS</td>
+<td align="right">0.0058348</td>
+<td align="right">0.0052928</td>
+<td align="right">0.0064027</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">AFR</td>
+<td align="right">0.0040708</td>
+<td align="right">0.0032719</td>
+<td align="right">0.0044637</td>
+</tr>
+<tr class="even">
+<td align="left">11</td>
+<td align="left">AMR</td>
+<td align="right">0.0047237</td>
+<td align="right">0.0043092</td>
+<td align="right">0.0051613</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">EAS</td>
+<td align="right">0.0062282</td>
+<td align="right">0.0056832</td>
+<td align="right">0.0066741</td>
+</tr>
+<tr class="even">
+<td align="left">11</td>
+<td align="left">EUR</td>
+<td align="right">0.0043657</td>
+<td align="right">0.0040023</td>
+<td align="right">0.0046316</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">SAS</td>
+<td align="right">0.0060407</td>
+<td align="right">0.0054140</td>
+<td align="right">0.0065591</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">AFR</td>
+<td align="right">0.0041118</td>
+<td align="right">0.0032841</td>
+<td align="right">0.0044701</td>
+</tr>
+<tr class="odd">
+<td align="left">12</td>
+<td align="left">AMR</td>
+<td align="right">0.0046749</td>
+<td align="right">0.0042773</td>
+<td align="right">0.0051317</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">EAS</td>
+<td align="right">0.0061964</td>
+<td align="right">0.0057257</td>
+<td align="right">0.0066475</td>
+</tr>
+<tr class="odd">
+<td align="left">12</td>
+<td align="left">EUR</td>
+<td align="right">0.0043838</td>
+<td align="right">0.0040111</td>
+<td align="right">0.0047075</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">SAS</td>
+<td align="right">0.0060908</td>
+<td align="right">0.0054304</td>
+<td align="right">0.0066957</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left">AFR</td>
+<td align="right">0.0039976</td>
+<td align="right">0.0032124</td>
+<td align="right">0.0043933</td>
+</tr>
+<tr class="even">
+<td align="left">13</td>
+<td align="left">AMR</td>
+<td align="right">0.0044057</td>
+<td align="right">0.0039931</td>
+<td align="right">0.0048531</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left">EAS</td>
+<td align="right">0.0059449</td>
+<td align="right">0.0055347</td>
+<td align="right">0.0063495</td>
+</tr>
+<tr class="even">
+<td align="left">13</td>
+<td align="left">EUR</td>
+<td align="right">0.0042387</td>
+<td align="right">0.0038622</td>
+<td align="right">0.0045233</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left">SAS</td>
+<td align="right">0.0057395</td>
+<td align="right">0.0051761</td>
+<td align="right">0.0062667</td>
+</tr>
+<tr class="even">
+<td align="left">14</td>
+<td align="left">AFR</td>
+<td align="right">0.0043820</td>
+<td align="right">0.0036047</td>
+<td align="right">0.0047919</td>
+</tr>
+<tr class="odd">
+<td align="left">14</td>
+<td align="left">AMR</td>
+<td align="right">0.0050740</td>
+<td align="right">0.0046526</td>
+<td align="right">0.0055276</td>
+</tr>
+<tr class="even">
+<td align="left">14</td>
+<td align="left">EAS</td>
+<td align="right">0.0062555</td>
+<td align="right">0.0059106</td>
+<td align="right">0.0067903</td>
+</tr>
+<tr class="odd">
+<td align="left">14</td>
+<td align="left">EUR</td>
+<td align="right">0.0045800</td>
+<td align="right">0.0042533</td>
+<td align="right">0.0049230</td>
+</tr>
+<tr class="even">
+<td align="left">14</td>
+<td align="left">SAS</td>
+<td align="right">0.0061510</td>
+<td align="right">0.0055617</td>
+<td align="right">0.0067035</td>
+</tr>
+<tr class="odd">
+<td align="left">15</td>
+<td align="left">AFR</td>
+<td align="right">0.0048215</td>
+<td align="right">0.0040817</td>
+<td align="right">0.0052905</td>
+</tr>
+<tr class="even">
+<td align="left">15</td>
+<td align="left">AMR</td>
+<td align="right">0.0052284</td>
+<td align="right">0.0047673</td>
+<td align="right">0.0057351</td>
+</tr>
+<tr class="odd">
+<td align="left">15</td>
+<td align="left">EAS</td>
+<td align="right">0.0068761</td>
+<td align="right">0.0063752</td>
+<td align="right">0.0074150</td>
+</tr>
+<tr class="even">
+<td align="left">15</td>
+<td align="left">EUR</td>
+<td align="right">0.0050892</td>
+<td align="right">0.0047509</td>
+<td align="right">0.0054422</td>
+</tr>
+<tr class="odd">
+<td align="left">15</td>
+<td align="left">SAS</td>
+<td align="right">0.0066972</td>
+<td align="right">0.0060238</td>
+<td align="right">0.0072860</td>
+</tr>
+<tr class="even">
+<td align="left">16</td>
+<td align="left">AFR</td>
+<td align="right">0.0049441</td>
+<td align="right">0.0040933</td>
+<td align="right">0.0053945</td>
+</tr>
+<tr class="odd">
+<td align="left">16</td>
+<td align="left">AMR</td>
+<td align="right">0.0055430</td>
+<td align="right">0.0049529</td>
+<td align="right">0.0060439</td>
+</tr>
+<tr class="even">
+<td align="left">16</td>
+<td align="left">EAS</td>
+<td align="right">0.0073127</td>
+<td align="right">0.0067001</td>
+<td align="right">0.0078725</td>
+</tr>
+<tr class="odd">
+<td align="left">16</td>
+<td align="left">EUR</td>
+<td align="right">0.0052123</td>
+<td align="right">0.0047580</td>
+<td align="right">0.0056203</td>
+</tr>
+<tr class="even">
+<td align="left">16</td>
+<td align="left">SAS</td>
+<td align="right">0.0069434</td>
+<td align="right">0.0061909</td>
+<td align="right">0.0075742</td>
+</tr>
+<tr class="odd">
+<td align="left">17</td>
+<td align="left">AFR</td>
+<td align="right">0.0050281</td>
+<td align="right">0.0042084</td>
+<td align="right">0.0054603</td>
+</tr>
+<tr class="even">
+<td align="left">17</td>
+<td align="left">AMR</td>
+<td align="right">0.0054935</td>
+<td align="right">0.0050080</td>
+<td align="right">0.0059579</td>
+</tr>
+<tr class="odd">
+<td align="left">17</td>
+<td align="left">EAS</td>
+<td align="right">0.0073580</td>
+<td align="right">0.0068226</td>
+<td align="right">0.0078460</td>
+</tr>
+<tr class="even">
+<td align="left">17</td>
+<td align="left">EUR</td>
+<td align="right">0.0051881</td>
+<td align="right">0.0047916</td>
+<td align="right">0.0055415</td>
+</tr>
+<tr class="odd">
+<td align="left">17</td>
+<td align="left">SAS</td>
+<td align="right">0.0068827</td>
+<td align="right">0.0062719</td>
+<td align="right">0.0074977</td>
+</tr>
+<tr class="even">
+<td align="left">18</td>
+<td align="left">AFR</td>
+<td align="right">0.0041040</td>
+<td align="right">0.0032931</td>
+<td align="right">0.0044893</td>
+</tr>
+<tr class="odd">
+<td align="left">18</td>
+<td align="left">AMR</td>
+<td align="right">0.0047786</td>
+<td align="right">0.0043024</td>
+<td align="right">0.0052071</td>
+</tr>
+<tr class="even">
+<td align="left">18</td>
+<td align="left">EAS</td>
+<td align="right">0.0062359</td>
+<td align="right">0.0057501</td>
+<td align="right">0.0066702</td>
+</tr>
+<tr class="odd">
+<td align="left">18</td>
+<td align="left">EUR</td>
+<td align="right">0.0044717</td>
+<td align="right">0.0040734</td>
+<td align="right">0.0047320</td>
+</tr>
+<tr class="even">
+<td align="left">18</td>
+<td align="left">SAS</td>
+<td align="right">0.0059285</td>
+<td align="right">0.0052829</td>
+<td align="right">0.0065135</td>
+</tr>
+<tr class="odd">
+<td align="left">19</td>
+<td align="left">AFR</td>
+<td align="right">0.0045924</td>
+<td align="right">0.0038645</td>
+<td align="right">0.0049826</td>
+</tr>
+<tr class="even">
+<td align="left">19</td>
+<td align="left">AMR</td>
+<td align="right">0.0050969</td>
+<td align="right">0.0046720</td>
+<td align="right">0.0055808</td>
+</tr>
+<tr class="odd">
+<td align="left">19</td>
+<td align="left">EAS</td>
+<td align="right">0.0067741</td>
+<td align="right">0.0062592</td>
+<td align="right">0.0071547</td>
+</tr>
+<tr class="even">
+<td align="left">19</td>
+<td align="left">EUR</td>
+<td align="right">0.0048457</td>
+<td align="right">0.0044461</td>
+<td align="right">0.0051294</td>
+</tr>
+<tr class="odd">
+<td align="left">19</td>
+<td align="left">SAS</td>
+<td align="right">0.0063173</td>
+<td align="right">0.0056578</td>
+<td align="right">0.0068683</td>
+</tr>
+<tr class="even">
+<td align="left">20</td>
+<td align="left">AFR</td>
+<td align="right">0.0045939</td>
+<td align="right">0.0037934</td>
+<td align="right">0.0049697</td>
+</tr>
+<tr class="odd">
+<td align="left">20</td>
+<td align="left">AMR</td>
+<td align="right">0.0054313</td>
+<td align="right">0.0048907</td>
+<td align="right">0.0058433</td>
+</tr>
+<tr class="even">
+<td align="left">20</td>
+<td align="left">EAS</td>
+<td align="right">0.0071512</td>
+<td align="right">0.0066183</td>
+<td align="right">0.0076725</td>
+</tr>
+<tr class="odd">
+<td align="left">20</td>
+<td align="left">EUR</td>
+<td align="right">0.0049037</td>
+<td align="right">0.0045578</td>
+<td align="right">0.0052872</td>
+</tr>
+<tr class="even">
+<td align="left">20</td>
+<td align="left">SAS</td>
+<td align="right">0.0066488</td>
+<td align="right">0.0060858</td>
+<td align="right">0.0071709</td>
+</tr>
+<tr class="odd">
+<td align="left">21</td>
+<td align="left">AFR</td>
+<td align="right">0.0050761</td>
+<td align="right">0.0044396</td>
+<td align="right">0.0055453</td>
+</tr>
+<tr class="even">
+<td align="left">21</td>
+<td align="left">AMR</td>
+<td align="right">0.0053416</td>
+<td align="right">0.0051072</td>
+<td align="right">0.0058805</td>
+</tr>
+<tr class="odd">
+<td align="left">21</td>
+<td align="left">EAS</td>
+<td align="right">0.0065446</td>
+<td align="right">0.0061715</td>
+<td align="right">0.0070003</td>
+</tr>
+<tr class="even">
+<td align="left">21</td>
+<td align="left">EUR</td>
+<td align="right">0.0049925</td>
+<td align="right">0.0047145</td>
+<td align="right">0.0053760</td>
+</tr>
+<tr class="odd">
+<td align="left">21</td>
+<td align="left">SAS</td>
+<td align="right">0.0063745</td>
+<td align="right">0.0059076</td>
+<td align="right">0.0070199</td>
+</tr>
+<tr class="even">
+<td align="left">22</td>
+<td align="left">AFR</td>
+<td align="right">0.0055467</td>
+<td align="right">0.0048371</td>
+<td align="right">0.0060514</td>
+</tr>
+<tr class="odd">
+<td align="left">22</td>
+<td align="left">AMR</td>
+<td align="right">0.0059595</td>
+<td align="right">0.0055949</td>
+<td align="right">0.0064353</td>
+</tr>
+<tr class="even">
+<td align="left">22</td>
+<td align="left">EAS</td>
+<td align="right">0.0074369</td>
+<td align="right">0.0071268</td>
+<td align="right">0.0079467</td>
+</tr>
+<tr class="odd">
+<td align="left">22</td>
+<td align="left">EUR</td>
+<td align="right">0.0055239</td>
+<td align="right">0.0052435</td>
+<td align="right">0.0059693</td>
+</tr>
+<tr class="even">
+<td align="left">22</td>
+<td align="left">SAS</td>
+<td align="right">0.0072212</td>
+<td align="right">0.0067676</td>
+<td align="right">0.0078644</td>
+</tr>
+<tr class="odd">
+<td align="left">X</td>
+<td align="left">AFR</td>
+<td align="right">0.0010081</td>
+<td align="right">0.0009991</td>
+<td align="right">0.0011945</td>
+</tr>
+<tr class="even">
+<td align="left">X</td>
+<td align="left">AMR</td>
+<td align="right">0.0011009</td>
+<td align="right">0.0010802</td>
+<td align="right">0.0012704</td>
+</tr>
+<tr class="odd">
+<td align="left">X</td>
+<td align="left">EAS</td>
+<td align="right">0.0019555</td>
+<td align="right">0.0019427</td>
+<td align="right">0.0021114</td>
+</tr>
+<tr class="even">
+<td align="left">X</td>
+<td align="left">EUR</td>
+<td align="right">0.0012423</td>
+<td align="right">0.0012304</td>
+<td align="right">0.0014230</td>
+</tr>
+<tr class="odd">
+<td align="left">X</td>
+<td align="left">SAS</td>
+<td align="right">0.0015903</td>
+<td align="right">0.0016220</td>
+<td align="right">0.0017988</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="error-distributions-across-bins" class="section level2">
+<h2>Error distributions across bins</h2>
+<div id="data-loading-functions" class="section level3">
+<h3>Data Loading Functions</h3>
+<pre class="r"><code>single_bin_counts &lt;- function(id, het_loc, bin_size = 1e6){
+  df_het &lt;- load_het_pos(id, het_loc)
+  
+  df_het$bin &lt;- ceiling(df_het$pos / bin_size)
+  
+  final &lt;- df_het %&gt;%
+    group_by(bin) %&gt;%
+    summarize(s_b = sum(beagle_switch),
+              s_e = sum(eagle_switch),
+              s_s = sum(shapeit_switch),
+              f_b = sum(beagle_flip),
+              f_e = sum(eagle_flip),
+              f_s = sum(shapeit_flip),
+              n_het = n(),
+              n_het_cpg = sum(cpg),
+              cpg_s_b = sum(cpg * beagle_switch),
+              cpg_s_e = sum(cpg * eagle_switch),
+              cpg_s_s = sum(cpg * shapeit_switch),
+              cpg_f_b = sum(cpg * beagle_flip),
+              cpg_f_e = sum(cpg * eagle_flip),
+              cpg_f_s = sum(cpg * shapeit_flip))
+  
+  final$id &lt;- id
+  return(final)
+}
+
+all_counts &lt;- function(ids, het_loc, df_subj_rel, bin_size = 1e6){
+  final &lt;- vector(mode = &quot;list&quot;, length = length(ids))
+  for(i in 1:length(ids)){
+    final[[i]] &lt;- single_bin_counts(ids[i], het_loc)
+  }
+  return(bind_rows(final) %&gt;% left_join({df_subj_rel %&gt;% select(id, SUPER)}, by = &quot;id&quot;))
+}</code></pre>
+</div>
+<div id="plotting-functions" class="section level3">
+<h3>Plotting Functions</h3>
+<pre class="r"><code>plot_switch_rate_bin &lt;- function(df, chrom, bin_label=&quot;MB&quot;){
+  p &lt;- df %&gt;%
+    filter(chrom == chrom) %&gt;%
+    mutate(Beagle = s_b / n_het,
+           Eagle = s_e / n_het,
+           SHAPEIT = s_s / n_het) %&gt;%
+    group_by(SUPER, bin) %&gt;%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    pivot_longer(Beagle:SHAPEIT, values_to = &quot;switch_rate&quot;, names_to = &quot;Method&quot;) %&gt;%
+    ggplot(aes(x = bin, y = switch_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0(&quot;Bin (&quot;, bin_label, &quot;)&quot;)) +
+    ylab(&quot;Switch Rate&quot;) +
+    ggtitle(paste0(&quot;Chromosome &quot;, chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_flip_rate_bin &lt;- function(df, chrom, bin_label=&quot;MB&quot;){
+  p &lt;- df %&gt;%
+    filter(chrom == chrom) %&gt;%
+    mutate(Beagle = f_b / n_het,
+           Eagle = f_e / n_het,
+           SHAPEIT = f_s / n_het) %&gt;%
+    group_by(SUPER, bin) %&gt;%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    pivot_longer(Beagle:SHAPEIT, values_to = &quot;flip_rate&quot;, names_to = &quot;Method&quot;) %&gt;%
+    ggplot(aes(x = bin, y = flip_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0(&quot;Bin (&quot;, bin_label, &quot;)&quot;)) +
+    ylab(&quot;Flip Rate&quot;) +
+    ggtitle(paste0(&quot;Chromosome &quot;, chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_error_rate_bin &lt;- function(df, chrom, bin_label=&quot;MB&quot;){
+  p &lt;- df %&gt;%
+    filter(chrom == chrom) %&gt;%
+    mutate(Beagle = (s_b + f_b) / n_het,
+           Eagle = (s_e + f_e) / n_het,
+           SHAPEIT = (s_s + f_s) / n_het) %&gt;%
+    group_by(SUPER, bin) %&gt;%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    pivot_longer(Beagle:SHAPEIT, values_to = &quot;error_rate&quot;, names_to = &quot;Method&quot;) %&gt;%
+    ggplot(aes(x = bin, y = error_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0(&quot;Bin (&quot;, bin_label, &quot;)&quot;)) +
+    ylab(&quot;Error Rate&quot;) +
+    ggtitle(paste0(&quot;Chromosome &quot;, chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_switches_bin &lt;- function(df, chrom, bin_label=&quot;MB&quot;){
+  p &lt;- df %&gt;%
+    filter(chrom == chrom) %&gt;%
+    mutate(Beagle = s_b,
+           Eagle = s_e,
+           SHAPEIT = s_s) %&gt;%
+    group_by(SUPER, bin) %&gt;%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    pivot_longer(Beagle:SHAPEIT, values_to = &quot;switch_rate&quot;, names_to = &quot;Method&quot;) %&gt;%
+    ggplot(aes(x = bin, y = switch_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0(&quot;Bin (&quot;, bin_label, &quot;)&quot;)) +
+    ylab(&quot;Switchs&quot;) +
+    ggtitle(paste0(&quot;Chromosome &quot;, chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_flips_bin &lt;- function(df, chrom, bin_label=&quot;MB&quot;){
+  p &lt;- df %&gt;%
+    filter(chrom == chrom) %&gt;%
+    mutate(Beagle = f_b,
+           Eagle = f_e,
+           SHAPEIT = f_s) %&gt;%
+    group_by(SUPER, bin) %&gt;%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    pivot_longer(Beagle:SHAPEIT, values_to = &quot;flip_rate&quot;, names_to = &quot;Method&quot;) %&gt;%
+    ggplot(aes(x = bin, y = flip_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0(&quot;Bin (&quot;, bin_label, &quot;)&quot;)) +
+    ylab(&quot;Flips&quot;) +
+    ggtitle(paste0(&quot;Chromosome &quot;, chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_errors_bin &lt;- function(df, chrom, bin_label=&quot;MB&quot;){
+  p &lt;- df %&gt;%
+    filter(chrom == chrom) %&gt;%
+    mutate(Beagle = (s_b + f_b),
+           Eagle = (s_e + f_e),
+           SHAPEIT = (s_s + f_s)) %&gt;%
+    group_by(SUPER, bin) %&gt;%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    pivot_longer(Beagle:SHAPEIT, values_to = &quot;error_rate&quot;, names_to = &quot;Method&quot;) %&gt;%
+    ggplot(aes(x = bin, y = error_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0(&quot;Bin (&quot;, bin_label, &quot;)&quot;)) +
+    ylab(&quot;Errors&quot;) +
+    ggtitle(paste0(&quot;Chromosome &quot;, chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}</code></pre>
+</div>
+<div id="load-the-data-for-all-chromosomes" class="section level3">
+<h3>Load the data for all chromosomes</h3>
+<pre class="r"><code># library(parallel)
+# library(foreach)
+# library(doParallel)
+# registerDoParallel(22)
+# list_MB &lt;- foreach (i=1:22) %dopar% {
+#   all_counts(1:602, paste0(&quot;output/trio_phase_&quot;, i, &quot;/het_loc/annotated/&quot;), df_subj_rel = df_subj_rel, bin_size = 1e6)
+# }
+# stopImplicitCluster()
+# 
+# for(i in 1:22){
+#   list_MB[[i]]$chrom &lt;- as.character(i)
+# }
+# 
+# all_MB &lt;- bind_rows(list_MB)
+# 
+# df_X_MB &lt;- all_counts(1:1000, &quot;output/switch_errors/het_loc/annotated/&quot;, pair_info_df, bin_size = 1e6 )
+# df_X_MB$chrom &lt;- &quot;X&quot;
+# 
+# all_MB &lt;- all_MB %&gt;% bind_rows(df_X_MB)
+# 
+# write_csv(all_MB, &quot;output/error_rate_MB.csv&quot;)
+
+df_all_MB &lt;- read_csv(&quot;output/error_rate_MB.csv&quot;)</code></pre>
+<pre><code>Rows: 1809032 Columns: 18
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr  (2): SUPER, chrom
+dbl (16): bin, s_b, s_e, s_s, f_b, f_e, f_s, n_het, n_het_cpg, cpg_s_b, cpg_...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>plot_switch_rate_bin(df_all_MB, &quot;X&quot;) + scale_colour_manual(values = cbPalette)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot_flip_rate_bin(df_all_MB, &quot;X&quot;) + scale_colour_manual(values = cbPalette)</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;SUPER&#39;. You can override using the
+`.groups` argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-20-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df_all_MB %&gt;%
+  filter(chrom == &quot;X&quot;) %&gt;%
+  group_by(bin, SUPER) %&gt;%
+  summarize(flip = mean(f_b / n_het),
+            switch = mean(s_b / n_het)) %&gt;%
+  ggplot(aes(flip, switch)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(cols = vars(SUPER)) +
+  xlab(&quot;Flip Rate&quot;) +
+  ylab(&quot;Switch Rate&quot;) +
+  ggtitle(paste0(&quot;Chromosome &quot;, &quot;X&quot;))</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-20-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>for(chrom in c(as.character(1:22), &quot;X&quot;)){
+  df_all_MB %&gt;%
+    filter(chrom == chrom) %&gt;%
+    group_by(bin, SUPER) %&gt;%
+    summarize(flip = mean(f_b / n_het),
+              switch = mean(s_b / n_het)) %&gt;%
+    ggplot(aes(flip, switch)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    facet_grid(cols = vars(SUPER)) +
+    xlab(&quot;Flip Rate&quot;) +
+    ylab(&quot;Switch Rate&quot;) +
+    ggtitle(paste0(&quot;Chromosome &quot;, chrom))
+}</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -3927,6 +6941,7 @@ loaded via a namespace (and not attached):
 [53] evaluate_1.0.1     knitr_1.48         gridGraphics_0.5-1 rlang_1.1.4       
 [57] Rcpp_1.0.13        glue_1.8.0         rstudioapi_0.17.1  vroom_1.6.5       
 [61] jsonlite_1.8.9     R6_2.5.1           fs_1.6.5          </code></pre>
+</div>
 </div>
 </div>
 
