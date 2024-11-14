@@ -19,6 +19,7 @@ library(gtsummary)
 library(grid)
 library(gridExtra)
 
+
 config_obj <- yaml::read_yaml("_config.yaml")
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
@@ -33,12 +34,17 @@ unrel_ids <- scan("data/1kgp/unrelated_subjects.txt", what = character())
 
 df_subj_rel <- df_subj %>%
   filter(SAMPLE_NAME %in% child_ids)
-df_subj_rel$id2 <- 1:602
+df_subj_rel$id <- 1:602
 
 df_subj_unrel <- df_subj %>%
   filter(SAMPLE_NAME %in% unrel_ids)
 
 df_chrom_size <- read_tsv("data/hg38.chrom.sizes", n_max = 24, col_names = c("chrom", "bases"))
+
+pair_info_df <- read_delim("data/sample_pairs.csv", col_names = c("POP", "ID1", "ID2"))
+pair_info_df <- left_join(pair_info_df, {df_subj %>% select(SAMPLE_NAME, POPULATION, SUPER)}, by = c("ID1"="SAMPLE_NAME")) %>%
+  select(-POPULATION)
+pair_info_df$id <- 1:1000
 ```
 
 ## Data Reading
@@ -319,9 +325,27 @@ plot_rr_window <- function(chrom, bin_size = 1e6){
 }
 ```
 
+#### MB Scale
+
 ```{r}
 for(i in c(1:22, "X")){
   print(plot_rr_window(i) + ggtitle(paste0("Chromosome ", i)))
+}
+```
+
+#### 100KB
+
+```{r}
+for(i in c(1:22, "X")){
+  print(plot_rr_window(i, bin_size = 1e5) + ggtitle(paste0("Chromosome ", i)))
+}
+```
+
+#### No bins
+
+```{r}
+for(i in c(1:22, "X")){
+  print(plot_rr_window(i, bin_size = 1) + ggtitle(paste0("Chromosome ", i)))
 }
 ```
 
@@ -346,6 +370,15 @@ df_all %>%
   xlab("Chromosome")
 ```
 
+```{r}
+df_all %>%
+  group_by(chrom, SUPER) %>%
+  summarize(Beagle = mean(Beagle_switch),
+            Eagle = mean(Eagle_switch),
+            SHAPEIT = mean(SHAPEIT_switch)) %>%
+  knitr::kable()
+```
+
 ## Flip Error Rates
 
 What do the flip error rates look like in the autosomes (compared to X)?
@@ -363,5 +396,243 @@ df_all %>%
   ylab("Mean Flip Rate") +
   facet_grid(rows = vars(SUPER)) +
   xlab("Chromosome")
+```
+
+```{r}
+df_all %>%
+  group_by(chrom, SUPER) %>%
+  summarize(Beagle = mean(Beagle_flip),
+            Eagle = mean(Eagle_flip),
+            SHAPEIT = mean(SHAPEIT_flip)) %>%
+  knitr::kable()
+```
+
+## Error distributions across bins
+
+### Data Loading Functions
+
+```{r}
+single_bin_counts <- function(id, het_loc, bin_size = 1e6){
+  df_het <- load_het_pos(id, het_loc)
+  
+  df_het$bin <- ceiling(df_het$pos / bin_size)
+  
+  final <- df_het %>%
+    group_by(bin) %>%
+    summarize(s_b = sum(beagle_switch),
+              s_e = sum(eagle_switch),
+              s_s = sum(shapeit_switch),
+              f_b = sum(beagle_flip),
+              f_e = sum(eagle_flip),
+              f_s = sum(shapeit_flip),
+              n_het = n(),
+              n_het_cpg = sum(cpg),
+              cpg_s_b = sum(cpg * beagle_switch),
+              cpg_s_e = sum(cpg * eagle_switch),
+              cpg_s_s = sum(cpg * shapeit_switch),
+              cpg_f_b = sum(cpg * beagle_flip),
+              cpg_f_e = sum(cpg * eagle_flip),
+              cpg_f_s = sum(cpg * shapeit_flip))
+  
+  final$id <- id
+  return(final)
+}
+
+all_counts <- function(ids, het_loc, df_subj_rel, bin_size = 1e6){
+  final <- vector(mode = "list", length = length(ids))
+  for(i in 1:length(ids)){
+    final[[i]] <- single_bin_counts(ids[i], het_loc)
+  }
+  return(bind_rows(final) %>% left_join({df_subj_rel %>% select(id, SUPER)}, by = "id"))
+}
+
+```
+
+### Plotting Functions
+
+```{r}
+plot_switch_rate_bin <- function(df, chrom, bin_label="MB"){
+  p <- df %>%
+    filter(chrom == chrom) %>%
+    mutate(Beagle = s_b / n_het,
+           Eagle = s_e / n_het,
+           SHAPEIT = s_s / n_het) %>%
+    group_by(SUPER, bin) %>%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    pivot_longer(Beagle:SHAPEIT, values_to = "switch_rate", names_to = "Method") %>%
+    ggplot(aes(x = bin, y = switch_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0("Bin (", bin_label, ")")) +
+    ylab("Switch Rate") +
+    ggtitle(paste0("Chromosome ", chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_flip_rate_bin <- function(df, chrom, bin_label="MB"){
+  p <- df %>%
+    filter(chrom == chrom) %>%
+    mutate(Beagle = f_b / n_het,
+           Eagle = f_e / n_het,
+           SHAPEIT = f_s / n_het) %>%
+    group_by(SUPER, bin) %>%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    pivot_longer(Beagle:SHAPEIT, values_to = "flip_rate", names_to = "Method") %>%
+    ggplot(aes(x = bin, y = flip_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0("Bin (", bin_label, ")")) +
+    ylab("Flip Rate") +
+    ggtitle(paste0("Chromosome ", chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_error_rate_bin <- function(df, chrom, bin_label="MB"){
+  p <- df %>%
+    filter(chrom == chrom) %>%
+    mutate(Beagle = (s_b + f_b) / n_het,
+           Eagle = (s_e + f_e) / n_het,
+           SHAPEIT = (s_s + f_s) / n_het) %>%
+    group_by(SUPER, bin) %>%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    pivot_longer(Beagle:SHAPEIT, values_to = "error_rate", names_to = "Method") %>%
+    ggplot(aes(x = bin, y = error_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0("Bin (", bin_label, ")")) +
+    ylab("Error Rate") +
+    ggtitle(paste0("Chromosome ", chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_switches_bin <- function(df, chrom, bin_label="MB"){
+  p <- df %>%
+    filter(chrom == chrom) %>%
+    mutate(Beagle = s_b,
+           Eagle = s_e,
+           SHAPEIT = s_s) %>%
+    group_by(SUPER, bin) %>%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    pivot_longer(Beagle:SHAPEIT, values_to = "switch_rate", names_to = "Method") %>%
+    ggplot(aes(x = bin, y = switch_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0("Bin (", bin_label, ")")) +
+    ylab("Switchs") +
+    ggtitle(paste0("Chromosome ", chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_flips_bin <- function(df, chrom, bin_label="MB"){
+  p <- df %>%
+    filter(chrom == chrom) %>%
+    mutate(Beagle = f_b,
+           Eagle = f_e,
+           SHAPEIT = f_s) %>%
+    group_by(SUPER, bin) %>%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    pivot_longer(Beagle:SHAPEIT, values_to = "flip_rate", names_to = "Method") %>%
+    ggplot(aes(x = bin, y = flip_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0("Bin (", bin_label, ")")) +
+    ylab("Flips") +
+    ggtitle(paste0("Chromosome ", chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+
+plot_errors_bin <- function(df, chrom, bin_label="MB"){
+  p <- df %>%
+    filter(chrom == chrom) %>%
+    mutate(Beagle = (s_b + f_b),
+           Eagle = (s_e + f_e),
+           SHAPEIT = (s_s + f_s)) %>%
+    group_by(SUPER, bin) %>%
+    summarize(Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    pivot_longer(Beagle:SHAPEIT, values_to = "error_rate", names_to = "Method") %>%
+    ggplot(aes(x = bin, y = error_rate, colour = Method)) +
+    geom_point() +
+    xlab(paste0("Bin (", bin_label, ")")) +
+    ylab("Errors") +
+    ggtitle(paste0("Chromosome ", chrom)) +
+    facet_grid(rows = vars(SUPER))
+  return(p)
+}
+```
+
+### Load the data for all chromosomes
+
+```{r}
+# library(parallel)
+# library(foreach)
+# library(doParallel)
+# registerDoParallel(22)
+# list_MB <- foreach (i=1:22) %dopar% {
+#   all_counts(1:602, paste0("output/trio_phase_", i, "/het_loc/annotated/"), df_subj_rel = df_subj_rel, bin_size = 1e6)
+# }
+# stopImplicitCluster()
+# 
+# for(i in 1:22){
+#   list_MB[[i]]$chrom <- as.character(i)
+# }
+# 
+# all_MB <- bind_rows(list_MB)
+# 
+# df_X_MB <- all_counts(1:1000, "output/switch_errors/het_loc/annotated/", pair_info_df, bin_size = 1e6 )
+# df_X_MB$chrom <- "X"
+# 
+# all_MB <- all_MB %>% bind_rows(df_X_MB)
+# 
+# write_csv(all_MB, "output/error_rate_MB.csv")
+
+df_all_MB <- read_csv("output/error_rate_MB.csv")
+```
+
+```{r}
+plot_switch_rate_bin(df_all_MB, "X") + scale_colour_manual(values = cbPalette)
+plot_flip_rate_bin(df_all_MB, "X") + scale_colour_manual(values = cbPalette)
+
+df_all_MB %>%
+  filter(chrom == "X") %>%
+  group_by(bin, SUPER) %>%
+  summarize(flip = mean(f_b / n_het),
+            switch = mean(s_b / n_het)) %>%
+  ggplot(aes(flip, switch)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(cols = vars(SUPER)) +
+  xlab("Flip Rate") +
+  ylab("Switch Rate") +
+  ggtitle(paste0("Chromosome ", "X"))
+```
+
+
+```{r, fig.width=9.75, fig.height=2.5}
+for(chrom in c(as.character(1:22), "X")){
+  df_all_MB %>%
+    filter(chrom == chrom) %>%
+    group_by(bin, SUPER) %>%
+    summarize(flip = mean(f_b / n_het),
+              switch = mean(s_b / n_het)) %>%
+    ggplot(aes(flip, switch)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    facet_grid(cols = vars(SUPER)) +
+    xlab("Flip Rate") +
+    ylab("Switch Rate") +
+    ggtitle(paste0("Chromosome ", chrom))
+}
 ```
 
