@@ -669,3 +669,110 @@ for(chromo in c(as.character(1:22), "X")){
 }
 ```
 
+## CpG Enrichment
+
+### Switches
+
+```{r}
+df_all %>%
+    filter(chrom == "1") %>%
+    mutate(Beagle = (n_other_cpg_beagle / n_het_cpg)/(n_other_beagle / n_hets),
+           Eagle = (n_other_cpg_eagle / n_het_cpg)/(n_other_eagle / n_hets),
+           SHAPEIT = (n_other_cpg_shapeit / n_het_cpg)/(n_other_shapeit / n_hets)) %>%
+    select(Beagle:SHAPEIT, SUPER) %>%
+    pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+    ggplot(aes(x = Method, y = enrich)) +
+    geom_boxplot() +
+    ggtitle("Enrichment of Switches at CpG", paste0("Chromosome ", "X")) +
+    ylab("Enrichment") +
+    geom_hline(yintercept = 1, colour = "red")
+
+df_all %>%
+    filter(chrom == "X") %>%
+    mutate(Beagle = (n_flip_cpg_beagle / n_het_cpg)/(n_flip_beagle / n_hets),
+           Eagle = (n_flip_cpg_eagle / n_het_cpg)/(n_flip_eagle / n_hets),
+           SHAPEIT = (n_flip_cpg_shapeit / n_het_cpg)/(n_flip_shapeit / n_hets)) %>%
+    select(Beagle:SHAPEIT, SUPER) %>%
+    pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+    ggplot(aes(x = Method, y = enrich)) +
+    geom_boxplot() +
+    ggtitle("Enrichment of Flips at CpG", paste0("Chromosome ", "X")) +
+    ylab("Enrichment") +
+    geom_hline(yintercept = 1, colour = "red") +
+  facet_grid(cols = vars(SUPER)) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+
+
+```{r, fig.height=4, fig.width=5}
+for(i in c(as.character(1:22), "X") ){
+  p <- df_all %>%
+    filter(chrom == i) %>%
+    mutate(Beagle = (n_other_cpg_beagle / n_het_cpg)/(n_other_beagle / n_hets),
+           Eagle = (n_other_cpg_eagle / n_het_cpg)/(n_other_eagle / n_hets),
+           SHAPEIT = (n_other_cpg_shapeit / n_het_cpg)/(n_other_shapeit / n_hets)) %>%
+    select(Beagle:SHAPEIT, SUPER) %>%
+    pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+    ggplot(aes(x = Method, y = enrich)) +
+    geom_boxplot() +
+    ggtitle("Enrichment of Switches at CpG", paste0("Chromosome ", i)) +
+    ylab("Enrichment") +
+    geom_hline(yintercept = 1, colour = "red")
+  print(p)
+}
+
+for(i in c(as.character(1:22), "X") ){
+  p <- df_all %>%
+    filter(chrom == i) %>%
+    mutate(Beagle = (n_flip_cpg_beagle / n_het_cpg)/(n_flip_beagle / n_hets),
+           Eagle = (n_flip_cpg_eagle / n_het_cpg)/(n_flip_eagle / n_hets),
+           SHAPEIT = (n_flip_cpg_shapeit / n_het_cpg)/(n_flip_shapeit / n_hets)) %>%
+    select(Beagle:SHAPEIT, SUPER) %>%
+    pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+    ggplot(aes(x = Method, y = enrich)) +
+    geom_boxplot() +
+    ggtitle("Enrichment of Flips at CpG", paste0("Chromosome ", i)) +
+    ylab("Enrichment") +
+    geom_hline(yintercept = 1, colour = "red")
+  print(p)
+}
+```
+
+```{r, fig.height=4, fig.width=8}
+for(i in c(as.character(1:22), "X") ){
+  p <- df_all %>%
+    filter(chrom == i) %>%
+    mutate(Beagle = (n_other_cpg_beagle / n_het_cpg)/(n_other_beagle / n_hets),
+           Eagle = (n_other_cpg_eagle / n_het_cpg)/(n_other_eagle / n_hets),
+           SHAPEIT = (n_other_cpg_shapeit / n_het_cpg)/(n_other_shapeit / n_hets)) %>%
+    select(Beagle:SHAPEIT, SUPER) %>%
+    pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+    ggplot(aes(x = Method, y = enrich)) +
+    geom_boxplot() +
+    ggtitle("Enrichment of Switches at CpG", paste0("Chromosome ", i)) +
+    ylab("Enrichment") +
+    geom_hline(yintercept = 1, colour = "red") +
+    facet_grid(cols = vars(SUPER)) +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  print(p)
+}
+
+for(i in c(as.character(1:22), "X") ){
+  p <- df_all %>%
+    filter(chrom == i) %>%
+    mutate(Beagle = (n_flip_cpg_beagle / n_het_cpg)/(n_flip_beagle / n_hets),
+           Eagle = (n_flip_cpg_eagle / n_het_cpg)/(n_flip_eagle / n_hets),
+           SHAPEIT = (n_flip_cpg_shapeit / n_het_cpg)/(n_flip_shapeit / n_hets)) %>%
+    select(Beagle:SHAPEIT, SUPER) %>%
+    pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
+    ggplot(aes(x = Method, y = enrich)) +
+    geom_boxplot() +
+    ggtitle("Enrichment of Flips at CpG", paste0("Chromosome ", i)) +
+    ylab("Enrichment") +
+    geom_hline(yintercept = 1, colour = "red") +
+    facet_grid(cols = vars(SUPER)) +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  print(p)
+}
+```
+
