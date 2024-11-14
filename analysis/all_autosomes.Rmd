@@ -620,9 +620,9 @@ df_all_MB %>%
 
 
 ```{r, fig.width=9.75, fig.height=2.5}
-for(chrom in c(as.character(1:22), "X")){
+for(chromo in c(as.character(1:22), "X")){
   p <- df_all_MB %>%
-    filter(chrom == chrom) %>%
+    filter(chrom == chromo) %>%
     group_by(bin, SUPER) %>%
     summarize(flip = mean(f_b / n_het),
               switch = mean(s_b / n_het)) %>%
@@ -632,7 +632,39 @@ for(chrom in c(as.character(1:22), "X")){
     facet_grid(cols = vars(SUPER)) +
     xlab("Flip Rate") +
     ylab("Switch Rate") +
-    ggtitle(paste0("Chromosome ", chrom))
+    ggtitle(paste0("Chromosome ", chromo, "; Beagle"))
+  print(p)
+}
+
+for(chromo in c(as.character(1:22), "X")){
+  p <- df_all_MB %>%
+    filter(chrom == chromo) %>%
+    group_by(bin, SUPER) %>%
+    summarize(flip = mean(f_e / n_het),
+              switch = mean(s_e / n_het)) %>%
+    ggplot(aes(flip, switch)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    facet_grid(cols = vars(SUPER)) +
+    xlab("Flip Rate") +
+    ylab("Switch Rate") +
+    ggtitle(paste0("Chromosome ", chromo, "; Eagle"))
+  print(p)
+}
+
+for(chromo in c(as.character(1:22), "X")){
+  p <- df_all_MB %>%
+    filter(chrom == chromo) %>%
+    group_by(bin, SUPER) %>%
+    summarize(flip = mean(f_s / n_het),
+              switch = mean(s_s / n_het)) %>%
+    ggplot(aes(flip, switch)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    facet_grid(cols = vars(SUPER)) +
+    xlab("Flip Rate") +
+    ylab("Switch Rate") +
+    ggtitle(paste0("Chromosome ", chromo, "; SHAPEIT"))
   print(p)
 }
 ```
