@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreef42a98198d4a59814bd5f5584aa8582289a6296etargetblankf42a981a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree0ddbe2de924c04567774f9a30288c7b5d12c0578targetblank0ddbe2da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/f42a98198d4a59814bd5f5584aa8582289a6296e" target="_blank">f42a981</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/0ddbe2de924c04567774f9a30288c7b5d12c0578" target="_blank">0ddbe2d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreef42a98198d4a59814bd5f5584aa8582289a6296etargetblankf42a981a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree0ddbe2de924c04567774f9a30288c7b5d12c0578targetblank0ddbe2da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/f42a98198d4a59814bd5f5584aa8582289a6296e" target="_blank">f42a981</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/0ddbe2de924c04567774f9a30288c7b5d12c0578" target="_blank">0ddbe2d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -911,6 +911,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/0ddbe2de924c04567774f9a30288c7b5d12c0578/analysis/all_autosomes.Rmd" target="_blank">0ddbe2d</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+<td>
+wflow_publish("analysis/all_autosomes.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/all_autosomes.html" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -8737,9 +8771,9 @@ Andy Beck
 </table>
 </div>
 </div>
-<pre class="r"><code>for(chrom in c(as.character(1:22), &quot;X&quot;)){
+<pre class="r"><code>for(chromo in c(as.character(1:22), &quot;X&quot;)){
   p &lt;- df_all_MB %&gt;%
-    filter(chrom == chrom) %&gt;%
+    filter(chrom == chromo) %&gt;%
     group_by(bin, SUPER) %&gt;%
     summarize(flip = mean(f_b / n_het),
               switch = mean(s_b / n_het)) %&gt;%
@@ -8749,78 +8783,1097 @@ Andy Beck
     facet_grid(cols = vars(SUPER)) +
     xlab(&quot;Flip Rate&quot;) +
     ylab(&quot;Switch Rate&quot;) +
-    ggtitle(paste0(&quot;Chromosome &quot;, chrom))
+    ggtitle(paste0(&quot;Chromosome &quot;, chromo, &quot;; Beagle&quot;))
   print(p)
 }</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-1.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-1">
+Past versions of unnamed-chunk-21-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-1.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-2.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-2">
+Past versions of unnamed-chunk-21-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-2.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-3.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-3">
+Past versions of unnamed-chunk-21-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-3.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-4.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-4">
+Past versions of unnamed-chunk-21-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-4.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-5.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-5">
+Past versions of unnamed-chunk-21-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-5.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-6.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-6">
+Past versions of unnamed-chunk-21-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-6.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-7.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-7">
+Past versions of unnamed-chunk-21-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-7.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-8.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-8">
+Past versions of unnamed-chunk-21-8.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-8.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-9.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-9">
+Past versions of unnamed-chunk-21-9.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-9.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-10.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-10">
+Past versions of unnamed-chunk-21-10.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-10.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-11.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-11">
+Past versions of unnamed-chunk-21-11.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-11.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-12.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-12">
+Past versions of unnamed-chunk-21-12.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-12.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-13.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-13">
+Past versions of unnamed-chunk-21-13.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-13.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-14.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-14">
+Past versions of unnamed-chunk-21-14.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-14.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-15.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-15">
+Past versions of unnamed-chunk-21-15.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-15.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-16.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-16">
+Past versions of unnamed-chunk-21-16.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-16.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-17.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-17">
+Past versions of unnamed-chunk-21-17.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-17.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-18.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-18">
+Past versions of unnamed-chunk-21-18.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-18.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-19.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-19">
+Past versions of unnamed-chunk-21-19.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-19.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-20.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-20">
+Past versions of unnamed-chunk-21-20.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-20" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-20.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-21.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-21">
+Past versions of unnamed-chunk-21-21.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-21" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-21.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-22.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-22">
+Past versions of unnamed-chunk-21-22.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-22" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-22.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
 argument.</code></pre>
 <p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-23.png" width="936" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-23">
+Past versions of unnamed-chunk-21-23.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-23" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/168daa57a9d2695ebe4f6beaf4961a9484c5a807/docs/figure/all_autosomes.Rmd/unnamed-chunk-21-23.png" target="_blank">168daa5</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>for(chromo in c(as.character(1:22), &quot;X&quot;)){
+  p &lt;- df_all_MB %&gt;%
+    filter(chrom == chromo) %&gt;%
+    group_by(bin, SUPER) %&gt;%
+    summarize(flip = mean(f_e / n_het),
+              switch = mean(s_e / n_het)) %&gt;%
+    ggplot(aes(flip, switch)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    facet_grid(cols = vars(SUPER)) +
+    xlab(&quot;Flip Rate&quot;) +
+    ylab(&quot;Switch Rate&quot;) +
+    ggtitle(paste0(&quot;Chromosome &quot;, chromo, &quot;; Eagle&quot;))
+  print(p)
+}</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-24.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-25.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-26.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-27.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-28.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-29.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-30.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-31.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-32.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-33.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-34.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-35.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-36.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-37.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-38.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-39.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-40.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-41.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-42.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-43.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-44.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-45.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-46.png" width="936" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>for(chromo in c(as.character(1:22), &quot;X&quot;)){
+  p &lt;- df_all_MB %&gt;%
+    filter(chrom == chromo) %&gt;%
+    group_by(bin, SUPER) %&gt;%
+    summarize(flip = mean(f_s / n_het),
+              switch = mean(s_s / n_het)) %&gt;%
+    ggplot(aes(flip, switch)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    facet_grid(cols = vars(SUPER)) +
+    xlab(&quot;Flip Rate&quot;) +
+    ylab(&quot;Switch Rate&quot;) +
+    ggtitle(paste0(&quot;Chromosome &quot;, chromo, &quot;; SHAPEIT&quot;))
+  print(p)
+}</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-47.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-48.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-49.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-50.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-51.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-52.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-53.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-54.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-55.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-56.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-57.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-58.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-59.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-60.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-61.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-62.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-63.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-64.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-65.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-66.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-67.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-68.png" width="936" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-21-69.png" width="936" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
