@@ -677,13 +677,79 @@ for(chromo in c(as.character(1:22), "X")){
 
 ### Switches
 
+```{r}
+df_X_rr <- read_rr("X") %>%
+  mutate(width = end - begin) %>%
+  mutate(bin = ceiling(begin / 1e6)) %>%
+  group_by(bin) %>%
+  summarize(rr = weighted.mean(rr, na.rm = T))
+
+df_tmp <- df_all_MB %>%
+  mutate(Beagle = s_b / n_het,
+         Eagle = s_e / n_het, 
+         SHAPEIT = s_s / n_het) %>%
+  group_by(SUPER, bin) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT))
+
+df_tmp <- df_tmp %>%
+  left_join(df_X_rr, by = "bin") %>%
+  drop_na()
+
+
+df_tmp <- df_tmp %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "switch")
+
+coeff <-  max(df_tmp$switch) / max(df_tmp$rr)
+
+df_tmp %>%
+  ggplot(aes(x = bin)) +
+  geom_line(aes(y = rr)) +
+  geom_line(aes(y = switch / coeff, color = Method)) +
+  scale_y_continuous(
+      name = "Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Switches")
+    ) +
+  facet_grid(cols = vars(SUPER))
+```
+
+```{r}
+df_X_rr <- read_rr("X") %>%
+  mutate(bin = ceiling( (end - ((end - begin)/2)) / 1e6),
+         width = end - begin) %>%
+  group_by(bin) %>%
+  summarize(rr = weighted.mean(rr, na.rm = T))
+
+df_tmp <- df_all_MB %>%
+  mutate(Beagle = f_b ,
+         Eagle = f_e , 
+         SHAPEIT = f_s ) %>%
+  group_by(SUPER, bin) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT))
+
+df_tmp <- df_tmp %>%
+  left_join(df_X_rr, by = "bin") %>%
+  drop_na()
+
+df_tmp %>%
+  ungroup() %>%
+  filter(SUPER == "EUR") %>%
+  select(Beagle:rr) %>%
+  corrr::correlate()
+```
+
+
 ```{r, fig.width=10, fig.height=3}
 
 for(i in c(as.character(1:22), "X")){
   df_X_rr <- read_rr(i) %>%
-    mutate(bin = ceiling(begin / 1e6)) %>%
+    mutate(bin = ceiling( (end - ((end - begin)/2)) / 1e6),
+         width = end - begin) %>%
     group_by(bin) %>%
-    summarize(rr = mean(rr))
+    summarize(rr = weighted.mean(rr, na.rm = T))
   
   df_X_rr <- df_X_rr %>%
     right_join({df_all_MB %>% filter(chrom == i)}, by="bin")
@@ -717,7 +783,8 @@ for(i in c(as.character(1:22), "X")){
               Eagle = mean(Eagle),
               SHAPEIT = mean(SHAPEIT)) %>%
     select(-bin) %>%
-    corrr::correlate()
+    corrr::correlate() %>%
+    print()
 }
 ```
 
@@ -727,9 +794,10 @@ for(i in c(as.character(1:22), "X")){
 
 for(i in c(as.character(1:22), "X")){
   df_X_rr <- read_rr(i) %>%
-    mutate(bin = ceiling(begin / 1e6)) %>%
+    mutate(bin = ceiling( (end - ((end - begin)/2)) / 1e6),
+         width = end - begin) %>%
     group_by(bin) %>%
-    summarize(rr = mean(rr))
+    summarize(rr = weighted.mean(rr, na.rm = T))
   
   df_X_rr <- df_X_rr %>%
     right_join({df_all_MB %>% filter(chrom == i)}, by="bin")
@@ -764,9 +832,78 @@ for(i in c(as.character(1:22), "X")){
               SHAPEIT = mean(SHAPEIT)) %>%
     ungroup() %>%
     select(-bin) %>%
-    corrr::correlate()
+    corrr::correlate() %>%
+    print()
 }
 ```
+
+### Single sample thorogh investigation
+
+```{r}
+df_rr <- read_rr("X") %>%
+  mutate(bin = ceiling(begin / 1e6)) %>%
+  group_by(bin) %>%
+  summarise(rr = mean(rr))
+
+df_sample <- load_het_pos(1, "output/switch_errors/het_loc/annotated/") %>%
+  mutate(bin = ceiling(pos / 1e6)) %>%
+  left_join(df_rr, by = "bin")
+```
+
+Average recombination rate in bins at all heterozygous positions:
+
+```{r}
+df_sample %>%
+  ggplot(aes(x = rr)) +
+  geom_boxplot()
+```
+
+At SHAPEIT flips:
+
+```{r}
+df_sample %>%
+  filter(shapeit_flip == 1) %>%
+  ggplot(aes(x = rr)) +
+  geom_boxplot()
+```
+
+Any switch:
+
+```{r}
+df_sample %>%
+  filter(beagle_switch == 1) %>%
+  mutate(type = "Beagle") %>%
+  bind_rows({df_sample %>%
+    filter(eagle_switch == 1) %>%
+    mutate(type = "Eagle")}) %>%
+  bind_rows({df_sample %>%
+    filter(shapeit_switch == 1) %>%
+    mutate(type = "SHAPEIT")}) %>%
+  bind_rows({df_sample %>%
+    mutate(type = "All")}) %>%
+  ggplot(aes(x = rr, y = type, color = type)) +
+  geom_boxplot() + scale_color_manual(values=cbPalette)
+```
+
+Any flip:
+
+```{r}
+df_sample %>%
+  filter(beagle_flip == 1) %>%
+  mutate(type = "Beagle") %>%
+  bind_rows({df_sample %>%
+    filter(eagle_flip == 1) %>%
+    mutate(type = "Eagle")}) %>%
+  bind_rows({df_sample %>%
+    filter(shapeit_flip == 1) %>%
+    mutate(type = "SHAPEIT")}) %>%
+  bind_rows({df_sample %>%
+    mutate(type = "All")}) %>%
+  ggplot(aes(x = rr, y = type, color = type)) +
+  geom_boxplot() + scale_color_manual(values=cbPalette)
+```
+
+
 
 ## CpG Enrichment
 
