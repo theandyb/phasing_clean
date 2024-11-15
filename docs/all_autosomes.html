@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-14
+<strong>Last updated:</strong> 2024-11-15
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreec3ee9daf7d2e91288abcb91c178fe237e9f5a9eatargetblankc3ee9daa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree77190d7289cec651f331d83009f5ce7a6a09db40targetblank77190d7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/c3ee9daf7d2e91288abcb91c178fe237e9f5a9ea" target="_blank">c3ee9da</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/77190d7289cec651f331d83009f5ce7a6a09db40" target="_blank">77190d7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreec3ee9daf7d2e91288abcb91c178fe237e9f5a9eatargetblankc3ee9daa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree77190d7289cec651f331d83009f5ce7a6a09db40targetblank77190d7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/c3ee9daf7d2e91288abcb91c178fe237e9f5a9ea" target="_blank">c3ee9da</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/77190d7289cec651f331d83009f5ce7a6a09db40" target="_blank">77190d7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -911,6 +911,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/77190d7289cec651f331d83009f5ce7a6a09db40/analysis/all_autosomes.Rmd" target="_blank">77190d7</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+wflow_publish("analysis/all_autosomes.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/all_autosomes.html" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -4030,10 +4064,14 @@ Andy Beck
 </div>
 <div id="recombination-rates" class="section level3">
 <h3>Recombination rates</h3>
-<pre class="r"><code>plot_rr_window &lt;- function(chrom, bin_size = 1e6){
+<pre class="r"><code>read_rr &lt;- function(chrom){
   df_rr &lt;- read_tsv(paste0(&quot;data/decode/chr&quot;, chrom, &quot;_recomb.bed&quot;),
                     show_col_types = F,
                     col_names = c(&quot;chrom&quot;, &quot;begin&quot;, &quot;end&quot;, &quot;rr&quot;))
+  df_rr
+}
+plot_rr_window &lt;- function(chrom, bin_size = 1e6){
+  df_rr &lt;- read_rr(chrom)
   df_rr &lt;- df_rr %&gt;%
     mutate(bin = ceiling(begin / bin_size)) %&gt;%
     group_by(bin) %&gt;%
@@ -11865,9 +11903,1415 @@ Andy Beck
 </div>
 </div>
 </div>
+<div id="errors-and-rr-in-bins" class="section level2">
+<h2>Errors and RR in bins</h2>
+<div id="switches" class="section level3">
+<h3>Switches</h3>
+<pre class="r"><code>for(i in c(as.character(1:22), &quot;X&quot;)){
+  df_X_rr &lt;- read_rr(i) %&gt;%
+    mutate(bin = ceiling(begin / 1e6)) %&gt;%
+    group_by(bin) %&gt;%
+    summarize(rr = mean(rr))
+  
+  df_X_rr &lt;- df_X_rr %&gt;%
+    right_join({df_all_MB %&gt;% filter(chrom == i)}, by=&quot;bin&quot;)
+  
+  p &lt;- df_X_rr %&gt;%
+    mutate(Beagle = s_b ,
+           Eagle = s_e ,
+           SHAPEIT = s_s ) %&gt;%
+    group_by(bin, SUPER) %&gt;%
+    summarise(rr = mean(rr),
+              Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    pivot_longer(Beagle:SHAPEIT, names_to = &quot;Method&quot;, values_to = &quot;switch_rate&quot;) %&gt;%
+    drop_na() %&gt;%
+    ggplot(aes(x = rr, y = switch_rate, color = Method)) +
+    geom_point() +
+    xlab(&quot;Recombination Rate&quot;) +
+    ylab(&quot;Switches&quot;) +
+    ggtitle(&quot;Switchs and Recombination Rates (MB)&quot;, paste0(&quot;Chromosome &quot;, i)) +
+    facet_grid(cols=vars(SUPER))
+  print(p)
+  
+  df_X_rr %&gt;%
+    mutate(Beagle = s_b ,
+           Eagle = s_e ,
+           SHAPEIT = s_s ) %&gt;%
+    group_by(bin, SUPER) %&gt;%
+    summarise(rr = mean(rr),
+              Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    select(-bin) %&gt;%
+    corrr::correlate()
+}</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-1">
+Past versions of unnamed-chunk-22-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-22-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-22-1.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-2.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-2">
+Past versions of unnamed-chunk-22-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-22-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-22-2.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-3.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-4.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-5.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-6.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-7.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-8.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-9.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-10.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-11.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-12.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-13.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-14.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-15.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-16.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-17.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-18.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-19.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-20.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-21.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-22.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-23.png" width="960" style="display: block; margin: auto;" /></p>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Adding missing grouping variables: `bin`
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;</code></pre>
+</div>
+<div id="flips" class="section level3">
+<h3>Flips</h3>
+<pre class="r"><code>for(i in c(as.character(1:22), &quot;X&quot;)){
+  df_X_rr &lt;- read_rr(i) %&gt;%
+    mutate(bin = ceiling(begin / 1e6)) %&gt;%
+    group_by(bin) %&gt;%
+    summarize(rr = mean(rr))
+  
+  df_X_rr &lt;- df_X_rr %&gt;%
+    right_join({df_all_MB %&gt;% filter(chrom == i)}, by=&quot;bin&quot;)
+  
+  p &lt;- df_X_rr %&gt;%
+    mutate(Beagle = f_b ,
+           Eagle = f_e ,
+           SHAPEIT = f_s ) %&gt;%
+    group_by(bin, SUPER) %&gt;%
+    summarise(rr = mean(rr),
+              Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    pivot_longer(Beagle:SHAPEIT, names_to = &quot;Method&quot;, values_to = &quot;switch_rate&quot;) %&gt;%
+    drop_na() %&gt;%
+    ggplot(aes(x = rr, y = switch_rate, color = Method)) +
+    geom_point() +
+    xlab(&quot;Recombination Rate&quot;) +
+    ylab(&quot;Flips&quot;) +
+    ggtitle(&quot;Flips and Recombination Rates (MB)&quot;, paste0(&quot;Chromosome &quot;, i)) +
+    facet_grid(cols=vars(SUPER))
+  print(p)
+  
+  df_X_rr %&gt;%
+    mutate(Beagle = f_b ,
+           Eagle = f_e ,
+           SHAPEIT = f_s ) %&gt;%
+    group_by(bin, SUPER) %&gt;%
+    summarise(rr = mean(rr),
+              Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %&gt;%
+    ungroup() %&gt;%
+    select(-bin) %&gt;%
+    corrr::correlate()
+}</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-1">
+Past versions of unnamed-chunk-23-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-1.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-2.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-2">
+Past versions of unnamed-chunk-23-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-2.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-3.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-3">
+Past versions of unnamed-chunk-23-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-3.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-4.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-4">
+Past versions of unnamed-chunk-23-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-4.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-5.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-5">
+Past versions of unnamed-chunk-23-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-5.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-6.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-6">
+Past versions of unnamed-chunk-23-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-6.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-7.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-7">
+Past versions of unnamed-chunk-23-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-7.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-8.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-8">
+Past versions of unnamed-chunk-23-8.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-8.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-9.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-9">
+Past versions of unnamed-chunk-23-9.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-9.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-10.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-10">
+Past versions of unnamed-chunk-23-10.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-10.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-11.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-11">
+Past versions of unnamed-chunk-23-11.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-11.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-12.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-12">
+Past versions of unnamed-chunk-23-12.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-12.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-13.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-13">
+Past versions of unnamed-chunk-23-13.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-13.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-14.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-14">
+Past versions of unnamed-chunk-23-14.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-14.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-15.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-15">
+Past versions of unnamed-chunk-23-15.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-15.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-16.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-16">
+Past versions of unnamed-chunk-23-16.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-16.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-17.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-17">
+Past versions of unnamed-chunk-23-17.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-17.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-18.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-18">
+Past versions of unnamed-chunk-23-18.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-18.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-19.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-19">
+Past versions of unnamed-chunk-23-19.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-19.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-20.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-20">
+Past versions of unnamed-chunk-23-20.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-20" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-20.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-21.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-21">
+Past versions of unnamed-chunk-23-21.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-21" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-21.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-22.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-22">
+Past versions of unnamed-chunk-23-22.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-22" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-22.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;
+`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.</code></pre>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-23.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-23">
+Past versions of unnamed-chunk-23-23.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-23" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-23-23.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>`summarise()` has grouped output by &#39;bin&#39;. You can override using the `.groups`
+argument.
+Non-numeric variables removed from input: `SUPER`
+Correlation computed with • Method: &#39;pearson&#39; • Missing treated using:
+&#39;pairwise.complete.obs&#39;</code></pre>
+</div>
+</div>
 <div id="cpg-enrichment" class="section level2">
 <h2>CpG Enrichment</h2>
-<div id="switches" class="section level3">
+<div id="switches-1" class="section level3">
 <h3>Switches</h3>
 <pre class="r"><code>df_all %&gt;%
     filter(chrom == &quot;1&quot;) %&gt;%
@@ -11881,7 +13325,44 @@ Andy Beck
     ggtitle(&quot;Enrichment of Switches at CpG&quot;, paste0(&quot;Chromosome &quot;, &quot;X&quot;)) +
     ylab(&quot;Enrichment&quot;) +
     geom_hline(yintercept = 1, colour = &quot;red&quot;)</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-1">
+Past versions of unnamed-chunk-24-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-24-1.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_all %&gt;%
     filter(chrom == &quot;X&quot;) %&gt;%
     mutate(Beagle = (n_flip_cpg_beagle / n_het_cpg)/(n_flip_beagle / n_hets),
@@ -11896,7 +13377,44 @@ Andy Beck
     geom_hline(yintercept = 1, colour = &quot;red&quot;) +
   facet_grid(cols = vars(SUPER)) +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-22-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-2">
+Past versions of unnamed-chunk-24-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/62ef498452319aa0b03e5cf3bb9cbbb80a8c0c57/docs/figure/all_autosomes.Rmd/unnamed-chunk-24-2.png" target="_blank">62ef498</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>for(i in c(as.character(1:22), &quot;X&quot;) ){
   p &lt;- df_all %&gt;%
     filter(chrom == i) %&gt;%
@@ -11912,16 +13430,16 @@ Andy Beck
     geom_hline(yintercept = 1, colour = &quot;red&quot;)
   print(p)
 }</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-1.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-2.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-3.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-4.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-1.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-2.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-3.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-4.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-5.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-6.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-5.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-6.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-7.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-8.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-9.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-10.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-11.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-12.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-13.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-14.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-15.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-16.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-17.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-18.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-19.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-7.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-8.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-9.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-10.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-11.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-12.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-13.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-14.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-15.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-16.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-17.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-18.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-19.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-20.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-21.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-22.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-23.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-20.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-21.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-22.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-23.png" width="480" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>for(i in c(as.character(1:22), &quot;X&quot;) ){
   p &lt;- df_all %&gt;%
     filter(chrom == i) %&gt;%
@@ -11937,16 +13455,16 @@ Andy Beck
     geom_hline(yintercept = 1, colour = &quot;red&quot;)
   print(p)
 }</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-24.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-25.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-26.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-27.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-24.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-25.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-26.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-27.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-28.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-29.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-28.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-29.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-30.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-31.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-32.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-33.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-34.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-35.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-36.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-37.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-38.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-39.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-40.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-41.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-42.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-30.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-31.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-32.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-33.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-34.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-35.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-36.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-37.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-38.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-39.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-40.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-41.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-42.png" width="480" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-43.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-44.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-45.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-23-46.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-43.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-44.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-45.png" width="480" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-25-46.png" width="480" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>for(i in c(as.character(1:22), &quot;X&quot;) ){
   p &lt;- df_all %&gt;%
     filter(chrom == i) %&gt;%
@@ -11964,16 +13482,16 @@ Andy Beck
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
   print(p)
 }</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-1.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-2.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-3.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-4.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-1.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-2.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-3.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-4.png" width="768" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-5.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-6.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-5.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-6.png" width="768" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-7.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-8.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-9.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-10.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-11.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-12.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-13.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-14.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-15.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-16.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-17.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-18.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-19.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-7.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-8.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-9.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-10.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-11.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-12.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-13.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-14.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-15.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-16.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-17.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-18.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-19.png" width="768" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-20.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-21.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-22.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-23.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-20.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-21.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-22.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-23.png" width="768" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>for(i in c(as.character(1:22), &quot;X&quot;) ){
   p &lt;- df_all %&gt;%
     filter(chrom == i) %&gt;%
@@ -11991,16 +13509,16 @@ Andy Beck
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
   print(p)
 }</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-24.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-25.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-26.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-27.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-24.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-25.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-26.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-27.png" width="768" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-28.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-29.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-28.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-29.png" width="768" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-30.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-31.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-32.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-33.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-34.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-35.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-36.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-37.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-38.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-39.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-40.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-41.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-42.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-30.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-31.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-32.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-33.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-34.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-35.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-36.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-37.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-38.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-39.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-40.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-41.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-42.png" width="768" style="display: block; margin: auto;" /></p>
 <pre><code>Warning: Removed 3 rows containing non-finite outside the scale range
 (`stat_boxplot()`).</code></pre>
-<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-43.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-44.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-45.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-24-46.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-43.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-44.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-45.png" width="768" style="display: block; margin: auto;" /><img src="figure/all_autosomes.Rmd/unnamed-chunk-26-46.png" width="768" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -12041,21 +13559,21 @@ other attached packages:
 
 loaded via a namespace (and not attached):
  [1] gtable_0.3.6       xfun_0.48          bslib_0.8.0        processx_3.8.4    
- [5] callr_3.7.6        tzdb_0.4.0         yulab.utils_0.1.7  vctrs_0.6.5       
- [9] tools_4.4.2        ps_1.8.1           generics_0.1.3     parallel_4.4.2    
-[13] fansi_1.0.6        highr_0.11         pkgconfig_2.0.3    ggplotify_0.1.2   
-[17] lifecycle_1.0.4    farver_2.1.2       compiler_4.4.2     git2r_0.33.0      
-[21] munsell_0.5.1      getPass_0.2-4      httpuv_1.6.15      htmltools_0.5.8.1 
-[25] sass_0.4.9         later_1.3.2        pillar_1.9.0       crayon_1.5.3      
-[29] jquerylib_0.1.4    whisker_0.4.1      cachem_1.1.0       tidyselect_1.2.1  
-[33] digest_0.6.37      stringi_1.8.4      labeling_0.4.3     cowplot_1.1.3     
-[37] rprojroot_2.0.4    fastmap_1.2.0      archive_1.1.8      colorspace_2.1-1  
-[41] cli_3.6.3          magrittr_2.0.3     utf8_1.2.4         withr_3.0.2       
-[45] scales_1.3.0       promises_1.3.0     bit64_4.0.5        timechange_0.3.0  
-[49] rmarkdown_2.28     httr_1.4.7         bit_4.5.0          hms_1.1.3         
-[53] evaluate_1.0.1     knitr_1.48         gridGraphics_0.5-1 rlang_1.1.4       
-[57] Rcpp_1.0.13        glue_1.8.0         rstudioapi_0.17.1  vroom_1.6.5       
-[61] jsonlite_1.8.9     R6_2.5.1           fs_1.6.5          </code></pre>
+ [5] corrr_0.4.4        callr_3.7.6        tzdb_0.4.0         yulab.utils_0.1.7 
+ [9] vctrs_0.6.5        tools_4.4.2        ps_1.8.1           generics_0.1.3    
+[13] parallel_4.4.2     fansi_1.0.6        highr_0.11         pkgconfig_2.0.3   
+[17] ggplotify_0.1.2    lifecycle_1.0.4    farver_2.1.2       compiler_4.4.2    
+[21] git2r_0.33.0       munsell_0.5.1      getPass_0.2-4      httpuv_1.6.15     
+[25] htmltools_0.5.8.1  sass_0.4.9         later_1.3.2        pillar_1.9.0      
+[29] crayon_1.5.3       jquerylib_0.1.4    whisker_0.4.1      cachem_1.1.0      
+[33] tidyselect_1.2.1   digest_0.6.37      stringi_1.8.4      labeling_0.4.3    
+[37] cowplot_1.1.3      rprojroot_2.0.4    fastmap_1.2.0      archive_1.1.8     
+[41] colorspace_2.1-1   cli_3.6.3          magrittr_2.0.3     utf8_1.2.4        
+[45] withr_3.0.2        scales_1.3.0       promises_1.3.0     bit64_4.0.5       
+[49] timechange_0.3.0   rmarkdown_2.28     httr_1.4.7         bit_4.5.0         
+[53] hms_1.1.3          evaluate_1.0.1     knitr_1.48         gridGraphics_0.5-1
+[57] rlang_1.1.4        Rcpp_1.0.13        glue_1.8.0         rstudioapi_0.17.1 
+[61] vroom_1.6.5        jsonlite_1.8.9     R6_2.5.1           fs_1.6.5          </code></pre>
 </div>
 </div>
 </div>
