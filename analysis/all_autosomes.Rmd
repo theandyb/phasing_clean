@@ -306,10 +306,14 @@ df_all %>%
 ### Recombination rates
 
 ```{r}
-plot_rr_window <- function(chrom, bin_size = 1e6){
+read_rr <- function(chrom){
   df_rr <- read_tsv(paste0("data/decode/chr", chrom, "_recomb.bed"),
                     show_col_types = F,
                     col_names = c("chrom", "begin", "end", "rr"))
+  df_rr
+}
+plot_rr_window <- function(chrom, bin_size = 1e6){
+  df_rr <- read_rr(chrom)
   df_rr <- df_rr %>%
     mutate(bin = ceiling(begin / bin_size)) %>%
     group_by(bin) %>%
@@ -666,6 +670,101 @@ for(chromo in c(as.character(1:22), "X")){
     ylab("Switch Rate") +
     ggtitle(paste0("Chromosome ", chromo, "; SHAPEIT"))
   print(p)
+}
+```
+
+## Errors and RR in bins
+
+### Switches
+
+```{r, fig.width=10, fig.height=3}
+
+for(i in c(as.character(1:22), "X")){
+  df_X_rr <- read_rr(i) %>%
+    mutate(bin = ceiling(begin / 1e6)) %>%
+    group_by(bin) %>%
+    summarize(rr = mean(rr))
+  
+  df_X_rr <- df_X_rr %>%
+    right_join({df_all_MB %>% filter(chrom == i)}, by="bin")
+  
+  p <- df_X_rr %>%
+    mutate(Beagle = s_b ,
+           Eagle = s_e ,
+           SHAPEIT = s_s ) %>%
+    group_by(bin, SUPER) %>%
+    summarise(rr = mean(rr),
+              Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "switch_rate") %>%
+    drop_na() %>%
+    ggplot(aes(x = rr, y = switch_rate, color = Method)) +
+    geom_point() +
+    xlab("Recombination Rate") +
+    ylab("Switches") +
+    ggtitle("Switchs and Recombination Rates (MB)", paste0("Chromosome ", i)) +
+    facet_grid(cols=vars(SUPER))
+  print(p)
+  
+  df_X_rr %>%
+    mutate(Beagle = s_b ,
+           Eagle = s_e ,
+           SHAPEIT = s_s ) %>%
+    group_by(bin, SUPER) %>%
+    summarise(rr = mean(rr),
+              Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    select(-bin) %>%
+    corrr::correlate()
+}
+```
+
+### Flips
+
+```{r, fig.width=10, fig.height=3}
+
+for(i in c(as.character(1:22), "X")){
+  df_X_rr <- read_rr(i) %>%
+    mutate(bin = ceiling(begin / 1e6)) %>%
+    group_by(bin) %>%
+    summarize(rr = mean(rr))
+  
+  df_X_rr <- df_X_rr %>%
+    right_join({df_all_MB %>% filter(chrom == i)}, by="bin")
+  
+  p <- df_X_rr %>%
+    mutate(Beagle = f_b ,
+           Eagle = f_e ,
+           SHAPEIT = f_s ) %>%
+    group_by(bin, SUPER) %>%
+    summarise(rr = mean(rr),
+              Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "switch_rate") %>%
+    drop_na() %>%
+    ggplot(aes(x = rr, y = switch_rate, color = Method)) +
+    geom_point() +
+    xlab("Recombination Rate") +
+    ylab("Flips") +
+    ggtitle("Flips and Recombination Rates (MB)", paste0("Chromosome ", i)) +
+    facet_grid(cols=vars(SUPER))
+  print(p)
+  
+  df_X_rr %>%
+    mutate(Beagle = f_b ,
+           Eagle = f_e ,
+           SHAPEIT = f_s ) %>%
+    group_by(bin, SUPER) %>%
+    summarise(rr = mean(rr),
+              Beagle = mean(Beagle),
+              Eagle = mean(Eagle),
+              SHAPEIT = mean(SHAPEIT)) %>%
+    ungroup() %>%
+    select(-bin) %>%
+    corrr::correlate()
 }
 ```
 
