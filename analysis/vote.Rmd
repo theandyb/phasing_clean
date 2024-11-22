@@ -145,7 +145,7 @@ df_x_rate %>%
   ggplot(aes(x = type, y = rate, color = method)) +
   geom_boxplot() +
   xlab("Error Type") +
-  ylab("Errors") +
+  ylab("Error Rates") +
   scale_color_manual(values = cbPalette) +
   labs(color = "Method")
 ```
