@@ -92,7 +92,7 @@ df_x %>%
   labs(color = "Method")
 ```
 
-Let's see if there are population-level differences:
+Let's see if there are population level differences:
 
 ```{r}
 df_x %>%
@@ -108,6 +108,70 @@ df_x %>%
   geom_boxplot() +
   xlab("Method") +
   ylab("Flips") +
+  labs(colour = "Population") +
+  scale_colour_manual(values = cbPalette)
+```
+
+
+Rates:
+
+```{r}
+df_x_rate <- df_switch_x %>%
+  mutate(Beagle_Flip = n_flip_beagle / n_hets,
+         Eagle_Flip = n_flip_eagle / n_hets,
+         SHAPEIT_Flip = n_flip_shapeit / n_hets,
+         Beagle_Switch = n_other_beagle / n_hets,
+         Eagle_Switch = n_other_eagle / n_hets,
+         SHAPEIT_Switch = n_other_shapeit / n_hets) %>%
+  select(contains("Flip", ignore.case = F), contains("Switch", ignore.case = F), pair_id) %>%
+  pivot_longer(-pair_id, names_to = c("method", "type"), names_sep = "_", values_to = "rate") %>%
+  pivot_wider(names_from = "method", values_from = "rate", id_cols = c("pair_id","type")) %>%
+  left_join({
+    df_vote_x %>%
+      mutate(Vote_Flip = n_flip_vote / n_hets,
+             Vote_Switch = n_other_vote / n_hets) %>%
+      select(contains("Flip", ignore.case = F), contains("Switch", ignore.case = F), pair_id) %>%
+      pivot_longer(-pair_id, names_to = c("method", "type"), names_sep = "_", values_to = "rate") %>%
+      pivot_wider(names_from = "method", values_from = "rate", id_cols = c("pair_id","type"))
+  }, by = c("pair_id", "type")) %>%
+  arrange(pair_id)
+
+df_x_rate <- df_x_rate %>%
+  left_join({pair_info_df %>% select(pair_id, SP)})
+
+df_x_rate %>%
+  pivot_longer(Beagle:Vote, names_to = "method", values_to = "rate") %>%
+  mutate(method = factor(method, levels = c("Beagle", "Eagle", "SHAPEIT", "Vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
+  ggplot(aes(x = type, y = rate, color = method)) +
+  geom_boxplot() +
+  xlab("Error Type") +
+  ylab("Errors") +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Method")
+```
+
+Let's see if there are population-level differences:
+
+```{r}
+df_x_rate %>%
+  pivot_longer(Beagle:Vote, names_to = "method", values_to = "rate") %>%
+  mutate(method = factor(method, levels = c("Beagle", "Eagle", "SHAPEIT", "Vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
+  filter(type=="Switch") %>%
+  ggplot(aes(x = method, y = rate, colour = SP)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Switch Rate") +
+  labs(colour = "Population") +
+  scale_colour_manual(values = cbPalette)
+
+df_x_rate %>%
+  pivot_longer(Beagle:Vote, names_to = "method", values_to = "rate") %>%
+  mutate(method = factor(method, levels = c("Beagle", "Eagle", "SHAPEIT", "Vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
+  filter(type=="Flip") %>%
+  ggplot(aes(x = method, y = rate, colour = SP)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Flip Rate") +
   labs(colour = "Population") +
   scale_colour_manual(values = cbPalette)
 ```
