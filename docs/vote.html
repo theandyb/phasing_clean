@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreed9d3024e42cfbb048feab56f2d923a1fb1fabc17targetblankd9d3024a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree32759fef6b11039e565fa6fbb9356fde550a886btargetblank32759fea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/d9d3024e42cfbb048feab56f2d923a1fb1fabc17" target="_blank">d9d3024</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/32759fef6b11039e565fa6fbb9356fde550a886b" target="_blank">32759fe</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreed9d3024e42cfbb048feab56f2d923a1fb1fabc17targetblankd9d3024a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree32759fef6b11039e565fa6fbb9356fde550a886btargetblank32759fea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/d9d3024e42cfbb048feab56f2d923a1fb1fabc17" target="_blank">d9d3024</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/32759fef6b11039e565fa6fbb9356fde550a886b" target="_blank">32759fe</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,7 +557,6 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    .ipynb_checkpoints/
-    Ignored:    analysis/figure/
     Ignored:    data/1kgp/chr1/
     Ignored:    data/1kgp/chr10/
     Ignored:    data/1kgp/chr11/
@@ -912,6 +911,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/32759fef6b11039e565fa6fbb9356fde550a886b/analysis/vote.Rmd" target="_blank">32759fe</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+<td>
+wflow_publish("analysis/vote.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/vote.html" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1340,10 +1373,47 @@ df_x_rate &lt;- df_x_rate %&gt;%
   ggplot(aes(x = type, y = rate, color = method)) +
   geom_boxplot() +
   xlab(&quot;Error Type&quot;) +
-  ylab(&quot;Errors&quot;) +
+  ylab(&quot;Error Rates&quot;) +
   scale_color_manual(values = cbPalette) +
   labs(color = &quot;Method&quot;)</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-7-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Let’s see if there are population-level differences:</p>
 <pre class="r"><code>df_x_rate %&gt;%
   pivot_longer(Beagle:Vote, names_to = &quot;method&quot;, values_to = &quot;rate&quot;) %&gt;%
@@ -1380,6 +1450,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-8-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/01a1afb806f9b961c47ffbbc610713dbc3bcd911/docs/figure/vote.Rmd/unnamed-chunk-8-1.png" target="_blank">01a1afb</a>
 </td>
 <td>
@@ -1404,6 +1485,43 @@ Andy Beck
   labs(colour = &quot;Population&quot;) +
   scale_colour_manual(values = cbPalette)</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-2">
+Past versions of unnamed-chunk-8-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-8-2.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>And finally, let’s look at each pair of methods and each individual
 synthetic diploid:</p>
 <pre class="r"><code>sub_plot &lt;- function(df, x, y, x_lab, y_lab){
@@ -1443,6 +1561,43 @@ pairwise_plots &lt;- function(df, type = &quot;switches&quot;){
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-10-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>pairwise_plots(df_x, &quot;flip&quot;)</code></pre>
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
@@ -1469,6 +1624,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-11-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/dadd1164920cfe96a8226ce84f683b67bc8b673f/docs/figure/vote.Rmd/unnamed-chunk-11-1.png" target="_blank">dadd116</a>
@@ -1566,6 +1732,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-13-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/dadd1164920cfe96a8226ce84f683b67bc8b673f/docs/figure/vote.Rmd/unnamed-chunk-13-1.png" target="_blank">dadd116</a>
 </td>
 <td>
@@ -1634,6 +1811,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-14-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/dadd1164920cfe96a8226ce84f683b67bc8b673f/docs/figure/vote.Rmd/unnamed-chunk-14-1.png" target="_blank">dadd116</a>
 </td>
 <td>
@@ -1677,10 +1865,84 @@ Andy Beck
   labs(colour = &quot;Population&quot;) +
   scale_colour_manual(values = cbPalette)</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-14-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-2">
+Past versions of unnamed-chunk-14-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-14-2.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>pairwise_plots(df_15, &quot;switches&quot;)</code></pre>
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-15-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-15-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>pairwise_plots(df_15, &quot;flip&quot;)</code></pre>
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
@@ -1707,6 +1969,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-16-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/6babd9f31a9ae2e1f604d329ba261a8bfe99af2e/docs/figure/vote.Rmd/unnamed-chunk-16-1.png" target="_blank">6babd9f</a>
@@ -1782,6 +2055,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-18-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/6babd9f31a9ae2e1f604d329ba261a8bfe99af2e/docs/figure/vote.Rmd/unnamed-chunk-18-1.png" target="_blank">6babd9f</a>
 </td>
 <td>
@@ -1828,6 +2112,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-19-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/6babd9f31a9ae2e1f604d329ba261a8bfe99af2e/docs/figure/vote.Rmd/unnamed-chunk-19-1.png" target="_blank">6babd9f</a>
 </td>
 <td>
@@ -1849,10 +2144,84 @@ Andy Beck
   labs(colour = &quot;Population&quot;) +
   scale_colour_manual(values = cbPalette)</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-19-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-2">
+Past versions of unnamed-chunk-19-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-19-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-19-2.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>pairwise_plots(df_22, &quot;switches&quot;)</code></pre>
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-20-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-1">
+Past versions of unnamed-chunk-20-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-20-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-20-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>pairwise_plots(df_22, &quot;flip&quot;)</code></pre>
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
@@ -1879,6 +2248,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-21-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/551762d22d3b43481aa3ed92817a5ed0a9eb56a9/docs/figure/vote.Rmd/unnamed-chunk-21-1.png" target="_blank">551762d</a>
@@ -1954,6 +2334,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-23-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/551762d22d3b43481aa3ed92817a5ed0a9eb56a9/docs/figure/vote.Rmd/unnamed-chunk-23-1.png" target="_blank">551762d</a>
 </td>
 <td>
@@ -2000,6 +2391,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-24-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/551762d22d3b43481aa3ed92817a5ed0a9eb56a9/docs/figure/vote.Rmd/unnamed-chunk-24-1.png" target="_blank">551762d</a>
 </td>
 <td>
@@ -2021,14 +2423,125 @@ Andy Beck
   labs(colour = &quot;Population&quot;) +
   scale_colour_manual(values = cbPalette)</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-24-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-2">
+Past versions of unnamed-chunk-24-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-24-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-24-2.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>pairwise_plots(df_1, &quot;switches&quot;)</code></pre>
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-25-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-1">
+Past versions of unnamed-chunk-25-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-25-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>pairwise_plots(df_1, &quot;flip&quot;)</code></pre>
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
 <p><img src="figure/vote.Rmd/unnamed-chunk-26-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-26-1">
+Past versions of unnamed-chunk-26-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-26-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/743a8c4945c888d8f95b6c991e0f41e6353fd7e1/docs/figure/vote.Rmd/unnamed-chunk-26-1.png" target="_blank">743a8c4</a>
+</td>
+<td>
+Andy Beck
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
