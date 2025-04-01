@@ -1,20 +1,21 @@
 #!/bin/bash
 #
-#SBATCH --job-name=trioPhase
+#SBATCH --job-name=tootone
 #SBATCH --ntasks=1
 #SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=8GB
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=beckandy@umich.edu
-#SBATCH --array=1-602
+#SBATCH --array=146,545
+#SBATCH --partition=main
 #SBATCH --constraint=avx2
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/sample.%A.%a.err
-#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/sample.%A.%a.out
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_17/slurm/sample.%A.%a.err
+#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_17/slurm/sample.%A.%a.out
 
 # Code for phasing 602 child samples against a panel with their parents removed
 
-chrom=1
+chrom=22
 eagle_map="/net/snowwhite/home/beckandy/software/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz"
 base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
 shapeit_dir="/net/snowwhite/home/beckandy/software/shapeit5/shapeit5" #location where shapeit is compiled
@@ -29,7 +30,8 @@ exclude_dir="${base_dir}/data/1kgp/exclude_samples/"
 out_dir="${base_dir}/output/trio_phase_${chrom}/"
 exclude_samples="${exclude_dir}/sample_${SLURM_ARRAY_TASK_ID}.txt"
 target_sample=$(head -n ${SLURM_ARRAY_TASK_ID} /net/snowwhite/home/beckandy/research/phasing_clean/data/1kgp/child_ids.txt  | tail -1)
-working_dir="/net/snowwhite/home/beckandy/scratch/"
+#working_dir="/net/snowwhite/home/beckandy/scratch/"
+working_dir="/tmp/"
 
 echo "Phasing subject ${target_sample} on chromosome ${chrom}"
 echo "Beagle map: ${beagle_map}"

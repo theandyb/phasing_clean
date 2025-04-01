@@ -1,18 +1,19 @@
 #!/bin/bash
 #
-#SBATCH --job-name=compare
+#SBATCH --job-name=twntyC
 #SBATCH --ntasks=1
 #SBATCH --time=01:00:00
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=1GB
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=beckandy@umich.edu
-#SBATCH --array=1-602
+#SBATCH --array=545
+#SBATCH --partition=main
 #SBATCH --constraint=avx2
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/check.%A.%a.err
-#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_22/slurm/check.%A.%a.out
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_20/slurm/check.%A.%a.err
+#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_20/slurm/check.%A.%a.out
 
-chrom=22
+chrom=20
 out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_${chrom}"
 beagle_vcf="$out_dir/beagle/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz"
 eagle_vcf="$out_dir/eagle/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz"

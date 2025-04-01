@@ -24,7 +24,7 @@ chrom = args.chrom
 input_file = args.switch
 output_file = args.output
 
-ref_file = "/net/snowwhite/home/beckandy/research/1000G_LSCI/reference_data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"
+ref_file = "/net/snowwhite/home/beckandy/research/phasing_clean/data/ref_GRCh38.fna"
 print("Reading reference file...")
 fasta_obj = Fasta(ref_file)
 seq = fasta_obj["chr{}".format(chrom)]

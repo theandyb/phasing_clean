@@ -6,11 +6,13 @@ config_obj <- yaml::read_yaml("_config.yaml")
 
 source(paste0(config_obj$base_dir,"/code/common_functions.R"))
 
-beagle_switch_dir <-   paste0(config_obj$base_dir,"/",config_obj$trio_result_dir,"/switch_errors/beagle/annotated/")
-eagle_switch_dir <-   paste0(config_obj$base_dir,"/",config_obj$trio_result_dir,"/switch_errors/eagle/annotated/")
-shapeit_switch_dir <-   paste0(config_obj$base_dir,"/",config_obj$trio_result_dir,"/switch_errors/shapeit/annotated/")
-het_loc_dir <- paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/het_loc/annotated/")
-out_dir <- paste0(config_obj$base_dir, "/", config_obj$trio_result_dir, "/mb_error_rate/")
+chrom <- 1
+
+beagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom ,"/switch_errors/beagle/annotated/")
+eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom ,"/switch_errors/eagle/annotated/")
+shapeit_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom ,"/switch_errors/shapeit/annotated/")
+het_loc_dir <- paste0(config_obj$base_dir,"/output/trio_phase_", chrom , "/het_loc/annotated/")
+out_dir <- paste0(config_obj$base_dir,"/output/trio_phase_", chrom , "/mb_error_rate/")
 
 # beagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/beagle/annotated/")
 # eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/eagle/annotated/")
@@ -78,7 +80,7 @@ annotate_het_df <- function(het_loc_dir, beagle_switch_dir, eagle_switch_dir, sh
 }
 
 # annotated het position files for all subjects
-for(i in 1:1000){
+for(i in 1:602){
   print(i)
   het_df <- annotate_het_df(het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, i)
   write_csv(het_df, paste0(het_loc_dir, "errors_", i, ".csv"))

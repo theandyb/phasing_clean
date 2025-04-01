@@ -336,8 +336,8 @@ switch_summary_trio <- function(pair_id, eagle_dir, beagle_dir, shapeit_dir, gc_
   switch_err_shapeit <- read_csv(paste0(shapeit_dir, "switch_", pair_id, ".csv"), show_col_types = FALSE) %>%
     mutate(bin_id = ceiling(pos_end / bin_size))
 
-  het_df <- read_tsv(paste0(paste0(het_loc_dir, "sample_", pair_id, ".bed")),
-                     col_names = c("chr", "pos_before", "pos"), show_col_types = FALSE) %>%
+  het_df <- read_tsv(paste0(paste0(het_loc_dir, "pair_", pair_id, "_het_loc.txt")),
+                     col_names = c("chr", "pos", "gt"), show_col_types = FALSE) %>%
     select(chr, pos) %>%
     mutate(pos_next = lead(pos)) %>%
     drop_na()

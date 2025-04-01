@@ -6,12 +6,13 @@
 #SBATCH --ntasks=1
 #SBATCH --time 01:00:00
 #SBATCH --job-name=SAn
-#SBATCH --array=1-602
+#SBATCH --array=290
 #SBATCH --requeue
+#SBATCH -p main
 #SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/ann-%A_%a.err
 #SBATCH -o /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_1/slurm/ann-%A_%a.out
 
-chrom=1
+chrom=5
 input_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_${chrom}/switch_errors/beagle"
 output_dir="${input_dir}/annotated"
 

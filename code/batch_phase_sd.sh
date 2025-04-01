@@ -88,7 +88,7 @@ awk '{if($3 == "1/0" || $3 == "0/1")print($0)}' > $out_dir/het_loc/pair_${SLURM_
 bcftools view -Ou $VCF | \
   bcftools view -s^$sub_a,$sub_b -Ou | \
   bcftools norm --no-version -Ou -m -any | \
-  bcftools norm --no-version -Ob -d none -f /net/snowwhite/home/beckandy/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna > /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf
+  bcftools norm --no-version -Ob -d none -f /net/snowwhite/home/beckandy/research/phasing_clean/data/ref_GRCh38.fna > /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf
 bcftools index /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf
 
 n_ref=$(bcftools query -f '%POS\n' /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf | wc -l)
