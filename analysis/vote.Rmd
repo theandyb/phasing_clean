@@ -89,7 +89,8 @@ df_x %>%
   xlab("Error Type") +
   ylab("Errors") +
   scale_color_manual(values = cbPalette) +
-  labs(color = "Method")
+  labs(color = "Method") +
+  theme_light()
 ```
 
 Let's see if there are population level differences:

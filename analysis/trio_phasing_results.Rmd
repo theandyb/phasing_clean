@@ -9,7 +9,7 @@ editor_options:
 
 ## Introduction
 
-Here in this document we present figures, tables, and statistics for the phasing evaluation on chromosome 15. This sample consists of 602 individuals phased using a reference panel of unrelated individuals from the 1000 genomes project. The phasing results are compared to a pedigree-adjusted phased genome for each sample.
+Here in this document we present figures, tables, and statistics for the phasing evaluation on the autosomes. This sample consists of 602 individuals phased using a reference panel of unrelated individuals from the 1000 genomes project. The phasing results are compared to a pedigree-adjusted phased genome for each sample.
 
 ## Libraries and Data
 
@@ -40,124 +40,45 @@ df_subj_rel$id2 <- 1:602
 df_subj_unrel <- df_subj %>%
   filter(SAMPLE_NAME %in% unrel_ids)
 
-df_switch_trio <- read_csv(paste0(config_obj$base_dir,"/output/trio_phase_15/switch_errors/summary.csv"))
+```
 
-df_switch_trio_22 <- read_csv(paste0(config_obj$base_dir,
-                                     "/output/trio_phase_22/switch_errors/summary.csv"))
+### Switch Error Summaries
 
-df_switch_trio_1 <- read_csv(paste0(config_obj$base_dir,
-                                     "/output/trio_phase_1/switch_errors/summary.csv"))
+```{r}
+df_switch_trio <- vector(mode = "list", length = 22)
 
+
+for(i in 1:22){
+  df_switch_trio[[i]] <- read_csv(paste0(config_obj$base_dir, "/output/trio_phase_", i, "/switch_errors/summary.csv"),
+                                  show_col_types = FALSE)
+}
+
+```
+
+### Heterozygous Position Counts
+
+```{r}
 # het dfs
+df_het <- vector(mode = "list", length = 22)
 
-df_het <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_15/het_pos_count.tsv"),
-                   col_names = c("id", "n_het"))
-df_het_22 <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_22/het_pos_count.tsv"),
-                   col_names = c("id", "n_het22"))
-df_het_1 <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_1/het_pos_count.tsv"),
-                   col_names = c("id", "n_het1"))
-
-
-n_var_site <- 1627002
-n_var_site_22 <- 767007
-n_var_site_1 <- 4372865
-
-df_het$frac_het <- df_het$n_het / n_var_site
-df_het_22$frac_het22 <- df_het_22$n_het22 / n_var_site_22
-df_het_1$frac_het1 <- df_het_1$n_het1 / n_var_site_1
-
-df_subj_rel <- left_join(df_subj_rel, df_het, by = c("id2" = "id")) %>%
-  left_join(df_het_22, by = c("id2" = "id")) %>%
-  left_join(df_het_1, by = c("id2" = "id")) 
-
-df_triple_het <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_15/triple_het.tsv"),
-                   col_names = c("id", "n_t_het"))
-df_triple_het_22 <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_22/triple_het.tsv"),
-                   col_names = c("id", "n_t_het22"))
-df_triple_het_1 <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_1/triple_het.tsv"),
-                   col_names = c("id", "n_t_het1"))
-
-df_subj_rel <- left_join(df_subj_rel, df_triple_het, by = c("id2" = "id")) %>%
-  left_join(df_triple_het_22, by = c("id2" = "id")) %>%
-  left_join(df_triple_het_1, by = c("id2" = "id"))
-
-df_subj_rel$frac_t_het <- df_subj_rel$n_t_het / df_subj_rel$n_het
-df_subj_rel$frac_t_het1 <- df_subj_rel$n_t_het1 / df_subj_rel$n_het1
-df_subj_rel$frac_t_het22 <- df_subj_rel$n_t_het22 / df_subj_rel$n_het22
+for(i in 1:22){
+  df_het[[i]] <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_", i, "/het_pos_count.tsv"),
+                   col_names = c("id", "n_het"), 
+                   show_col_types = FALSE)
+}
 
 
-df_switch_trio <- left_join(df_switch_trio, df_triple_het, by=c("pair_id" = "id"))
-df_switch_trio_22 <- left_join(df_switch_trio_22, df_triple_het_22, by=c("pair_id" = "id"))
-df_switch_trio_1 <- left_join(df_switch_trio_1, df_triple_het_1, by=c("pair_id" = "id"))
+```
 
-maf_prop_df <- read_csv(paste0(config_obj$base_dir,"/output/trio_phase_15/maf_props.csv"))
+### deCODE genetic maps (cM/MB)
 
-maf_prop_df <- left_join(maf_prop_df, 
-                         {df_subj_rel %>% 
-                             select(id2, POPULATION, SUPER, sex, n_het, n_t_het)},
-                         by = c("id" = "id2"))
+```{r}
+df_decode <- vector(mode = "list", length = 22)
 
-maf_prop_df_22 <- read_csv(paste0(config_obj$base_dir,"/output/trio_phase_22/maf_props.csv"))
+for(i in 1:22){
+  df_decode[[i]] <- read_tsv(paste0("data/decode/chr", i, "_recomb.bed"), col_names = c("chr", "start", "end", "cM_MB"), show_col_types = FALSE)
+}
 
-maf_prop_df_22 <- left_join(maf_prop_df_22, 
-                         {df_subj_rel %>% 
-                             select(id2, POPULATION, SUPER, sex, n_het22, n_t_het22)},
-                         by = c("id" = "id2"))
-
-maf_prop_df_1 <- read_csv(paste0(config_obj$base_dir,"/output/trio_phase_1/maf_props.csv"))
-
-maf_prop_df_1 <- left_join(maf_prop_df_1, 
-                         {df_subj_rel %>% 
-                             select(id2, POPULATION, SUPER, sex, n_het1, n_t_het1)},
-                         by = c("id" = "id2"))
-
-### Triple het error counts
-#### 15
-df_th_b_15 <- read_csv("output/trio_phase_15/switch_errors/beagle_triple_het.csv") %>%
-  rename(beagle_switch_th = n_switch_th, beagle_flip_th = n_flip_th)
-
-df_th_e_15 <- read_csv("output/trio_phase_15/switch_errors/eagle_triple_het.csv") %>%
-  rename(eagle_switch_th = n_switch_th, eagle_flip_th = n_flip_th)
-
-df_th_s_15 <- read_csv("output/trio_phase_15/switch_errors/shapeit_triple_het.csv") %>%
-  rename(shapeit_switch_th = n_switch_th, shapeit_flip_th = n_flip_th)
-
-df_switch_trio <- left_join(df_switch_trio, df_th_b_15, by=c("pair_id" = "id"))
-df_switch_trio <- left_join(df_switch_trio, df_th_e_15, by=c("pair_id" = "id"))
-df_switch_trio <- left_join(df_switch_trio, df_th_s_15, by=c("pair_id" = "id"))
-
-#### 22
-df_th_b_22 <- read_csv("output/trio_phase_22/switch_errors/beagle_triple_het.csv") %>%
-  rename(beagle_switch_th22 = n_switch_th, beagle_flip_th22 = n_flip_th)
-
-df_th_e_22 <- read_csv("output/trio_phase_22/switch_errors/eagle_triple_het.csv") %>%
-  rename(eagle_switch_th22 = n_switch_th, eagle_flip_th22 = n_flip_th)
-
-df_th_s_22 <- read_csv("output/trio_phase_22/switch_errors/shapeit_triple_het.csv") %>%
-  rename(shapeit_switch_th22 = n_switch_th, shapeit_flip_th22 = n_flip_th)
-
-df_switch_trio_22 <- left_join(df_switch_trio_22, df_th_b_22, by=c("pair_id" = "id"))
-df_switch_trio_22 <- left_join(df_switch_trio_22, df_th_e_22, by=c("pair_id" = "id"))
-df_switch_trio_22 <- left_join(df_switch_trio_22, df_th_s_22, by=c("pair_id" = "id"))
-
-#### 1
-df_th_b_1 <- read_csv("output/trio_phase_1/switch_errors/beagle_triple_het.csv") %>%
-  rename(beagle_switch_th1 = n_switch_th, beagle_flip_th1 = n_flip_th)
-
-df_th_e_1 <- read_csv("output/trio_phase_1/switch_errors/eagle_triple_het.csv") %>%
-  rename(eagle_switch_th1 = n_switch_th, eagle_flip_th1 = n_flip_th)
-
-df_th_s_1 <- read_csv("output/trio_phase_1/switch_errors/shapeit_triple_het.csv") %>%
-  rename(shapeit_switch_th1 = n_switch_th, shapeit_flip_th1 = n_flip_th)
-
-df_switch_trio_1 <- left_join(df_switch_trio_1, df_th_b_1, by=c("pair_id" = "id"))
-df_switch_trio_1 <- left_join(df_switch_trio_1, df_th_e_1, by=c("pair_id" = "id"))
-df_switch_trio_1 <- left_join(df_switch_trio_1, df_th_s_1, by=c("pair_id" = "id"))
-
-# deCODE genetic maps (cM/MB)
-df_decode <- read_tsv("data/decode/chr15_recomb.bed", col_names = c("chr", "start", "end", "cM_MB"))
-df_decode22 <- read_tsv("data/decode/chr22_recomb.bed", col_names = c("chr", "start", "end", "cM_MB"))
-df_decode1 <- read_tsv("data/decode/chr1_recomb.bed", col_names = c("chr", "start", "end", "cM_MB"))
 ```
 
 ### Chr X Results
@@ -242,258 +163,6 @@ df_subj_unrel %>%
     defaultExpanded = TRUE)
 ```
 
-## Chromosome 15 Information
-
-Things I'd like:
-
-* Density of heterozygous SNPs per individual
-* GC content of heterozygous positions
-
-First let's look at the density of heterozygous positions in each sample, i.e. what fraction of the sites are heterozygous.
-
-```{r}
-df_subj_rel %>%
-  tbl_summary(
-    by = SUPER,
-    include = c(frac_het, frac_het22, frac_het1),
-    statistic = list(all_continuous() ~ "{mean} ({sd})", 
-                     all_categorical() ~ "{n} / {N} ({p}%)"))
-
-df_subj_rel %>%
-  ggplot() +
-  stat_density(aes(x = frac_het, colour = SUPER),
-                  geom="line",position="identity") +
-  theme_classic() +
-  ggtitle("Fraction of Sites Heterozygous", "Chromosome 15") +
-  labs(colour="Population") +
-  xlab("Fraction of Sites Heterozygous") +
-  scale_colour_manual(values=cbPalette)
-
-df_subj_rel %>%
-  ggplot() +
-  stat_density(aes(x = frac_het22, colour = SUPER),
-                  geom="line",position="identity") +
-  theme_classic() +
-  ggtitle("Fraction of Sites Heterozygous", "Chromosome 22") +
-  labs(colour="Population") +
-  xlab("Fraction of Sites Heterozygous") +
-  scale_colour_manual(values=cbPalette)
-
-df_subj_rel %>%
-  ggplot() +
-  stat_density(aes(x = frac_het1, colour = SUPER),
-                  geom="line",position="identity") +
-  theme_classic() +
-  ggtitle("Fraction of Sites Heterozygous", "Chromosome 1") +
-  labs(colour="Population") +
-  xlab("Fraction of Sites Heterozygous") +
-  scale_colour_manual(values=cbPalette)
-
-df_subj_rel %>%
-  ggplot() +
-  geom_boxplot(aes(x = frac_het, y = SUPER , fill = SUPER), show.legend = FALSE) +
-  theme_classic() +
-  ggtitle("Fraction of Sites Heterozygous", "Chromosome 15") +
-  labs(fill="Population") +
-  xlab("Fraction of Sites Heterozygous") +
-  ylab("Population") +
-  scale_fill_manual(values=cbPalette)
-
-df_subj_rel %>%
-  ggplot() +
-  geom_boxplot(aes(x = frac_het22, y = SUPER , fill = SUPER), show.legend = FALSE) +
-  theme_classic() +
-  ggtitle("Fraction of Sites Heterozygous", "Chromosome 22") +
-  labs(fill="Population") +
-  xlab("Fraction of Sites Heterozygous") +
-  ylab("Population") +
-  scale_fill_manual(values=cbPalette)
-
-df_subj_rel %>%
-  ggplot() +
-  geom_boxplot(aes(x = frac_het1, y = SUPER , fill = SUPER), show.legend = FALSE) +
-  theme_classic() +
-  ggtitle("Fraction of Sites Heterozygous", "Chromosome 1") +
-  labs(fill="Population") +
-  xlab("Fraction of Sites Heterozygous") +
-  ylab("Population") +
-  scale_fill_manual(values=cbPalette)
-```
-
-How does this compare to what we observe in the X chromosome?
-
-```{r}
-sd_pair_info_df %>%
-  tbl_summary(
-    by = SP,
-    include = c(frac_het),
-    statistic = list(all_continuous() ~ "{mean} ({sd})", 
-                     all_categorical() ~ "{n} / {N} ({p}%)"))
-
-sd_pair_info_df %>%
-  ggplot() +
-  stat_density(aes(x = frac_het, colour = SP),
-                  geom="line",position="identity") +
-  theme_classic() +
-  ggtitle("Fraction of Sites Heterozygous", "Chromosome X") +
-  labs(colour="Population") +
-  xlab("Fraction of Sites Heterozygous") +
-  scale_colour_manual(values=cbPalette)
-
-sd_pair_info_df %>%
-  ggplot() +
-  geom_boxplot(aes(x = frac_het, y = SP , fill = SP), show.legend = FALSE) +
-  theme_classic() +
-  ggtitle("Fraction of Sites Heterozygous", "Chromosome X") +
-  labs(fill="Population") +
-  xlab("Fraction of Sites Heterozygous") +
-  ylab("Population") +
-  scale_fill_manual(values=cbPalette)
-
-sd_pair_info_df %>%
-  ggplot() +
-  geom_boxplot(aes(x = n_het, y = SP , fill = SP), show.legend = FALSE) +
-  theme_classic() +
-  ggtitle("Number of Heterozygous Sites", "Chromosome X") +
-  labs(fill="Population") +
-  xlab("Number of Heterozygous Sites") +
-  ylab("Population") +
-  scale_fill_manual(values=cbPalette)
-```
-
-And for another comparison, we'll summarize heterozygosity by super population:
-
-```{r}
-df_subj_rel %>%
-  group_by(SUPER) %>%
-  summarize(mean_het_15 = mean(frac_het),
-            mean_het_22 = mean(frac_het22),
-            mean_het_1 = mean(frac_het1)) %>%
-  left_join({ sd_pair_info_df %>%
-      group_by(SP) %>%
-      summarize(mean_het_x = mean(frac_het))
-  }, by = c("SUPER" = "SP")) %>%
-  mutate(x_15_ratio = mean_het_x/mean_het_15,
-         x_22_ratio = mean_het_x / mean_het_22,
-         c15_22_ratio = mean_het_15 / mean_het_22,
-         c15_1_ratio = mean_het_15 / mean_het_1) %>%
-  knitr::kable()
-```
-
-And finally, since samples are shared between 15 and 22, let's look at how fraction of heterozygous sites looks like across chromosomes:
-
-```{r}
-df_subj_rel %>%
-  ggplot(aes(frac_het, frac_het22, color = SUPER)) +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0) +
-  theme_classic() +
-  xlab("Chromosome 15 % Heterozygous") +
-  ylab("Chromosome 22 % Heterozygous") +
-  labs(color = "Population") +
-  scale_color_manual(values = cbPalette)
-
-df_subj_rel %>%
-  ggplot(aes(frac_het, frac_het1, color = SUPER)) +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0) +
-  theme_classic() +
-  xlab("Chromosome 15 % Heterozygous") +
-  ylab("Chromosome 1 % Heterozygous") +
-  labs(color = "Population") +
-  scale_color_manual(values = cbPalette)
-
-df_subj_rel %>%
-  ggplot(aes(frac_het22, frac_het1, color = SUPER)) +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0) +
-  theme_classic() +
-  xlab("Chromosome 22 % Heterozygous") +
-  ylab("Chromosome 1 % Heterozygous") +
-  labs(color = "Population") +
-  scale_color_manual(values = cbPalette)
-```
-
-In addition, we also know how many heterozygous sites are triple heterozygous in each trio:
-
-```{r}
-df_subj_rel %>%
-  ggplot(aes(x = frac_t_het, y = SUPER, fill = SUPER)) +
-  geom_boxplot(show.legend = FALSE) +
-  theme_classic() +
-  xlab("Triple Het Site Fraction") +
-  ylab("Population") +
-  scale_fill_manual(values = cbPalette) +
-  ggtitle("Fraction of heterozygous sites with triple heterozygotes", "Chromosome 15")
-
-df_subj_rel %>%
-  ggplot(aes(x = frac_t_het22, y = SUPER, fill = SUPER)) +
-  geom_boxplot(show.legend = FALSE) +
-  theme_classic() +
-  xlab("Triple Het Site Fraction") +
-  ylab("Population") +
-  scale_fill_manual(values = cbPalette) +
-  ggtitle("Fraction of heterozygous sites with triple heterozygotes", "Chromosome 22")
-
-df_subj_rel %>%
-  ggplot(aes(x = frac_t_het1, y = SUPER, fill = SUPER)) +
-  geom_boxplot(show.legend = FALSE) +
-  theme_classic() +
-  xlab("Triple Het Site Fraction") +
-  ylab("Population") +
-  scale_fill_manual(values = cbPalette) +
-  ggtitle("Fraction of heterozygous sites with triple heterozygotes", "Chromosome 1")
-
-df_subj_rel %>%
-  ggplot(aes(x = frac_t_het22, y = frac_t_het, color = SUPER)) +
-  geom_point() +
-  geom_abline(slope=1, intercept = 0) +
-  theme_classic() +
-  xlab("Chromosome 22") +
-  ylab("Chromosome 15") +
-  scale_color_manual(values = cbPalette) +
-  ggtitle("Fraction of heterozygous sites with triple heterozygotes")
-
-df_subj_rel %>%
-  ggplot(aes(x = frac_t_het1, y = frac_t_het, color = SUPER)) +
-  geom_point() +
-  geom_abline(slope=1, intercept = 0) +
-  theme_classic() +
-  xlab("Chromosome 1") +
-  ylab("Chromosome 15") +
-  scale_color_manual(values = cbPalette) +
-  ggtitle("Fraction of heterozygous sites with triple heterozygotes")
-
-df_subj_rel %>%
-  ggplot(aes(x = frac_t_het1, y = frac_t_het22, color = SUPER)) +
-  geom_point() +
-  geom_abline(slope=1, intercept = 0) +
-  theme_classic() +
-  xlab("Chromosome 1") +
-  ylab("Chromosome 22") +
-  scale_color_manual(values = cbPalette) +
-  ggtitle("Fraction of heterozygous sites with triple heterozygotes")
-
-df_subj_rel %>%
-  ggplot(aes(x = n_t_het22, y = n_t_het, color = SUPER)) +
-  geom_point() +
-  theme_classic() +
-  xlab("Chromosome 22") +
-  ylab("Chromosome 15") +
-  scale_color_manual(values = cbPalette) +
-  ggtitle("Triple Heterozygous Sites")
-
-df_subj_rel %>%
-  ggplot(aes(x = n_t_het, y = SUPER, fill = SUPER)) +
-  geom_boxplot(show.legend = FALSE) +
-  theme_classic() +
-  xlab("Triple Het Sites") +
-  ylab("Population") +
-  scale_fill_manual(values = cbPalette) +
-  ggtitle("Triple Heterozygotes Sites", "Chromosome 15")
-```
-
-
 ## Switch Errors
 
 ### Total Errors
@@ -549,38 +218,27 @@ table_total_errors <- function(df, pop){
   return(res)
 }
 
-plot_total_errors(df_switch_trio, "Beagle", "Eagle", "SUPER")
-plot_total_errors(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
-plot_total_errors(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+plot_total_errors(df_switch_trio[[15]], "Beagle", "Eagle", "SUPER")
+plot_total_errors(df_switch_trio[[15]], "Beagle", "SHAPEIT", "SUPER")
+plot_total_errors(df_switch_trio[[15]], "SHAPEIT", "Eagle", "SUPER")
 
-cross_meth_plot(df_switch_trio, "Total Errors", plot_total_errors, "SUPER", "15")
+cross_meth_plot(df_switch_trio[[15]], "Total Errors", plot_total_errors, "SUPER", "15")
 
-table_total_errors(df_switch_trio, "SUPER")
+table_total_errors(df_switch_trio[[15]], "SUPER")
 ```
 
 And now chromosome 22:
 
 ```{r}
-plot_total_errors(df_switch_trio_22, "Beagle", "Eagle", "SUPER", 22)
-plot_total_errors(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER", 22)
-plot_total_errors(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER", 22)
+plot_total_errors(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", 22)
+plot_total_errors(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", 22)
+plot_total_errors(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", 22)
 
-cross_meth_plot(df_switch_trio_22, "Total Errors", plot_total_errors, "SUPER", "22")
+cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_errors, "SUPER", "22")
 
-table_total_errors(df_switch_trio_22, "SUPER")
+table_total_errors(df_switch_trio[[22]], "SUPER")
 ```
 
-And now chromosome 1:
-
-```{r}
-plot_total_errors(df_switch_trio_1, "Beagle", "Eagle", "SUPER", 1)
-plot_total_errors(df_switch_trio_1, "Beagle", "SHAPEIT", "SUPER", 1)
-plot_total_errors(df_switch_trio_1, "SHAPEIT", "Eagle", "SUPER", 1)
-
-cross_meth_plot(df_switch_trio_1, "Total Errors", plot_total_errors, "SUPER", "1")
-
-table_total_errors(df_switch_trio_1, "SUPER")
-```
 
 And finally, chromosome X:
 

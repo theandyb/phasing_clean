@@ -3,7 +3,7 @@ library(yaml)
 
 config_obj <- yaml::read_yaml("_config.yaml")
 
-out_dir <- paste0(config_obj$base_dir, "/data/1kgp/chr15/exclude_samples/")
+out_dir <- paste0(config_obj$base_dir, "/data/1kgp/chr8/exclude_samples/")
 
 # load the subject information
 subj_df <- read_csv(paste0(config_obj$base_dir, "/data/1kgp/subject_info.csv"))
@@ -41,4 +41,5 @@ for(i in 1:602){
   }
   write_tsv(data.frame(id = remove_id), paste0(out_dir, "sample_", i, ".txt") ,col_names = F)
 }
+i <- 33
 

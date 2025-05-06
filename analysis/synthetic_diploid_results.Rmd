@@ -721,6 +721,7 @@ df_vcftools %>%
   labs(color = "Population")
 ```
 
+
 ```{r}
 df_vcftools %>%
   mutate(Beagle = n_other_beagle + n_flip_beagle,
@@ -839,6 +840,43 @@ df_vcftools %>%
          SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
   cross_meth_plot(p_title = "Total Error Rates")
 ```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = method, y = error_rate)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Error Rate")
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = pop, y = error_rate, colour = method)) +
+  geom_boxplot() +
+  xlab("Population") +
+  ylab("Error Rate") +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Method")
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  corrr::correlate() %>%
+  corrr::shave()
+```
+
 
 
 ### Non-flip switches
@@ -968,6 +1006,44 @@ df_vcftools %>%
   cross_meth_plot(p_title = "Switch Rate")
 ```
 
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = method, y = error_rate)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Switch Rate")
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = pop, y = error_rate, colour = method)) +
+  geom_boxplot() +
+  xlab("Population") +
+  ylab("Switch Rate") +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Method")
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  corrr::correlate() %>%
+  corrr::shave()
+```
+
 
 ### Flips
 
@@ -1093,6 +1169,54 @@ df_vcftools %>%
          Eagle = (n_flip_eagle ) / n_hets, 
          SHAPEIT = (n_flip_shapeit) / n_hets) %>%
   cross_meth_plot(p_title = "Flip Error Rates")
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = method, y = error_rate)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Flip Rate")
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets ) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = pop, y = error_rate, colour = method)) +
+  geom_boxplot() +
+  xlab("Population") +
+  ylab("Flip Rate") +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Method")
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  corrr::correlate() %>%
+  corrr::shave()
+```
+
+### Error Rates in Bins
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  select()
 ```
 
 
@@ -1554,6 +1678,65 @@ print(res_obj$p)
 res_obj$tab_prop %>%
   knitr::kable()
 ```
+
+### Plot all
+
+```{r}
+maf_prop_df %>%
+  filter(str_detect(category, "switch")) %>%
+  separate(category, into=c("method", "type", "maf_c"), sep="_") %>%
+  select(-type) %>%
+  bind_rows({maf_prop_df %>%
+      filter(str_starts(category, "het")) %>%
+      separate(category, into=c("method", "maf_c"), sep = "_") }) %>%
+  mutate(method = factor(method),
+         maf_c = factor(maf_c)) %>%
+  mutate(method = fct_recode(method, "Beagle" = "beagle",
+                             "Eagle" = "eagle",
+                             "SHAPEIT" = "shapeit",
+                             "heterozygous" = "het"),
+         maf_c = fct_recode(maf_c, "Rare" = "rare",
+                            "Uncommon" = "uncommon",
+                            "Common" = "common")) %>%
+  mutate(method = fct_relevel(method, "heterozygous", "Beagle", "Eagle", "SHAPEIT"),
+         maf_c = fct_relevel(maf_c, "Rare", "Uncommon", "Common")) %>%
+  ggplot(aes(x = maf_c, y = proportion, colour = method)) +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Proportion") +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Method") +
+  ggtitle("Switch Errors")
+```
+
+```{r}
+maf_prop_df %>%
+  filter(str_detect(category, "flip_")) %>%
+  separate(category, into=c("method", "type", "maf_c"), sep="_") %>%
+  select(-type) %>%
+  bind_rows({maf_prop_df %>%
+      filter(str_starts(category, "het")) %>%
+      separate(category, into=c("method", "maf_c"), sep = "_") }) %>%
+  mutate(method = factor(method),
+         maf_c = factor(maf_c)) %>%
+  mutate(method = fct_recode(method, "Beagle" = "beagle",
+                             "Eagle" = "eagle",
+                             "SHAPEIT" = "shapeit",
+                             "heterozygous" = "het"),
+         maf_c = fct_recode(maf_c, "Rare" = "rare",
+                            "Uncommon" = "uncommon",
+                            "Common" = "common")) %>%
+  mutate(method = fct_relevel(method, "heterozygous", "Beagle", "Eagle", "SHAPEIT"),
+         maf_c = fct_relevel(maf_c, "Rare", "Uncommon", "Common")) %>%
+  ggplot(aes(x = maf_c, y = proportion, colour = method)) +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Proportion") +
+  scale_color_manual(values = cbPalette) +
+  labs(color = "Method") +
+  ggtitle("Flip Errors")
+```
+
 
 ### Enrichment of Rare
 

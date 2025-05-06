@@ -12,7 +12,7 @@ navbar:
   right:
   - icon: fab fa-github
     text: Source code
-    href: https://github.com/thandyb/phasing_clean
+    href: https://github.com/theandyb/phasing_clean
 output:
   workflowr::wflow_html:
     toc: yes

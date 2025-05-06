@@ -1,23 +1,26 @@
 #!/bin/bash
 #
-#SBATCH --job-name=vote
+#SBATCH --job-name=vote2
 #SBATCH --ntasks=1
-#SBATCH --time=03:00:00
+#SBATCH --time=08:00:00
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=5GB
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=beckandy@umich.edu
 #SBATCH --array=1-602
 #SBATCH --constraint=avx2
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/vote_1/slurm/vote.%A.%a.err
-#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/vote_1/slurm/vote.%A.%a.out
+#SBATCH --exclude=r[6330,6324]
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/vote_2/slurm/vote.%A.%a.err
+#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/vote_2/slurm/vote.%A.%a.out
+
+chrom=2
 
 base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
-in_dir="${base_dir}/output/trio_phase_1"
-out_dir="${base_dir}/output/vote_1"
+in_dir="${base_dir}/output/trio_phase_${chrom}"
+out_dir="${base_dir}/output/vote_${chrom}"
 tmp_dir="/tmp"
 
-if [ ! -f "${out_dir}/vote_${SLURM_ARRAY_TASK_ID}.bcf" ]; then
+if [ ! -f "${out_dir}/error_vote_${SLURM_ARRAY_TASK_ID}.tsv" ]; then
 
 # Index input bcf
 bcftools index $in_dir/shapeit/sample_${SLURM_ARRAY_TASK_ID}.vcf.gz

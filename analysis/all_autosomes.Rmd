@@ -604,6 +604,49 @@ plot_errors_bin <- function(df, chrom, bin_label="MB"){
 df_all_MB <- read_csv("output/error_rate_MB.csv")
 ```
 
+### Chromosome X:
+
+```{r}
+df_all_MB %>%
+  filter(chrom == "X") %>%
+  mutate(Beagle = s_b / n_het,
+         Eagle = s_e / n_het,
+         SHAPEIT = s_s / n_het) %>%
+  group_by(bin) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(-bin, names_to = "method", values_to = "rate") %>%
+  ggplot(aes(x = bin, y = rate, colour = method)) +
+    geom_point() +
+    geom_line() +
+    scale_color_manual(values = cbPalette) +
+    xlab("MB Bin") +
+    ylab("Mean Switch Rate") +
+    labs(color = "Method")
+```
+
+```{r}
+df_all_MB %>%
+  filter(chrom == "X") %>%
+  mutate(Beagle = f_b / n_het,
+         Eagle = f_e / n_het,
+         SHAPEIT = f_s / n_het) %>%
+  group_by(bin) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(-bin, names_to = "method", values_to = "rate") %>%
+  ggplot(aes(x = bin, y = rate, colour = method)) +
+    geom_point() +
+    geom_line() +
+    scale_color_manual(values = cbPalette) +
+    xlab("MB Bin") +
+    ylab("Mean Flip Rate") +
+    labs(color = "Method")
+```
+
+
 ```{r}
 plot_switch_rate_bin(df_all_MB, "X") + scale_colour_manual(values = cbPalette)
 plot_flip_rate_bin(df_all_MB, "X") + scale_colour_manual(values = cbPalette)
@@ -719,7 +762,7 @@ df_X_rr <- read_rr("X") %>%
   mutate(bin = ceiling( (end - ((end - begin)/2)) / 1e6),
          width = end - begin) %>%
   group_by(bin) %>%
-  summarize(rr = weighted.mean(rr, na.rm = T))
+  summarize(rr = weighted.mean(rr, width, na.rm = T))
 
 df_tmp <- df_all_MB %>%
   mutate(Beagle = f_b ,
@@ -741,6 +784,151 @@ df_tmp %>%
   corrr::correlate()
 ```
 
+#### EUR
+
+```{r}
+df_X_rr <- read_rr("X") %>%
+  mutate(bin = ceiling( (end - ((end - begin)/2)) / 1e6),
+         width = end - begin) %>%
+  group_by(bin) %>%
+  summarize(rr = weighted.mean(rr, width, na.rm = T))
+
+df_tmp <- df_all_MB %>% filter(chrom == "X", SUPER == "EUR") %>%
+  group_by(bin) %>%
+  summarize(Beagle = sum(s_b),
+            Eagle = sum(s_e),
+            SHAPEIT = sum(s_s))
+
+df_tmp <- df_tmp %>%
+  left_join(df_X_rr, by = "bin")
+
+coeff <-  max(df_tmp$Eagle) / max(df_tmp$rr, na.rm = T)
+
+df_tmp %>%
+  select(bin, Beagle:SHAPEIT, rr) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = rr)) +
+    geom_point(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Switches")
+    ) +
+  scale_color_manual(values=cbPalette)
+```
+
+```{r}
+corrr::correlate({df_tmp %>% select(Beagle:SHAPEIT, rr)})
+```
+
+```{r}
+df_X_rr <- read_rr(15) %>%
+  mutate(bin = ceiling( (end - ((end - begin)/2)) / 1e6),
+         width = end - begin) %>%
+  group_by(bin) %>%
+  summarize(rr = weighted.mean(rr, width, na.rm = T))
+
+df_tmp <- df_all_MB %>% filter(chrom == 15, SUPER == "EUR") %>%
+  group_by(bin) %>%
+  summarize(Beagle = sum(s_b),
+            Eagle = sum(s_e),
+            SHAPEIT = sum(s_s))
+
+df_tmp <- df_tmp %>%
+  left_join(df_X_rr, by = "bin")
+
+coeff <-  max(df_tmp$Eagle) / max(df_tmp$rr, na.rm = T)
+
+df_tmp %>%
+  select(bin, Beagle:SHAPEIT, rr) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = rr)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Switches")
+    ) +
+  scale_color_manual(values=cbPalette)
+```
+
+```{r}
+corrr::correlate({df_tmp %>% select(Beagle:SHAPEIT, rr)})
+```
+
+#### EUR flips
+
+```{r}
+df_X_rr <- read_rr("X") %>%
+  mutate(bin = ceiling( (end - ((end - begin)/2)) / 1e6),
+         width = end - begin) %>%
+  group_by(bin) %>%
+  summarize(rr = weighted.mean(rr, width, na.rm = T))
+
+df_tmp <- df_all_MB %>% filter(chrom == "X", SUPER == "EUR") %>%
+  group_by(bin) %>%
+  summarize(Beagle = sum(f_b),
+            Eagle = sum(f_e),
+            SHAPEIT = sum(f_s))
+
+df_tmp <- df_tmp %>%
+  left_join(df_X_rr, by = "bin")
+
+coeff <-  max(df_tmp$SHAPEIT) / max(df_tmp$rr, na.rm = T)
+
+df_tmp %>%
+  select(bin, Beagle:SHAPEIT, rr) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = rr)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Flips")
+    ) +
+  scale_color_manual(values=cbPalette)
+```
+
+```{r}
+corrr::correlate({df_tmp %>% select(Beagle:SHAPEIT, rr)})
+```
+
+Chr 15:
+
+```{r}
+df_X_rr <- read_rr(15) %>%
+  mutate(bin = ceiling( (end - ((end - begin)/2)) / 1e6),
+         width = end - begin) %>%
+  group_by(bin) %>%
+  summarize(rr = weighted.mean(rr, width, na.rm = T))
+
+df_tmp <- df_all_MB %>% filter(chrom == 15, SUPER == "EUR") %>%
+  group_by(bin) %>%
+  summarize(Beagle = sum(f_b),
+            Eagle = sum(f_e),
+            SHAPEIT = sum(f_s))
+
+df_tmp <- df_tmp %>%
+  left_join(df_X_rr, by = "bin")
+
+coeff <-  max(df_tmp$SHAPEIT) / max(df_tmp$rr, na.rm = T)
+
+df_tmp %>%
+  select(bin, Beagle:SHAPEIT, rr) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "stat", values_to = "val") %>%
+  ggplot(aes(x = bin)) +
+    geom_line(aes(y = rr)) +
+    geom_line(aes(y = val / coeff, color = stat)) +
+    scale_y_continuous(
+      name = "Weight Mean cM_MB", 
+      sec.axis = sec_axis(~.*coeff, name = "Flips")
+    ) +
+  scale_color_manual(values=cbPalette)
+```
+
+```{r}
+corrr::correlate({df_tmp %>% select(Beagle:SHAPEIT, rr)})
+```
 
 ```{r, fig.width=10, fig.height=3}
 

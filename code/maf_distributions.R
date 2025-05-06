@@ -8,8 +8,8 @@ eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_e
 shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/shapeit/annotated/")
 beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/beagle/annotated/")
 het_dir <- paste0(config_obj$base_dir, "/output/switch_errors/het_loc/annotated/")
-maf_df <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chrX_maf.tsv"),
-                   col_names = c("chrom", "pos", "maf"))
+maf_df <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chrX_freq.tsv"),
+                   col_names = c("chrom", "pos", "maf", "AC", "AN"))
 
 maf_df <- maf_df %>%
   mutate(maf_cat = cut(maf, breaks = c(-Inf, 0.01, 0.05, 1), labels = c("rare", "uncommon", "common")),

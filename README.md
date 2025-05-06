@@ -134,6 +134,8 @@ rm data/1kgp/chrX_2504_snps_noPAR.bcf
 mv data/1kgp/chrX_2504_snps_noPAR2.bcf data/1kgp/chrX_2504_snps_noPAR.bcf
 ```
 
+This removes 16437 sites.
+
 And finally, we will remove singletons as well:
 
 ```         
@@ -144,12 +146,14 @@ rm out.log out.singletons
 bcftools view -Ob -T ^data/1kgp/singletons.txt data/1kgp/chrX_2504_snps_noPAR.bcf > data/1kgp/chrX_2504_snps_noPAR_noSing.bcf
 ```
 
+In our analyses, we found this to remove 438,425 sites. The final bcf file contains 1,722,954 sites.
+
 ### MAF distribution in X
 
 ```
-bcftools +fill-tags data/1kgp/chrX_2504_snps_noPAR_noSing.bcf -- -t AF | \
-bcftools query -f "%CHROM\t%POS\t%AF\n" | \
-  awk '{maf = (1-$3 < $3 ? 1-$3 : $3); print($1"\t"$2"\t"maf)}' > data/1kgp/chrX_freq.tsv
+bcftools +fill-tags data/1kgp/chrX_2504_snps_noPAR_noSing.bcf -- -t AF,AC,AN | \
+bcftools query -f "%CHROM\t%POS\t%AF\t%AC\t%AN\n" | \
+  awk '{maf = (1-$3 < $3 ? 1-$3 : $3); print($1"\t"$2"\t"maf"\t"$4"\t"$5)}' > data/1kgp/chrX_freq.tsv
 ```
 
 ### GC Content in Windows on X and autosomes
@@ -175,22 +179,36 @@ bedtools maskfasta -fi data/chrX.fasta -bed data/mask_pilot_X_fasta.bed -fo data
 samtools faidx data/chrX_mask.fasta
 bedtools makewindows -g data/chrX.sizes -w 1000 | sort -k 1,1V -k2,2n > data/chrX.1kb.sorted.bed
 bedtools nuc -fi data/chrX_mask.fasta -bed data/chrX.1kb.sorted.bed > data/chrX_gc1kb_pilot.bed
+bedtools nuc -fi data/chrX.fasta -bed data/chrX.1kb.sorted.bed > data/chrX_gc1kb.bed
 
 ```
 
-## Downloading and processing Chromosome 15
+## Downloading and processing Autosomes
 
 For our analysis of trios, we need to download both the phased and unphased VCFs from 1kGP:
 
 ```
-chrom=1
-curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr${chrom}.filtered.SNV_INDEL_SV_phased_panel.vcf.gz" > "data/1kgp/chr${chrom}/chr${chrom}_phased.vcf.gz"
+for chrom in `seq 1 22`; do
+curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr${chrom}.filtered.SNV_INDEL_SV_phased_panel.vcf.gz" > "data/1kgp/chr${chrom}/chr${chrom}_phased.vcf.gz" &
+done
 
-curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr${chrom}.filtered.SNV_INDEL_SV_phased_panel.vcf.gz.tbi" > "data/1kgp/chr${chrom}/chr${chrom}_phased.vcf.gz.tbi"
+wait
 
-curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/20201028_CCDG_14151_B01_GRM_WGS_2020-08-05_chr${chrom}.recalibrated_variants.vcf.gz" > "data/1kgp/chr${chrom}/chr${chrom}_unphased.vcf.gz"
+for chrom in `seq 1 22`; do
+curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr${chrom}.filtered.SNV_INDEL_SV_phased_panel.vcf.gz.tbi" > "data/1kgp/chr${chrom}/chr${chrom}_phased.vcf.gz.tbi" &
+done
 
+wait
+
+for chrom in `seq 1 22`; do
+curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/20201028_CCDG_14151_B01_GRM_WGS_2020-08-05_chr${chrom}.recalibrated_variants.vcf.gz" > "data/1kgp/chr${chrom}/chr${chrom}_unphased.vcf.gz" &
+done
+
+wait
+
+for chrom in `seq 1 22`; do
 curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_raw_GT_with_annot/20201028_CCDG_14151_B01_GRM_WGS_2020-08-05_chr${chrom}.recalibrated_variants.vcf.gz.tbi" > "data/1kgp/chr${chrom}/chr${chrom}_unphased.vcf.gz.tbi"
+done
 ```
 
 For the phased VCF
@@ -200,32 +218,61 @@ For the phased VCF
 3.  Remove multiallelic sites
 4.  Apply filter=PASS
 
-```         
-chrom=1
-bcftools annotate -x ^INFO/AF,INFO/AC,^FORMAT/GT "data/1kgp/chr${chrom}/chr${chrom}_phased.vcf.gz" | \
-bcftools view -v snps -Ob > "data/1kgp/chr${chrom}/chr${chrom}_phased.bcf"
+```
 
-bcftools query -f "%POS\n" "data/1kgp/chr${chrom}/chr${chrom}_phased.bcf" | \
-awk '{count[$1]++}END{for(key in count){if(count[key]>1){print(key)}}}' | \
-sort -n | \
-sed -e "s/^/chr${chrom}\t/" > "data/1kgp/chr${chrom}/repeat_sites_phased.txt"
+for chrom in `seq 1 22`; do
+(bcftools annotate -x ^INFO/AF,INFO/AC,^FORMAT/GT "data/1kgp/chr${chrom}/chr${chrom}_phased.vcf.gz" | bcftools view -v snps -Ob > "data/1kgp/chr${chrom}/chr${chrom}_phased.bcf") &
+done
+wait
+echo "Done"
 
-bcftools view -T ^"data/1kgp/chr${chrom}/repeat_sites_phased.txt" -Ob "data/1kgp/chr${chrom}/chr${chrom}_phased.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_biallelic.bcf"
+for chrom in `seq 1 22`; do
+(bcftools query -f "%POS\n" "data/1kgp/chr${chrom}/chr${chrom}_phased.bcf" | awk '{count[$1]++}END{for(key in count){if(count[key]>1){print(key)}}}' | sort -n | sed -e "s/^/chr${chrom}\t/" > "data/1kgp/chr${chrom}/repeat_sites_phased.txt") &
+done
+wait
+echo "Done"
+
+for chrom in `seq 1 22`; do
+(bcftools view -T ^"data/1kgp/chr${chrom}/repeat_sites_phased.txt" -Ob "data/1kgp/chr${chrom}/chr${chrom}_phased.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_biallelic.bcf") &
+done
+wait
+echo "Done"
 
 
-bcftools view "data/1kgp/chr${chrom}/chr${chrom}_phased_biallelic.bcf" | \
-bedtools intersect -a - -b "data/1kgp/chr${chrom}/chr${chrom}_pilot_mask.bed" -wa -header | \
-bcftools view -Ob > "data/1kgp/chr${chrom}/chr${chrom}_phased_mask.bcf"
+for chrom in `seq 1 22`; do
+(bcftools view "data/1kgp/chr${chrom}/chr${chrom}_phased_biallelic.bcf" | bedtools intersect -a - -b "data/1kgp/chr${chrom}/chr${chrom}_pilot_mask.bed" -wa -header | bcftools view -Ob > "data/1kgp/chr${chrom}/chr${chrom}_phased_mask.bcf") &
+done
+wait
+echo "done"
 
-bcftools view "data/1kgp/chr${chrom}/chr${chrom}_phased_mask.bcf" | vcftools --singletons --out phased --vcf -
-awk -v var="$chrom" '{if($1 == "chr"var)print($1"\t"$2)}' phased.singletons > "data/1kgp/chr${chrom}/singletons_phased.txt"
-rm phased.log phased.singletons
+for chrom in `seq 1 22`; do
+(bcftools view "data/1kgp/chr${chrom}/chr${chrom}_phased_mask.bcf" | vcftools --singletons --out phased_${chrom} --vcf -) &
+done
+wait
+echo "Done"
 
-bcftools view -Ob -T ^"data/1kgp/chr${chrom}/singletons_phased.txt" "data/1kgp/chr${chrom}/chr${chrom}_phased_mask.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf"
+for chrom in `seq 1 22`; do
+awk -v var="$chrom" '{if($1 == "chr"var)print($1"\t"$2)}' phased_${chrom}.singletons > "data/1kgp/chr${chrom}/singletons_phased.txt"
+rm phased_${chrom}.log phased_${chrom}.singletons
+done
 
-bcftools view -Ob -S data/1kgp/unrelated_subjects.txt "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing_2504.bcf"
+for chrom in `seq 1 22`; do
+(bcftools view -Ob -T ^"data/1kgp/chr${chrom}/singletons_phased.txt" "data/1kgp/chr${chrom}/chr${chrom}_phased_mask.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf") &
+done
+wait
+echo "Done"
 
-bcftools index "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf"
+for chrom in `seq 1 22`; do
+(bcftools view -Ob -S data/1kgp/unrelated_subjects.txt "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing_2504.bcf") &
+done
+wait
+echo "Done"
+
+for chrom in `seq 1 22`; do
+(bcftools index "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf") &
+done
+wait
+echo "done"
 ```
 
 For the (large) unphased VCF we:
@@ -234,28 +281,51 @@ For the (large) unphased VCF we:
 2.  Limit to snps
 3.  Filter to list of sites in phased bcf
 
-We also remove sites from the phased VCF that are biallelic in the unphased VCF
+We also remove sites from the phased VCF that are not biallelic in the unphased VCF
 
 ```
-chrom=1
-bcftools annotate -x ^INFO/AF,INFO/AC,INFO/DP,^FORMAT/GT "data/1kgp/chr${chrom}/chr${chrom}_unphased.vcf.gz" | \
-bcftools view -v snps -Ob > "data/1kgp/chr${chrom}/chr${chrom}_unphased.bcf"
 
-bcftools index "data/1kgp/chr${chrom}/chr${chrom}_unphased.bcf"
+for chrom in `seq 1 22`; do
+(bcftools annotate -x ^INFO/AF,INFO/AC,INFO/DP,^FORMAT/GT "data/1kgp/chr${chrom}/chr${chrom}_unphased.vcf.gz" | bcftools view -v snps -Ob > "data/1kgp/chr${chrom}/chr${chrom}_unphased.bcf") &
+done
+wait
+echo "done"
 
-bcftools isec -n~11 -c all "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf" "data/1kgp/chr${chrom}/chr${chrom}_unphased.bcf" > "data/1kgp/chr${chrom}/overlap_sites.txt"
+for chrom in `seq 1 22`; do
+bcftools index "data/1kgp/chr${chrom}/chr${chrom}_unphased.bcf" &
+done
+wait
+echo "Done"
 
+for chrom in `seq 1 22`; do
+(bcftools isec -n~11 -c all "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf" "data/1kgp/chr${chrom}/chr${chrom}_unphased.bcf" > "data/1kgp/chr${chrom}/overlap_sites.txt") &
+done
+wait
+echo "Done"
 
-bcftools view -T "data/1kgp/chr${chrom}/overlap_sites.txt" "data/1kgp/chr${chrom}/chr${chrom}_unphased.bcf" | \
-bcftools view -m2 -M2 -Ob > "data/1kgp/chr${chrom}/chr${chrom}_unphased_overlap.bcf"
+for chrom in `seq 1 22`; do
+(bcftools view -T "data/1kgp/chr${chrom}/overlap_sites.txt" "data/1kgp/chr${chrom}/chr${chrom}_unphased.bcf" | bcftools view -m2 -M2 -Ob > "data/1kgp/chr${chrom}/chr${chrom}_unphased_overlap.bcf") &
+done
+wait
+echo "Done"
 
+for chrom in `seq 1 22`; do
+(bcftools query -f "%CHROM\t%POS\n" "data/1kgp/chr${chrom}/chr${chrom}_unphased_overlap.bcf" > "data/1kgp/chr${chrom}/overlap_sites_biallelic.txt") &
+done
+wait
+echo "done"
 
-bcftools query -f "%CHROM\t%POS\n" "data/1kgp/chr${chrom}/chr${chrom}_unphased_overlap.bcf" > "data/1kgp/chr${chrom}/overlap_sites_biallelic.txt"
+for chrom in `seq 1 22`; do
+(bcftools view -T "data/1kgp/chr${chrom}/overlap_sites_biallelic.txt" -Ob "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_overlap.bcf") &
+done
+wait
+echo "Done"
 
-
-bcftools view -T "data/1kgp/chr${chrom}/overlap_sites_biallelic.txt" -Ob "data/1kgp/chr${chrom}/chr${chrom}_phased_mask_noSing.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_overlap.bcf"
-
-bcftools view -Ob -S data/1kgp/unrelated_subjects.txt "data/1kgp/chr${chrom}/chr${chrom}_phased_overlap.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_overlap_2504.bcf"
+for chrom in `seq 1 22`; do
+(bcftools view -Ob -S data/1kgp/unrelated_subjects.txt "data/1kgp/chr${chrom}/chr${chrom}_phased_overlap.bcf" > "data/1kgp/chr${chrom}/chr${chrom}_phased_overlap_2504.bcf") &
+done
+wait
+echo "Done"
 ```
 
 ### Extract additional information from vcf
@@ -263,21 +333,27 @@ bcftools view -Ob -S data/1kgp/unrelated_subjects.txt "data/1kgp/chr${chrom}/chr
 #### Count triple heterozygous sites per trio
 
 ```
-chrom=1
-mkdir -p "data/1kgp/chr${chrom}/triple_het/trio_lists"
+mkdir -p "data/1kgp/chr1/triple_het/trio_lists"
+
+for chrom in `seq 1 22`; do
+#mkdir -p "output/trio_phase_${chrom}/slurm"
+done
 
 Rscript code/trio_family_lists.R
 
-mkdir -p "output/trio_phase_${chrom}/slurm"
 sbatch code/batch_triple_hets.sh
 
-
+for chrom in `seq 1 22`; do
 for i in `seq 1 602`; do
 wc -l "data/1kgp/chr${chrom}/triple_het/sample_${i}.tsv" >> "output/trio_phase_${chrom}/triple_het.tmp"
 done
+done
 
-
+for chrom in `seq 1 22`; do
 awk '{print(NR"\t"$1)}' "output/trio_phase_${chrom}/triple_het.tmp" > "output/trio_phase_${chrom}/triple_het.tsv"
+rm "output/trio_phase_${chrom}/triple_het.tmp"
+done
+
 #here
 ```
 
@@ -319,7 +395,7 @@ done
 awk '{print(NR"\t"$1)}' output/switch_errors/het_cpg_count.tmp > output/switch_errors/het_cpg_count.tsv
 ```
 
-5.Get maf at variant sites
+5. Get maf at variant sites (note: this is done above and can be skipped here)
 
 ```
 bcftools view data/1kgp/chrX_2504_snps_noPAR_noSing.bcf | vcftools --vcf - --freq --out chrX_freq
@@ -333,10 +409,23 @@ awk 'NR>1 {split($5,a,":");split($6,b,":");c = (a[2]<b[2])?a[2]:b[2]; print($1"\
 For each of the 602 children of the trios, we need to identify which samples need to be excluded from the reference panel when phasing (i.e., either removing the parents, the child themselves, or no one in the case neither the parents nor the child were part of the 2,504 phase 3 samples). The script in `code/trio_exclude_lists.R` generates a file for each child with a list of IDs to exclude from the reference panel for the children.
 
 
-## Phasing chromosome 15
+## Phasing autosomes
 
 ```
-chrom=22
+for chrom in `seq 1 22`; do
+out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_${chrom}"
+mkdir -p $out_dir/mb_error_rate
+mkdir -p $out_dir/beagle
+mkdir $out_dir/eagle
+mkdir $out_dir/shapeit
+mkdir -p $out_dir/het_loc/annotated
+mkdir $out_dir/truth
+mkdir -p $out_dir/switch_errors/beagle/annotated
+mkdir -p $out_dir/switch_errors/eagle/annotated
+mkdir -p $out_dir/switch_errors/shapeit/annotated
+done
+
+for chrom in `seq 1 22`; do
 out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_${chrom}/no_th"
 mkdir -p $out_dir/mb_error_rate
 mkdir -p $out_dir/beagle
@@ -347,41 +436,54 @@ mkdir $out_dir/truth
 mkdir -p $out_dir/switch_errors/beagle/annotated
 mkdir -p $out_dir/switch_errors/eagle/annotated
 mkdir -p $out_dir/switch_errors/shapeit/annotated
-```
-
-The batch script `code/batch_phase_trios.sh` submits a job to SLURM for each of the 602 trios and generates 4 phased VCFs: 1 with the "true" phase for the child, and 3 phases infered using only the reference panel. The batch script `code/batch_compare_trio.sh` generates a list of switch error locations. A summary of these switches is generated by the script `code/trio_phase_results.R` and analysis is documented in `analysis/trio_phasing_results.Rmd`. We also extract some additional summary information on the samples (e.g., number of heterozygous sites)
-
-```
-for i in `seq 1 602`; do
-wc -l output/trio_phase_1/het_loc/pair_${i}_het_loc.txt  >> output/trio_phase_1/het_pos_count.tmp 
 done
+```
 
-awk '{print(NR"\t"$1)}' output/trio_phase_1/het_pos_count.tmp > output/trio_phase_1/het_pos_count.tsv
+The batch script `code/batch_phase_trios.sh` submits a job to SLURM for each of the 602 trios and generates 4 phased VCFs: 1 with the "true" phase for the child, and 3 phases inferred using only the reference panel. The batch script `code/batch_compare_trio.sh` generates a list of switch error locations. A summary of these switches is generated by the script `code/trio_phase_results.R` and analysis is documented in `analysis/trio_phasing_results.Rmd`. We also extract some additional summary information on the samples (e.g., number of heterozygous sites)
+
+```
+for chrom in `seq 1 22`; do
+(for i in `seq 1 602`; do wc -l output/trio_phase_${chrom}/het_loc/pair_${i}_het_loc.txt  >> output/trio_phase_${chrom}/het_pos_count.tmp; done) &
+done
+wait
+echo "Done"
+
+for chrom in `seq 1 22`; do 
+(awk '{print(NR"\t"$1)}' output/trio_phase_${chrom}/het_pos_count.tmp > output/trio_phase_${chrom}/het_pos_count.tsv) &
+done
+wait
+echo "Done"
 ```
 
 ### Count hets at CpG in each trio
 
 ```
-chrom="1/no_th"
-for i in `seq 1 602`; do
-awk -F',' '{n_cpg += $3}END{print(n_cpg)}' "output/trio_phase_${chrom}/het_loc/annotated/pair_${i}.csv" >> "output/trio_phase_${chrom}/het_cpg_count.tmp"
+for chrom in `seq 1 22`; do
+(for i in `seq 1 602`; do awk -F',' '{n_cpg += $3}END{print(n_cpg)}' "output/trio_phase_${chrom}/het_loc/annotated/pair_${i}.csv" >> "output/trio_phase_${chrom}/het_cpg_count.tmp"; done) &
 done
+wait
+echo "Done"
 
-awk '{print(NR"\t"$1)}' output/trio_phase_${chrom}/het_cpg_count.tmp > output/trio_phase_${chrom}/het_cpg_count.tsv
+for chrom in `seq 1 22`; do
+(awk '{print(NR"\t"$1)}' output/trio_phase_${chrom}/het_cpg_count.tmp > output/trio_phase_${chrom}/het_cpg_count.tsv) &
+done
+wait
+echo "Done"
 ```
 
 ### Get maf at variant sites
 
 ```
-chrom=22
-bcftools +fill-tags "data/1kgp/chr${chrom}/chr${chrom}_phased_overlap.bcf" -- -t AF | \
-  bcftools query -f "%CHROM\t%POS\t%AF\n" | \
-  awk '{maf = (1-$3 < $3 ? 1-$3 : $3); print($1"\t"$2"\t"maf)}' > "data/1kgp/chr${chrom}/chr${chrom}_freq.tsv"
+for chrom in `seq 1 22`; do
+(bcftools +fill-tags "data/1kgp/chr${chrom}/chr${chrom}_phased_overlap.bcf" -- -t AF | bcftools query -f "%CHROM\t%POS\t%AF\n" | awk '{maf = (1-$3 < $3 ? 1-$3 : $3); print($1"\t"$2"\t"maf)}' > "data/1kgp/chr${chrom}/chr${chrom}_freq.tsv") &
+done
+wait
+echo "Done"
 ```
 
-* `code/get_maf_at_errors_trio.R`: gets a list of all postions where an error occurs, with count of times it appears, along with maf
+* `code/get_maf_at_errors_trio.R`: gets a list of all positions where an error occurs, with count of times it appears, along with maf
 * `code/maf_categories_trio.R`: for each proband, get proportions of all error types by bin (output: `maf_props.csv`)
-* `error_rates_per_bin.R`: gets rate of each error type in MB bin
+* `error_rates_per_bin.R`: gets rate of each error type in MB bin; this also generates an annotated heterozygous position file for each sample in which the error status for each method is included for each position
 
 ## Voting Approach
 

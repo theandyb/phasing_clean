@@ -1,0 +1,349 @@
+---
+title: "genomic_context"
+author: "Andy Beck"
+date: "2024-10-31"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(yaml)
+library(gridExtra)
+
+source("code/common_functions.R")
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+'%!in%' <- function(x,y)!('%in%'(x,y))
+```
+
+Some data stuff:
+
+```{r}
+config_obj <- yaml::read_yaml("_config.yaml")
+
+eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/eagle/annotated/")
+shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/shapeit/annotated/")
+beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/switch_errors/switch_errors/beagle/annotated/")
+num_sites_dir <-      paste0(config_obj$base_dir,"/output/switch_errors/vcf_n_sites/")
+het_loc_dir <-        paste0(config_obj$base_dir,"/output/switch_errors/het_loc/annotated/")
+
+sample_info_df <- read_csv("data/1kgp/subject_info.csv") %>%
+  select(SAMPLE_NAME, POPULATION, SUPER)
+
+pair_info_df <- read_delim("data/sample_pairs.csv", col_names = c("POP", "ID1", "ID2"))
+pair_info_df <- left_join(pair_info_df, sample_info_df, by = c("ID1"="SAMPLE_NAME")) %>%
+  rename(SP = SUPER) %>%
+  select(-POPULATION)
+pair_info_df$id <- 1:1000
+
+df_freq  <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chrX_maf.tsv"),
+                   col_names = c("chrom", "pos", "maf"))
+
+gc_content_1kb <- read_tsv("data/chrX_gc1kb_pilot.bed")
+```
+
+Functions for loading data:
+
+```{r}
+load_het_pos <- function(id, het_loc_dir){
+  fname <- paste0(het_loc_dir, "pair_", id, ".csv")
+  return(read_csv(fname, show_col_types = FALSE))
+}
+
+load_switch_df <- function(id, switch_dir){
+  fname <- paste0(switch_dir, "switch_", id, ".csv")
+  results <- read_csv(fname, show_col_types = FALSE)
+  flip_loc <- get_flip_pos(results)
+  results$is_flip <- (results$pos_start %in% flip_loc) | (results$pos_end %in% flip_loc)
+  results$flip <- results$pos_end %in% flip_loc
+  return(results)
+}
+
+annotate_het_list <- function(id, het_loc_dir, beagle_dir, eagle_dir, shapeit_dir, df_freq){
+  result <- load_het_pos(id, het_loc_dir)
+  df_b <- load_switch_df(id, beagle_dir)
+  df_e <- load_switch_df(id, eagle_dir)
+  df_s <- load_switch_df(id, shapeit_dir)
+  
+  result$switch_b <- result$pos %in% {df_b %>% filter(!is_flip) %>% pull(pos_end)}
+  result$flip_b <- result$pos %in% {df_b %>% filter(flip) %>% pull(pos_end)}
+  result$flip2_b <- result$pos %in% {df_b %>% filter(is_flip & !flip) %>% pull(pos_end)}
+  
+  result$switch_e <- result$pos %in% {df_e %>% filter(!is_flip) %>% pull(pos_end)}
+  result$flip_e <- result$pos %in% {df_e %>% filter(flip) %>% pull(pos_end)}
+  result$flip2_e <- result$pos %in% {df_e %>% filter(is_flip & !flip) %>% pull(pos_end)}
+  
+  result$switch_s <- result$pos %in% {df_s %>% filter(!is_flip) %>% pull(pos_end)}
+  result$flip_s <- result$pos %in% {df_s %>% filter(flip) %>% pull(pos_end)}
+  result$flip2_s <- result$pos %in% {df_s %>% filter(is_flip & !flip) %>% pull(pos_end)}
+  
+  result <- left_join(result,
+                       {df_freq %>%
+                           select(pos, maf)},
+                       by = c("pos" = "pos"))
+  
+  return(result)
+}
+
+single_errors_per_bin <- function(id, het_loc_dir, beagle_dir, eagle_dir, shapeit_dir, df_freq, bin_size = 1e6){
+  df <- annotate_het_list(id, het_loc_dir, beagle_dir, eagle_dir, shapeit_dir, df_freq)
+  df$bin <- ceiling(df$pos / bin_size)
+  
+  df_bin <- df %>%
+    group_by(bin) %>%
+    summarize(n_het = n(),
+              switch_b = sum(switch_b),
+              switch_e = sum(switch_e),
+              switch_s = sum(switch_s),
+              flip_b = sum(flip_b),
+              flip_e = sum(flip_e),
+              flip_s = sum(flip_s))
+  df_bin$id <- id
+  return(df_bin)
+}
+
+all_errors_per_bin <- function(ids, het_loc_dir, beagle_dir, eagle_dir, shapeit_dir, df_freq, bin_size = 1e6){
+  results <- vector(mode = "list", length = length(ids))
+  for(i in 1:length(ids)){
+    results[[i]] <- single_errors_per_bin(ids[i], het_loc_dir, beagle_dir, eagle_dir, shapeit_dir, df_freq, bin_size)
+  }
+  return(bind_rows(results))
+}
+
+load_gc <- function(file_path){
+  df <- read_tsv(file_path, skip = 1, 
+                 col_names = c("chr", "start", "end", "pct_at", "pct_gc",
+                               "n_a", "n_c", "n_g", "n_t", "n_n", "n_o", "seq_length"))
+  df
+}
+
+bin_gc <- function(file_path, bin_size = 1e6){
+  df <- load_gc(file_path)
+  df <- df %>%
+    mutate(bin_id = ceiling(end / bin_size)) %>%
+    group_by(chr, bin_id) %>%
+    summarize(start = min(start),
+              end = max(end),
+              n_a = sum(n_a),
+              n_c = sum(n_c),
+              n_g = sum(n_g),
+              n_t = sum(n_t),
+              n_n = sum(n_n),
+              n_o = sum(n_o))
+  df$pct_gc <- (df$n_c + df$n_g)/(df$n_a + df$n_t + df$n_c + df$n_g)
+  df
+}
+```
+
+
+## Introduction
+
+The purpose of this document is to explore how phasing errors are spatially distributed along the chromosome, as well as how they correlate with genomic features (which are also distributed along the chromosome). In particular, we will look at the following genomic features:
+
+1. Recombination rates (deCODE)
+2. GC content
+3. Replication timing
+4. Chromatin accessibility
+
+We first focus on our results for synthetic diploids on chromosome X; we will also assess our proband re-phasing results on chromosomes 1, 15, 22 (in which we will also evaluate triple heterozygosity)
+
+## Spatial Distribution of Errors
+
+We'll first look at the distribution of errors in megabase-sized bins. The simplest approach would be to calculate the mean number of switches per individual in each bin:
+
+```{r}
+df_errors <- all_errors_per_bin(1:1000, het_loc_dir, beagle_switch_dir, eagle_switch_dir, shapeit_switch_dir, df_freq)
+
+df_errors <- df_errors %>%
+  left_join({pair_info_df %>% select(id, SP)}, by = "id") %>%
+  rename(pop = SP)
+```
+
+
+```{r}
+df_errors %>%
+  group_by(bin) %>%
+  summarize(Beagle = mean(switch_b),
+            Eagle = mean(switch_e),
+            SHAPEIT = mean(switch_s)) %>%
+  pivot_longer(-bin, names_to = "method", values_to = "switch") %>%
+  ggplot(aes(x = bin, y = switch, color = method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_color_manual(values = cbPalette)
+
+p1 <- df_errors %>%
+  filter(pop %in% c("AFR", "EUR")) %>%
+  group_by(pop, bin) %>%
+  summarize(Beagle = mean(switch_b),
+            Eagle = mean(switch_e),
+            SHAPEIT = mean(switch_s)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  ggplot(aes(x = bin, y = switch, color = method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  facet_grid(cols = vars(pop)) + 
+  ylim(c(0, 5))
+
+p2 <- df_errors %>%
+  filter(pop %in% c("AMR", "SAS")) %>%
+  group_by(pop, bin) %>%
+  summarize(Beagle = mean(switch_b),
+            Eagle = mean(switch_e),
+            SHAPEIT = mean(switch_s)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  ggplot(aes(x = bin, y = switch, color = method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  facet_grid(cols = vars(pop)) +
+  ylim(c(0,5))
+
+p3 <- df_errors %>%
+  filter(pop %in% c("EAS")) %>%
+  group_by(pop, bin) %>%
+  summarize(Beagle = mean(switch_b),
+            Eagle = mean(switch_e),
+            SHAPEIT = mean(switch_s)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  ggplot(aes(x = bin, y = switch, color = method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  facet_grid(cols = vars(pop))
+
+grid.arrange(p1, p2, p3, nrow = 3)
+```
+
+We see similar patterns across populations, with larger peaks in EAS and SAS. Let's see if this is potentially explained by the number of heterozygous positions in each bin. First, the average number of heterozygous positions per individual in each bin:
+
+```{r}
+df_errors %>%
+  group_by(pop, bin) %>%
+  summarize(n_het = mean(n_het)) %>%
+  ggplot(aes(x = bin, y = n_het, colour = pop)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() + 
+  scale_colour_manual(values = cbPalette)
+```
+
+Here we see that in most bins, the highest average number of heterozygous positions is in the AFR synthetic diploids, which we expect. Next, let's look at the average switch rates (switches per heterozygous position) in each bin:
+
+```{r}
+p1 <- df_errors %>%
+  filter(pop %in% c("AFR", "EUR")) %>%
+  mutate(beagle = switch_b / n_het,
+         eagle = switch_e / n_het,
+         shapeit = switch_s / n_het) %>%
+  group_by(pop, bin) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  ggplot(aes(x = bin, y = switch, color = method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  facet_grid(cols = vars(pop)) + 
+  ylim(c(0,0.045))
+
+p2 <- df_errors %>%
+  filter(pop %in% c("AMR", "SAS")) %>%
+  mutate(beagle = switch_b / n_het,
+         eagle = switch_e / n_het,
+         shapeit = switch_s / n_het) %>%
+  group_by(pop, bin) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  ggplot(aes(x = bin, y = switch, color = method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  facet_grid(cols = vars(pop)) + 
+  ylim(c(0,0.045))
+
+p3 <- df_errors %>%
+  filter(pop %in% c("EAS")) %>%
+  mutate(beagle = switch_b / n_het,
+         eagle = switch_e / n_het,
+         shapeit = switch_s / n_het) %>%
+  group_by(pop, bin) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  ggplot(aes(x = bin, y = switch, color = method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_color_manual(values = cbPalette) +
+  facet_grid(cols = vars(pop)) + 
+  ylim(c(0,0.045))
+
+grid.arrange(p1, p2, p3, nrow = 3)
+```
+
+Visually, we see what might be a shared peak at around bin 110 between EAS and SAS; let's confirm that the peaks are indeed in the same bin:
+
+```{r}
+df_errors %>%
+  filter(pop %in% c("EAS", "SAS")) %>%
+  mutate(beagle = switch_b / n_het,
+         eagle = switch_e / n_het,
+         shapeit = switch_s / n_het) %>%
+  group_by(pop, bin) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  group_by(pop) %>%
+  filter(switch == max(switch))
+```
+
+Ok, so the peak is in the same bin (112); let's see if all methods have their max value in bin 112 as well for EAS and SAS:
+
+```{r}
+df_errors %>%
+  filter(pop %in% c("EAS", "SAS")) %>%
+  mutate(beagle = switch_b / n_het,
+         eagle = switch_e / n_het,
+         shapeit = switch_s / n_het) %>%
+  group_by(pop, bin) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  group_by(pop, method) %>%
+  filter(switch == max(switch))
+```
+
+And finally, let's see where the highest error rates were observed for the three methods in the other populations:
+
+```{r}
+df_errors %>%
+  filter(pop %in% c("AFR", "AMR", "EUR")) %>%
+  mutate(beagle = switch_b / n_het,
+         eagle = switch_e / n_het,
+         shapeit = switch_s / n_het) %>%
+  group_by(pop, bin) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  group_by(pop, method) %>%
+  filter(switch == max(switch))
+```
+
