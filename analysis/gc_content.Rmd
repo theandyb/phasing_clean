@@ -1,0 +1,25 @@
+---
+title: "gc_content"
+author: "theandyb"
+date: "2025-05-30"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(ggpubfigs)
+```
+
+
+Let's explore what the landscape of GC content looks like across the human genome!
+
+## 1kb Windows
+
+```{r}
+
+```
+

@@ -25,3 +25,5 @@ Welcome to my research website.
 [Reference Panel Composition](alt_ref_panel.html)
 
 [More autosome/X comparisons](all_autosomes.html)
+
+[GC Content](gc_content.html)
