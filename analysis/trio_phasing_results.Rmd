@@ -163,6 +163,82 @@ df_subj_unrel %>%
     defaultExpanded = TRUE)
 ```
 
+## All Autosome Summaries
+
+### Total Errors
+
+First let's get an overall error rate across all 22 autsomes based on our re-phasing of the trio probands:
+
+```{r}
+df_total <- df_switch_trio[[1]] %>%
+  mutate(Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
+         Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(Eagle, Beagle, SHAPEIT, SUPER) %>%
+  mutate(chrom = 1)
+
+for(i in 2:22){
+  df_total <- bind_rows(df_total, 
+                        {
+                          df_switch_trio[[i]] %>%
+                            mutate(Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
+                                   Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+                                   SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+                            select(Eagle, Beagle, SHAPEIT, SUPER) %>%
+                            mutate(chrom = i)
+                        })
+}
+
+df_total <- df_total %>%
+  bind_rows(df_total, {df_switch_x %>%
+      mutate(Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
+                                   Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+                                   SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+      rename(SUPER = pop) %>%
+                            select(Eagle, Beagle, SHAPEIT, SUPER) %>%
+                            mutate(chrom = 23)})
+
+df_total %>%
+  group_by(chrom) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+
+df_total %>%
+  group_by(chrom, SUPER) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>% 
+  knitr::kable()
+
+df_total %>%
+  group_by(chrom) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = chrom, y = error_rate, colour = method, shape = method)) +
+  geom_point() +
+  theme_bw() +
+  xlab("Chromosome") +
+  ylab("Error Rate")
+
+df_total %>%
+  group_by(chrom, SUPER) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = chrom, y = error_rate, colour = SUPER, shape = method)) +
+  geom_point() +
+  theme_bw() +
+  ylab("Error Rate") +
+  xlab("Chromosome") +
+  labs(colour = "Population", shape = "Method")
+```
+
+
 ## Switch Errors
 
 ### Total Errors
@@ -249,7 +325,7 @@ plot_total_errors(df_switch_x, "SHAPEIT", "Eagle", "pop", "X")
 
 table_total_errors(df_switch_x, "pop")
 
-cross_meth_plot(df_switch_trio, "Total Errors", plot_total_errors, "SUPER", "22")
+cross_meth_plot(df_switch_x, "Total Errors", plot_total_errors, "pop")
 ```
 
 
@@ -273,31 +349,31 @@ plot_total_rate <- function(df, m1, m2, pop, chrom="15"){
   return(p)
 }
 
-plot_total_rate(df_switch_trio, "Beagle", "Eagle", "SUPER")
-plot_total_rate(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
-plot_total_rate(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+plot_total_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER")
+plot_total_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER")
+plot_total_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER")
 
-cross_meth_plot(df_switch_trio, "Total Errors", plot_total_rate, "SUPER", "15")
+cross_meth_plot(df_switch_trio[[1]], "Total Errors", plot_total_rate, "SUPER", "15")
 ```
 
 And now chromosome 22:
 
 ```{r}
-plot_total_rate(df_switch_trio_22, "Beagle", "Eagle", "SUPER", 22)
-plot_total_rate(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER", 22)
-plot_total_rate(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER", 22)
+plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", 22)
+plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", 22)
+plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", 22)
 
-cross_meth_plot(df_switch_trio_22, "Total Errors", plot_total_rate, "SUPER", "22")
+cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", "22")
 ```
 
 And now chromosome 1:
 
 ```{r}
-plot_total_rate(df_switch_trio_1, "Beagle", "Eagle", "SUPER", 1)
-plot_total_rate(df_switch_trio_1, "Beagle", "SHAPEIT", "SUPER", 1)
-plot_total_rate(df_switch_trio_1, "SHAPEIT", "Eagle", "SUPER", 1)
+plot_total_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", 1)
+plot_total_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", 1)
+plot_total_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", 1)
 
-cross_meth_plot(df_switch_trio_1, "Total Errors", plot_total_rate, "SUPER", "1")
+cross_meth_plot(df_switch_trio[[1]], "Total Errors", plot_total_rate, "SUPER", "1")
 ```
 
 And finally, chromosome X:
@@ -347,37 +423,37 @@ table_switches <- function(df, pop){
   return(res)
 }
 
-plot_switches(df_switch_trio, "Beagle", "Eagle", "SUPER")
-plot_switches(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
-plot_switches(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+plot_switches(df_switch_trio[[15]], "Beagle", "Eagle", "SUPER")
+plot_switches(df_switch_trio[[15]], "Beagle", "SHAPEIT", "SUPER")
+plot_switches(df_switch_trio[[15]], "SHAPEIT", "Eagle", "SUPER")
 
-table_switches(df_switch_trio, "SUPER")
+table_switches(df_switch_trio[[15]], "SUPER")
 
-cross_meth_plot(df_switch_trio, "Switches", plot_switches, "SUPER", "15")
+cross_meth_plot(df_switch_trio[[15]], "Switches", plot_switches, "SUPER", "15")
 ```
 
 And now chromosome 22:
 
 ```{r}
-plot_switches(df_switch_trio_22, "Beagle", "Eagle", "SUPER", 22)
-plot_switches(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER", 22)
-plot_switches(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER", 22)
+plot_switches(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", 22)
+plot_switches(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", 22)
+plot_switches(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", 22)
 
-table_switches(df_switch_trio_22, "SUPER")
+table_switches(df_switch_trio[[22]], "SUPER")
 
-cross_meth_plot(df_switch_trio_22, "Switches", plot_switches, "SUPER", "22")
+cross_meth_plot(df_switch_trio[[2]], "Switches", plot_switches, "SUPER", "22")
 ```
 
 And now chromosome 1:
 
 ```{r}
-plot_switches(df_switch_trio_1, "Beagle", "Eagle", "SUPER", 1)
-plot_switches(df_switch_trio_1, "Beagle", "SHAPEIT", "SUPER", 1)
-plot_switches(df_switch_trio_1, "SHAPEIT", "Eagle", "SUPER", 1)
+plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", 1)
+plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", 1)
+plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", 1)
 
-table_switches(df_switch_trio_1, "SUPER")
+table_switches(df_switch_trio[[1]], "SUPER")
 
-cross_meth_plot(df_switch_trio_1, "Switches", plot_switches, "SUPER", "1")
+cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", "1")
 ```
 
 And finally, chromosome X:
@@ -412,29 +488,29 @@ plot_switch_rate <- function(df, m1, m2, pop, chrom = 15){
   return(p)
 }
 
-plot_switch_rate(df_switch_trio, "Beagle", "Eagle", "SUPER")
-plot_switch_rate(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
-plot_switch_rate(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+plot_switch_rate(df_switch_trio[[15]], "Beagle", "Eagle", "SUPER")
+plot_switch_rate(df_switch_trio[[15]], "Beagle", "SHAPEIT", "SUPER")
+plot_switch_rate(df_switch_trio[[15]], "SHAPEIT", "Eagle", "SUPER")
 
-cross_meth_plot(df_switch_trio, "Switches", plot_switch_rate, "SUPER", "15")
+cross_meth_plot(df_switch_trio[[15]], "Switches", plot_switch_rate, "SUPER", "15")
 ```
 
 And now chromosome 22:
 
 ```{r}
-plot_switch_rate(df_switch_trio_22, "Beagle", "Eagle", "SUPER", 22)
-plot_switch_rate(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER", 22)
-plot_switch_rate(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER", 22)
-cross_meth_plot(df_switch_trio_22, "Switches", plot_switch_rate, "SUPER", "22")
+plot_switch_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", 22)
+plot_switch_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", 22)
+plot_switch_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", 22)
+cross_meth_plot(df_switch_trio[[22]], "Switches", plot_switch_rate, "SUPER", "22")
 ```
 
 And now chromosome 1:
 
 ```{r}
-plot_switch_rate(df_switch_trio_1, "Beagle", "Eagle", "SUPER", 1)
-plot_switch_rate(df_switch_trio_1, "Beagle", "SHAPEIT", "SUPER", 1)
-plot_switch_rate(df_switch_trio_1, "SHAPEIT", "Eagle", "SUPER", 1)
-cross_meth_plot(df_switch_trio_1, "Switches", plot_switch_rate, "SUPER", "1")
+plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", 1)
+plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", 1)
+plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", 1)
+cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", "1")
 ```
 
 And finally, chromosome X:
@@ -484,37 +560,37 @@ table_flip <- function(df, pop){
   return(res)
 }
 
-plot_flips(df_switch_trio, "Beagle", "Eagle", "SUPER")
-plot_flips(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
-plot_flips(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+plot_flips(df_switch_trio[[15]], "Beagle", "Eagle", "SUPER")
+plot_flips(df_switch_trio[[15]], "Beagle", "SHAPEIT", "SUPER")
+plot_flips(df_switch_trio[[15]], "SHAPEIT", "Eagle", "SUPER")
 
-table_flip(df_switch_trio, "SUPER")
+table_flip(df_switch_trio[[15]], "SUPER")
 
-cross_meth_plot(df_switch_trio, "Flips", plot_flips, "SUPER", "15")
+cross_meth_plot(df_switch_trio[[15]], "Flips", plot_flips, "SUPER", "15")
 ```
 
 And now chromosome 22:
 
 ```{r}
-plot_flips(df_switch_trio_22, "Beagle", "Eagle", "SUPER", 22)
-plot_flips(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER", 22)
-plot_flips(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER", 22)
+plot_flips(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", 22)
+plot_flips(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", 22)
+plot_flips(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", 22)
 
-table_flip(df_switch_trio_22, "SUPER")
+table_flip(df_switch_trio[[22]], "SUPER")
 
-cross_meth_plot(df_switch_trio_22, "Flips", plot_flips, "SUPER", "22")
+cross_meth_plot(df_switch_trio[[22]], "Flips", plot_flips, "SUPER", "22")
 ```
 
 And now chromosome 1:
 
 ```{r}
-plot_flips(df_switch_trio_1, "Beagle", "Eagle", "SUPER", 1)
-plot_flips(df_switch_trio_1, "Beagle", "SHAPEIT", "SUPER", 1)
-plot_flips(df_switch_trio_1, "SHAPEIT", "Eagle", "SUPER", 1)
+plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", 1)
+plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", 1)
+plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", 1)
 
-table_flip(df_switch_trio_1, "SUPER")
+table_flip(df_switch_trio[[1]], "SUPER")
 
-cross_meth_plot(df_switch_trio_1, "Flips", plot_flips, "SUPER", "1")
+cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", "1")
 ```
 
 And finally, chromosome X:
@@ -549,31 +625,31 @@ plot_flip_rate <- function(df, m1, m2, pop, chrom = 15){
   return(p)
 }
 
-plot_flip_rate(df_switch_trio, "Beagle", "Eagle", "SUPER")
-plot_flip_rate(df_switch_trio, "Beagle", "SHAPEIT", "SUPER")
-plot_flip_rate(df_switch_trio, "SHAPEIT", "Eagle", "SUPER")
+plot_flip_rate(df_switch_trio[[15]], "Beagle", "Eagle", "SUPER")
+plot_flip_rate(df_switch_trio[[15]], "Beagle", "SHAPEIT", "SUPER")
+plot_flip_rate(df_switch_trio[[15]], "SHAPEIT", "Eagle", "SUPER")
 
-cross_meth_plot(df_switch_trio, "Flips", plot_flip_rate, "SUPER", "15")
+cross_meth_plot(df_switch_trio[[15]], "Flips", plot_flip_rate, "SUPER", "15")
 ```
 
 And now chromosome 22:
 
 ```{r}
-plot_flip_rate(df_switch_trio_22, "Beagle", "Eagle", "SUPER", 22)
-plot_flip_rate(df_switch_trio_22, "Beagle", "SHAPEIT", "SUPER", 22)
-plot_flip_rate(df_switch_trio_22, "SHAPEIT", "Eagle", "SUPER", 22)
+plot_flip_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", 22)
+plot_flip_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", 22)
+plot_flip_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", 22)
 
-cross_meth_plot(df_switch_trio_22, "Flips", plot_flip_rate, "SUPER", "22")
+cross_meth_plot(df_switch_trio[[22]], "Flips", plot_flip_rate, "SUPER", "22")
 ```
 
 And now chromosome 1:
 
 ```{r}
-plot_flip_rate(df_switch_trio_1, "Beagle", "Eagle", "SUPER", 1)
-plot_flip_rate(df_switch_trio_1, "Beagle", "SHAPEIT", "SUPER", 1)
-plot_flip_rate(df_switch_trio_1, "SHAPEIT", "Eagle", "SUPER", 1)
+plot_flip_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", 1)
+plot_flip_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", 1)
+plot_flip_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", 1)
 
-cross_meth_plot(df_switch_trio_1, "Flips", plot_flip_rate, "SUPER", "1")
+cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flip_rate, "SUPER", "1")
 ```
 
 And finally, chromosome X:
@@ -588,771 +664,3 @@ cross_meth_plot(df_switch_x, "Flips", plot_flip_rate, "pop", "X")
 
 ## Comparisons of Average Rates Across Chromosomes
 
-### Switches
-
-```{r}
-df_pop_switch_rates <- df_switch_trio %>%
-  mutate(Beagle = n_other_beagle / n_hets,
-            Eagle = n_other_eagle / n_hets,
-            SHAPEIT = n_other_shapeit / n_hets ) %>%
-  group_by(SUPER) %>%
-  summarize(Beagle15 = mean(Beagle),
-            Eagle15 = mean(Eagle),
-            SHAPEIT15 = mean(SHAPEIT)) %>%
-  left_join({
-    df_switch_x %>%
-      mutate(Beagle = n_other_beagle / n_hets,
-            Eagle = n_other_eagle / n_hets,
-            SHAPEIT = n_other_shapeit / n_hets ) %>%
-      group_by(pop) %>%
-      summarize(BeagleX = mean(Beagle),
-            EagleX = mean(Eagle),
-            SHAPEITX = mean(SHAPEIT))
-  }, by = c("SUPER" = "pop")) %>%
-  left_join({
-    df_switch_trio_22 %>%
-      mutate(Beagle = n_other_beagle / n_hets,
-             Eagle = n_other_eagle / n_hets,
-             SHAPEIT = n_other_shapeit / n_hets) %>%
-      group_by(SUPER) %>%
-      summarize(Beagle22 = mean(Beagle),
-                Eagle22 = mean(Eagle),
-                SHAPEIT22 = mean(SHAPEIT))
-  }, by="SUPER") %>% 
-  left_join({
-    df_switch_trio_1 %>%
-      mutate(Beagle = n_other_beagle / n_hets,
-             Eagle = n_other_eagle / n_hets,
-             SHAPEIT = n_other_shapeit / n_hets) %>%
-      group_by(SUPER) %>%
-      summarize(Beagle1 = mean(Beagle),
-                Eagle1 = mean(Eagle),
-                SHAPEIT1 = mean(SHAPEIT))
-  }, by="SUPER")
-
-df_pop_switch_rates %>%
-  knitr::kable()
-
-df_pop_switch_rates %>%
-  mutate(Beagle15_X = Beagle15 / BeagleX,
-         Eagle15_X = Eagle15 / EagleX,
-         SHAPEIT15_X = SHAPEIT15 / SHAPEITX,
-         Beagle15_22 = Beagle15 / Beagle22,
-         Eagle15_22 = Eagle15 / Eagle22,
-         SHAPEIT15_22 = SHAPEIT15 / SHAPEIT22,
-         Beagle15_1 = Beagle15 / Beagle1,
-         Eagle15_1 = Eagle15 / Eagle1,
-         SHAPEIT15_1 = SHAPEIT15 / SHAPEIT1) %>%
-  select(SUPER, Beagle15_X, Eagle15_X, SHAPEIT15_X, 
-         Beagle15_22, Eagle15_22, SHAPEIT15_22,
-         Beagle15_1, Eagle15_1, SHAPEIT15_1) %>%
-  knitr::kable()
-
-df_pop_switch_rates %>%
-  mutate(Beagle1_X = Beagle1 / BeagleX,
-         Eagle1_X = Eagle1 / EagleX,
-         SHAPEIT1_X = SHAPEIT1 / SHAPEITX,
-         Beagle1_22 = Beagle1 / Beagle22,
-         Eagle1_22 = Eagle1 / Eagle22,
-         SHAPEIT1_22 = SHAPEIT1 / SHAPEIT22) %>%
-  select(SUPER, Beagle1_X, Eagle1_X, SHAPEIT1_X, 
-         Beagle1_22, Eagle1_22, SHAPEIT1_22) %>%
-  knitr::kable()
-
-df_pop_switch_rates %>%
-  mutate(BeagleX_15 = BeagleX / Beagle15,
-         EagleX_15 = EagleX / Eagle15,
-         SHAPEITX_15= SHAPEITX / SHAPEIT15,
-         Beagle22_15 = Beagle22 / Beagle15,
-         Eagle22_15 = Eagle22 / Eagle15,
-         SHAPEIT22_15 = SHAPEIT22 / SHAPEIT15,
-         Beagle1_15 = Beagle1 / Beagle15,
-         Eagle1_15 = Eagle1 / Eagle15,
-         SHAPEIT1_15 = SHAPEIT1 / SHAPEIT15) %>%
-  select(SUPER, BeagleX_15, EagleX_15, SHAPEITX_15, 
-         Beagle22_15, Eagle22_15, SHAPEIT22_15,
-         Beagle1_15, Eagle1_15, SHAPEIT1_15) %>%
-  knitr::kable()
-```
-
-### Flips
-
-```{r}
-df_pop_flip_rates <- df_switch_trio %>%
-  mutate(Beagle = n_flip_beagle / n_hets,
-            Eagle = n_flip_eagle / n_hets,
-            SHAPEIT = n_flip_shapeit / n_hets ) %>%
-  group_by(SUPER) %>%
-  summarize(Beagle15 = mean(Beagle),
-            Eagle15 = mean(Eagle),
-            SHAPEIT15 = mean(SHAPEIT)) %>%
-  left_join({
-    df_switch_x %>%
-      mutate(Beagle = n_flip_beagle / n_hets,
-            Eagle = n_flip_eagle / n_hets,
-            SHAPEIT = n_flip_shapeit / n_hets ) %>%
-      group_by(pop) %>%
-      summarize(BeagleX = mean(Beagle),
-            EagleX = mean(Eagle),
-            SHAPEITX = mean(SHAPEIT))
-  }, by = c("SUPER" = "pop")) %>%
-  left_join({
-    df_switch_trio_22 %>%
-      mutate(Beagle = n_flip_beagle / n_hets,
-             Eagle = n_flip_eagle / n_hets,
-             SHAPEIT = n_flip_shapeit / n_hets) %>%
-      group_by(SUPER) %>%
-      summarize(Beagle22 = mean(Beagle),
-                Eagle22 = mean(Eagle),
-                SHAPEIT22 = mean(SHAPEIT))
-  }, by="SUPER") %>% 
-  left_join({
-    df_switch_trio_1 %>%
-      mutate(Beagle = n_flip_beagle / n_hets,
-             Eagle = n_flip_eagle / n_hets,
-             SHAPEIT = n_flip_shapeit / n_hets) %>%
-      group_by(SUPER) %>%
-      summarize(Beagle1 = mean(Beagle),
-                Eagle1 = mean(Eagle),
-                SHAPEIT1 = mean(SHAPEIT))
-  }, by="SUPER")
-
-df_pop_flip_rates %>%
-  knitr::kable()
-
-df_pop_flip_rates %>%
-  mutate(Beagle15_X = Beagle15 / BeagleX,
-         Eagle15_X = Eagle15 / EagleX,
-         SHAPEIT15_X = SHAPEIT15 / SHAPEITX,
-         Beagle15_22 = Beagle15 / Beagle22,
-         Eagle15_22 = Eagle15 / Eagle22,
-         SHAPEIT15_22 = SHAPEIT15 / SHAPEIT22,
-         Beagle15_1 = Beagle15 / Beagle1,
-         Eagle15_1 = Eagle15 / Eagle1,
-         SHAPEIT15_1 = SHAPEIT15 / SHAPEIT1) %>%
-  select(SUPER, Beagle15_X, Eagle15_X, SHAPEIT15_X, 
-         Beagle15_22, Eagle15_22, SHAPEIT15_22,
-         Beagle15_1, Eagle15_1, SHAPEIT15_1) %>%
-  knitr::kable()
-
-df_pop_flip_rates %>%
-  mutate(Beagle1_X = Beagle1 / BeagleX,
-         Eagle1_X = Eagle1 / EagleX,
-         SHAPEIT1_X = SHAPEIT1 / SHAPEITX,
-         Beagle1_22 = Beagle1 / Beagle22,
-         Eagle1_22 = Eagle1 / Eagle22,
-         SHAPEIT1_22 = SHAPEIT1 / SHAPEIT22) %>%
-  select(SUPER, Beagle1_X, Eagle1_X, SHAPEIT1_X, 
-         Beagle1_22, Eagle1_22, SHAPEIT1_22) %>%
-  knitr::kable()
-
-df_pop_flip_rates %>%
-  mutate(BeagleX_15 = BeagleX / Beagle15,
-         EagleX_15 = EagleX / Eagle15,
-         SHAPEITX_15= SHAPEITX / SHAPEIT15,
-         Beagle22_15 = Beagle22 / Beagle15,
-         Eagle22_15 = Eagle22 / Eagle15,
-         SHAPEIT22_15 = SHAPEIT22 / SHAPEIT15,
-         Beagle1_15 = Beagle1 / Beagle15,
-         Eagle1_15 = Eagle1 / Eagle15,
-         SHAPEIT1_15 = SHAPEIT1 / SHAPEIT15) %>%
-  select(SUPER, BeagleX_15, EagleX_15, SHAPEITX_15, 
-         Beagle22_15, Eagle22_15, SHAPEIT22_15,
-         Beagle1_15, Eagle1_15, SHAPEIT1_15) %>%
-  knitr::kable()
-```
-
-## Error rates and triple het rate
-
-Using only trio sequencing data, the phase of sites which are heterozygous in both the parents and in the child cannot be determined by the principles of Mendelian segregation. Below we explore the assocition between the frequency of triple heterozygous sites in each trio and the rate of errors in phasing of the child.
-
-### Switch rate
-
-#### Beagle
-
-```{r}
-plot_th_sr <- function(df, m1, chrom = 15, het_var = "n_t_het"){
-  df <- df %>%
-    mutate(Beagle = n_other_beagle / n_hets,
-           Eagle = n_other_eagle / n_hets,
-           SHAPEIT = n_other_shapeit / n_hets,
-           frac_t_het = !! sym(het_var) / n_hets)
-  c_val <- signif(cor(df[m1], df["frac_t_het"]), 4)
-  c_obj <- cor.test(df[[m1]], df[["frac_t_het"]])
-  p_val <- paste0("p=",signif(c_obj$p.value, 4))
-  p <- df %>%
-    ggplot(aes(x = frac_t_het, y = !! sym(m1), color = SUPER)) +
-    geom_point() +
-    xlab("Fraction of sites triple heterozygous") +
-    ylab("Switch Error Rate") +
-    scale_color_manual(values = cbPalette) +
-    labs(color="Population") +
-    ggtitle("Switch error rates and triple heterozygotes", paste0("Chromosome ", chrom, "; corr = ", c_val, "(", p_val ,")"))
-  return(p)
-}
-
-plot_th_sr(df_switch_trio, "Beagle")
-plot_th_sr(df_switch_trio_22, "Beagle", 22, "n_t_het22")
-plot_th_sr(df_switch_trio_1, "Beagle", 1, "n_t_het1")
-```
-
-And comparing the fraction of triple hets that are errors to frac of all sites that are errors:
-
-```{r}
-df_switch_trio %>%
-  mutate(frac_t_het = (n_t_het / n_hets)) %>%
-  ggplot(aes(x = frac_t_het, color = SUPER)) +
-    geom_density() +
-    xlab("Fraction of TH Het Sites") +
-    scale_color_manual(values = cbPalette) +
-    theme_classic() 
-
-enrich_plot_switch <- function(df, chrom = 15, suffix = "") {
-  b_var <- paste0("beagle_switch_th", suffix)
-  e_var <- paste0("eagle_switch_th", suffix)
-  s_var <- paste0("shapeit_switch_th", suffix)
-  p <- df %>%
-    mutate(Beagle = (!! sym(b_var) / n_other_beagle),
-           Eagle = (!! sym(e_var) / n_other_eagle),
-           SHAPEIT = (!! sym(s_var) / n_other_shapeit)) %>%
-    select(SUPER, Eagle, Beagle, SHAPEIT) %>%
-    pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
-    ggplot(aes(x = enrich, color = SUPER)) +
-      geom_density() +
-      xlab("Frac. switches at TH") +
-      scale_color_manual(values = cbPalette) +
-      theme_classic() +
-    ggtitle(paste0("Chromosome ", chrom))
-  return(p)
-}
-enrich_plot_switch(df_switch_trio)
-enrich_plot_switch(df_switch_trio_22, 22, "22")
-enrich_plot_switch(df_switch_trio_1, 1, "1")
-
-
-enrich_plot_flip <- function(df, chrom = 15, suffix = "") {
-  b_var <- paste0("beagle_flip_th", suffix)
-  e_var <- paste0("eagle_flip_th", suffix)
-  s_var <- paste0("shapeit_flip_th", suffix)
-  p <- df %>%
-    mutate(Beagle = (!! sym(b_var) / n_other_beagle),
-           Eagle = (!! sym(e_var) / n_other_eagle),
-           SHAPEIT = (!! sym(s_var) / n_other_shapeit)) %>%
-    select(SUPER, Eagle, Beagle, SHAPEIT) %>%
-    pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
-    ggplot(aes(x = enrich, color = SUPER)) +
-      geom_density() +
-      xlab("Frac. flips at TH") +
-      scale_color_manual(values = cbPalette) +
-      theme_classic() +
-    ggtitle(paste0("Chromosome ", chrom))
-  return(p)
-}
-
-enrich_plot_flip(df_switch_trio)
-enrich_plot_flip(df_switch_trio_22,22, 22)
-enrich_plot_flip(df_switch_trio_1,1, 1)
-
-
-barplot_switch_th <- function(df, chrom = 15, suffix = "", het_var="n_t_het"){
-  b_var <- paste0("beagle_switch_th", suffix)
-  e_var <- paste0("eagle_switch_th", suffix)
-  s_var <- paste0("shapeit_switch_th", suffix)
-  p <- df %>%
-  mutate(Beagle = (!! sym(b_var) / n_other_beagle) / (!! sym(het_var) / n_hets),
-         Eagle = (!! sym(e_var) / n_other_eagle) / (!! sym(het_var) / n_hets),
-         SHAPEIT = (!! sym(s_var) / n_other_shapeit) / (!! sym(het_var) / n_hets)) %>%
-  select(SUPER, Eagle, Beagle, SHAPEIT) %>%
-  pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
-  ggplot(aes(x = Method, y = enrich, color = SUPER)) +
-    geom_boxplot() +
-    ylab("Frac. switches at TH / Frac. Het. at TH") +
-    scale_color_manual(values = cbPalette) +
-    theme_classic() +
-  geom_hline(yintercept = 1) +
-    ggtitle(paste0("Chromosome ", chrom))
-  return(p)
-}
-
-barplot_switch_th(df_switch_trio)
-barplot_switch_th(df_switch_trio_22, 22, 22, "n_t_het22")
-barplot_switch_th(df_switch_trio_1, 1, 1, "n_t_het1")
-
-barplot_flip_th <- function(df, chrom = 15, suffix = "", het_var="n_t_het"){
-  b_var <- paste0("beagle_flip_th", suffix)
-  e_var <- paste0("eagle_flip_th", suffix)
-  s_var <- paste0("shapeit_flip_th", suffix)
-  p <- df %>%
-  mutate(Beagle = (!! sym(b_var) / n_other_beagle) / (!! sym(het_var) / n_hets),
-         Eagle = (!! sym(e_var) / n_other_eagle) / (!! sym(het_var) / n_hets),
-         SHAPEIT = (!! sym(s_var) / n_other_shapeit) / (!! sym(het_var) / n_hets)) %>%
-  select(SUPER, Eagle, Beagle, SHAPEIT) %>%
-  pivot_longer(-SUPER, names_to = "Method", values_to = "enrich") %>%
-  ggplot(aes(x = Method, y = enrich, color = SUPER)) +
-    geom_boxplot() +
-    ylab("Frac. switches at TH / Frac. Het. at TH") +
-    scale_color_manual(values = cbPalette) +
-    theme_classic() +
-  geom_hline(yintercept = 1) +
-    ggtitle(paste0("Chromosome ", chrom))
-  return(p)
-}
-
-barplot_flip_th(df_switch_trio)
-barplot_flip_th(df_switch_trio_22, 22, 22, "n_t_het22")
-barplot_flip_th(df_switch_trio_1, 1, 1, "n_t_het1")
-```
-
-
-#### Eagle
-
-```{r}
-plot_th_sr(df_switch_trio, "Eagle")
-```
-
-#### SHAPEIT
-
-```{r}
-plot_th_sr(df_switch_trio, "SHAPEIT")
-```
-
-### Flip Rate
-
-#### Beagle
-```{r}
-plot_th_fr <- function(df, m1, chrom = 15){
-  df <- df %>%
-    mutate(Beagle = n_flip_beagle / n_hets,
-           Eagle = n_flip_eagle / n_hets,
-           SHAPEIT = n_flip_shapeit / n_hets,
-           frac_t_het = n_t_het / n_hets)
-  c_val <- signif(cor(df[m1], df["frac_t_het"]), 4)
-  c_obj <- cor.test(df[[m1]], df[["frac_t_het"]])
-  p_val <- paste0("p=",signif(c_obj$p.value, 4))
-  p <- df %>%
-    ggplot(aes(x = frac_t_het, y = !! sym(m1), color = SUPER)) +
-    geom_point() +
-    xlab("Fraction of sites triple heterozygous") +
-    ylab("Flip Error Rate") +
-    scale_color_manual(values = cbPalette) +
-    labs(color="Population") +
-    ggtitle("Flip error rates and triple heterozygotes", paste0("Chromosome ", chrom, "; corr = ", c_val, "(", p_val ,")"))
-  return(p)
-}
-
-plot_th_fr(df_switch_trio, "Beagle")
-```
-
-#### Eagle
-
-```{r}
-plot_th_fr(df_switch_trio, "Eagle")
-```
-
-#### SHAPEIT
-
-```{r}
-plot_th_fr(df_switch_trio, "SHAPEIT")
-```
-
-## Enrichment at CpG
-
-```{r}
-df_switch_trio %>%
-  summarize(mean_switch_eagle = mean(n_other_cpg_eagle),
-            mean_switch_beagle = mean(n_other_cpg_beagle),
-            mean_switch_shapeit = mean(n_other_cpg_shapeit),
-            mean_flip_eagle = mean(n_flip_cpg_eagle),
-            mean_flip_beagle = mean(n_flip_cpg_beagle),
-            mean_flip_shapeit = mean(n_flip_cpg_shapeit)) %>%
-  knitr::kable()
-
-df_switch_trio %>%
-  group_by(SUPER) %>%
-  summarize(mean_switch_eagle = mean(n_other_cpg_eagle),
-            mean_switch_beagle = mean(n_other_cpg_beagle),
-            mean_switch_shapeit = mean(n_other_cpg_shapeit),
-            mean_flip_eagle = mean(n_flip_cpg_eagle),
-            mean_flip_beagle = mean(n_flip_cpg_beagle),
-            mean_flip_shapeit = mean(n_flip_cpg_shapeit)) %>%
-  knitr::kable()
-
-df_switch_trio %>%
-  summarize(mean_switch_eagle = mean(n_other_cpg_eagle / n_other_eagle),
-            mean_switch_beagle = mean(n_other_cpg_beagle / n_other_beagle),
-            mean_switch_shapeit = mean(n_other_cpg_shapeit / n_other_shapeit),
-            mean_flip_eagle = mean(n_flip_cpg_eagle / n_flip_eagle),
-            mean_flip_beagle = mean(n_flip_cpg_beagle / n_flip_beagle),
-            mean_flip_shapeit = mean(n_flip_cpg_shapeit / n_flip_shapeit)) %>%
-  knitr::kable()
-```
-
-```{r}
-df_switch_trio %>%
-  summarize(mean_switch_eagle = mean((n_other_cpg_eagle / n_other_eagle) / ( n_het_cpg / n_hets)),
-            mean_switch_beagle = mean((n_other_cpg_beagle / n_other_beagle) / ( n_het_cpg / n_hets)),
-            mean_switch_shapeit = mean((n_other_cpg_shapeit / n_other_shapeit) / ( n_het_cpg / n_hets) ),
-            mean_flip_eagle = mean((n_flip_cpg_eagle / n_flip_eagle) / ( n_het_cpg / n_hets)),
-            mean_flip_beagle = mean((n_flip_cpg_beagle / n_flip_beagle) / ( n_het_cpg / n_hets)),
-            mean_flip_shapeit = mean((n_flip_cpg_shapeit / n_flip_shapeit) / ( n_het_cpg / n_hets))) %>%
-  knitr::kable()
-```
-
-```{r}
-df_switch_trio %>%
-  mutate( prop_cpg_beagle =  n_other_cpg_beagle / n_other_beagle,
-             prop_cpg_eagle =  n_other_cpg_eagle / n_other_eagle,
-             prop_cpg_shapeit =  n_other_cpg_shapeit / n_other_shapeit) %>%
-  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
-         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
-         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
-         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
-  mutate(Beagle = ods_beagle / ods_het,
-         Eagle = ods_eagle / ods_het,
-         SHAPEIT = ods_shapeit / ods_het) %>%
-  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(-SUPER, names_to = "Method", values_to = "OR") %>%
-  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
-  geom_boxplot() +
-  ylab("Odds CpG Switch / Odds CpG Het") +
-  ggtitle("Odds Ratio of CpG Status for Switches") +
-  theme_classic() +
-  labs(colour = "Population") +
-  scale_color_manual(values = cbPalette) +
-  geom_hline(yintercept = 1, linetype=2)
-
-df_switch_trio %>%
-  mutate( prop_cpg_beagle =  n_other_cpg_beagle / n_other_beagle,
-             prop_cpg_eagle =  n_other_cpg_eagle / n_other_eagle,
-             prop_cpg_shapeit =  n_other_cpg_shapeit / n_other_shapeit) %>%
-  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
-         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
-         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
-         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
-  mutate(Beagle = ods_beagle / ods_het,
-         Eagle = ods_eagle / ods_het,
-         SHAPEIT = ods_shapeit / ods_het) %>%
-  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(-SUPER, names_to = "Method", values_to = "OR") %>%
-  ggplot(aes(x = Method, y = OR)) +
-  geom_boxplot() +
-  ylab("Odds CpG Switch / Odds CpG Het") +
-  ggtitle("Odds Ratio of CpG Status for Switches") +
-  theme_classic() +
-  scale_color_manual(values = cbPalette) +
-  geom_hline(yintercept = 1, linetype=2)
-```
-
-And flips:
-
-```{r}
-df_switch_trio %>%
-  mutate( prop_cpg_beagle =  n_flip_cpg_beagle / n_flip_beagle,
-             prop_cpg_eagle =  n_flip_cpg_eagle / n_flip_eagle,
-             prop_cpg_shapeit =  n_flip_cpg_shapeit / n_flip_shapeit) %>%
-  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
-         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
-         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
-         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
-  mutate(Beagle = ods_beagle / ods_het,
-         Eagle = ods_eagle / ods_het,
-         SHAPEIT = ods_shapeit / ods_het) %>%
-  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(-SUPER, names_to = "Method", values_to = "OR") %>%
-  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
-  geom_boxplot() +
-  ylab("Odds CpG Switch / Odds CpG Het") +
-  ggtitle("Odds Ratio of CpG Status for Switches") +
-  theme_classic() +
-  labs(colour = "Population") +
-  scale_color_manual(values = cbPalette) +
-  geom_hline(yintercept = 1, linetype=2)
-
-df_switch_trio %>%
-  mutate( prop_cpg_beagle =  n_flip_cpg_beagle / n_flip_beagle,
-             prop_cpg_eagle =  n_flip_cpg_eagle / n_flip_eagle,
-             prop_cpg_shapeit =  n_flip_cpg_shapeit / n_flip_shapeit) %>%
-  mutate(ods_beagle = prop_cpg_beagle / (1 - prop_cpg_beagle),
-         ods_eagle = prop_cpg_eagle / (1 - prop_cpg_eagle),
-         ods_shapeit = prop_cpg_shapeit / (1 - prop_cpg_shapeit),
-         ods_het = ( n_het_cpg / n_hets) / (1 - ( n_het_cpg / n_hets))) %>%
-  mutate(Beagle = ods_beagle / ods_het,
-         Eagle = ods_eagle / ods_het,
-         SHAPEIT = ods_shapeit / ods_het) %>%
-  select(SUPER, Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(-SUPER, names_to = "Method", values_to = "OR") %>%
-  ggplot(aes(x = Method, y = OR)) +
-  geom_boxplot() +
-  ylab("Odds CpG Switch / Odds CpG Het") +
-  ggtitle("Odds Ratio of CpG Status for Switches") +
-  theme_classic() +
-  scale_color_manual(values = cbPalette) +
-  geom_hline(yintercept = 1, linetype=2)
-
-```
-
-## MAF Bins
-
-In the `maf_prop_df` data frame, we have for each synthetic diploid the proportion of heterozygous sites that are: rare variants (maf < 0.01); uncommon variants (0.01 < maf < 0.05); and common variants (maf > 0.05). We also have these proportions for each type of error for each method (switch; flip start; flip end; correct).
-
-Let's first look at the distributions of these proportions for all heterozygous positions within each individual:
-
-```{r}
-prop_maf_fig <- function(cat_type, title_text){
-  df <- maf_prop_df %>%
-    filter(str_detect(category, paste0("^", cat_type, "_[rcu]"))) %>%
-    mutate(category = factor(category)) %>%
-    mutate(category = fct_recode(category, "Rare" = paste0(cat_type, "_rare"),
-                               "Uncommon" = paste0(cat_type, "_uncommon"),
-                               "Common" = paste0(cat_type, "_common"))) %>%
-    mutate(category = fct_relevel(category, c("Rare", "Uncommon", "Common")))
-  
-  p <- df %>%
-    ggplot(aes(x = category, y = proportion, color = SUPER)) +
-    geom_boxplot() +
-    ggtitle(paste0(title_text, " in MAF Bins")) +
-    xlab("") +
-    ylab("Proportion of Sites") +
-    theme_classic() +
-    labs(color = "Population") +
-    scale_color_manual(values = cbPalette)
-  
-  tab_prop <- df %>%
-    group_by(SUPER, category) %>%
-    summarize(mean_prop = mean(proportion))
-  
-  return(list(p = p, tab_prop = tab_prop))
-}
-
-res_obj <- prop_maf_fig("het", "Heterozygous Sites")
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-### Beagle Errors
-
-#### Switches
-
-```{r}
-cat_type <- "beagle_switch"
-title_text <- "Beagle Switches"
-
-res_obj <- prop_maf_fig(cat_type, title_text)
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-### Flips
-
-#### Start
-
-```{r}
-cat_type <- "beagle_flip"
-title_text <- "Beagle Flips"
-
-res_obj <- prop_maf_fig(cat_type, title_text)
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-#### End
-
-```{r}
-cat_type <- "beagle_flip end"
-title_text <- "Beagle Flip Ends"
-
-res_obj <- prop_maf_fig(cat_type, title_text)
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-### Eagle Errors
-
-#### Switches
-
-```{r}
-cat_type <- "eagle_switch"
-title_text <- "Eagle Switches"
-
-res_obj <- prop_maf_fig(cat_type, title_text)
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-### Flips
-
-#### Start
-
-```{r}
-cat_type <- "eagle_flip"
-title_text <- "Eagle Flips"
-
-res_obj <- prop_maf_fig(cat_type, title_text)
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-#### End
-
-```{r}
-cat_type <- "eagle_flip end"
-title_text <- "Eagle Flip Ends"
-
-res_obj <- prop_maf_fig(cat_type, title_text)
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-### SHAPEIT Errors
-
-#### Switches
-
-```{r}
-cat_type <- "shapeit_switch"
-title_text <- "SHAPEIT Switches"
-
-res_obj <- prop_maf_fig(cat_type, title_text)
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-### Flips
-
-#### Start
-
-```{r}
-cat_type <- "shapeit_flip"
-title_text <- "SHAPEIT Flips"
-
-res_obj <- prop_maf_fig(cat_type, title_text)
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-#### End
-
-```{r}
-cat_type <- "shapeit_flip end"
-title_text <- "SHAPEIT Flip Ends"
-
-res_obj <- prop_maf_fig(cat_type, title_text)
-print(res_obj$p)
-
-res_obj$tab_prop %>%
-  knitr::kable()
-```
-
-### Odds Ratios
-
-Here we'll compoute the ratio of odds of being in the rare variant category for errors and all heterozygous positions within each individual.
-
-```{r}
-maf_prop_df %>%
-  select(category, proportion, id, SUPER) %>%
-  pivot_wider(names_from = category, values_from = proportion) %>%
-  mutate(or_het = het_rare / (1 - het_rare),
-         or_b_s = beagle_switch_rare / (1 - beagle_switch_rare),
-         or_e_s = eagle_switch_rare / (1 - eagle_switch_rare),
-         or_s_s = shapeit_switch_rare / (1 - shapeit_switch_rare)) %>%
-  mutate(Beagle = or_b_s / or_het,
-         Eagle = or_e_s / or_het,
-         SHAPEIT = or_s_s / or_het) %>%
-  select(id, SUPER, Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(!id & !SUPER, names_to = "Method", values_to = "OR") %>%
-  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
-  geom_boxplot() +
-  ggtitle("Odds Ratio of Rare Variant") +
-  ylab("Odds Rare Switch / Odds Rare Heterozygous") +
-  theme_classic() +
-  labs(colour = "Population") +
-  geom_hline(yintercept = 1, linetype = 2)
-```
-
-```{r}
-maf_prop_df %>%
-  select(category, proportion, id, SUPER) %>%
-  pivot_wider(names_from = category, values_from = proportion) %>%
-  mutate(or_het = het_rare / (1 - het_rare),
-         or_b_s = beagle_flip_rare / (1 - beagle_flip_rare),
-         or_e_s = eagle_flip_rare / (1 - beagle_flip_rare),
-         or_s_s = shapeit_flip_rare / (1 - beagle_flip_rare)) %>%
-  mutate(Beagle = or_b_s / or_het,
-         Eagle = or_e_s / or_het,
-         SHAPEIT = or_s_s / or_het) %>%
-  select(id, SUPER, Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(!id & !SUPER, names_to = "Method", values_to = "OR") %>%
-  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
-  geom_boxplot() +
-  ggtitle("Odds Ratio of Rare Variant") +
-  ylab("Odds Rare Flip / Odds Rare Heterozygous") +
-  theme_classic() +
-  labs(colour = "Population") +
-  geom_hline(yintercept = 1, linetype = 2)
-```
-
-### Enrichment
-
-Instead of odds ratios, we compare the ratio of switches that are rare to the ratio of total heterozygous positions that are rare
-
-```{r}
-maf_prop_df %>%
-  select(category, proportion, id, SUPER) %>%
-  pivot_wider(names_from = category, values_from = proportion) %>%
-  mutate(Beagle = beagle_switch_rare / het_rare,
-         Eagle = eagle_switch_rare / het_rare,
-         SHAPEIT = shapeit_switch_rare / het_rare) %>%
-  select(id, SUPER, Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(!id & !SUPER, names_to = "Method", values_to = "OR") %>%
-  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
-  geom_boxplot() +
-  ggtitle("Ratio of Proportions Rare") +
-  ylab("Fraction Switch Rare / Fraction Het Rare") +
-  theme_classic() +
-  labs(colour = "Population") +
-  geom_hline(yintercept = 1, linetype = 2)
-```
-
-```{r}
-maf_prop_df %>%
-  select(category, proportion, id, SUPER) %>%
-  pivot_wider(names_from = category, values_from = proportion) %>%
-  mutate(Beagle = beagle_flip_rare / het_rare,
-         Eagle = eagle_flip_rare / het_rare,
-         SHAPEIT = shapeit_flip_rare / het_rare) %>%
-  select(id, SUPER, Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(!id & !SUPER, names_to = "Method", values_to = "OR") %>%
-  ggplot(aes(x = Method, y = OR, colour = SUPER)) +
-  geom_boxplot() +
-  ggtitle("Ratio of Proportions Rare") +
-  ylab("Fraction Flip Rare / Fraction Het Rare") +
-  theme_classic() +
-  labs(colour = "Population") +
-  geom_hline(yintercept = 1, linetype = 2)
-```
-
-## deCODE recombination rates
-
-```{r}
-df_decode %>%
-  mutate(bin = ceiling(start / 1e6)) %>%
-  group_by(bin) %>%
-  summarize(cM_MB = mean(cM_MB))
-```
