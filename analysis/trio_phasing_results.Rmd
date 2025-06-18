@@ -243,6 +243,62 @@ df_total %>%
   scale_colour_brewer(palette = "Set1")
 ```
 
+What range of values do we observe in the autosomes (sans 8)?
+
+```{r}
+df_total %>%
+  filter(chrom %in% c(1:7, 9:22)) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  summarize(across(.cols = everything(),
+                   .fns = list(
+                     mean = ~mean(.x, na.rm =T),
+                     sd = ~sd(.x, na.rm = T),
+                     min = ~min(.x, na.rm=T),
+                     max = ~max(.x, na.rm = T)
+                   ),
+                   .names = "{.col}_{.fn}") 
+            ) %>%
+  knitr::kable()
+
+df_total %>%
+  filter(chrom %in% c(1:7, 9:22)) %>%
+  select(chrom, Beagle, Eagle, SHAPEIT) %>%
+  group_by(chrom) %>%
+  summarize(across(.cols = everything(),
+                   .fns = list(
+                     mean = ~mean(.x, na.rm =T),
+                     sd = ~sd(.x, na.rm = T),
+                     min = ~min(.x, na.rm=T),
+                     max = ~max(.x, na.rm = T)
+                   ),
+                   .names = "{.col}_{.fn}") 
+            ) %>%
+  knitr::kable()
+```
+
+
+Let's first do a hypothesis test to compare the mean error rates in X versus the autosomes.
+
+```{r}
+# Beagle
+autosomes <- df_total %>% filter(chrom < 23) %>% pull(Beagle)
+chrX <- df_total %>% filter(chrom == 23) %>% pull(Beagle)
+t.test(autosomes, chrX) %>% broom::tidy()
+
+# Eagle
+autosomes <- df_total %>% filter(chrom < 23) %>% pull(Eagle)
+chrX <- df_total %>% filter(chrom == 23) %>% pull(Eagle)
+t.test(autosomes, chrX) %>% broom::tidy()
+
+# SHAPEIT
+autosomes <- df_total %>% filter(chrom < 23) %>% pull(SHAPEIT)
+chrX <- df_total %>% filter(chrom == 23) %>% pull(SHAPEIT)
+t.test(autosomes, chrX) %>% broom::tidy()
+
+```
+
+
+
 For each chromosome, we will test several hypotheses:
 
 1. Are the error rates for Beagle, Eagle, and SHAPEIT the same?
@@ -386,6 +442,52 @@ df_switches %>%
   scale_colour_brewer(palette = "Set1") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   scale_x_continuous("Chromosome", labels = as.character(unique(df_switches$chrom)), breaks = unique(df_switches$chrom))
+```
+
+```{r}
+
+mod_b <- df_switches %>%
+  select(Beagle, Eagle, SHAPEIT, chrom, pair_id) %>%
+  {lmerTest::lmer(Beagle ~ factor(chrom) + (1|pair_id), data = . )}
+anova(mod_b) %>% broom::tidy()
+emmeans::emmeans(mod_b, ~ chrom, pbkrtest.limit = 14244) %>% pairs() %>% broom::tidy() %>%
+  separate(contrast, into = c("chrom1", "chrom2"), sep = " - ") %>%
+  filter(chrom1 %in% "chrom23" | chrom2 %in% "chrom23") %>% 
+  knitr::kable()
+
+mod_e <- df_switches %>%
+  select(Beagle, Eagle, SHAPEIT, chrom, pair_id) %>%
+  {lmerTest::lmer(Eagle ~ factor(chrom) + (1|pair_id), data = . )}
+anova(mod_e) %>% broom::tidy()
+emmeans::emmeans(mod_e, ~ chrom, pbkrtest.limit = 14244) %>% pairs() %>% broom::tidy() %>%
+  separate(contrast, into = c("chrom1", "chrom2"), sep = " - ") %>%
+  filter(chrom1 %in% "chrom23" | chrom2 %in% "chrom23") %>% 
+  knitr::kable()
+
+mod_s <- df_switches %>%
+  select(Beagle, Eagle, SHAPEIT, chrom, pair_id) %>%
+  {lmerTest::lmer(SHAPEIT ~ factor(chrom) + (1|pair_id), data = . )}
+anova(mod_s) %>% broom::tidy()
+emmeans::emmeans(mod_s, ~ chrom, pbkrtest.limit = 14244) %>% pairs() %>% broom::tidy() %>%
+  separate(contrast, into = c("chrom1", "chrom2"), sep = " - ") %>%
+  filter(chrom1 %in% "chrom23" | chrom2 %in% "chrom23") %>% 
+  knitr::kable()
+
+# Beagle
+autosomes <- df_switches %>% filter(chrom %in% c(1:7,9:22)) %>% pull(Beagle)
+chrX <- df_switches %>% filter(chrom == 23) %>% pull(Beagle)
+t.test(autosomes, chrX) %>% broom::tidy()
+
+# Eagle
+autosomes <- df_switches %>% filter(chrom < 23) %>% pull(Eagle)
+chrX <- df_switches %>% filter(chrom == 23) %>% pull(Eagle)
+t.test(autosomes, chrX) %>% broom::tidy()
+
+# SHAPEIT
+autosomes <- df_switches %>% filter(chrom < 23) %>% pull(SHAPEIT)
+chrX <- df_switches %>% filter(chrom == 23) %>% pull(SHAPEIT)
+t.test(autosomes, chrX) %>% broom::tidy()
+
 ```
 
 ```{r}
