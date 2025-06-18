@@ -167,14 +167,14 @@ df_subj_unrel %>%
 
 ### Total Errors
 
-First let's get an overall error rate across all 22 autsomes based on our re-phasing of the trio probands:
+First let's get an overall error rate across all 22 autosomes based on our re-phasing of the trio probands:
 
 ```{r}
 df_total <- df_switch_trio[[1]] %>%
   mutate(Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
          Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
          SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
-  select(Eagle, Beagle, SHAPEIT, SUPER) %>%
+  select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
   mutate(chrom = 1)
 
 for(i in 2:22){
@@ -184,19 +184,19 @@ for(i in 2:22){
                             mutate(Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
                                    Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
                                    SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
-                            select(Eagle, Beagle, SHAPEIT, SUPER) %>%
+                            select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
                             mutate(chrom = i)
                         })
 }
 
 df_total <- df_total %>%
-  bind_rows(df_total, {df_switch_x %>%
+  bind_rows({df_switch_x %>%
       mutate(Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
                                    Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
                                    SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
       rename(SUPER = pop) %>%
                             select(Eagle, Beagle, SHAPEIT, SUPER) %>%
-                            mutate(chrom = 23)})
+                            mutate(pair_id = 603:1602, chrom = 23)})
 
 df_total %>%
   group_by(chrom) %>%
@@ -219,10 +219,14 @@ df_total %>%
             SHAPEIT = mean(SHAPEIT)) %>%
   pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
   ggplot(aes(x = chrom, y = error_rate, colour = method, shape = method)) +
-  geom_point() +
+  geom_point(size=3) +
   theme_bw() +
   xlab("Chromosome") +
-  ylab("Error Rate")
+  ylab("Error Rate") +
+  labs(colour = "Method", shape = "Method") +
+  scale_colour_brewer(palette = "Set2") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_x_continuous("Chromosome", labels = as.character(unique(df_total$chrom)), breaks = unique(df_total$chrom))
 
 df_total %>%
   group_by(chrom, SUPER) %>%
@@ -231,13 +235,354 @@ df_total %>%
             SHAPEIT = mean(SHAPEIT)) %>%
   pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
   ggplot(aes(x = chrom, y = error_rate, colour = SUPER, shape = method)) +
-  geom_point() +
+  geom_point(size=2) +
   theme_bw() +
   ylab("Error Rate") +
   xlab("Chromosome") +
-  labs(colour = "Population", shape = "Method")
+  labs(colour = "Population", shape = "Method") +
+  scale_colour_brewer(palette = "Set1")
 ```
 
+For each chromosome, we will test several hypotheses:
+
+1. Are the error rates for Beagle, Eagle, and SHAPEIT the same?
+2. If the above does not hold, when we do pairwise comparisons between the methods, are error rates the same?
+3. Do error rates differ by population? If so, do above tests separately for each population.
+
+For the first test, I'll use a linear mixed model with random intercepts for each individual/synthetic diploid. This will also allow me to do contrasts for the pairwise comparisons.
+
+```{r}
+mod_fit <- df_total %>%
+  filter(chrom == 1) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
+
+df_anova <- anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = 1)
+
+df_pairwise <- emmeans::emmeans(mod_fit, ~ method) %>% pairs() %>% broom::tidy() %>% mutate(chrom=1)
+
+for(i in 2:23){
+  mod_fit <- df_total %>%
+    filter(chrom == i) %>%
+    pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+    {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
+  
+  df_anova <- df_anova %>% bind_rows({anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = i)})
+  df_pairwise <- df_pairwise %>% bind_rows({
+    emmeans::emmeans(mod_fit, ~ method) %>% pairs() %>% broom::tidy() %>% mutate(chrom=i)})
+}
+
+df_anova %>% knitr::kable()
+
+df_pairwise %>% knitr::kable()
+```
+
+Now let's do these comparisons within each super-population:
+
+```{r}
+mod_fit <- df_total %>%
+  filter(chrom == 1) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method*SUPER + (1|pair_id), data = .)}
+
+df_pop_anova <- anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = 1)
+
+df_pop_pairwise <- emmeans::emmeans(mod_fit, ~ method | SUPER) %>% pairs() %>% broom::tidy() %>% mutate(chrom=1)
+df_pop_pop <- emmeans::emmeans(mod_fit, ~ SUPER | method) %>% pairs() %>% broom::tidy() %>% mutate(chrom = 1)
+
+for(i in 2:23){
+  mod_fit <- df_total %>%
+    filter(chrom == i) %>%
+    pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+    {lmerTest::lmer(error_rate ~ method*SUPER + (1|pair_id), data = .)}
+  
+  df_pop_anova <- df_pop_anova %>% bind_rows({anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = i)})
+  df_pop_pairwise <- df_pop_pairwise %>% bind_rows({
+    emmeans::emmeans(mod_fit, ~ method | SUPER) %>% pairs() %>% broom::tidy() %>% mutate(chrom=i)})
+  df_pop_pop <- df_pop_pop %>% bind_rows({
+    emmeans::emmeans(mod_fit, ~ SUPER | method) %>% pairs() %>% broom::tidy() %>% mutate(chrom = i)})
+}
+
+df_pop_anova %>% knitr::kable()
+df_pop_pairwise %>% knitr::kable()
+df_pop_pop %>% knitr::kable()
+```
+
+### Switch Errors
+
+Next, let's consider switches and flips independently:
+
+```{r}
+df_switches <- df_switch_trio[[1]] %>%
+  mutate(Eagle = (n_other_eagle) / n_hets,
+         Beagle = (n_other_beagle) / n_hets,
+         SHAPEIT = (n_other_shapeit) / n_hets) %>%
+  select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
+  mutate(chrom = 1)
+
+for(i in 2:22){
+  df_switches <- bind_rows(df_switches, 
+                        {
+                          df_switch_trio[[i]] %>%
+                            mutate(Eagle = (n_other_eagle) / n_hets,
+                                   Beagle = (n_other_beagle) / n_hets,
+                                   SHAPEIT = (n_other_shapeit) / n_hets) %>%
+                            select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
+                            mutate(chrom = i)
+                        })
+}
+
+df_switches <- df_switches %>%
+  bind_rows({df_switch_x %>%
+      mutate(Eagle = (n_other_eagle) / n_hets,
+                                   Beagle = (n_other_beagle) / n_hets,
+                                   SHAPEIT = (n_other_shapeit) / n_hets) %>%
+      rename(SUPER = pop) %>%
+                            select(Eagle, Beagle, SHAPEIT, SUPER) %>%
+                            mutate(pair_id = 603:1602, chrom = 23)})
+
+df_switches %>%
+  group_by(chrom) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+
+df_switches %>%
+  group_by(chrom, SUPER) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%  
+  knitr::kable() 
+
+df_switches %>%
+  group_by(chrom) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = chrom, y = error_rate, colour = method, shape = method)) +
+  geom_point(size=3) +
+  theme_bw() +
+  xlab("Chromosome") +
+  ylab("Switch Rate") +
+  labs(colour = "Method", shape = "Method") +
+  scale_colour_brewer(palette = "Set2") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_x_continuous("Chromosome", labels = as.character(unique(df_switches$chrom)), breaks = unique(df_switches$chrom))
+
+df_switches %>%
+  group_by(chrom, SUPER) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = chrom, y = error_rate, colour = SUPER, shape = method)) +
+  geom_point(size=2) +
+  theme_bw() +
+  ylab("Switch Rate") +
+  xlab("Chromosome") +
+  labs(colour = "Population", shape = "Method") +
+  scale_colour_brewer(palette = "Set1") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_x_continuous("Chromosome", labels = as.character(unique(df_switches$chrom)), breaks = unique(df_switches$chrom))
+```
+
+```{r}
+mod_fit <- df_switches %>%
+  filter(chrom == 1) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
+
+df_anova <- anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = 1)
+
+df_pairwise <- emmeans::emmeans(mod_fit, ~ method) %>% pairs() %>% broom::tidy() %>% mutate(chrom=1)
+
+for(i in 2:23){
+  mod_fit <- df_switches %>%
+    filter(chrom == i) %>%
+    pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+    {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
+  
+  df_anova <- df_anova %>% bind_rows({anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = i)})
+  df_pairwise <- df_pairwise %>% bind_rows({
+    emmeans::emmeans(mod_fit, ~ method) %>% pairs() %>% broom::tidy() %>% mutate(chrom=i)})
+}
+
+df_anova %>% knitr::kable()
+
+df_pairwise %>% knitr::kable()
+```
+
+Now let's do these comparisons within each super-population:
+
+```{r}
+mod_fit <- df_switches %>%
+  filter(chrom == 1) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method*SUPER + (1|pair_id), data = .)}
+
+df_pop_anova <- anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = 1)
+
+df_pop_pairwise <- emmeans::emmeans(mod_fit, ~ method | SUPER) %>% pairs() %>% broom::tidy() %>% mutate(chrom=1)
+df_pop_pop <- emmeans::emmeans(mod_fit, ~ SUPER | method) %>% pairs() %>% broom::tidy() %>% mutate(chrom = 1)
+
+for(i in 2:23){
+  mod_fit <- df_switches %>%
+    filter(chrom == i) %>%
+    pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+    {lmerTest::lmer(error_rate ~ method*SUPER + (1|pair_id), data = .)}
+  
+  df_pop_anova <- df_pop_anova %>% bind_rows({anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = i)})
+  df_pop_pairwise <- df_pop_pairwise %>% bind_rows({
+    emmeans::emmeans(mod_fit, ~ method | SUPER) %>% pairs() %>% broom::tidy() %>% mutate(chrom=i)})
+  df_pop_pop <- df_pop_pop %>% bind_rows({
+    emmeans::emmeans(mod_fit, ~ SUPER | method) %>% pairs() %>% broom::tidy() %>% mutate(chrom = i)})
+}
+
+df_pop_anova %>% 
+  knitr::kable()
+df_pop_pairwise %>% knitr::kable()
+
+df_pop_pop %>% knitr::kable()
+```
+
+### Flip Errors
+
+```{r}
+df_flips <- df_switch_trio[[1]] %>%
+  mutate(Eagle = (n_flip_eagle) / n_hets,
+         Beagle = (n_flip_beagle) / n_hets,
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
+  mutate(chrom = 1)
+
+for(i in 2:22){
+  df_flips <- bind_rows(df_flips, 
+                        {
+                          df_switch_trio[[i]] %>%
+                            mutate(Eagle = (n_flip_eagle) / n_hets,
+                                   Beagle = (n_flip_beagle) / n_hets,
+                                   SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+                            select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
+                            mutate(chrom = i)
+                        })
+}
+
+df_flips <- df_flips %>%
+  bind_rows({df_switch_x %>%
+      mutate(Eagle = (n_flip_eagle) / n_hets,
+             Beagle = (n_flip_beagle) / n_hets,
+             SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+      rename(SUPER = pop) %>%
+                            select(Eagle, Beagle, SHAPEIT, SUPER) %>%
+                            mutate(pair_id = 603:1602, chrom = 23)})
+
+df_flips %>%
+  group_by(chrom) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>% 
+  knitr::kable()
+
+df_flips %>%
+  group_by(chrom, SUPER) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>% 
+  knitr::kable() 
+
+df_flips %>%
+  group_by(chrom) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = chrom, y = error_rate, colour = method, shape = method)) +
+  geom_point(size=3) +
+  theme_bw() +
+  xlab("Chromosome") +
+  ylab("Flip Rate") +
+  labs(colour = "Method", shape = "Method") +
+  scale_colour_brewer(palette = "Set2") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_x_continuous("Chromosome", labels = as.character(unique(df_flips$chrom)), breaks = unique(df_flips$chrom))
+
+df_flips %>%
+  group_by(chrom, SUPER) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = chrom, y = error_rate, colour = SUPER, shape = method)) +
+  geom_point(size=2) +
+  theme_bw() +
+  ylab("Switch Rate") +
+  xlab("Chromosome") +
+  labs(colour = "Population", shape = "Method") +
+  scale_colour_brewer(palette = "Set1") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_x_continuous("Chromosome", labels = as.character(unique(df_flips$chrom)), breaks = unique(df_flips$chrom))
+```
+
+```{r}
+mod_fit <- df_flips %>%
+  filter(chrom == 1) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
+
+df_anova <- anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = 1)
+
+df_pairwise <- emmeans::emmeans(mod_fit, ~ method) %>% pairs() %>% broom::tidy() %>% mutate(chrom=1)
+
+for(i in 2:23){
+  mod_fit <- df_flips %>%
+    filter(chrom == i) %>%
+    pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+    {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
+  
+  df_anova <- df_anova %>% bind_rows({anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = i)})
+  df_pairwise <- df_pairwise %>% bind_rows({
+    emmeans::emmeans(mod_fit, ~ method) %>% pairs() %>% broom::tidy() %>% mutate(chrom=i)})
+}
+
+df_anova %>%
+  knitr::kable()
+
+df_pairwise %>%
+  knitr::kable()
+```
+
+```{r}
+mod_fit <- df_flips %>%
+  filter(chrom == 1) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method*SUPER + (1|pair_id), data = .)}
+
+df_pop_anova <- anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = 1)
+
+df_pop_pairwise <- emmeans::emmeans(mod_fit, ~ method | SUPER) %>% pairs() %>% broom::tidy() %>% mutate(chrom=1)
+df_pop_pop <- emmeans::emmeans(mod_fit, ~ SUPER | method) %>% pairs() %>% broom::tidy() %>% mutate(chrom = 1)
+
+for(i in 2:23){
+  mod_fit <- df_flips %>%
+    filter(chrom == i) %>%
+    pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+    {lmerTest::lmer(error_rate ~ method*SUPER + (1|pair_id), data = .)}
+  
+  df_pop_anova <- df_pop_anova %>% bind_rows({anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = i)})
+  df_pop_pairwise <- df_pop_pairwise %>% bind_rows({
+    emmeans::emmeans(mod_fit, ~ method | SUPER) %>% pairs() %>% broom::tidy() %>% mutate(chrom=i)})
+  df_pop_pop <- df_pop_pop %>% bind_rows({
+    emmeans::emmeans(mod_fit, ~ SUPER | method) %>% pairs() %>% broom::tidy() %>% mutate(chrom = i)})
+}
+
+df_pop_anova %>%
+  knitr::kable()
+df_pop_pairwise %>% knitr::kable()
+
+df_pop_pop %>% knitr::kable()
+```
 
 ## Switch Errors
 
