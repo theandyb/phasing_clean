@@ -12,6 +12,8 @@ Welcome to my research website.
 
 [Synthetic Diploid Results](synthetic_diploid_results.html)
 
+[Errors across Bins](errors_per_bin.html)
+
 [Trio phasing results](trio_phasing_results.html)
 
 [Overlap of errors](sd_error_overlap.html)
