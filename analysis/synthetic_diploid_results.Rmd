@@ -153,16 +153,43 @@ df_vcftools %>%
               )
 ```
 
-#### T tests for differences
+#### F/T tests for differences
 
 Errors per het
 
 ```{r}
+fit <- df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  mutate(unit_id = 1:1000) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method + (1|unit_id), data = .)}
+
+anova(fit)
+report::report(fit)
+emmeans::emmeans(fit, ~ method) %>% pairs()
+
+
+int_fit <- df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
+  select(Beagle, Eagle, SHAPEIT, pop) %>%
+  mutate(unit_id = 1:1000) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method * pop + (1|unit_id), data = .)}
+
+anova(int_fit) %>% broom::tidy()
+emmeans::emmeans(int_fit, ~ method | pop) %>% pairs()
+
+
 df_vcftools %>%
   mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
          Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
          SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
-  mutate(diff = Beagle - Eagle) %>%
+  mutate(diff = Eagle - Beagle) %>%
   t_test(response = diff, mu = 0)
 
 df_vcftools %>%
@@ -276,6 +303,32 @@ df_vcftools %>%
                 all_continuous() ~ "{mean} ({sd})",
                 all_categorical() ~ "{n} / {N} ({p}%)")
               )
+
+fit <- df_vcftools %>%
+  mutate(Beagle = (n_hets - n_other_beagle - n_flip_beagle) / n_hets ,
+         Eagle = (n_hets - n_other_eagle - n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_hets - n_other_shapeit - n_flip_shapeit) / n_hets ) %>%
+  select(Beagle, Eagle, SHAPEIT, pop) %>%
+  mutate(unit_id = 1:1000) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "accuracy") %>%
+  {lmerTest::lmer(accuracy ~ method + (1|unit_id), data = .)}
+summary(fit)
+anova(fit)
+report::report(fit)
+emmeans::emmeans(fit, ~ method) %>% pairs()
+
+fit <- df_vcftools %>%
+  mutate(Beagle = (n_hets - n_other_beagle - n_flip_beagle) / n_hets ,
+         Eagle = (n_hets - n_other_eagle - n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_hets - n_other_shapeit - n_flip_shapeit) / n_hets ) %>%
+  select(Beagle, Eagle, SHAPEIT, pop) %>%
+  mutate(unit_id = 1:1000) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "accuracy") %>%
+  {lmerTest::lmer(accuracy ~ method*pop + (1|unit_id), data = .)}
+summary(fit)
+anova(fit) %>% broom::tidy()
+report::report(fit)
+emmeans::emmeans(fit, ~ method | pop) %>% pairs()
 ```
 
 
@@ -372,6 +425,55 @@ df_vcftools %>%
                 all_continuous() ~ "{mean} ({sd})",
                 all_categorical() ~ "{n} / {N} ({p}%)")
               )
+
+fit <- df_vcftools %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets,
+         SHAPEIT = n_other_shapeit / n_hets) %>%
+  select(Beagle, Eagle, SHAPEIT, pop) %>%
+  mutate(unit_id = 1:1000) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch_rate") %>%
+  {lmerTest::lmer(switch_rate ~ method + (1|unit_id), data = .)}
+
+anova(fit) %>% broom::tidy()
+emmeans::emmeans(fit, ~ method) %>% pairs()
+
+fit <- df_vcftools %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets,
+         SHAPEIT = n_other_shapeit / n_hets) %>%
+  select(Beagle, Eagle, SHAPEIT, pop) %>%
+  mutate(unit_id = 1:1000) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch_rate") %>%
+  {lmerTest::lmer(switch_rate ~ method * pop + (1|unit_id), data = .)}
+anova(fit) %>% broom::tidy()
+
+emmeans::emmeans(fit, ~ method | pop) %>% pairs()
+
+fit <- df_vcftools %>%
+  mutate(Beagle = n_flip_beagle / n_hets,
+         Eagle = n_flip_eagle / n_hets,
+         SHAPEIT = n_flip_shapeit / n_hets) %>%
+  select(Beagle, Eagle, SHAPEIT, pop) %>%
+  mutate(unit_id = 1:1000) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "flip_rate") %>%
+  {lmerTest::lmer(flip_rate ~ method + (1|unit_id), data = .)}
+
+anova(fit) %>% broom::tidy()
+emmeans::emmeans(fit, ~ method) %>% pairs()
+
+fit <- df_vcftools %>%
+  mutate(Beagle = n_flip_beagle / n_hets,
+         Eagle = n_flip_eagle / n_hets,
+         SHAPEIT = n_flip_shapeit / n_hets) %>%
+  select(Beagle, Eagle, SHAPEIT, pop) %>%
+  mutate(unit_id = 1:1000) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "flip_rate") %>%
+  {lmerTest::lmer(flip_rate ~ method * pop + (1|unit_id), data = .)}
+
+anova(fit) %>% broom::tidy() 
+
+emmeans::emmeans(fit, ~ method | pop) %>% pairs()
 ```
 
 T-tests:
@@ -537,7 +639,7 @@ df_vcftools %>%
             mean_switch_shapeit = mean(n_other_cpg_shapeit / n_other_shapeit),
             mean_flip_eagle = mean(n_flip_cpg_eagle / n_flip_eagle),
             mean_flip_beagle = mean(n_flip_cpg_beagle / n_flip_beagle),
-            mean_flip_shapeit = mean(n_flip_cpg_shapeit / n_flip_shapeit)) %>%
+            mean_flip_shapeit = mean(n_flip_cpg_shapeit / n_flip_shapeit)) %>% 
   knitr::kable()
 ```
 
@@ -621,8 +723,8 @@ df_vcftools %>%
   pivot_longer(-pop, names_to = "Method", values_to = "OR") %>%
   ggplot(aes(x = Method, y = OR, colour = pop)) +
   geom_boxplot() +
-  ylab("Odds CpG Switch / Odds CpG Het") +
-  ggtitle("Odds Ratio of CpG Status for Switches") +
+  ylab("Odds CpG Flip / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Flips") +
   theme_classic() +
   labs(colour = "Population") +
   scale_color_manual(values = cbPalette) +
@@ -643,14 +745,53 @@ df_vcftools %>%
   pivot_longer(-pop, names_to = "Method", values_to = "OR") %>%
   ggplot(aes(x = Method, y = OR)) +
   geom_boxplot() +
-  ylab("Odds CpG Switch / Odds CpG Het") +
-  ggtitle("Odds Ratio of CpG Status for Switches") +
+  ylab("Odds CpG Flip / Odds CpG Het") +
+  ggtitle("Odds Ratio of CpG Status for Flips") +
   theme_classic() +
   scale_color_manual(values = cbPalette) +
   geom_hline(yintercept = 1, linetype=2)
 
 ```
 
+```{r}
+df_vcftools %>%
+  summarize(mean_switch_eagle = mean((n_other_cpg_eagle / n_other_eagle) / ( n_het_cpg / n_hets)),
+            mean_switch_beagle = mean((n_other_cpg_beagle / n_other_beagle) / ( n_het_cpg / n_hets)),
+            mean_switch_shapeit = mean((n_other_cpg_shapeit / n_other_shapeit) / ( n_het_cpg / n_hets) ),
+            mean_flip_eagle = mean((n_flip_cpg_eagle / n_flip_eagle) / ( n_het_cpg / n_hets)),
+            mean_flip_beagle = mean((n_flip_cpg_beagle / n_flip_beagle) / ( n_het_cpg / n_hets)),
+            mean_flip_shapeit = mean((n_flip_cpg_shapeit / n_flip_shapeit) / ( n_het_cpg / n_hets))) %>%
+  knitr::kable()
+
+perform_one_sided_ttest_purrr <- function(column_data) {
+  if (!is.numeric(column_data) || length(na.omit(column_data)) < 2) {
+    return(tibble(t.statistic = NA, p.value = NA, mean = NA, conf.low = NA, conf.high = NA))
+  }
+  
+  test_result <- t.test(column_data, mu = 1, alternative = "greater")
+  
+  # Return results as a tibble (dataframe row) for easier combining
+  tibble(
+    t.statistic = test_result$statistic,
+    p.value = test_result$p.value,
+    mean = test_result$estimate,
+    conf.low = test_result$conf.int[1],
+    conf.high = test_result$conf.int[2]
+  )
+}
+  
+# t tests
+df_vcftools %>%
+  mutate(or_switch_eagle = ((n_other_cpg_eagle / n_other_eagle) / ( n_het_cpg / n_hets)),
+            or_switch_beagle = ((n_other_cpg_beagle / n_other_beagle) / ( n_het_cpg / n_hets)),
+            or_switch_shapeit = ((n_other_cpg_shapeit / n_other_shapeit) / ( n_het_cpg / n_hets) ),
+            or_flip_eagle = ((n_flip_cpg_eagle / n_flip_eagle) / ( n_het_cpg / n_hets)),
+            or_flip_beagle = ((n_flip_cpg_beagle / n_flip_beagle) / ( n_het_cpg / n_hets)),
+            or_flip_shapeit = ((n_flip_cpg_shapeit / n_flip_shapeit) / ( n_het_cpg / n_hets))) %>%
+  select(starts_with("or_")) %>%
+  purrr::map_df(perform_one_sided_ttest_purrr, .id = "ColumnName") %>%
+  knitr::kable()
+```
 
 ##### By Population
 
@@ -864,7 +1005,8 @@ df_vcftools %>%
   xlab("Population") +
   ylab("Error Rate") +
   scale_color_manual(values = cbPalette) +
-  labs(color = "Method")
+  labs(color = "Method") +
+  theme_classic()
 ```
 
 ```{r}
@@ -1016,7 +1158,8 @@ df_vcftools %>%
   ggplot(aes(x = method, y = error_rate)) +
   geom_boxplot() +
   xlab("Method") +
-  ylab("Switch Rate")
+  ylab("Switch Rate") +
+  theme_classic()
 ```
 
 ```{r}
@@ -1031,7 +1174,8 @@ df_vcftools %>%
   xlab("Population") +
   ylab("Switch Rate") +
   scale_color_manual(values = cbPalette) +
-  labs(color = "Method")
+  labs(color = "Method") +
+  theme_classic()
 ```
 
 ```{r}
@@ -1181,7 +1325,8 @@ df_vcftools %>%
   ggplot(aes(x = method, y = error_rate)) +
   geom_boxplot() +
   xlab("Method") +
-  ylab("Flip Rate")
+  ylab("Flip Rate") +
+  theme_classic()
 ```
 
 ```{r}
@@ -1196,7 +1341,8 @@ df_vcftools %>%
   xlab("Population") +
   ylab("Flip Rate") +
   scale_color_manual(values = cbPalette) +
-  labs(color = "Method")
+  labs(color = "Method") +
+  theme_classic()
 ```
 
 ```{r}
@@ -1209,18 +1355,25 @@ df_vcftools %>%
   corrr::shave()
 ```
 
-### Error Rates in Bins
+
+### Proportion of errors at CpG
+
+#### T Tests
+
+Null: enrichment = 1
 
 ```{r}
 df_vcftools %>%
-  mutate(Beagle = (n_flip_beagle) / n_hets,
-         Eagle = (n_flip_eagle ) / n_hets, 
-         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
-  select()
+  mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_switch_cpg_eagle / n_switch_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_switch_cpg_shapeit / n_switch_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  purrr::map_df(perform_one_sided_ttest_purrr, .id = "ColumnName") %>%
+  knitr::kable()
 ```
 
 
-### Proportion of errors at CpG
+#### Figures
 
 ```{r}
 df_vcftools %>%
@@ -1694,11 +1847,11 @@ maf_prop_df %>%
   mutate(method = fct_recode(method, "Beagle" = "beagle",
                              "Eagle" = "eagle",
                              "SHAPEIT" = "shapeit",
-                             "heterozygous" = "het"),
+                             "Heterozygous" = "het"),
          maf_c = fct_recode(maf_c, "Rare" = "rare",
                             "Uncommon" = "uncommon",
                             "Common" = "common")) %>%
-  mutate(method = fct_relevel(method, "heterozygous", "Beagle", "Eagle", "SHAPEIT"),
+  mutate(method = fct_relevel(method, "Heterozygous", "Beagle", "Eagle", "SHAPEIT"),
          maf_c = fct_relevel(maf_c, "Rare", "Uncommon", "Common")) %>%
   ggplot(aes(x = maf_c, y = proportion, colour = method)) +
   geom_boxplot() +
@@ -1706,7 +1859,8 @@ maf_prop_df %>%
   ylab("Proportion") +
   scale_color_manual(values = cbPalette) +
   labs(color = "Method") +
-  ggtitle("Switch Errors")
+  ggtitle("Switch Errors") +
+  theme_classic()
 ```
 
 ```{r}
@@ -1722,11 +1876,11 @@ maf_prop_df %>%
   mutate(method = fct_recode(method, "Beagle" = "beagle",
                              "Eagle" = "eagle",
                              "SHAPEIT" = "shapeit",
-                             "heterozygous" = "het"),
+                             "Heterozygous" = "het"),
          maf_c = fct_recode(maf_c, "Rare" = "rare",
                             "Uncommon" = "uncommon",
                             "Common" = "common")) %>%
-  mutate(method = fct_relevel(method, "heterozygous", "Beagle", "Eagle", "SHAPEIT"),
+  mutate(method = fct_relevel(method, "Heterozygous", "Beagle", "Eagle", "SHAPEIT"),
          maf_c = fct_relevel(maf_c, "Rare", "Uncommon", "Common")) %>%
   ggplot(aes(x = maf_c, y = proportion, colour = method)) +
   geom_boxplot() +
@@ -1734,7 +1888,8 @@ maf_prop_df %>%
   ylab("Proportion") +
   scale_color_manual(values = cbPalette) +
   labs(color = "Method") +
-  ggtitle("Flip Errors")
+  ggtitle("Flip Errors") +
+  theme_classic()
 ```
 
 
@@ -1782,7 +1937,7 @@ maf_prop_df %>%
 
 ### Odds Ratios
 
-Here we'll compoute the ratio of odds of being in the rare variant category for errors and all heterozygous positions within each individual.
+Here we'll compute the ratio of odds of being in the rare variant category for errors and all heterozygous positions within each individual.
 
 ```{r}
 maf_prop_df %>%
@@ -1838,6 +1993,40 @@ maf_prop_df %>%
                 all_categorical() ~ "{n} / {N} ({p}%)")
               )
 ```
+
+Let's use a T test to compare the observed odds ratios to 1:
+
+```{r}
+maf_prop_df %>%
+  select(category, proportion, id, SP) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(or_het = het_rare / (1 - het_rare),
+         or_b_s = beagle_switch_rare / (1 - beagle_switch_rare),
+         or_e_s = eagle_switch_rare / (1 - eagle_switch_rare),
+         or_s_s = shapeit_switch_rare / (1 - shapeit_switch_rare)) %>%
+  mutate(Beagle = or_b_s / or_het,
+         Eagle = or_e_s / or_het,
+         SHAPEIT = or_s_s / or_het) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  purrr::map_df(perform_one_sided_ttest_purrr, .id = "ColumnName") %>%
+  knitr::kable()
+
+
+maf_prop_df %>%
+  select(category, proportion, id, SP) %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(or_het = het_rare / (1 - het_rare),
+         or_b_s = beagle_flip_rare / (1 - beagle_flip_rare),
+         or_e_s = eagle_flip_rare / (1 - beagle_flip_rare),
+         or_s_s = shapeit_flip_rare / (1 - beagle_flip_rare)) %>%
+  mutate(Beagle = or_b_s / or_het,
+         Eagle = or_e_s / or_het,
+         SHAPEIT = or_s_s / or_het) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  purrr::map_df(perform_one_sided_ttest_purrr, .id = "ColumnName") %>%
+  knitr::kable()
+```
+
 
 ```{r}
 maf_prop_df %>%
