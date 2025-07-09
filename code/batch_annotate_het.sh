@@ -5,9 +5,9 @@
 #SBATCH --mem=8000MB
 #SBATCH --ntasks=1
 #SBATCH --time 01:00:00
-#SBATCH --job-name=anny
+#SBATCH --job-name=ANNY
 #SBATCH --array=0-13243
-#SBATCH --exclude=r[6320,6319,6333,6331,6323]
+#SBATCH --exclude=r[6320,6319,6333,6331,6323,6313,6410]
 #SBATCH --requeue
 #SBATCH -p main
 #SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/slurm/het_annT-%A_%a.err

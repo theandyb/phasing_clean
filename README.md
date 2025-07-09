@@ -174,6 +174,13 @@ bedtools makewindows -g data/chr${i}.sizes -w 1000 | sort -k 1,1V -k2,2n > data/
 bedtools nuc -fi data/chr${i}_mask.fasta -bed data/chr${i}.1kb.sorted.bed > data/chr${i}_gc1kb_pilot.bed
 done
 
+for i in `seq 1 22`; do
+echo $i
+fastafetch -f data/ref_GRCh38.fna -i data/ref_GRCh38.fna.in -q "chr${i}" > data/chr${i}.fasta
+samtools faidx data/chr${i}.fasta
+bedtools nuc -fi data/chr${i}.fasta -bed data/chr${i}.1kb.sorted.bed > data/chr${i}_gc1kb_noMask.bed
+done
+
 
 bedtools maskfasta -fi data/chrX.fasta -bed data/mask_pilot_X_fasta.bed -fo data/chrX_mask.fasta
 samtools faidx data/chrX_mask.fasta

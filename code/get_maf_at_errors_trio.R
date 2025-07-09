@@ -6,10 +6,10 @@ config_obj <- yaml::read_yaml("_config.yaml")
 
 
 
-for(chrom in 10:22){
-  eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom ,"/switch_errors/eagle/annotated/")
-  shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/shapeit/annotated/")
-  beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/switch_errors/beagle/annotated/")
+for(chrom in 2:22){
+  eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom ,"/no_th/switch_errors/eagle/")
+  shapeit_switch_dir <- paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/no_th/switch_errors/shapeit/")
+  beagle_switch_dir <-  paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/no_th/switch_errors/beagle/")
 
   maf_df <- read_tsv(paste0(config_obj$base_dir,"/data/1kgp/chr", chrom, "/chr", chrom, "_freq.tsv"),
                      col_names = c("chrom", "pos", "maf"))
@@ -84,32 +84,38 @@ for(chrom in 10:22){
 
   beagle_switches_df <- bind_rows(beagle_switches) %>%
     group_by(pop, pos_start) %>%
-    summarize(n = n())
+    summarize(n = n(),
+              maf = mean(maf))
   beagle_flips_df <- bind_rows(beagle_flips) %>%
     group_by(pop, pos_start) %>%
-    summarize(n = n())
+    summarize(n = n(),
+              maf = mean(maf))
 
   eagle_switches_df <- bind_rows(eagle_switches) %>%
     group_by(pop, pos_start) %>%
-    summarize(n = n())
+    summarize(n = n(),
+              maf = mean(maf))
   eagle_flips_df <- bind_rows(eagle_flips) %>%
     group_by(pop, pos_start) %>%
-    summarize(n = n())
+    summarize(n = n(),
+              maf = mean(maf))
 
   shapeit_switches_df <- bind_rows(shapeit_switches) %>%
     group_by(pop, pos_start) %>%
-    summarize(n = n())
+    summarize(n = n(),
+              maf = mean(maf))
   shapeit_flips_df <- bind_rows(shapeit_flips) %>%
     group_by(pop, pos_start) %>%
-    summarize(n = n())
+    summarize(n = n(),
+              maf = mean(maf))
 
   # save for later analysis
-  write_csv(beagle_switches_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/beagle_switch_maf.csv"))
-  write_csv(beagle_flips_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/beagle_flip_maf.csv"))
+  write_csv(beagle_switches_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/no_th/beagle_switch_maf.csv"))
+  write_csv(beagle_flips_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/no_th/beagle_flip_maf.csv"))
 
-  write_csv(eagle_switches_df, paste0(config_obj$base_dir, "/output/trio_phase_" ,chrom, "/eagle_switch_maf.csv"))
-  write_csv(eagle_flips_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/eagle_flip_maf.csv"))
+  write_csv(eagle_switches_df, paste0(config_obj$base_dir, "/output/trio_phase_" ,chrom, "/no_th/eagle_switch_maf.csv"))
+  write_csv(eagle_flips_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/no_th/eagle_flip_maf.csv"))
 
-  write_csv(shapeit_switches_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/shapeit_switch_maf.csv"))
-  write_csv(shapeit_flips_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/shapeit_flip_maf.csv"))
+  write_csv(shapeit_switches_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/no_th/shapeit_switch_maf.csv"))
+  write_csv(shapeit_flips_df, paste0(config_obj$base_dir, "/output/trio_phase_", chrom, "/no_th/shapeit_flip_maf.csv"))
 }

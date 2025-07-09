@@ -1,0 +1,86 @@
+---
+title: "trio_maf"
+author: "theandyb"
+date: "2025-06-23"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+```{r}
+library(tidyverse)
+```
+
+
+Let's work through a single individual/chromosome first, and then build up loops. First, we'll load the minor allele frequency information for chromosome 22:
+
+```{r}
+base_dir <- "/net/snowwhite/home/beckandy/research/phasing_clean/"
+
+load_maf <- function(chrom, base_dir){
+  f_name <- paste0(base_dir, "data/1kgp/chr", chrom, "/chr", chrom, "_freq.tsv")
+  df <- read_tsv(f_name, col_names = c("chr", "pos", "maf"), show_col_types = F)
+  return(df)
+}
+
+df_maf <- load_maf(22, base_dir)
+```
+
+Next, we'll load the heterozygous positions for subject 1:
+
+```{r}
+load_het_df <- function(id, chrom, base_dir){
+  f_name <- paste0(base_dir, "output/trio_phase_", chrom, "/no_th/het_loc/errors_", id, ".csv")
+  df <- read_csv(f_name, show_col_types = F)
+  return(df)
+}
+
+df_het <- load_het_df(602, 22, base_dir) %>%
+  left_join({df_maf %>% select(-chr)}, by = "pos")
+```
+
+Let's play around with this data frame for a minute just to see what's up:
+
+```{r}
+df_het_maf <- df_het %>%
+  mutate(b_s_maf = maf * beagle_switch,
+         e_s_maf = maf * eagle_switch,
+         s_s_maf = maf * shapeit_switch,
+         b_f_maf = maf * beagle_flip,
+         e_f_maf = maf * eagle_flip,
+         s_f_maf = maf * shapeit_flip) %>%
+  select(contains("maf")) %>%
+  mutate(across(where(is.numeric), ~na_if(., 0)))
+
+df_het_maf %>%
+  rename(beagle = b_s_maf,
+         eagle = e_s_maf,
+         shapeit = s_s_maf,
+         background = maf) %>%
+  select(background, beagle, eagle, shapeit) %>%
+  pivot_longer(background:shapeit, names_to = "method", values_to = "maf") %>%
+  drop_na() %>%
+  ggplot(aes(x = method, y = maf, colour = method)) +
+  geom_boxplot() +
+  guides(colour="none") +
+  ggtitle("MAF Distribution: Switch Errors",
+          "Chromosome 22, Sample 602")
+
+df_het_maf %>%
+  rename(beagle = b_f_maf,
+         eagle = e_f_maf,
+         shapeit = s_f_maf,
+         background = maf) %>%
+  select(background, beagle, eagle, shapeit) %>%
+  pivot_longer(background:shapeit, names_to = "method", values_to = "maf") %>%
+  drop_na() %>%
+  ggplot(aes(x = method, y = maf, colour = method)) +
+  geom_boxplot() +
+  guides(colour="none") +
+  ggtitle("MAF Distribution: Flip Errors",
+          "Chromosome 22, Sample 602")
+```
+
+

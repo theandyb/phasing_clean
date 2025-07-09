@@ -369,7 +369,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -380,8 +380,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -394,9 +394,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>phasing_clean/</code> <span
@@ -419,18 +419,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -521,15 +524,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree7ca1146b2cf510035680a5b39a2e66b18f70bf2atargetblank7ca1146a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreea82629b107c63133275e78bca7e5424fec23f62atargetblanka82629ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/theandyb/phasing_clean/tree/7ca1146b2cf510035680a5b39a2e66b18f70bf2a" target="_blank">7ca1146</a>
+<a href="https://github.com/theandyb/phasing_clean/tree/a82629b107c63133275e78bca7e5424fec23f62a" target="_blank">a82629b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantree7ca1146b2cf510035680a5b39a2e66b18f70bf2atargetblank7ca1146a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomtheandybphasingcleantreea82629b107c63133275e78bca7e5424fec23f62atargetblanka82629ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +542,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/theandyb/phasing_clean/tree/7ca1146b2cf510035680a5b39a2e66b18f70bf2a" target="_blank">7ca1146</a>.
+<a href="https://github.com/theandyb/phasing_clean/tree/a82629b107c63133275e78bca7e5424fec23f62a" target="_blank">a82629b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,7 +560,6 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    .ipynb_checkpoints/
-    Ignored:    analysis/figure/
     Ignored:    data/1kgp/chr1/
     Ignored:    data/1kgp/chr10/
     Ignored:    data/1kgp/chr11/
@@ -889,12 +891,14 @@ Ignored files:
     Ignored:    scratch/
 
 Untracked files:
+    Untracked:  analysis/errors_per_bin.Rmd
     Untracked:  analysis/trio_rephase_noTH.Rmd
     Untracked:  core
 
 Unstaged changes:
     Modified:   README.md
     Modified:   analysis/gc_content.Rmd
+    Modified:   analysis/synthetic_diploid_results.Rmd
     Modified:   code/batch_annotate_het.sh
     Modified:   code/batch_annotate_trio_switch.sh
     Modified:   code/batch_compare_noTH.sh
@@ -945,6 +949,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/theandyb/phasing_clean/e45377bb20354896e1cd122dd84a85b4e739402f/docs/synthetic_diploid_results.html" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -10178,6 +10199,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-29-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-29-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -10300,6 +10332,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-29-2.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-29-2.png" target="_blank">aa44c59</a>
@@ -10578,6 +10621,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-33-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-33-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -10701,6 +10755,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-34-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-34-1.png" target="_blank">aa44c59</a>
@@ -10837,6 +10902,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-35-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-35-1.png" target="_blank">aa44c59</a>
@@ -11005,6 +11081,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-36-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-36-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -11143,6 +11230,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-37-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-37-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -11277,6 +11375,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-38-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-38-1.png" target="_blank">aa44c59</a>
@@ -11415,6 +11524,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-39-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-39-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -11547,6 +11667,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-40-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-40-1.png" target="_blank">aa44c59</a>
@@ -11685,6 +11816,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-41-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-41-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -11800,6 +11942,43 @@ Andy Beck
   labs(color = &quot;Method&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-41-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-41-2">
+Past versions of unnamed-chunk-41-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-41-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-41-2.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
          Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
@@ -11857,6 +12036,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-44-1.png" target="_blank">aa44c59</a>
@@ -11973,6 +12163,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-45-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-45-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -12076,6 +12277,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-46-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-46-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -12174,6 +12386,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-47-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-47-1.png" target="_blank">aa44c59</a>
@@ -12281,6 +12504,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-48-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-48-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -12382,6 +12616,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-49-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-49-1.png" target="_blank">aa44c59</a>
@@ -12487,6 +12732,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-50-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-50-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -12574,6 +12830,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-51-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-51-1.png" target="_blank">aa44c59</a>
@@ -12669,6 +12936,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-52-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-52-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -12762,6 +13040,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-53-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-53-1.png" target="_blank">aa44c59</a>
@@ -12891,6 +13180,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-56-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-56-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -12981,6 +13281,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-57-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-57-1.png" target="_blank">aa44c59</a>
@@ -13075,6 +13386,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-58-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-58-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -13162,6 +13484,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-59-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-59-1.png" target="_blank">aa44c59</a>
@@ -13258,6 +13591,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-60-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/24be840dc3d45727bb9613fdb03edb45a2d956bf/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-60-1.png" target="_blank">24be840</a>
 </td>
 <td>
@@ -13339,6 +13683,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-61-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/24be840dc3d45727bb9613fdb03edb45a2d956bf/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-61-1.png" target="_blank">24be840</a>
 </td>
 <td>
@@ -13418,6 +13773,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-62-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-62-1.png" target="_blank">aa44c59</a>
@@ -13507,6 +13873,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-63-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-63-1.png" target="_blank">aa44c59</a>
@@ -13602,6 +13979,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-64-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-64-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -13695,6 +14083,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-65-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-65-1.png" target="_blank">aa44c59</a>
@@ -13862,6 +14261,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -13921,6 +14331,43 @@ Andy Beck
   ylab(&quot;Proportion&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-68-2">
+Past versions of unnamed-chunk-68-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-68-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-2.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle),
          Eagle = (n_flip_cpg_eagle / n_flip_eagle),
@@ -13934,6 +14381,43 @@ Andy Beck
   ylab(&quot;Proportion&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-68-3">
+Past versions of unnamed-chunk-68-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-68-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-3.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_switch_cpg_eagle / n_switch_eagle) / (n_het_cpg / n_hets),
@@ -13948,6 +14432,43 @@ Andy Beck
   theme_classic() +
   geom_hline(yintercept = 1)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-68-4">
+Past versions of unnamed-chunk-68-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-68-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-4.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
@@ -13962,6 +14483,43 @@ Andy Beck
   theme_classic() +
   geom_hline(yintercept = 1)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-68-5">
+Past versions of unnamed-chunk-68-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-68-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-5.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
@@ -13976,6 +14534,43 @@ Andy Beck
   theme_classic() +
   geom_hline(yintercept = 1)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-68-6">
+Past versions of unnamed-chunk-68-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-68-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-6.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_switch_cpg_eagle / n_switch_eagle) / (n_het_cpg / n_hets),
@@ -13992,6 +14587,43 @@ Andy Beck
   scale_color_manual(values=cbPalette) +
   labs(color = &quot;Population&quot;)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-68-7">
+Past versions of unnamed-chunk-68-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-68-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-7.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
@@ -14008,6 +14640,43 @@ Andy Beck
   scale_color_manual(values=cbPalette) +
   labs(color = &quot;Population&quot;)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-68-8">
+Past versions of unnamed-chunk-68-8.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-68-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-8.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>df_vcftools %&gt;%
   mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
          Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
@@ -14024,6 +14693,43 @@ Andy Beck
   scale_color_manual(values=cbPalette) +
   labs(color = &quot;Population&quot;)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-68-9">
+Past versions of unnamed-chunk-68-9.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-68-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-68-9.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>We observe a mild enrichment of switches and a more profound
 enrichment of flips at CpGs across all methods. We also observe some
 variation across populations within each method, for example: AFR has
@@ -14058,6 +14764,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-69-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-69-1.png" target="_blank">aa44c59</a>
@@ -14103,6 +14820,43 @@ Andy Beck
 <pre><code>Warning in get_plot_component(plot, &quot;guide-box&quot;): Multiple components found;
 returning the first one. To return all, use `return_all = TRUE`.</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-69-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-69-2">
+Past versions of unnamed-chunk-69-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-69-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-69-2.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="tables-1" class="section level4">
 <h4>Tables</h4>
@@ -20088,6 +20842,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-73-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-73-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -20192,6 +20957,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-74-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-74-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -20287,6 +21063,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-75-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-75-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -20379,6 +21166,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-76-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/theandyb/phasing_clean/blob/aa44c59fecea8fb2234312f7a21f98755a248efc/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-76-1.png" target="_blank">aa44c59</a>
 </td>
 <td>
@@ -20450,6 +21248,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-77-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-77-1">
+Past versions of unnamed-chunk-77-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-77-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-77-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -20508,6 +21343,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-78-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-78-1">
+Past versions of unnamed-chunk-78-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-78-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-78-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -20563,6 +21435,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-79-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-79-1">
+Past versions of unnamed-chunk-79-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-79-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-79-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -20621,6 +21530,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-80-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-80-1">
+Past versions of unnamed-chunk-80-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-80-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-80-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -20679,6 +21625,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-81-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-81-1">
+Past versions of unnamed-chunk-81-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-81-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-81-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -20734,6 +21717,43 @@ res_obj &lt;- prop_maf_fig(cat_type, title_text)</code></pre>
 argument.</code></pre>
 <pre class="r"><code>print(res_obj$p)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-82-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-82-1">
+Past versions of unnamed-chunk-82-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-82-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-82-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_obj$tab_prop %&gt;%
   knitr::kable()</code></pre>
 <table>
@@ -20782,7 +21802,7 @@ argument.</code></pre>
 </div>
 <div id="plot-all" class="section level3">
 <h3>Plot all</h3>
-<pre class="r"><code>maf_prop_df %&gt;%
+<pre class="r"><code>df_switch_maf &lt;- maf_prop_df %&gt;%
   filter(str_detect(category, &quot;switch&quot;)) %&gt;%
   separate(category, into=c(&quot;method&quot;, &quot;type&quot;, &quot;maf_c&quot;), sep=&quot;_&quot;) %&gt;%
   select(-type) %&gt;%
@@ -20799,7 +21819,9 @@ argument.</code></pre>
                             &quot;Uncommon&quot; = &quot;uncommon&quot;,
                             &quot;Common&quot; = &quot;common&quot;)) %&gt;%
   mutate(method = fct_relevel(method, &quot;Heterozygous&quot;, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SHAPEIT&quot;),
-         maf_c = fct_relevel(maf_c, &quot;Rare&quot;, &quot;Uncommon&quot;, &quot;Common&quot;)) %&gt;%
+         maf_c = fct_relevel(maf_c, &quot;Rare&quot;, &quot;Uncommon&quot;, &quot;Common&quot;))
+
+df_switch_maf %&gt;%
   ggplot(aes(x = maf_c, y = proportion, colour = method)) +
   geom_boxplot() +
   xlab(&quot;&quot;) +
@@ -20809,7 +21831,117 @@ argument.</code></pre>
   ggtitle(&quot;Switch Errors&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-83-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>maf_prop_df %&gt;%
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-83-1">
+Past versions of unnamed-chunk-83-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-83-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-83-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>df_switch_maf %&gt;%
+  group_by(method, maf_c) %&gt;%
+  summarize(proportion = mean(proportion))</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;method&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code># A tibble: 12 × 3
+# Groups:   method [4]
+   method       maf_c    proportion
+   &lt;fct&gt;        &lt;fct&gt;         &lt;dbl&gt;
+ 1 Heterozygous Rare         0.0602
+ 2 Heterozygous Uncommon     0.0853
+ 3 Heterozygous Common       0.855 
+ 4 Beagle       Rare         0.216 
+ 5 Beagle       Uncommon     0.148 
+ 6 Beagle       Common       0.637 
+ 7 Eagle        Rare         0.317 
+ 8 Eagle        Uncommon     0.142 
+ 9 Eagle        Common       0.541 
+10 SHAPEIT      Rare         0.202 
+11 SHAPEIT      Uncommon     0.144 
+12 SHAPEIT      Common       0.654 </code></pre>
+<pre class="r"><code>df_switch_maf %&gt;%
+  filter(maf_c == &quot;Rare&quot;) %&gt;%
+  group_by(id, method) %&gt;%
+  summarize(odds_r = proportion / (1 - proportion)) %&gt;%
+  pivot_wider(id_cols = id, names_from = &quot;method&quot;, values_from = &quot;odds_r&quot;) %&gt;%
+  mutate(Beagle = Beagle / Heterozygous,
+         Eagle = Eagle / Heterozygous,
+         SHAPEIT = SHAPEIT / Heterozygous) %&gt;%
+  ungroup() %&gt;%
+  select(Beagle, Eagle, SHAPEIT) %&gt;%
+  purrr::map_df(perform_one_sided_ttest_purrr, .id = &quot;ColumnName&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;id&#39;. You can override using the `.groups`
+argument.</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ColumnName</th>
+<th align="right">t.statistic</th>
+<th align="right">p.value</th>
+<th align="right">mean</th>
+<th align="right">conf.low</th>
+<th align="right">conf.high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Beagle</td>
+<td align="right">57.54956</td>
+<td align="right">0</td>
+<td align="right">4.852829</td>
+<td align="right">4.742608</td>
+<td align="right">Inf</td>
+</tr>
+<tr class="even">
+<td align="left">Eagle</td>
+<td align="right">79.20113</td>
+<td align="right">0</td>
+<td align="right">8.108401</td>
+<td align="right">7.960636</td>
+<td align="right">Inf</td>
+</tr>
+<tr class="odd">
+<td align="left">SHAPEIT</td>
+<td align="right">57.72984</td>
+<td align="right">0</td>
+<td align="right">4.443551</td>
+<td align="right">4.345346</td>
+<td align="right">Inf</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>df_flip_maf &lt;- maf_prop_df %&gt;%
   filter(str_detect(category, &quot;flip_&quot;)) %&gt;%
   separate(category, into=c(&quot;method&quot;, &quot;type&quot;, &quot;maf_c&quot;), sep=&quot;_&quot;) %&gt;%
   select(-type) %&gt;%
@@ -20826,7 +21958,9 @@ argument.</code></pre>
                             &quot;Uncommon&quot; = &quot;uncommon&quot;,
                             &quot;Common&quot; = &quot;common&quot;)) %&gt;%
   mutate(method = fct_relevel(method, &quot;Heterozygous&quot;, &quot;Beagle&quot;, &quot;Eagle&quot;, &quot;SHAPEIT&quot;),
-         maf_c = fct_relevel(maf_c, &quot;Rare&quot;, &quot;Uncommon&quot;, &quot;Common&quot;)) %&gt;%
+         maf_c = fct_relevel(maf_c, &quot;Rare&quot;, &quot;Uncommon&quot;, &quot;Common&quot;)) 
+
+df_flip_maf %&gt;%
   ggplot(aes(x = maf_c, y = proportion, colour = method)) +
   geom_boxplot() +
   xlab(&quot;&quot;) +
@@ -20836,6 +21970,116 @@ argument.</code></pre>
   ggtitle(&quot;Flip Errors&quot;) +
   theme_classic()</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-84-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-84-1">
+Past versions of unnamed-chunk-84-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-84-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-84-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>df_flip_maf %&gt;%
+  group_by(method, maf_c) %&gt;%
+  summarize(proportion = mean(proportion)) </code></pre>
+<pre><code>`summarise()` has grouped output by &#39;method&#39;. You can override using the
+`.groups` argument.</code></pre>
+<pre><code># A tibble: 12 × 3
+# Groups:   method [4]
+   method       maf_c    proportion
+   &lt;fct&gt;        &lt;fct&gt;         &lt;dbl&gt;
+ 1 Heterozygous Rare         0.0602
+ 2 Heterozygous Uncommon     0.0853
+ 3 Heterozygous Common       0.855 
+ 4 Beagle       Rare         0.569 
+ 5 Beagle       Uncommon     0.108 
+ 6 Beagle       Common       0.323 
+ 7 Eagle        Rare         0.560 
+ 8 Eagle        Uncommon     0.112 
+ 9 Eagle        Common       0.328 
+10 SHAPEIT      Rare         0.562 
+11 SHAPEIT      Uncommon     0.112 
+12 SHAPEIT      Common       0.326 </code></pre>
+<pre class="r"><code>df_flip_maf %&gt;%
+  filter(maf_c == &quot;Rare&quot;) %&gt;%
+  group_by(id, method) %&gt;%
+  summarize(odds_r = proportion / (1 - proportion)) %&gt;%
+  pivot_wider(id_cols = id, names_from = &quot;method&quot;, values_from = &quot;odds_r&quot;) %&gt;%
+  mutate(Beagle = Beagle / Heterozygous,
+         Eagle = Eagle / Heterozygous,
+         SHAPEIT = SHAPEIT / Heterozygous) %&gt;%
+  ungroup() %&gt;%
+  select(Beagle, Eagle, SHAPEIT) %&gt;%
+  purrr::map_df(perform_one_sided_ttest_purrr, .id = &quot;ColumnName&quot;) %&gt;%
+  knitr::kable()</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;id&#39;. You can override using the `.groups`
+argument.</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ColumnName</th>
+<th align="right">t.statistic</th>
+<th align="right">p.value</th>
+<th align="right">mean</th>
+<th align="right">conf.low</th>
+<th align="right">conf.high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Beagle</td>
+<td align="right">63.33152</td>
+<td align="right">0</td>
+<td align="right">24.44954</td>
+<td align="right">23.83994</td>
+<td align="right">Inf</td>
+</tr>
+<tr class="even">
+<td align="left">Eagle</td>
+<td align="right">63.30015</td>
+<td align="right">0</td>
+<td align="right">23.79326</td>
+<td align="right">23.20043</td>
+<td align="right">Inf</td>
+</tr>
+<tr class="odd">
+<td align="left">SHAPEIT</td>
+<td align="right">63.89476</td>
+<td align="right">0</td>
+<td align="right">23.75609</td>
+<td align="right">23.16974</td>
+<td align="right">Inf</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="enrichment-of-rare" class="section level3">
 <h3>Enrichment of Rare</h3>
@@ -20857,6 +22101,43 @@ argument.</code></pre>
   xlab(&quot;Method&quot;) +
   ylab(&quot;Prop. rare switches / Prop. rare heterozygous sites&quot;)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-85-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-85-1">
+Past versions of unnamed-chunk-85-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-85-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-85-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="enrichment-of-flips-at-rare" class="section level4">
 <h4>Enrichment of Flips at Rare</h4>
@@ -20876,6 +22157,43 @@ argument.</code></pre>
   xlab(&quot;Method&quot;) +
   ylab(&quot;Prop. rare flips / Prop. rare heterozygous sites&quot;)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-86-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-86-1">
+Past versions of unnamed-chunk-86-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-86-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-86-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="odds-ratios" class="section level3">
@@ -20903,6 +22221,43 @@ individual.</p>
   labs(colour = &quot;Population&quot;) +
   geom_hline(yintercept = 1, linetype = 2)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-87-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-87-1">
+Past versions of unnamed-chunk-87-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-87-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-87-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>maf_prop_df %&gt;%
   select(category, proportion, id, SP) %&gt;%
   pivot_wider(names_from = category, values_from = proportion) %&gt;%
@@ -22022,6 +23377,43 @@ N = 200</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
   labs(colour = &quot;Population&quot;) +
   geom_hline(yintercept = 1, linetype = 2)</code></pre>
 <p><img src="figure/synthetic_diploid_results.Rmd/unnamed-chunk-89-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-89-1">
+Past versions of unnamed-chunk-89-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-89-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/theandyb/phasing_clean/blob/e45377bb20354896e1cd122dd84a85b4e739402f/docs/figure/synthetic_diploid_results.Rmd/unnamed-chunk-89-1.png" target="_blank">e45377b</a>
+</td>
+<td>
+theandyb
+</td>
+<td>
+2025-06-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>maf_prop_df %&gt;%
   select(category, proportion, id, SP) %&gt;%
   pivot_wider(names_from = category, values_from = proportion) %&gt;%

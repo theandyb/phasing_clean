@@ -12,6 +12,7 @@ editor_options:
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(ggpubfigs)
+library(viridis)
 ```
 
 
@@ -20,6 +21,71 @@ Let's explore what the landscape of GC content looks like across the human genom
 ## 1kb Windows
 
 ```{r}
+load_gc_bed <- function(chr, suffix = "_gc1kb_pilot.bed"){
+  f_name <- paste0("data/chr", chr, suffix)
+  read_tsv(f_name, 
+           skip=1, 
+           col_names = c("chr", "start", "end", "p_at", "p_gc", "n_a", "n_c", "n_g", "n_t", "n_n", "n_o", "len"),
+           show_col_types = FALSE) %>%
+    mutate(bin = ceiling(start / 1000))
+}
+```
 
+What measures might we want to take on each chromosome for comparisons?
+
+* Mean GC
+* Max GC
+* Min GC (non-zero)
+* Var GC (excluding high N regions)
+
+```{r}
+gc_summary <- function(chr, n_exc = 500){
+  df <- load_gc_bed(chr)
+  mean_gc <- mean(df$p_gc)
+  mean_gc_nz <- df %>% filter(p_gc > 0) %>% pull(p_gc) %>% mean()
+  max_gc <- max(df$p_gc)
+  min_gc  <- df %>% filter(n_n < n_exc) %>% pull(p_gc) %>% min()
+}
+```
+
+
+### Chr 1
+
+```{r}
+df_1 <- load_gc_bed(1)
+df_1_nm <- load_gc_bed(1, suffix = "_gc1kb_noMask.bed")
+
+df_1_gc <- df_1 %>%
+  select(bin, p_gc, n_n) %>%
+  rename(mask_gc = p_gc, mask_n = n_n) %>%
+  inner_join({df_1_nm %>% select(bin, p_gc, n_n) %>% rename(nomask_gc = p_gc)}, by = "bin")
+
+sum(df_1_gc$n_n == df_1_gc$mask_n) / length(df_1_gc$n_n)
+sum(df_1_gc$mask_gc == df_1_gc$nomask_gc) / length(df_1_gc$nomask_gc)
+
+df_1_gc %>%
+  filter(mask_gc > 0) %>%
+  ggplot(aes(x = mask_gc, y = nomask_gc)) +
+  geom_hex(bins = 60)
+```
+
+```{r}
+df_1 %>%
+  ggplot(aes(x = bin, y = p_gc)) +
+  geom_point()
+
+df_1 %>%
+  ggplot(aes(x = bin, y = p_gc)) +
+  geom_smooth()
+```
+
+
+I imagine that we'd expect to see some autocorrelation of gc values among successive windows?
+
+```{r}
+df_1 %>%
+  filter(p_gc != 0) %>%
+  pull(p_gc) %>%
+  acf()
 ```
 

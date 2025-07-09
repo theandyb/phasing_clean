@@ -12,8 +12,8 @@ load_haplotype <- function(chromosome, id, base_dir, method){
   cmd_txt <- paste0('bcftools query -f "%CHROM\t%POS\t[%GT]\n" ', f_name)
 
   df <- vroom::vroom(pipe(cmd_txt), col_names = c("chrom", "pos", "gt"), delim = "\t", show_col_types = FALSE) %>%
-    separate(gt, into = c("h1", "h2"), sep = "\\|") %>%
-    filter(h1 != h2)
+  separate(gt, into = c("h1", "h2"), sep = "\\|") %>%
+  filter(h1 != h2)
 
   return(df)
 }
@@ -26,7 +26,7 @@ load_switch <- function(chromosome, id, base_dir, method){
 }
 
 load_het <- function(chromosome, id, base_dir){
-  f_name <- paste0(base_dir, "/trio_phase_", chromosome, "/no_th/het_loc/annotated/pair_", id, ".csv")
+  f_name <- paste0(base_dir, "/trio_phase_", chromosome, "/no_th/het_loc/pair_", id, ".csv")
   df <- read_csv(f_name, show_col_types = F)
   return(df)
 }

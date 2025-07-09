@@ -1,0 +1,176 @@
+---
+title: "errors_per_bin"
+author: "theandyb"
+date: "2025-06-19"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Here in this document we will explore the distribution of errors across the chromosome in bins.
+
+```{r}
+library(tidyverse)
+
+sample_info_df <- read_csv("data/1kgp/subject_info.csv") %>%
+  select(SAMPLE_NAME, POPULATION, SUPER)
+
+pair_info_df <- read_delim("data/sample_pairs.csv", col_names = c("POP", "ID1", "ID2"))
+pair_info_df <- left_join(pair_info_df, sample_info_df, by = c("ID1"="SAMPLE_NAME")) %>%
+  rename(SP = SUPER) %>%
+  select(-POPULATION)
+pair_info_df$id <- 1:1000
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000")
+```
+
+## Get errors per bin for each individual
+
+```{r}
+err_per_bin <- function(id, bin_size = 1e6){
+  f_name <- paste0("output/switch_errors/het_loc/annotated/errors_", id, ".csv")
+  df <- read_csv(f_name, show_col_types = F) %>%
+    mutate(bin = ceiling(pos / bin_size)) %>%
+    group_by(bin) %>%
+    summarize(n_het = n(),
+              beagle_switch = sum(beagle_switch),
+              eagle_switch = sum(eagle_switch),
+              shapeit_switch = sum(shapeit_switch),
+              beagle_flip = sum(beagle_flip),
+              eagle_flip = sum(eagle_flip),
+              shapeit_flip = sum(shapeit_flip)
+              )
+  df$id <- id
+  return(df)
+}
+
+df_err_1mb <- err_per_bin(1)
+for(i in 2:1000){
+  df_err_1mb <- bind_rows(df_err_1mb, err_per_bin(i))
+}
+```
+
+## Plots
+
+```{r}
+df_switch_bin <- df_err_1mb %>%
+  select(-id) %>%
+  group_by(bin) %>%
+  summarise(across(where(is.numeric), \(x) sum(x, na.rm = TRUE))) %>%
+  mutate(Beagle = beagle_switch / n_het,
+         Eagle = eagle_switch / n_het,
+         SHAPEIT = shapeit_switch / n_het) %>%
+  select(bin, Beagle:SHAPEIT) 
+
+df_flip_bin <- df_err_1mb %>%
+  select(-id) %>%
+  group_by(bin) %>%
+  summarise(across(where(is.numeric), \(x) sum(x, na.rm = TRUE))) %>%
+  mutate(Beagle = beagle_flip / n_het,
+         Eagle = eagle_flip / n_het,
+         SHAPEIT = shapeit_flip / n_het) %>%
+  select(bin, Beagle:SHAPEIT) 
+
+df_switch_bin %>%
+  pivot_longer(-bin, names_to = "Method", values_to = "switch_rate") %>%
+  ggplot(aes(x = bin, y = switch_rate, colour = Method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() + 
+  xlab("X Chromosome Bin (MB)") +
+  ylab("Switch Rate") +
+  scale_color_manual(values = cbPalette)
+
+df_flip_bin %>%
+  pivot_longer(-bin, names_to = "Method", values_to = "switch_rate") %>%
+  ggplot(aes(x = bin, y = switch_rate, colour = Method)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() + 
+  xlab("X Chromosome Bin (MB)") +
+  ylab("Flip Rate") +
+  scale_color_manual(values = cbPalette)
+
+df_switch_bin %>%
+  select(Beagle:SHAPEIT) %>%
+  corrr::correlate(diagonal = 1) %>%
+  knitr::kable()
+
+cor.test(df_switch_bin$Beagle, df_switch_bin$Eagle) %>% broom::tidy() %>% knitr::kable()
+cor.test(df_switch_bin$Beagle, df_switch_bin$SHAPEIT) %>% broom::tidy() %>% knitr::kable()
+cor.test(df_switch_bin$SHAPEIT, df_switch_bin$SHAPEIT) %>% broom::tidy() %>% knitr::kable()
+
+
+df_switch_bin %>%
+  select(Beagle:SHAPEIT) %>%
+  corrr::correlate(diagonal = 1) %>%
+  knitr::kable()
+
+cor.test(df_switch_bin$Beagle, df_switch_bin$Eagle) %>% broom::tidy() %>% knitr::kable()
+cor.test(df_switch_bin$Beagle, df_switch_bin$SHAPEIT) %>% broom::tidy() %>% knitr::kable()
+cor.test(df_switch_bin$SHAPEIT, df_switch_bin$SHAPEIT) %>% broom::tidy() %>% knitr::kable()
+```
+
+Let's look at the bins with the largest divergences between methods:
+
+```{r}
+df_tmp <- df_switch_bin %>%
+  mutate(B_E = Beagle - Eagle,
+         B_S = Beagle - SHAPEIT,
+         E_S = Eagle - SHAPEIT,
+         E_B_en = Eagle / Beagle,
+         E_S_en = Eagle / SHAPEIT) 
+
+df_tmp %>%
+  arrange(B_E) %>%
+  ggplot(aes(x = bin, y = E_B_en)) +
+  geom_point() +
+  theme_classic() +
+  xlab("Bin") +
+  ylab("Eagle Switch Rate / Beagle Switch Rate")
+
+df_tmp %>%
+  arrange(B_E) %>%
+  ggplot(aes(x = bin, y = E_S_en)) +
+  geom_point() +
+  theme_classic() +
+  xlab("Bin") +
+  ylab("Eagle Switch Rate / SHAPEIT Switch Rate")
+
+sum(df_tmp$B_E > 0)
+sum(df_tmp$E_S < 0)
+
+summary(df_tmp$E_B_en)
+summary(df_tmp$E_S_en)
+```
+
+And for flips:
+
+```{r}
+df_tmp <- df_flip_bin %>%
+  mutate(B_E = Beagle - Eagle,
+         B_S = Beagle - SHAPEIT,
+         E_S = Eagle - SHAPEIT,
+         S_B_en = SHAPEIT / Beagle,
+         S_E_en = SHAPEIT / Eagle) 
+
+df_tmp %>%
+  ggplot(aes(x = bin, y = S_B_en)) +
+  geom_point() +
+  theme_classic() +
+  xlab("Bin") +
+  ylab("SHAPEIT Switch Rate / Beagle Switch Rate")
+
+df_tmp %>%
+  ggplot(aes(x = bin, y = S_E_en)) +
+  geom_point() +
+  theme_classic() +
+  xlab("Bin") +
+  ylab("SHAPEIT Switch Rate / Eagle Switch Rate")
+
+summary(df_tmp$S_B_en)
+summary(df_tmp$S_E_en)
+```
+

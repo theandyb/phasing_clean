@@ -1835,7 +1835,7 @@ res_obj$tab_prop %>%
 ### Plot all
 
 ```{r}
-maf_prop_df %>%
+df_switch_maf <- maf_prop_df %>%
   filter(str_detect(category, "switch")) %>%
   separate(category, into=c("method", "type", "maf_c"), sep="_") %>%
   select(-type) %>%
@@ -1852,7 +1852,9 @@ maf_prop_df %>%
                             "Uncommon" = "uncommon",
                             "Common" = "common")) %>%
   mutate(method = fct_relevel(method, "Heterozygous", "Beagle", "Eagle", "SHAPEIT"),
-         maf_c = fct_relevel(maf_c, "Rare", "Uncommon", "Common")) %>%
+         maf_c = fct_relevel(maf_c, "Rare", "Uncommon", "Common"))
+
+df_switch_maf %>%
   ggplot(aes(x = maf_c, y = proportion, colour = method)) +
   geom_boxplot() +
   xlab("") +
@@ -1861,10 +1863,27 @@ maf_prop_df %>%
   labs(color = "Method") +
   ggtitle("Switch Errors") +
   theme_classic()
+
+df_switch_maf %>%
+  group_by(method, maf_c) %>%
+  summarize(proportion = mean(proportion))
+
+df_switch_maf %>%
+  filter(maf_c == "Rare") %>%
+  group_by(id, method) %>%
+  summarize(odds_r = proportion / (1 - proportion)) %>%
+  pivot_wider(id_cols = id, names_from = "method", values_from = "odds_r") %>%
+  mutate(Beagle = Beagle / Heterozygous,
+         Eagle = Eagle / Heterozygous,
+         SHAPEIT = SHAPEIT / Heterozygous) %>%
+  ungroup() %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  purrr::map_df(perform_one_sided_ttest_purrr, .id = "ColumnName") %>%
+  knitr::kable()
 ```
 
 ```{r}
-maf_prop_df %>%
+df_flip_maf <- maf_prop_df %>%
   filter(str_detect(category, "flip_")) %>%
   separate(category, into=c("method", "type", "maf_c"), sep="_") %>%
   select(-type) %>%
@@ -1881,7 +1900,9 @@ maf_prop_df %>%
                             "Uncommon" = "uncommon",
                             "Common" = "common")) %>%
   mutate(method = fct_relevel(method, "Heterozygous", "Beagle", "Eagle", "SHAPEIT"),
-         maf_c = fct_relevel(maf_c, "Rare", "Uncommon", "Common")) %>%
+         maf_c = fct_relevel(maf_c, "Rare", "Uncommon", "Common")) 
+
+df_flip_maf %>%
   ggplot(aes(x = maf_c, y = proportion, colour = method)) +
   geom_boxplot() +
   xlab("") +
@@ -1890,6 +1911,23 @@ maf_prop_df %>%
   labs(color = "Method") +
   ggtitle("Flip Errors") +
   theme_classic()
+
+df_flip_maf %>%
+  group_by(method, maf_c) %>%
+  summarize(proportion = mean(proportion)) 
+
+df_flip_maf %>%
+  filter(maf_c == "Rare") %>%
+  group_by(id, method) %>%
+  summarize(odds_r = proportion / (1 - proportion)) %>%
+  pivot_wider(id_cols = id, names_from = "method", values_from = "odds_r") %>%
+  mutate(Beagle = Beagle / Heterozygous,
+         Eagle = Eagle / Heterozygous,
+         SHAPEIT = SHAPEIT / Heterozygous) %>%
+  ungroup() %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  purrr::map_df(perform_one_sided_ttest_purrr, .id = "ColumnName") %>%
+  knitr::kable()
 ```
 
 

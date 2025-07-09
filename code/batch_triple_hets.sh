@@ -15,7 +15,7 @@
 #SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/slurm/tripleHet.%A.%a.out
 
 # Code for counting triple hets
-chrom=11
+chrom=22
 base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
 source_vcf="${base_dir}/data/1kgp/chr${chrom}/chr${chrom}_unphased_overlap.bcf"
 include_dir="${base_dir}/data/1kgp/chr1/triple_het/trio_lists" # hardcoded to chr1, since we only generate include lists once

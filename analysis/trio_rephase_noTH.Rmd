@@ -1,0 +1,290 @@
+---
+title: "trio_rephase_noTH"
+author: "theandyb"
+date: "2025-05-12"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(conflicted)
+library(janitor)
+library(gtsummary)
+
+conflicted::conflict_prefer("select", "dplyr")
+conflict_prefer("filter","dplyr")
+```
+
+Here in this document we will explore basic summary statistics regarding the errors observed when rephasing the probands from 602 1kGP trio sequences. In particular, we will focus on the results when we omit sites in the genome where the trio is triple-heterozygous, i.e. the locations where the child's phasing cannot be directly inferred from the parent's genotype.
+
+### Demographic information
+
+```{r}
+df_subj <- read_csv("data/1kgp/subject_info.csv", show_col_types = F)
+ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt", show_col_types = F)
+child_ids <- ped_df %>% filter(fatherID != "0" & motherID != "0") %>% pull(sampleID)
+unrel_ids <- scan("data/1kgp/unrelated_subjects.txt", what = character())
+
+df_subj_rel <- df_subj %>%
+  filter(SAMPLE_NAME %in% child_ids)
+df_subj_rel$id2 <- 1:602
+
+df_subj_unrel <- df_subj %>%
+  filter(SAMPLE_NAME %in% unrel_ids)
+```
+
+### Switch and Flip Errors
+
+```{r}
+df_errors <- read_csv("output/all_noTH.csv", show_col_types = F)
+```
+
+## Error Rates by Chromosome
+
+```{r}
+df_errors %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  select(chrom, sample, beagle, eagle, shapeit) %>%
+  pivot_longer(beagle:shapeit, names_to = "method", values_to = "err_rate") %>%
+  ggplot(aes(x = chrom, y = err_rate, colour = method, group = sample)) +
+  geom_point()
+
+df_errors %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  select(chrom, sample, beagle, eagle, shapeit) %>%
+  pivot_longer(beagle:shapeit, names_to = "method", values_to = "err_rate") %>%
+  ggplot(aes(x = factor(chrom), y = err_rate, colour = method)) +
+  geom_violin()
+```
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  group_by(chrom, SUPER) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "err_rate") %>%
+  ggplot(aes(x = factor(chrom), y =  err_rate, colour = SUPER, shape = Method)) +
+    geom_point()
+
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  mutate(beagle = (n_flip_b ) / n_het,
+         eagle = (n_flip_e ) / n_het,
+         shapeit = (n_flip_s ) / n_het) %>%
+  group_by(chrom, SUPER) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "err_rate") %>%
+  ggplot(aes(x = factor(chrom), y =  err_rate, colour = SUPER, shape = Method)) +
+    geom_point() +
+  ggtitle("Flip Rate")
+
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  mutate(beagle = (n_switch_b ) / n_het,
+         eagle = (n_switch_e ) / n_het,
+         shapeit = (n_switch_s ) / n_het) %>%
+  group_by(chrom, SUPER) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "err_rate") %>%
+  ggplot(aes(x = factor(chrom), y =  err_rate, colour = SUPER, shape = Method)) +
+    geom_point() +
+  ggtitle("Switch Rate")
+
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  mutate(beagle = (n_switch_b ) / n_het,
+         eagle = (n_switch_e ) / n_het,
+         shapeit = (n_switch_s ) / n_het) %>%
+  group_by(chrom, SUPER) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "err_rate") %>%
+  filter(SUPER=="AFR") %>%
+  ggplot(aes(x = factor(chrom), y =  err_rate, fill = Method)) +
+    geom_bar(stat = "identity", position = 'dodge') +
+  ggtitle("Switch Rate", "AFR") +
+  theme_bw()
+```
+
+
+### Outlier on chromosome 12?
+
+```{r}
+df_errors %>%
+  filter(chrom == 12) %>%
+   mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  arrange(desc(shapeit)) %>%
+  head(5) %>%
+  knitr::kable()
+```
+
+```{r}
+df_errors %>%
+  filter(chrom == 12) %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  ggplot(aes(x = SUPER, y = n_het, colour = SUPER)) +
+  geom_boxplot() +
+  geom_point(data = {df_errors %>% filter(chrom == 12, sample == 299) %>% left_join(df_subj_rel, by = join_by(sample == id2))}, color = "red")
+```
+
+### Population Specific Error Rates by Chromosome
+
+#### AFR
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  filter(SUPER=="AFR") %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  select(chrom, sample, beagle, eagle, shapeit) %>%
+  pivot_longer(beagle:shapeit, names_to = "method", values_to = "err_rate") %>%
+  ggplot(aes(x = factor(chrom), y = err_rate, colour = method)) +
+  geom_violin()
+```
+
+#### AMR
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  filter(SUPER=="AMR") %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  select(chrom, sample, beagle, eagle, shapeit) %>%
+  pivot_longer(beagle:shapeit, names_to = "method", values_to = "err_rate") %>%
+  ggplot(aes(x = factor(chrom), y = err_rate, colour = method)) +
+  geom_violin()
+```
+
+#### EAS
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  filter(SUPER=="EAS") %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  select(chrom, sample, beagle, eagle, shapeit) %>%
+  pivot_longer(beagle:shapeit, names_to = "method", values_to = "err_rate") %>%
+  ggplot(aes(x = factor(chrom), y = err_rate, colour = method)) +
+  geom_violin()
+```
+
+#### EUR
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  filter(SUPER=="EUR") %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  select(chrom, sample, beagle, eagle, shapeit) %>%
+  pivot_longer(beagle:shapeit, names_to = "method", values_to = "err_rate") %>%
+  ggplot(aes(x = factor(chrom), y = err_rate, colour = method)) +
+  geom_violin()
+```
+
+#### SAS
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  filter(SUPER=="SAS") %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  select(chrom, sample, beagle, eagle, shapeit) %>%
+  pivot_longer(beagle:shapeit, names_to = "method", values_to = "err_rate") %>%
+  ggplot(aes(x = factor(chrom), y = err_rate, colour = method)) +
+  geom_violin()
+```
+
+## Tables for Error Rates
+
+### All Errors
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  gtsummary::tbl_summary(include = c(beagle, eagle, shapeit),
+                         by = SUPER,
+                         statistic = list(gtsummary::all_continuous() ~ "{mean} ({sd})",
+                                          gtsummary::all_categorical() ~ "{n} / {N} ({p})%"))
+```
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  mutate(beagle = (n_flip_b + n_switch_b) / n_het,
+         eagle = (n_flip_e + n_switch_e) / n_het,
+         shapeit = (n_flip_s + n_switch_s) / n_het) %>%
+  group_by(chrom, SUPER) %>%
+  summarize(Beagle = mean(beagle),
+            Eagle = mean(eagle),
+            SHAPEIT = mean(shapeit)) %>%
+  knitr::kable()
+```
+
+
+### Switch Rates
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  mutate(beagle = (n_switch_b) / n_het,
+         eagle = (n_switch_e) / n_het,
+         shapeit = (n_switch_s) / n_het) %>%
+  gtsummary::tbl_summary(include = c(beagle, eagle, shapeit),
+                         by = SUPER,
+                         statistic = list(gtsummary::all_continuous() ~ "{mean} ({sd})",
+                                          gtsummary::all_categorical() ~ "{n} / {N} ({p})%"))
+```
+
+### Flip Rates
+
+```{r}
+df_errors %>%
+  left_join(df_subj_rel, by = join_by(sample == id2)) %>%
+  mutate(beagle = (n_flip_b) / n_het,
+         eagle = (n_flip_e) / n_het,
+         shapeit = (n_flip_s) / n_het) %>%
+  gtsummary::tbl_summary(include = c(beagle, eagle, shapeit),
+                         by = SUPER,
+                         statistic = list(gtsummary::all_continuous() ~ "{mean} ({sd})",
+                                          gtsummary::all_categorical() ~ "{n} / {N} ({p})%"))
+```
+
+## Compare rates to X chromosome
+
+```{r}
+df_x <- read_csv("output/switch_errors/switch_errors/summary.csv")
+```
+
