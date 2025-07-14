@@ -55,6 +55,13 @@ for(i in 1:22){
 
 ```
 
+And let's also load the results from when we phase without the triple heterozygous positions:
+
+```{r}
+df_switch_trio_noth <- read_csv("output/all_noTH.csv", show_col_types = F)
+```
+
+
 ### Heterozygous Position Counts
 
 ```{r warning=FALSE}
@@ -177,6 +184,17 @@ df_total <- df_switch_trio[[1]] %>%
   select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
   mutate(chrom = 1)
 
+df_total_noth <- df_switch_trio_noth %>%
+  mutate(Eagle = (n_switch_e + n_flip_e) / n_het,
+         Beagle = (n_switch_b + n_flip_b) / n_het,
+         SHAPEIT = (n_switch_s + n_flip_s) / n_het) %>%
+  select(Eagle, Beagle, SHAPEIT, sample, chrom)
+
+df_total_noth <- df_total_noth %>%
+  left_join({df_subj_rel %>% select(id2, SUPER)}, by = c("sample" = "id2")) %>%
+  rename(pair_id = sample) %>%
+  select(Eagle, Beagle, SHAPEIT, SUPER, pair_id, chrom)
+
 for(i in 2:22){
   df_total <- bind_rows(df_total, 
                         {
@@ -198,6 +216,19 @@ df_total <- df_total %>%
                             select(Eagle, Beagle, SHAPEIT, SUPER) %>%
                             mutate(pair_id = 603:1602, chrom = 23)})
 
+df_total_noth <- df_total_noth %>%
+  bind_rows({df_switch_x %>%
+      mutate(Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
+                                   Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+                                   SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+      rename(SUPER = pop) %>%
+                            select(Eagle, Beagle, SHAPEIT, SUPER) %>%
+                            mutate(pair_id = 603:1602, chrom = 23)})
+```
+
+#### Total Error Rates: with TH
+
+```{r}
 df_total %>%
   group_by(chrom) %>%
   summarise(Beagle = mean(Beagle),
@@ -211,6 +242,7 @@ df_total %>%
             Eagle = mean(Eagle),
             SHAPEIT = mean(SHAPEIT)) %>% 
   knitr::kable()
+
 
 df_total %>%
   group_by(chrom) %>%
@@ -243,6 +275,56 @@ df_total %>%
   scale_colour_brewer(palette = "Set1")
 ```
 
+#### Total Error Rates: without TH
+
+```{r}
+df_total_noth %>%
+  group_by(chrom) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+
+df_total_noth %>%
+  group_by(chrom, SUPER) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>% 
+  knitr::kable()
+
+df_total_noth %>%
+  group_by(chrom) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = chrom, y = error_rate, colour = method, shape = method)) +
+  geom_point(size=3) +
+  theme_bw() +
+  xlab("Chromosome") +
+  ylab("Error Rate") +
+  labs(colour = "Method", shape = "Method") +
+  scale_colour_brewer(palette = "Set2") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_x_continuous("Chromosome", labels = as.character(unique(df_total_noth$chrom)), breaks = unique(df_total_noth$chrom))
+
+df_total_noth %>%
+  group_by(chrom, SUPER) %>%
+  summarise(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
+  ggplot(aes(x = chrom, y = error_rate, colour = SUPER, shape = method)) +
+  geom_point(size=2) +
+  theme_bw() +
+  ylab("Error Rate") +
+  xlab("Chromosome") +
+  labs(colour = "Population", shape = "Method") +
+  scale_colour_brewer(palette = "Set1") +
+  scale_x_continuous("Chromosome", labels = as.character(unique(df_total_noth$chrom)), breaks = unique(df_total_noth$chrom))
+
+```
+
 In X, do we see large variation among samples?
 
 ```{r warning=FALSE}
@@ -255,8 +337,7 @@ df_total %>%
 What range of values do we observe in the autosomes (sans 8)?
 
 ```{r warning=FALSE}
-df_total %>%
-  filter(chrom %in% c(1:7, 9:22)) %>%
+df_total_noth %>%
   select(Beagle, Eagle, SHAPEIT) %>%
   summarize(across(.cols = everything(),
                    .fns = list(
@@ -269,8 +350,7 @@ df_total %>%
             ) %>%
   knitr::kable()
 
-df_total %>%
-  filter(chrom %in% c(1:22)) %>%
+df_total_noth %>%
   select(chrom, Beagle, Eagle, SHAPEIT) %>%
   group_by(chrom) %>%
   summarize(across(.cols = everything(),
@@ -290,20 +370,19 @@ Let's first do a hypothesis test to compare the mean error rates in X versus the
 
 ```{r warning=FALSE}
 # Beagle
-autosomes <- df_total %>% filter(chrom < 23) %>% pull(Beagle)
-chrX <- df_total %>% filter(chrom == 23) %>% pull(Beagle)
+autosomes <- df_total_noth %>% filter(chrom < 23) %>% pull(Beagle)
+chrX <- df_total_noth %>% filter(chrom == 23) %>% pull(Beagle)
 t.test(autosomes, chrX) %>% broom::tidy()
 
 # Eagle
-autosomes <- df_total %>% filter(chrom < 23) %>% pull(Eagle)
-chrX <- df_total %>% filter(chrom == 23) %>% pull(Eagle)
+autosomes <- df_total_noth %>% filter(chrom < 23) %>% pull(Eagle)
+chrX <- df_total_noth %>% filter(chrom == 23) %>% pull(Eagle)
 t.test(autosomes, chrX) %>% broom::tidy()
 
 # SHAPEIT
-autosomes <- df_total %>% filter(chrom < 23) %>% pull(SHAPEIT)
-chrX <- df_total %>% filter(chrom == 23) %>% pull(SHAPEIT)
+autosomes <- df_total_noth %>% filter(chrom < 23) %>% pull(SHAPEIT)
+chrX <- df_total_noth %>% filter(chrom == 23) %>% pull(SHAPEIT)
 t.test(autosomes, chrX) %>% broom::tidy()
-
 ```
 
 
@@ -317,7 +396,7 @@ For each chromosome, we will test several hypotheses:
 For the first test, I'll use a linear mixed model with random intercepts for each individual/synthetic diploid. This will also allow me to do contrasts for the pairwise comparisons.
 
 ```{r warning=FALSE}
-mod_fit <- df_total %>%
+mod_fit <- df_total_noth %>%
   filter(chrom == 1) %>%
   pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
   {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
@@ -327,7 +406,7 @@ df_anova <- anova(mod_fit) %>% broom::tidy() %>% mutate(chrom = 1)
 df_pairwise <- emmeans::emmeans(mod_fit, ~ method) %>% pairs() %>% broom::tidy() %>% mutate(chrom=1)
 
 for(i in 2:23){
-  mod_fit <- df_total %>%
+  mod_fit <- df_total_noth %>%
     filter(chrom == i) %>%
     pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
     {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
@@ -345,7 +424,7 @@ df_pairwise %>% knitr::kable()
 Now let's do these comparisons within each super-population:
 
 ```{r warning=FALSE}
-mod_fit <- df_total %>%
+mod_fit <- df_total_noth %>%
   filter(chrom == 1) %>%
   pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
   {lmerTest::lmer(error_rate ~ method*SUPER + (1|pair_id), data = .)}
@@ -356,7 +435,7 @@ df_pop_pairwise <- emmeans::emmeans(mod_fit, ~ method | SUPER) %>% pairs() %>% b
 df_pop_pop <- emmeans::emmeans(mod_fit, ~ SUPER | method) %>% pairs() %>% broom::tidy() %>% mutate(chrom = 1)
 
 for(i in 2:23){
-  mod_fit <- df_total %>%
+  mod_fit <- df_total_noth %>%
     filter(chrom == i) %>%
     pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "error_rate") %>%
     {lmerTest::lmer(error_rate ~ method*SUPER + (1|pair_id), data = .)}
@@ -378,24 +457,37 @@ df_pop_pop %>% knitr::kable()
 Next, let's consider switches and flips independently:
 
 ```{r warning=FALSE}
-df_switches <- df_switch_trio[[1]] %>%
-  mutate(Eagle = (n_other_eagle) / n_hets,
-         Beagle = (n_other_beagle) / n_hets,
-         SHAPEIT = (n_other_shapeit) / n_hets) %>%
-  select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
-  mutate(chrom = 1)
+# df_switches <- df_switch_trio[[1]] %>%
+#   mutate(Eagle = (n_other_eagle) / n_hets,
+#          Beagle = (n_other_beagle) / n_hets,
+#          SHAPEIT = (n_other_shapeit) / n_hets) %>%
+#   select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
+#   mutate(chrom = 1)
+# 
+# for(i in 2:22){
+#   df_switches <- bind_rows(df_switches, 
+#                         {
+#                           df_switch_trio[[i]] %>%
+#                             mutate(Eagle = (n_other_eagle) / n_hets,
+#                                    Beagle = (n_other_beagle) / n_hets,
+#                                    SHAPEIT = (n_other_shapeit) / n_hets) %>%
+#                             select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
+#                             mutate(chrom = i)
+#                         })
+# }
+# 
 
-for(i in 2:22){
-  df_switches <- bind_rows(df_switches, 
-                        {
-                          df_switch_trio[[i]] %>%
-                            mutate(Eagle = (n_other_eagle) / n_hets,
-                                   Beagle = (n_other_beagle) / n_hets,
-                                   SHAPEIT = (n_other_shapeit) / n_hets) %>%
-                            select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
-                            mutate(chrom = i)
-                        })
-}
+
+df_switches <- df_switch_trio_noth %>%
+  mutate(Eagle = (n_switch_e) / n_het,
+         Beagle = (n_switch_b) / n_het,
+         SHAPEIT = (n_switch_s) / n_het) %>%
+  select(Eagle, Beagle, SHAPEIT, sample, chrom)
+
+df_switches <- df_switches %>%
+  left_join({df_subj_rel %>% select(id2, SUPER)}, by = c("sample" = "id2")) %>%
+  rename(pair_id = sample) %>%
+  select(Eagle, Beagle, SHAPEIT, SUPER, pair_id, chrom)
 
 df_switches <- df_switches %>%
   bind_rows({df_switch_x %>%
@@ -453,8 +545,8 @@ df_switches %>%
   scale_x_continuous("Chromosome", labels = as.character(unique(df_switches$chrom)), breaks = unique(df_switches$chrom))
 ```
 
-```{r warning=FALSE}
 
+```{r warning=FALSE}
 mod_b <- df_switches %>%
   select(Beagle, Eagle, SHAPEIT, chrom, pair_id) %>%
   {lmerTest::lmer(Beagle ~ factor(chrom) + (1|pair_id), data = . )}
@@ -561,24 +653,35 @@ df_pop_pop %>% knitr::kable()
 ### Flip Errors
 
 ```{r warning=FALSE}
-df_flips <- df_switch_trio[[1]] %>%
-  mutate(Eagle = (n_flip_eagle) / n_hets,
-         Beagle = (n_flip_beagle) / n_hets,
-         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
-  select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
-  mutate(chrom = 1)
+# df_flips <- df_switch_trio[[1]] %>%
+#   mutate(Eagle = (n_flip_eagle) / n_hets,
+#          Beagle = (n_flip_beagle) / n_hets,
+#          SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+#   select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
+#   mutate(chrom = 1)
+# 
+# for(i in 2:22){
+#   df_flips <- bind_rows(df_flips, 
+#                         {
+#                           df_switch_trio[[i]] %>%
+#                             mutate(Eagle = (n_flip_eagle) / n_hets,
+#                                    Beagle = (n_flip_beagle) / n_hets,
+#                                    SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+#                             select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
+#                             mutate(chrom = i)
+#                         })
+# }
 
-for(i in 2:22){
-  df_flips <- bind_rows(df_flips, 
-                        {
-                          df_switch_trio[[i]] %>%
-                            mutate(Eagle = (n_flip_eagle) / n_hets,
-                                   Beagle = (n_flip_beagle) / n_hets,
-                                   SHAPEIT = (n_flip_shapeit) / n_hets) %>%
-                            select(Eagle, Beagle, SHAPEIT, SUPER, pair_id) %>%
-                            mutate(chrom = i)
-                        })
-}
+df_flips <- df_switch_trio_noth %>%
+  mutate(Eagle = (n_flip_e) / n_het,
+         Beagle = (n_flip_b) / n_het,
+         SHAPEIT = (n_flip_s) / n_het) %>%
+  select(Eagle, Beagle, SHAPEIT, sample, chrom)
+
+df_flips <- df_flips %>%
+  left_join({df_subj_rel %>% select(id2, SUPER)}, by = c("sample" = "id2")) %>%
+  rename(pair_id = sample) %>%
+  select(Eagle, Beagle, SHAPEIT, SUPER, pair_id, chrom)
 
 df_flips <- df_flips %>%
   bind_rows({df_switch_x %>%
@@ -628,7 +731,7 @@ df_flips %>%
   ggplot(aes(x = chrom, y = error_rate, colour = SUPER, shape = method)) +
   geom_point(size=2) +
   theme_bw() +
-  ylab("Switch Rate") +
+  ylab("Flip Rate") +
   xlab("Chromosome") +
   labs(colour = "Population", shape = "Method") +
   scale_colour_brewer(palette = "Set1") +
@@ -731,11 +834,46 @@ plot_total_errors <- function(df, m1, m2, pop, chrom=as.character(chrom)){
   return(p)
 }
 
+plot_total_errors_noth <- function(df, m1, m2, pop, chrom=as.character(chrom)){
+  p <- df %>%
+    mutate(Beagle = (n_switch_b + n_flip_b),
+         Eagle =  (n_switch_e + n_flip_e),
+         SHAPEIT =  (n_switch_s + n_flip_s)) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Total Errors", paste0("Chromosome ", chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
 table_total_errors <- function(df, pop){
   res <- df %>%
     mutate(Beagle = (n_other_beagle + n_flip_beagle),
          Eagle =  (n_other_eagle + n_flip_eagle),
          SHAPEIT =  (n_other_shapeit + n_flip_shapeit)) %>%
+    mutate(b_l_e = factor(Beagle < Eagle),
+           b_e_e = factor(Beagle == Eagle),
+           b_l_s = factor(Beagle < SHAPEIT),
+           e_l_b = factor(Beagle > Eagle),
+           e_l_s = factor(Eagle < SHAPEIT),
+           s_l_b = factor(SHAPEIT < Beagle),
+           s_l_e = factor(SHAPEIT < Eagle)) %>%
+    tbl_summary(by = !! sym(pop),  
+                include = c(b_l_e, b_e_e, b_l_s, e_l_b, e_l_s, s_l_b, s_l_e))
+    
+  return(res)
+}
+
+table_total_errors_noth <- function(df, pop){
+  res <- df %>%
+    mutate(Beagle = (n_switch_b + n_flip_b),
+         Eagle =  (n_switch_e + n_flip_e),
+         SHAPEIT =  (n_switch_s + n_flip_s)) %>%
     mutate(b_l_e = factor(Beagle < Eagle),
            b_e_e = factor(Beagle == Eagle),
            b_l_s = factor(Beagle < SHAPEIT),
@@ -754,13 +892,24 @@ table_total_errors <- function(df, pop){
 
 ```{r warning=FALSE}
 chrom <- 1
+
+df_switch_trio_noth <- df_switch_trio_noth %>%
+  left_join({df_subj_rel %>% select(SUPER, id2)}, by = c("sample" = "id2"))
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 2
@@ -768,12 +917,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 2
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 3
@@ -781,12 +937,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 3
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 4
@@ -794,12 +957,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 4
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 5
@@ -807,12 +977,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 5
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 6
@@ -820,12 +997,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 6
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 7
@@ -833,12 +1017,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 7
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 8
@@ -846,12 +1037,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 8
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 9
@@ -859,12 +1057,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 9
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 10
@@ -872,12 +1077,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 10
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 11
@@ -885,12 +1097,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 10
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 12
@@ -898,12 +1117,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 12
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 13
@@ -911,12 +1137,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 13
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 14
@@ -924,12 +1157,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 14
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 15
@@ -937,12 +1177,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 15
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 16
@@ -950,12 +1197,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 16
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 17
@@ -963,12 +1217,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 17
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 18
@@ -976,12 +1237,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 18
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 19
@@ -989,12 +1257,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 19
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 20
@@ -1002,12 +1277,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 20
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 21
@@ -1015,12 +1297,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 21
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome 22
@@ -1028,12 +1317,19 @@ table_total_errors(df_switch_trio[[chrom]], "SUPER")
 ```{r warning=FALSE}
 chrom <- 22
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "Eagle", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_total_errors(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_errors, "SUPER", as.character(chrom))
+cross_meth_plot({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "Total Errors", plot_total_errors_noth, "SUPER", as.character(chrom))
 
 table_total_errors(df_switch_trio[[chrom]], "SUPER")
+table_total_errors_noth({df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ]}, "SUPER")
 ```
 
 ### Chromosome X
@@ -1068,248 +1364,419 @@ plot_total_rate <- function(df, m1, m2, pop, chrom=as.character(chrom)){
     scale_color_manual(values = cbPalette)
   return(p)
 }
+
+plot_total_rate_noth <- function(df, m1, m2, pop, chrom=as.character(chrom)){
+  p <- df %>%
+    mutate(Beagle = (n_switch_b + n_flip_b) / n_het,
+         Eagle = (n_switch_e + n_flip_e) / n_het,
+         SHAPEIT = (n_switch_s + n_flip_s) / n_het) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Error Rate", paste0("Chromosome ", chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
 ```
 
 ### Chromosome 1
 
 ```{r warning=FALSE}
 chrom <- 1 
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 2
 
 ```{r warning=FALSE}
 chrom <- 2
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 3
 
 ```{r warning=FALSE}
 chrom <- 3
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 4
 
 ```{r warning=FALSE}
 chrom <- 4
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 5
 
 ```{r warning=FALSE}
 chrom <- 5
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 6
 
 ```{r warning=FALSE}
 chrom <- 6
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 7
 
 ```{r warning=FALSE}
 chrom <- 7
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 8
 
 ```{r warning=FALSE}
 chrom <- 8
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 9
 
 ```{r warning=FALSE}
 chrom <- 9
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 10
 
 ```{r warning=FALSE}
 chrom <- 10
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 11
 
 ```{r warning=FALSE}
 chrom <- 11
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 12
 
 ```{r warning=FALSE}
 chrom <- 12
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 13
 
 ```{r warning=FALSE}
 chrom <- 13
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 14
 
 ```{r warning=FALSE}
 chrom <- 14
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 15
 
 ```{r warning=FALSE}
 chrom <- 15
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 16
 
 ```{r warning=FALSE}
 chrom <- 16
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 17
 
 ```{r warning=FALSE}
 chrom <- 17
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 18
 
 ```{r warning=FALSE}
 chrom <- 18
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 19
 
 ```{r warning=FALSE}
 chrom <- 19
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 20
 
 ```{r warning=FALSE}
 chrom <- 20 
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 21
 
 ```{r warning=FALSE}
 chrom <- 21 
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 22
 
 ```{r warning=FALSE}
 chrom <- 22 
-plot_total_rate(df_switch_trio[[22]], "Beagle", "Eagle", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_total_rate(df_switch_trio[[22]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[22]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+
+plot_total_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_total_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_total_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Total Errors", plot_total_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Total Errors", plot_total_rate_noth, "SUPER", as.character(chrom))
 ```
 
 
@@ -1343,11 +1810,45 @@ plot_switches <- function(df, m1, m2, pop, chrom=15){
   return(p)
 }
 
+plot_switches_noth <- function(df, m1, m2, pop, chrom=15){
+  p <- df %>%
+    mutate(Beagle = n_switch_b,
+         Eagle = n_switch_e,
+         SHAPEIT = n_switch_s) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Switches", paste0("Chromosome ", chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
 table_switches <- function(df, pop){
   res <- df %>%
     mutate(Beagle = (n_other_beagle ),
          Eagle =  (n_other_eagle),
          SHAPEIT =  (n_other_shapeit)) %>%
+    mutate(b_l_e = factor(Beagle < Eagle),
+           b_l_s = factor(Beagle < SHAPEIT),
+           e_l_b = factor(Beagle > Eagle),
+           e_l_s = factor(Eagle < SHAPEIT),
+           s_l_b = factor(SHAPEIT < Beagle),
+           s_l_e = factor(SHAPEIT < Eagle)) %>%
+    tbl_summary(by = !! sym(pop),  
+                include = c(b_l_e, b_l_s, e_l_b, e_l_s, s_l_b, s_l_e))
+    
+  return(res)
+}
+
+table_switches_noth <- function(df, pop){
+  res <- df %>%
+    mutate(Beagle = (n_switch_b ),
+         Eagle =  (n_switch_e),
+         SHAPEIT =  (n_switch_s)) %>%
     mutate(b_l_e = factor(Beagle < Eagle),
            b_l_s = factor(Beagle < SHAPEIT),
            e_l_b = factor(Beagle > Eagle),
@@ -1365,286 +1866,441 @@ table_switches <- function(df, pop){
 
 ```{r warning=FALSE}
 chrom <- 1
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 2
 
 ```{r warning=FALSE}
 chrom <- 2
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 3
 
 ```{r warning=FALSE}
 chrom <- 3
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 4
 
 ```{r warning=FALSE}
 chrom <- 4
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 5
 
 ```{r warning=FALSE}
 chrom <- 5
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 6
 
 ```{r warning=FALSE}
 chrom <- 6
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 7
 
 ```{r warning=FALSE}
 chrom <- 7
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 8
 
 ```{r warning=FALSE}
 chrom <- 8
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 9
 
 ```{r warning=FALSE}
 chrom <- 9
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 10
 
 ```{r warning=FALSE}
 chrom <- 10
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 11
 
 ```{r warning=FALSE}
 chrom <- 11
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 12
 
 ```{r warning=FALSE}
 chrom <- 12
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 13
 
 ```{r warning=FALSE}
 chrom <- 13
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 14
 
 ```{r warning=FALSE}
 chrom <- 14
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 15
 
 ```{r warning=FALSE}
 chrom <- 15
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 16
 
 ```{r warning=FALSE}
 chrom <- 16
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 17
 
 ```{r warning=FALSE}
 chrom <- 17
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 18
 
 ```{r warning=FALSE}
 chrom <- 18
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 19
 
 ```{r warning=FALSE}
 chrom <- 19
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 20
 
 ```{r warning=FALSE}
 chrom <- 20
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 21
 
 ```{r warning=FALSE}
 chrom <- 21
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 22
 
 ```{r warning=FALSE}
 chrom <- 22
-plot_switches(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switches(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_switches(df_switch_trio[[1]], "SUPER")
+plot_switches(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switches, "SUPER", as.character(chrom))
+plot_switches(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_switches(df_switch_trio[[chrom]], "SUPER")
+table_switches_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switches, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switches_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome X
@@ -1678,227 +2334,399 @@ plot_switch_rate <- function(df, m1, m2, pop, chrom = 15){
     scale_color_manual(values = cbPalette)
   return(p)
 }
+
+plot_switch_rate_noth <- function(df, m1, m2, pop, chrom = 15){
+  p <- df %>%
+    mutate(Beagle = n_switch_b / n_het,
+         Eagle = n_switch_e / n_het,
+         SHAPEIT = n_switch_s / n_het) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Switch Rate", paste0("Chromosome ", chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
 ```
 
 ### Chromosome 1
 
 ```{r warning=FALSE}
 chrom <- 1
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 2
 
 ```{r warning=FALSE}
 chrom <- 2
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 3
 
 ```{r warning=FALSE}
 chrom <- 3
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 4
 
 ```{r warning=FALSE}
 chrom <- 4
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 5
 
 ```{r warning=FALSE}
 chrom <- 5
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 6
 
 ```{r warning=FALSE}
 chrom <- 6
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 7
 
 ```{r warning=FALSE}
 chrom <- 7
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 8
 
 ```{r warning=FALSE}
 chrom <- 8
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 9
 
 ```{r warning=FALSE}
 chrom <- 9
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 10
 
 ```{r warning=FALSE}
 chrom <- 10
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 11
 
 ```{r warning=FALSE}
 chrom <- 11
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 12
 
 ```{r warning=FALSE}
 chrom <- 12
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 13
 
 ```{r warning=FALSE}
 chrom <- 13
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 14
 
 ```{r warning=FALSE}
 chrom <- 14
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 15
 
 ```{r warning=FALSE}
 chrom <- 15
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 16
 
 ```{r warning=FALSE}
 chrom <- 16
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 17
 
 ```{r warning=FALSE}
 chrom <- 17
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 18
 
 ```{r warning=FALSE}
 chrom <- 18
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 19
 
 ```{r warning=FALSE}
 chrom <- 19
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 20
 
 ```{r warning=FALSE}
 chrom <- 20
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 21
 
 ```{r warning=FALSE}
 chrom <- 21
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 22
 
 ```{r warning=FALSE}
 chrom <- 22
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_switch_rate(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
-cross_meth_plot(df_switch_trio[[1]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
+
+plot_switch_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_switch_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+cross_meth_plot(df_switch_trio[[chrom]], "Switches", plot_switch_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Switches", plot_switch_rate_noth, "SUPER", as.character(chrom))
 ```
+
 ### Chromosome X
 
 ```{r warning=FALSE}
@@ -1929,11 +2757,45 @@ plot_flips <- function(df, m1, m2, pop, chrom = 15){
   return(p)
 }
 
+plot_flips_noth <- function(df, m1, m2, pop, chrom = 15){
+  p <- df %>%
+    mutate(Beagle = n_flip_b,
+         Eagle = n_flip_e,
+         SHAPEIT = n_flip_s) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Total Flips", paste0("Chromosome ", chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
+
 table_flip <- function(df, pop){
   res <- df %>%
     mutate(Beagle = (n_flip_beagle ),
          Eagle =  (n_flip_eagle),
          SHAPEIT =  (n_flip_shapeit)) %>%
+    mutate(b_l_e = factor(Beagle < Eagle),
+           b_l_s = factor(Beagle < SHAPEIT),
+           e_l_b = factor(Beagle > Eagle),
+           e_l_s = factor(Eagle < SHAPEIT),
+           s_l_b = factor(SHAPEIT < Beagle),
+           s_l_e = factor(SHAPEIT < Eagle)) %>%
+    tbl_summary(by = !! sym(pop),  
+                include = c(b_l_e, b_l_s, e_l_b, e_l_s, s_l_b, s_l_e))
+    
+  return(res)
+}
+
+table_flip_noth <- function(df, pop){
+  res <- df %>%
+    mutate(Beagle = (n_flip_b ),
+         Eagle =  (n_flip_e),
+         SHAPEIT =  (n_flip_s)) %>%
     mutate(b_l_e = factor(Beagle < Eagle),
            b_l_s = factor(Beagle < SHAPEIT),
            e_l_b = factor(Beagle > Eagle),
@@ -1951,286 +2813,440 @@ table_flip <- function(df, pop){
 
 ```{r warning=FALSE}
 chrom <- 1
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 2
 
 ```{r warning=FALSE}
 chrom <- 2
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 3
 
 ```{r warning=FALSE}
 chrom <- 3
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 4
 
 ```{r warning=FALSE}
 chrom <- 4
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 5
 
 ```{r warning=FALSE}
 chrom <- 5
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 6
 
 ```{r warning=FALSE}
 chrom <- 6
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 7
 
 ```{r warning=FALSE}
 chrom <- 7
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 8
 
 ```{r warning=FALSE}
 chrom <- 8
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 9
 
 ```{r warning=FALSE}
 chrom <- 9
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 10
 
 ```{r warning=FALSE}
 chrom <- 10
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 11
 
 ```{r warning=FALSE}
 chrom <- 11
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 12
 
 ```{r warning=FALSE}
 chrom <- 12
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 13
 
 ```{r warning=FALSE}
 chrom <- 13
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 14
 
 ```{r warning=FALSE}
 chrom <- 14
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 15
 
 ```{r warning=FALSE}
 chrom <- 15
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 16
 
 ```{r warning=FALSE}
 chrom <- 16
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 17
 
 ```{r warning=FALSE}
 chrom <- 17
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 18
 
 ```{r warning=FALSE}
 chrom <- 18
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 19
 
 ```{r warning=FALSE}
 chrom <- 19
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 20
 
 ```{r warning=FALSE}
 chrom <- 20
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 21
 
 ```{r warning=FALSE}
 chrom <- 21
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 22
 
 ```{r warning=FALSE}
 chrom <- 22
-plot_flips(df_switch_trio[[1]], "Beagle", "Eagle", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "Beagle", "SHAPEIT", "SUPER", chrom)
-plot_flips(df_switch_trio[[1]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "Eagle", "SUPER", chrom)
 
-table_flip(df_switch_trio[[1]], "SUPER")
+plot_flips(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Beagle", "SHAPEIT", "SUPER", chrom)
 
-cross_meth_plot(df_switch_trio[[1]], "Flips", plot_flips, "SUPER", as.character(chrom))
+plot_flips(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flips_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SHAPEIT", "Eagle", "SUPER", chrom)
+
+table_flip(df_switch_trio[[chrom]], "SUPER")
+table_flip_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "SUPER")
+
+cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flips, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom),], "Flips", plot_flips_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome X
@@ -2264,6 +3280,23 @@ plot_flip_rate <- function(df, m1, m2, pop, chrom = 15){
     scale_color_manual(values = cbPalette)
   return(p)
 }
+
+plot_flip_rate_noth <- function(df, m1, m2, pop, chrom = 15){
+  p <- df %>%
+    mutate(Beagle = n_flip_b / n_het,
+         Eagle = n_flip_e / n_het,
+         SHAPEIT = n_flip_s / n_het) %>%
+    ggplot(aes(x = !! sym(m1), y = !! sym(m2), colour = !! sym(pop))) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0) +
+    ggtitle("Flip rate", paste0("Chromosome ", chrom)) +
+    theme_classic() +
+    xlab(m1) +
+    ylab(m2) +
+    labs(color="Population") +
+    scale_color_manual(values = cbPalette)
+  return(p)
+}
 ```
 
 ### Chromosome 1
@@ -2272,10 +3305,16 @@ plot_flip_rate <- function(df, m1, m2, pop, chrom = 15){
 chrom <- 1
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 2
@@ -2284,10 +3323,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 2
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 3
@@ -2296,10 +3341,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 3
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 4
@@ -2308,10 +3359,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 4
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 5
@@ -2320,10 +3377,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 5
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 6
@@ -2332,10 +3395,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 6
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 7
@@ -2344,10 +3413,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 7
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 8
@@ -2356,10 +3431,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 8
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 9
@@ -2368,10 +3449,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 9
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 10
@@ -2380,10 +3467,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 10
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 11
@@ -2392,10 +3485,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 11
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 12
@@ -2404,10 +3503,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 12
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 13
@@ -2416,10 +3521,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 13
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 14
@@ -2428,10 +3539,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 14
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 15
@@ -2440,10 +3557,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 15
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 16
@@ -2452,10 +3575,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 16
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 17
@@ -2464,10 +3593,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 17
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 18
@@ -2476,10 +3611,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 18
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 19
@@ -2488,10 +3629,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 19
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 20
@@ -2500,10 +3647,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 20
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 21
@@ -2512,10 +3665,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 21
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome 22
@@ -2524,10 +3683,16 @@ cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.ch
 chrom <- 22
 
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "Eagle", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "Beagle", "SHAPEIT", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Beagle", "SHAPEIT", "SUPER", chrom)
+
 plot_flip_rate(df_switch_trio[[chrom]], "SHAPEIT", "Eagle", "SUPER", chrom)
+plot_flip_rate_noth(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "SHAPEIT", "Eagle", "SUPER", chrom)
 
 cross_meth_plot(df_switch_trio[[chrom]], "Flips", plot_flip_rate, "SUPER", as.character(chrom))
+cross_meth_plot(df_switch_trio_noth[which(df_switch_trio_noth$chrom == chrom), ], "Flips", plot_flip_rate_noth, "SUPER", as.character(chrom))
 ```
 
 ### Chromosome X
@@ -2540,5 +3705,5 @@ plot_flip_rate(df_switch_x, "SHAPEIT", "Eagle", "pop", "X")
 cross_meth_plot(df_switch_x, "Flips", plot_flip_rate, "pop", "X")
 ```
 
-## Comparisons of Average Rates Across Chromosomes
+
 
