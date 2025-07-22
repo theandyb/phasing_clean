@@ -69,7 +69,7 @@ df_switch_trio_noth <- read_csv("output/all_noTH.csv", show_col_types = F)
 df_het <- vector(mode = "list", length = 22)
 
 for(i in 1:22){
-  df_het[[i]] <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_", i, "/het_pos_count.tsv"),
+  df_het[[i]] <- read_tsv(paste0(config_obj$base_dir, "/output/trio_phase_", i, "/no_th/het_pos_count.tsv"),
                    col_names = c("id", "n_het"), 
                    show_col_types = FALSE)
 }
@@ -334,7 +334,7 @@ df_total %>%
 ```
 
 
-What range of values do we observe in the autosomes (sans 8)?
+What range of values do we observe in the autosomes?
 
 ```{r warning=FALSE}
 df_total_noth %>%
@@ -385,6 +385,30 @@ chrX <- df_total_noth %>% filter(chrom == 23) %>% pull(SHAPEIT)
 t.test(autosomes, chrX) %>% broom::tidy()
 ```
 
+Additionally, I would like to test the null hypothesis that the error rates are the same across chromosomes for each method:
+
+```{r}
+mod_fit <- df_total_noth %>%
+  filter(chrom < 23) %>%
+  {lmerTest::lmer(Beagle ~ chrom + (1|pair_id), data = .)}
+
+df_anova <- anova(mod_fit) %>% broom::tidy() %>% mutate(method = "Beagle")
+
+mod_fit <- df_total_noth %>%
+  filter(chrom < 23) %>%
+  {lmerTest::lmer(Eagle ~ chrom + (1|pair_id), data = .)}
+
+df_anova <- bind_rows(df_anova, {anova(mod_fit) %>% broom::tidy() %>% mutate(method = "Eagle")})
+
+mod_fit <- df_total_noth %>%
+  filter(chrom < 23) %>%
+  {lmerTest::lmer(SHAPEIT ~ chrom + (1|pair_id), data = .)}
+
+df_anova <- bind_rows(df_anova, {anova(mod_fit) %>% broom::tidy() %>% mutate(method = "SHAPEIT")})
+
+df_anova %>%
+  knitr::kable()
+```
 
 
 For each chromosome, we will test several hypotheses:
@@ -419,6 +443,10 @@ for(i in 2:23){
 df_anova %>% knitr::kable()
 
 df_pairwise %>% knitr::kable()
+
+df_pairwise %>%
+  filter(adj.p.value > 0.05) %>%
+  knitr::kable()
 ```
 
 Now let's do these comparisons within each super-population:
@@ -575,7 +603,7 @@ emmeans::emmeans(mod_s, ~ chrom, pbkrtest.limit = 14244) %>% pairs() %>% broom::
   knitr::kable()
 
 # Beagle
-autosomes <- df_switches %>% filter(chrom %in% c(1:7,9:22)) %>% pull(Beagle)
+autosomes <- df_switches %>%  filter(chrom < 23) %>% pull(Beagle)
 chrX <- df_switches %>% filter(chrom == 23) %>% pull(Beagle)
 t.test(autosomes, chrX) %>% broom::tidy()
 
@@ -738,6 +766,24 @@ df_flips %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   scale_x_continuous("Chromosome", labels = as.character(unique(df_flips$chrom)), breaks = unique(df_flips$chrom))
 ```
+
+```{r}
+# Beagle
+autosomes <- df_flips %>% filter(chrom < 23) %>% pull(Beagle)
+chrX <- df_flips %>% filter(chrom == 23) %>% pull(Beagle)
+t.test(autosomes, chrX) %>% broom::tidy()
+
+# Eagle
+autosomes <- df_flips %>% filter(chrom < 23) %>% pull(Eagle)
+chrX <- df_flips %>% filter(chrom == 23) %>% pull(Eagle)
+t.test(autosomes, chrX) %>% broom::tidy()
+
+# SHAPEIT
+autosomes <- df_flips %>% filter(chrom < 23) %>% pull(SHAPEIT)
+chrX <- df_flips %>% filter(chrom == 23) %>% pull(SHAPEIT)
+t.test(autosomes, chrX) %>% broom::tidy()
+```
+
 
 ```{r warning=FALSE}
 mod_fit <- df_flips %>%
