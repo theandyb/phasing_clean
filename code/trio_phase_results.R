@@ -5,7 +5,7 @@ config_obj <- yaml::read_yaml("_config.yaml")
 
 source(paste0(config_obj$base_dir,"/code/common_functions.R"))
 
-for(chrom in 2:22){
+for(chrom in 1:22){
   beagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom ,"/switch_errors/beagle/annotated/")
   eagle_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom ,"/switch_errors/eagle/annotated/")
   shapeit_switch_dir <-   paste0(config_obj$base_dir,"/output/trio_phase_", chrom ,"/switch_errors/shapeit/annotated/")

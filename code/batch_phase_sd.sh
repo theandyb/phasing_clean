@@ -111,7 +111,8 @@ $shapeit_dir/phase_common/bin/phase_common \
   --reference /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf \
   --region chrX \
   --thread 4 \
-  --output /tmp/andy_shapeit_${SLURM_ARRAY_TASK_ID}.bcf
+  --output /tmp/andy_shapeit_${SLURM_ARRAY_TASK_ID}.bcf \
+  --log test.log
 
 echo "SHAPEIT done"
 

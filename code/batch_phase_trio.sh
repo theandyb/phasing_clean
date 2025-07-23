@@ -1,21 +1,27 @@
 #!/bin/bash
 #
-#SBATCH --job-name=tootone
+#SBATCH --job-name=noTH
 #SBATCH --ntasks=1
 #SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=8GB
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=beckandy@umich.edu
-#SBATCH --array=146,545
-#SBATCH --partition=main
+#SBATCH --array=0-13243
 #SBATCH --constraint=avx2
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_17/slurm/sample.%A.%a.err
-#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/trio_phase_17/slurm/sample.%A.%a.out
+#SBATCH --exclude=r[6320,6319,6333,6331,6323]
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/slurm/sample_noTH.%A.%a.err
+#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/slurm/sample_noTH.%A.%a.out
 
-# Code for phasing 602 child samples against a panel with their parents removed
+# Calculate the chromosome and job index based on the array index
+total_jobs_per_chromosome=602
+chromosome_index=$(( $SLURM_ARRAY_TASK_ID / total_jobs_per_chromosome ))
+job_index_within_chromosome=$(( $SLURM_ARRAY_TASK_ID % total_jobs_per_chromosome ))
+chrom=$(( chromosome_index + 1 ))
+sample=$(( job_index_within_chromosome + 1 ))
 
-chrom=22
+echo "Running job $sample for chromosome $chrom"
+
 eagle_map="/net/snowwhite/home/beckandy/software/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz"
 base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
 shapeit_dir="/net/snowwhite/home/beckandy/software/shapeit5/shapeit5" #location where shapeit is compiled
