@@ -284,9 +284,9 @@ df_vcftools %>%
 
 ```{r}
 df_vcftools %>%
-  mutate(Beagle = (n_hets - n_other_beagle - n_flip_beagle) / n_hets ,
-         Eagle = (n_hets - n_other_eagle - n_flip_eagle) / n_hets ,
-         SHAPEIT = (n_hets - n_other_shapeit - n_flip_shapeit) / n_hets ) %>%
+  mutate(Beagle = (n_hets - n_other_beagle - ( 2 * n_flip_beagle) ) / n_hets ,
+         Eagle = (n_hets - n_other_eagle - ( 2* n_flip_eagle)) / n_hets ,
+         SHAPEIT = (n_hets - n_other_shapeit - (2* n_flip_shapeit)) / n_hets ) %>%
   tbl_summary(include = c(Beagle, Eagle, SHAPEIT),
               statistic = list(
                 all_continuous() ~ "{mean} ({sd})",
@@ -294,9 +294,9 @@ df_vcftools %>%
               )
 
 df_vcftools %>%
-  mutate(Beagle = (n_hets - n_other_beagle - n_flip_beagle) / n_hets ,
-         Eagle = (n_hets - n_other_eagle - n_flip_eagle) / n_hets ,
-         SHAPEIT = (n_hets - n_other_shapeit - n_flip_shapeit) / n_hets ) %>%
+  mutate(Beagle = (n_hets - n_other_beagle - (2 * n_flip_beagle)) / n_hets ,
+         Eagle = (n_hets - n_other_eagle - (2 * n_flip_eagle)) / n_hets ,
+         SHAPEIT = (n_hets - n_other_shapeit - (2 * n_flip_shapeit)) / n_hets ) %>%
   tbl_summary(by = pop,
               include = c(Beagle, Eagle, SHAPEIT),
               statistic = list(
@@ -305,9 +305,9 @@ df_vcftools %>%
               )
 
 fit <- df_vcftools %>%
-  mutate(Beagle = (n_hets - n_other_beagle - n_flip_beagle) / n_hets ,
-         Eagle = (n_hets - n_other_eagle - n_flip_eagle) / n_hets ,
-         SHAPEIT = (n_hets - n_other_shapeit - n_flip_shapeit) / n_hets ) %>%
+  mutate(Beagle = (n_hets - n_other_beagle - (2 * n_flip_beagle)) / n_hets ,
+         Eagle = (n_hets - n_other_eagle - (2 * n_flip_eagle)) / n_hets ,
+         SHAPEIT = (n_hets - n_other_shapeit - (2 * n_flip_shapeit)) / n_hets ) %>%
   select(Beagle, Eagle, SHAPEIT, pop) %>%
   mutate(unit_id = 1:1000) %>%
   pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "accuracy") %>%
@@ -318,9 +318,9 @@ report::report(fit)
 emmeans::emmeans(fit, ~ method) %>% pairs()
 
 fit <- df_vcftools %>%
-  mutate(Beagle = (n_hets - n_other_beagle - n_flip_beagle) / n_hets ,
-         Eagle = (n_hets - n_other_eagle - n_flip_eagle) / n_hets ,
-         SHAPEIT = (n_hets - n_other_shapeit - n_flip_shapeit) / n_hets ) %>%
+  mutate(Beagle = (n_hets - n_other_beagle - (2 * n_flip_beagle)) / n_hets ,
+         Eagle = (n_hets - n_other_eagle - (2 * n_flip_eagle)) / n_hets ,
+         SHAPEIT = (n_hets - n_other_shapeit - (2 * n_flip_shapeit)) / n_hets ) %>%
   select(Beagle, Eagle, SHAPEIT, pop) %>%
   mutate(unit_id = 1:1000) %>%
   pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "accuracy") %>%
@@ -847,6 +847,182 @@ b_l_s <- df_vcftools %>%
 
 
 Comparing Eagle to Beagle, we observed a higher number of errors in Eagle in `r b_l_e` synthetic diploids, while for SHAPEIT and Eagle we see more errors in Eagle than in SHAPEIT in `r s_l_e` synthetic diploids.
+
+#### Boxplots
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_flip_beagle + n_other_beagle,
+         Eagle = n_other_eagle + n_flip_eagle,
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  select(n_hets, Beagle, Eagle, SHAPEIT) %>%
+  colMeans()
+```
+
+
+Across a mean number of 68929.5 heterozygous sites, we observed an mean number of 197.7 errors for Beagle, 236.5 for Eagle and 201.2 for SHAPEIT. Thus, the three algorithms reconstructed X haplotypes to a high degree of accuracy, with error rates of 0.0031, 0.0037, and 0.0031 errors per heterozygous position for Beagle, Eagle, and SHAPEIT, respectively. While similar, these error rates were found to be significantly different ($F(2, 1998) = 2542$, $p < 0.001$), with Eagle having a higher error rate than both Beagle (mean difference $5.87\times 10^{-4}$, $p < 0.001$) and SHAPEIT (mean difference $5.4 \times 10^{-4}$, $p < 0.001$), and SHAPEIT having a higher error rate than Beagle (mean difference $4.6 \times 10^{-5}$, $p < 0.001$).
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle + n_flip_beagle,
+         Eagle = n_other_eagle + n_flip_eagle, 
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  select(pair_id, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pair_id, names_to = "method", values_to = "errors") %>%
+  ggplot(aes(x = method, y = errors)) + 
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Errors")
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT =( n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(pair_id, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pair_id, names_to = "method", values_to = "errors") %>%
+  ggplot(aes(x = method, y = errors)) + 
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Error Rate per Heterozygous Position") +
+  theme_bw()
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT =( n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(pair_id, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pair_id, names_to = "method", values_to = "errors") %>%
+  ggplot(aes(x = method, y = errors)) + 
+  geom_violin(draw_quantiles = c(0.5)) +
+  xlab("Method") +
+  ylab("Error Rate per Heterozygous Position") +
+  theme_bw()
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets, 
+         SHAPEIT =( n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "errors") %>%
+  ggplot(aes(x = method, y = errors, colour = pop)) + 
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("Error Rate per Heterozygous Position") +
+  scale_color_manual(values = cbPalette)
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets,
+         SHAPEIT = n_other_shapeit / n_hets,
+         type = "Switches") %>%
+  select(pair_id, pop, type, Beagle, Eagle, SHAPEIT) %>%
+  bind_rows({df_vcftools %>%
+      mutate(Beagle = n_flip_beagle / n_hets,
+             Eagle = n_flip_eagle / n_hets,
+             SHAPEIT = n_flip_shapeit / n_hets, 
+             type = "Flips") %>%
+      select(pair_id, pop, type, Beagle, Eagle, SHAPEIT)}) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "errors") %>%
+  ggplot(aes(x = method, y = errors)) +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Error Rate") +
+  theme_bw() +
+  facet_grid(cols = vars(type))
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets,
+         SHAPEIT = n_other_shapeit / n_hets,
+         type = "Switches") %>%
+  select(pair_id, pop, type, Beagle, Eagle, SHAPEIT) %>%
+  bind_rows({df_vcftools %>%
+      mutate(Beagle = n_flip_beagle / n_hets,
+             Eagle = n_flip_eagle / n_hets,
+             SHAPEIT = n_flip_shapeit / n_hets, 
+             type = "Flips") %>%
+      select(pair_id, pop, type, Beagle, Eagle, SHAPEIT)}) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "errors") %>%
+  ggplot(aes(x = method, y = errors, colour = pop)) +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Error Rate") +
+  theme_bw() +
+  scale_color_manual(values = cbPalette) +
+  labs(colour = "Population") +
+  facet_grid(cols = vars(type))
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets,
+         SHAPEIT = n_other_shapeit / n_hets,
+         type = "Switches") %>%
+  select(pair_id, pop, type, Beagle, Eagle, SHAPEIT) %>%
+  bind_rows({df_vcftools %>%
+      mutate(Beagle = n_flip_beagle / n_hets,
+             Eagle = n_flip_eagle / n_hets,
+             SHAPEIT = n_flip_shapeit / n_hets, 
+             type = "Flips") %>%
+      select(pair_id, pop, type, Beagle, Eagle, SHAPEIT)}) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "errors") %>%
+  ggplot(aes(x = method, y = errors, colour = type)) +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Error Rate") +
+  theme_bw() +
+  scale_color_manual(values = cbPalette) +
+  labs(colour = "Error Type") +
+  facet_grid(cols = vars(pop))
+```
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_flip_beagle + n_other_beagle,
+         Eagle = n_other_eagle + n_flip_eagle,
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  select(pop, subpop, n_hets, Beagle, Eagle, SHAPEIT) %>%
+  group_by(pop, subpop) %>%
+  summarize(n_het = mean(n_hets),
+            Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  arrange(desc(Beagle)) %>%
+  knitr::kable()
+
+df_vcftools %>%
+  mutate(Beagle = n_flip_beagle + n_other_beagle,
+         Eagle = n_other_eagle + n_flip_eagle,
+         SHAPEIT = n_other_shapeit + n_flip_shapeit) %>%
+  select(pop, subpop, n_hets, Beagle, Eagle, SHAPEIT) %>%
+  group_by(pop, subpop) %>%
+  summarize(n_het = mean(n_hets),
+            Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "errors") %>%
+  ggplot(aes(x = n_het, y = errors, colour = method)) +
+  geom_point() +
+  xlab("Mean Heterozygous Positions") +
+  ylab("Mean Number Errors") +
+  labs(colour = "Method") +
+  facet_wrap(vars(pop))
+```
+
+
+Comparing across populations, both the number of errors and the number of heterozygous positions differed greatly. While e.g. YRA samples had the largest number of errors, they also had the largest number of heterozygous sites, resulting in a low overall error rate.  Overall, EAS and SAS had the two highest error rates across all three methods (Table ~\ref{tab:mean_err_pop}). The differences between methods were also found to be significantly different between populations ($F(8, 1990) = 71.08$, $p < 0.001$). Comparing methods within populations we observed that in all populations Beagle had the lowest error rate, followed by SHAPEIT while Eagle had the largest error rate. and while many pairwise comparisons of methods remain significant within each population with no change in ranking between methods, the difference between Beagle and SHAPEIT is not significant in the EAS ($t(1990)=1.42$, $p = 0.331$) and SAS ($t(1990) = 1.51$, $p = 0.286$) populations. Within each method, error rates were found to be significantly different between all pairs of populations.
+
+
+#### Scatterplots
 
 ```{r}
 df_vcftools %>%
