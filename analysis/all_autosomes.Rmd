@@ -19,12 +19,24 @@ library(gtsummary)
 library(grid)
 library(gridExtra)
 
+theme_linedraw_blank <- function(base_size = 11, base_family = "", base_line_size = base_size/22, base_rect_size = base_size/22) {
+  theme_linedraw(
+    base_size = base_size,
+    base_family = base_family,
+    base_line_size = base_line_size,
+    base_rect_size = base_rect_size
+  ) %+replace%
+    theme(
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank()
+    )
+}
 
 config_obj <- yaml::read_yaml("_config.yaml")
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
-theme_set(theme_linedraw())
+theme_set(theme_linedraw_blank())
 
 df_subj <- read_csv("data/1kgp/subject_info.csv")
 ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt")
@@ -109,32 +121,54 @@ load_premade_summary <- function(res_dir){
 ## Summary of all autosomes
 
 ```{r}
-# df_1 <- all_summary(1:602, "output/trio_phase_1/het_loc/annotated/")
-# df_1 <- df_1 %>%
+# df_2 <- all_summary(1:602, "output/trio_phase_1/het_loc/annotated/")
+# df_2 <- df_2 %>%
 #   left_join({df_subj_rel %>% select(SUPER, sex, id2) %>% rename(id=id2, pop = SUPER)})
 
-df_1 <- load_premade_summary("output/trio_phase_1/")
-df_2 <- load_premade_summary("output/trio_phase_2/")
-df_3 <- load_premade_summary("output/trio_phase_3/")
-df_4 <- load_premade_summary("output/trio_phase_4/")
-df_5 <- load_premade_summary("output/trio_phase_5/")
-df_6 <- load_premade_summary("output/trio_phase_6/")
-df_7 <- load_premade_summary("output/trio_phase_7/")
-df_8 <- load_premade_summary("output/trio_phase_8/")
-df_9 <- load_premade_summary("output/trio_phase_9/")
-df_10 <- load_premade_summary("output/trio_phase_10/")
-df_11 <- load_premade_summary("output/trio_phase_11/")
-df_12 <- load_premade_summary("output/trio_phase_12/")
-df_13 <- load_premade_summary("output/trio_phase_13/")
-df_14 <- load_premade_summary("output/trio_phase_14/")
-df_15 <- load_premade_summary("output/trio_phase_15/")
-df_16 <- load_premade_summary("output/trio_phase_16/")
-df_17 <- load_premade_summary("output/trio_phase_17/")
-df_18 <- load_premade_summary("output/trio_phase_18/")
-df_19 <- load_premade_summary("output/trio_phase_19/")
-df_20 <- load_premade_summary("output/trio_phase_20/")
-df_21 <- load_premade_summary("output/trio_phase_21/")
-df_22 <- load_premade_summary("output/trio_phase_22/")
+df_1 <- load_premade_summary("output/trio_phase_1/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_2 <- load_premade_summary("output/trio_phase_2/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_3 <- load_premade_summary("output/trio_phase_3/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_4 <- load_premade_summary("output/trio_phase_4/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_5 <- load_premade_summary("output/trio_phase_5/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_6 <- load_premade_summary("output/trio_phase_6/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_7 <- load_premade_summary("output/trio_phase_7/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_8 <- load_premade_summary("output/trio_phase_8/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_9 <- load_premade_summary("output/trio_phase_9/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_10 <- load_premade_summary("output/trio_phase_10/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_11 <- load_premade_summary("output/trio_phase_11/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_12 <- load_premade_summary("output/trio_phase_12/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_13 <- load_premade_summary("output/trio_phase_13/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_14 <- load_premade_summary("output/trio_phase_14/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_15 <- load_premade_summary("output/trio_phase_15/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_16 <- load_premade_summary("output/trio_phase_16/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_17 <- load_premade_summary("output/trio_phase_17/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_18 <- load_premade_summary("output/trio_phase_18/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_19 <- load_premade_summary("output/trio_phase_19/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_20 <- load_premade_summary("output/trio_phase_20/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_21 <- load_premade_summary("output/trio_phase_21/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
+df_22 <- load_premade_summary("output/trio_phase_22/no_th/") %>% 
+  select(-motherID, -fatherID, -id2, -SAMPLE_NAME)
 
 df_1$chrom <- "1"
 df_2$chrom <- "2"
@@ -159,12 +193,18 @@ df_20$chrom <- "20"
 df_21$chrom <- '21'
 df_22$chrom <- "22"
 
-df_x <- load_premade_summary("output/switch_errors/") %>% rename(SUPER = pop)
+df_x <- load_premade_summary("output/switch_errors/") %>% 
+  rename(SUPER = pop, POPULATION = subpop) %>%
+  select(-size_mb)
 df_x$chrom <- "X"
+df_x$sex <- 1
+df_x <- df_x[,colnames(df_22)]
 
 df_all <- bind_rows(df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9, df_10,
                     df_11, df_12, df_13, df_14, df_15, df_16, df_17, df_18, df_19, df_20,
                     df_21, df_22, df_x)
+
+
 
 df_all$chrom <- factor(df_all$chrom, levels = c(as.character(1:22), "X"))
 
@@ -315,9 +355,10 @@ read_rr <- function(chrom){
 plot_rr_window <- function(chrom, bin_size = 1e6){
   df_rr <- read_rr(chrom)
   df_rr <- df_rr %>%
-    mutate(bin = ceiling(begin / bin_size)) %>%
+    mutate(bin = ceiling(begin / bin_size),
+           width = end - begin) %>%
     group_by(bin) %>%
-    summarize(rr= mean(rr))
+    summarize(rr= sum(rr * width) / sum(width))
   
   p <- df_rr %>%
     ggplot(aes(x = bin, y = rr)) +
@@ -333,7 +374,7 @@ plot_rr_window <- function(chrom, bin_size = 1e6){
 
 ```{r}
 for(i in c(1:22, "X")){
-  print(plot_rr_window(i) + ggtitle(paste0("Chromosome ", i)))
+  print(plot_rr_window(i) + geom_line() + ggtitle(paste0("Chromosome ", i)))
 }
 ```
 
@@ -341,15 +382,17 @@ for(i in c(1:22, "X")){
 
 ```{r}
 for(i in c(1:22, "X")){
-  print(plot_rr_window(i, bin_size = 1e5) + ggtitle(paste0("Chromosome ", i)))
+  print(plot_rr_window(i, bin_size = 1e5) + geom_line() + ggtitle(paste0("Chromosome ", i)))
 }
 ```
 
-#### No bins
+#### 10kb
+
+#### 100KB
 
 ```{r}
 for(i in c(1:22, "X")){
-  print(plot_rr_window(i, bin_size = 1) + ggtitle(paste0("Chromosome ", i)))
+  print(plot_rr_window(i, bin_size = 1e4) + geom_line() + ggtitle(paste0("Chromosome ", i)))
 }
 ```
 
@@ -367,7 +410,7 @@ df_all %>%
   pivot_longer(Beagle:SHAPEIT, names_to = "Method", values_to = "switch") %>%
   ggplot(aes(x = chrom, y = switch, color = Method)) +
   geom_point() +
-  theme_linedraw() +
+  theme_linedraw_blank() +
   scale_colour_manual(values = cbPalette) +
   ylab("Mean Switch Rate") +
   facet_grid(rows = vars(SUPER)) +
@@ -584,7 +627,7 @@ plot_errors_bin <- function(df, chrom, bin_label="MB"){
 # library(doParallel)
 # registerDoParallel(22)
 # list_MB <- foreach (i=1:22) %dopar% {
-#   all_counts(1:602, paste0("output/trio_phase_", i, "/het_loc/annotated/"), df_subj_rel = df_subj_rel, bin_size = 1e6)
+#   all_counts(1:602, paste0("output/trio_phase_", i, "/no_th/het_loc/"), df_subj_rel = df_subj_rel, bin_size = 1e6)
 # }
 # stopImplicitCluster()
 # 
@@ -728,6 +771,7 @@ df_X_rr <- read_rr("X") %>%
   summarize(rr = weighted.mean(rr, na.rm = T))
 
 df_tmp <- df_all_MB %>%
+  filter(chrom == "X") %>%
   mutate(Beagle = s_b / n_het,
          Eagle = s_e / n_het, 
          SHAPEIT = s_s / n_het) %>%
@@ -765,6 +809,7 @@ df_X_rr <- read_rr("X") %>%
   summarize(rr = weighted.mean(rr, width, na.rm = T))
 
 df_tmp <- df_all_MB %>%
+  filter(chrom == "X") %>%
   mutate(Beagle = f_b ,
          Eagle = f_e , 
          SHAPEIT = f_s ) %>%
@@ -902,7 +947,7 @@ df_X_rr <- read_rr(15) %>%
   group_by(bin) %>%
   summarize(rr = weighted.mean(rr, width, na.rm = T))
 
-df_tmp <- df_all_MB %>% filter(chrom == 15, SUPER == "EUR") %>%
+df_tmp <- df_all_MB %>% filter(chrom == "15", SUPER == "EUR") %>%
   group_by(bin) %>%
   summarize(Beagle = sum(f_b),
             Eagle = sum(f_e),
@@ -1024,74 +1069,6 @@ for(i in c(as.character(1:22), "X")){
     print()
 }
 ```
-
-### Single sample thorogh investigation
-
-```{r}
-df_rr <- read_rr("X") %>%
-  mutate(bin = ceiling(begin / 1e6)) %>%
-  group_by(bin) %>%
-  summarise(rr = mean(rr))
-
-df_sample <- load_het_pos(1, "output/switch_errors/het_loc/annotated/") %>%
-  mutate(bin = ceiling(pos / 1e6)) %>%
-  left_join(df_rr, by = "bin")
-```
-
-Average recombination rate in bins at all heterozygous positions:
-
-```{r}
-df_sample %>%
-  ggplot(aes(x = rr)) +
-  geom_boxplot()
-```
-
-At SHAPEIT flips:
-
-```{r}
-df_sample %>%
-  filter(shapeit_flip == 1) %>%
-  ggplot(aes(x = rr)) +
-  geom_boxplot()
-```
-
-Any switch:
-
-```{r}
-df_sample %>%
-  filter(beagle_switch == 1) %>%
-  mutate(type = "Beagle") %>%
-  bind_rows({df_sample %>%
-    filter(eagle_switch == 1) %>%
-    mutate(type = "Eagle")}) %>%
-  bind_rows({df_sample %>%
-    filter(shapeit_switch == 1) %>%
-    mutate(type = "SHAPEIT")}) %>%
-  bind_rows({df_sample %>%
-    mutate(type = "All")}) %>%
-  ggplot(aes(x = rr, y = type, color = type)) +
-  geom_boxplot() + scale_color_manual(values=cbPalette)
-```
-
-Any flip:
-
-```{r}
-df_sample %>%
-  filter(beagle_flip == 1) %>%
-  mutate(type = "Beagle") %>%
-  bind_rows({df_sample %>%
-    filter(eagle_flip == 1) %>%
-    mutate(type = "Eagle")}) %>%
-  bind_rows({df_sample %>%
-    filter(shapeit_flip == 1) %>%
-    mutate(type = "SHAPEIT")}) %>%
-  bind_rows({df_sample %>%
-    mutate(type = "All")}) %>%
-  ggplot(aes(x = rr, y = type, color = type)) +
-  geom_boxplot() + scale_color_manual(values=cbPalette)
-```
-
-
 
 ## CpG Enrichment
 
