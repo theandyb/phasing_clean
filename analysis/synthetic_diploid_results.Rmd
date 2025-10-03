@@ -48,7 +48,6 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 maf_prop_df <- read_csv(paste0(config_obj$base_dir,"/output/switch_errors/maf_props.csv"))
 pair_info_df$id <- 1:1000
 maf_prop_df <- left_join(maf_prop_df, {pair_info_df %>% select(id, SP, POP)})
-pair_info_df <- pair_info_df %>% select(id)
 #regen
 ```
 
@@ -872,7 +871,8 @@ df_vcftools %>%
   ggplot(aes(x = method, y = errors)) + 
   geom_boxplot() +
   xlab("Method") +
-  ylab("Errors")
+  ylab("Errors") +
+  theme_classic()
 ```
 
 ```{r}
@@ -886,7 +886,7 @@ df_vcftools %>%
   geom_boxplot() +
   xlab("Method") +
   ylab("Error Rate per Heterozygous Position") +
-  theme_bw()
+  theme_classic()
 
 df_vcftools %>%
   mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
@@ -898,7 +898,7 @@ df_vcftools %>%
   geom_violin(draw_quantiles = c(0.5)) +
   xlab("Method") +
   ylab("Error Rate per Heterozygous Position") +
-  theme_bw()
+  theme_classic()
 ```
 
 ```{r}
@@ -912,7 +912,8 @@ df_vcftools %>%
   geom_boxplot() +
   xlab("Method") +
   ylab("Error Rate per Heterozygous Position") +
-  scale_color_manual(values = cbPalette)
+  scale_color_manual(values = cbPalette) +
+  theme_classic()
 ```
 
 ```{r}
@@ -934,7 +935,9 @@ df_vcftools %>%
   xlab("") +
   ylab("Error Rate") +
   theme_bw() +
-  facet_grid(cols = vars(type))
+  facet_grid(cols = vars(type)) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
 ```
 
 ```{r}
@@ -958,7 +961,9 @@ df_vcftools %>%
   theme_bw() +
   scale_color_manual(values = cbPalette) +
   labs(colour = "Population") +
-  facet_grid(cols = vars(type))
+  facet_grid(cols = vars(type)) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
 ```
 
 ```{r}
@@ -982,7 +987,10 @@ df_vcftools %>%
   theme_bw() +
   scale_color_manual(values = cbPalette) +
   labs(colour = "Error Type") +
-  facet_grid(cols = vars(pop))
+  facet_grid(cols = vars(pop)) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # rotate xaxis text labels
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ```{r}
@@ -1020,6 +1028,71 @@ df_vcftools %>%
 
 
 Comparing across populations, both the number of errors and the number of heterozygous positions differed greatly. While e.g. YRA samples had the largest number of errors, they also had the largest number of heterozygous sites, resulting in a low overall error rate.  Overall, EAS and SAS had the two highest error rates across all three methods (Table ~\ref{tab:mean_err_pop}). The differences between methods were also found to be significantly different between populations ($F(8, 1990) = 71.08$, $p < 0.001$). Comparing methods within populations we observed that in all populations Beagle had the lowest error rate, followed by SHAPEIT while Eagle had the largest error rate. and while many pairwise comparisons of methods remain significant within each population with no change in ranking between methods, the difference between Beagle and SHAPEIT is not significant in the EAS ($t(1990)=1.42$, $p = 0.331$) and SAS ($t(1990) = 1.51$, $p = 0.286$) populations. Within each method, error rates were found to be significantly different between all pairs of populations.
+
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle / (n_other_beagle + n_flip_beagle),
+         Eagle = n_other_eagle / (n_other_eagle + n_flip_eagle),
+         SHAPEIT = n_other_shapeit / (n_other_shapeit + n_flip_shapeit),
+         Total = (n_other_beagle + n_other_eagle + n_other_shapeit) / (n_other_beagle + n_flip_beagle + n_other_eagle + n_flip_eagle + n_other_shapeit + n_flip_shapeit)) %>%
+  select(Beagle:Total) %>%
+  colMeans()
+```
+
+
+We next separated overall errors into switch errors and flip errors. Overall, switch errors constituted 54.3$\%$ of the overall errors. Switch rates differed significantly between the three methods ($F(2, 1998) = 4651.30$, $p < 0.001$), with SHAPEIT ($1.57 \times 10^{-3}$ switches/heterozygous position) having a lower average switch rate than both Beagle ($1.70 \times 10^{-3}$, $t(1998) = 16.84$, $p < 0.01$) and Eagle ($2.29 \times 10^{-3}$, $t(1998) = 90.67$, $p < 0.001$).  Flip rates also varried significantly between the three methods ($F(2, 1998) = 638.99$, $p < 0.001$), but unlike switches, SHAPEIT ($1.56 \times 10^{-3}$ flips/het) was found to have a significantly higher flip rate than Beagle ($1.38 \times 10^{-3}$ flip/het; $t(1998) = 30.57$, $p < 0.001$) and Eagle ($1.37 \times 10^{-3}$ flips/het; $t(1998) = 31.34$, $p < 0.001$), whereas the difference between Beagle and Eagle’s flip rates was not significant ($t(1998) = 0.77$, $p = 0.72$). Both switch rates ($F(4, 995) = 382.04$, $p < 0.001$) and flip rates ($F(4, 995) = 256.57$, $p < 0.001$) were found to have significant differences between populations, but only switch rates were found to have a significant difference in method contrasts between populations ($F(8, 1990) = 89.15$, $p < 0.001$). The ordering of the methods by switch rates and flip rates was found to be consistent across the five populations. For both switch and flip errors, the population with the highest average rate is EAS, while the population with the lowest average rate is AFR.
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle,
+         Eagle = n_other_eagle ,
+         SHAPEIT = n_other_shapeit ) %>%
+  select(pop, subpop, n_hets, Beagle, Eagle, SHAPEIT) %>%
+  group_by(pop, subpop) %>%
+  summarize(n_het = mean(n_hets),
+            Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  arrange(desc(Eagle)) %>%
+  knitr::kable()
+
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle,
+         Eagle = n_other_eagle ,
+         SHAPEIT = n_other_shapeit ) %>%
+  select(pop, subpop, n_hets, Beagle, Eagle, SHAPEIT) %>%
+  group_by(pop, subpop) %>%
+  summarize(n_het = mean(n_hets),
+            Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch") %>%
+  ggplot(aes(x = n_het, y = switch, colour = pop)) +
+  geom_point() +
+  facet_wrap(vars(method)) +
+  theme_bw() + # remove grid
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+df_vcftools %>%
+  mutate(Beagle = n_flip_beagle,
+         Eagle = n_flip_eagle ,
+         SHAPEIT = n_flip_shapeit ) %>%
+  select(pop, subpop, n_hets, Beagle, Eagle, SHAPEIT) %>%
+  group_by(pop, subpop) %>%
+  summarize(n_het = mean(n_hets),
+            Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "flip") %>%
+  ggplot(aes(x = n_het, y = flip, colour = pop)) +
+  geom_point() +
+  facet_wrap(vars(method)) + 
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
 
 
 #### Scatterplots
@@ -2129,6 +2202,31 @@ maf_prop_df %>%
   ylab("Prop. rare switches / Prop. rare heterozygous sites")
 ```
 
+Same plot as above, but don't separate by population:
+
+```{r}
+maf_prop_df %>%
+  filter(category == "het_rare" | str_detect(category, "switch_rare")) %>%
+  select(id, category, proportion) %>%
+  pivot_wider(id_cols = c("id"), names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_switch_rare / het_rare,
+         Eagle = eagle_switch_rare / het_rare,
+         SHAPEIT = shapeit_switch_rare / het_rare) %>%
+  select(id, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  theme_classic() +
+  ggtitle("Enrichment of Switches at Rare Variants") + 
+  xlab("Method") +
+  ylab("Prop. rare switches / Prop. rare heterozygous sites") + # make axis labels bigger
+  theme(axis.text = element_text(size = 14)) +
+  theme(axis.title = element_text(size = 16)) +
+  theme(plot.title = element_text(size = 18, hjust = 0.5))
+  
+```
+
+
 #### Enrichment of Flips at Rare
 
 ```{r}
@@ -2148,6 +2246,30 @@ maf_prop_df %>%
   xlab("Method") +
   ylab("Prop. rare flips / Prop. rare heterozygous sites")
 ```
+
+Same plot as above, but don't separate by population:
+
+```{r}
+maf_prop_df %>%
+  filter(category == "het_rare" | str_detect(category, "flip_rare")) %>%
+  select(id, category, proportion) %>%
+  pivot_wider(id_cols = c("id"), names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_flip_rare / het_rare,
+         Eagle = eagle_flip_rare / het_rare,
+         SHAPEIT = shapeit_flip_rare / het_rare) %>%
+  select(id, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  theme_classic() +
+  ggtitle("Enrichment of Flips at Rare Variants") + 
+  xlab("Method") +
+  ylab("Prop. rare flips / Prop. rare heterozygous sites") + # make axis labels bigger
+  theme(axis.text = element_text(size = 14)) +
+  theme(axis.title = element_text(size = 16)) +
+  theme(plot.title = element_text(size = 18, hjust = 0.5))
+```
+
 
 ### Odds Ratios
 
