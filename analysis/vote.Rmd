@@ -13,8 +13,21 @@ library(grid)
 library(gridExtra) 
 library(yaml)
 
+library(ggpubfigs)
+pal_choice <- "vibrant_seven"
+
+
 config_obj <- yaml::read_yaml("_config.yaml")
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000")
+
+theme_andy <- function(){
+  theme_bw() +
+    theme(
+      panel.grid.major = element_blank(), 
+      panel.grid.minor = element_blank(),
+      text = element_text(size=14)
+    )
+}
 ```
 
 
@@ -88,9 +101,9 @@ df_x %>%
   geom_boxplot() +
   xlab("Error Type") +
   ylab("Errors") +
-  scale_color_manual(values = cbPalette) +
+  scale_color_manual(values = friendly_pal(pal_choice)) +
   labs(color = "Method") +
-  theme_light()
+  theme_andy()
 ```
 
 Let's see if there are population level differences:
@@ -102,7 +115,8 @@ df_x %>%
   xlab("Method") +
   ylab("Switches") +
   labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
+  scale_color_manual(values = friendly_pal(pal_choice)) +
+  theme_andy()
 
 df_x %>%
   ggplot(aes(x = method, y = flip, colour = SP)) +
@@ -110,7 +124,81 @@ df_x %>%
   xlab("Method") +
   ylab("Flips") +
   labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
+  scale_color_manual(values = friendly_pal(pal_choice)) +
+  theme_andy()
+```
+
+Total Errors:
+
+```{r}
+df_switch_x %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(Beagle, Eagle, SHAPEIT, pair_id) %>%
+  pivot_longer(-pair_id, names_to = "method", values_to = "rate") %>% 
+  bind_rows({
+    df_vote_x %>%
+      mutate(Vote = (n_other_vote + n_flip_vote) / n_hets) %>%
+      select(Vote, pair_id) %>%
+      pivot_longer(-pair_id, names_to = "method", values_to = "rate")
+  }) %>%
+  ggplot(aes(x = method, y = rate, fill = method)) +
+  geom_violin() +
+  geom_boxplot(width=0.1, color="black", alpha=0.2) +
+  scale_fill_manual(values = friendly_pal(pal_choice)) +
+  xlab("Method") +
+  ylab("Total Error Rate")
+```
+
+Get average error rates for each method:
+
+```{r}
+df_switch_x %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(Beagle, Eagle, SHAPEIT, pair_id) %>%
+  pivot_longer(-pair_id, names_to = "method", values_to = "rate") %>% 
+  bind_rows({
+    df_vote_x %>%
+      mutate(Vote = (n_other_vote + n_flip_vote) / n_hets) %>%
+      select(Vote, pair_id) %>%
+      pivot_longer(-pair_id, names_to = "method", values_to = "rate")
+  }) %>%
+  group_by(method) %>%
+  summarise(mean_rate = mean(rate),
+            median_rate = median(rate)) %>%
+  knitr::kable()
+```
+
+```{r}
+# T test comparing Vote to others
+df_vote_rates <- df_vote_x %>%
+  mutate(Vote = (n_other_vote + n_flip_vote) / n_hets) %>%
+  select(Vote, pair_id)
+df_beagle_rates <- df_switch_x %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets) %>%
+  select(Beagle, pair_id)
+df_eagle_rates <- df_switch_x %>%
+  mutate(Eagle = (n_other_eagle + n_flip_eagle) / n_hets) %>%
+  select(Eagle, pair_id)
+df_shapeit_rates <- df_switch_x %>%
+  mutate(SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets) %>%
+  select(SHAPEIT, pair_id)
+
+df_result <- t.test(df_vote_rates$Vote, df_beagle_rates$Beagle, paired = TRUE) %>% 
+  broom::tidy() %>% mutate(method_comp = "Vote vs Beagle") %>%
+  bind_rows({
+    t.test(df_vote_rates$Vote, df_eagle_rates$Eagle, paired = TRUE) %>%
+      broom::tidy() %>% mutate(method_comp = "Vote vs Eagle")
+  }) %>%
+  bind_rows({
+    t.test(df_vote_rates$Vote, df_shapeit_rates$SHAPEIT, paired = TRUE) %>%
+      broom::tidy() %>% mutate(method_comp = "Vote vs SHAPEIT")
+  })
+
+df_result
 ```
 
 
@@ -147,8 +235,9 @@ df_x_rate %>%
   geom_boxplot() +
   xlab("Error Type") +
   ylab("Error Rates") +
-  scale_color_manual(values = cbPalette) +
-  labs(color = "Method")
+  scale_color_manual(values = friendly_pal(pal_choice)) +
+  labs(color = "Method") +
+  theme_andy()
 ```
 
 Let's see if there are population-level differences:
@@ -163,7 +252,8 @@ df_x_rate %>%
   xlab("Method") +
   ylab("Switch Rate") +
   labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
+  scale_colour_manual(values = friendly_pal(pal_choice)) +
+  theme_bw()
 
 df_x_rate %>%
   pivot_longer(Beagle:Vote, names_to = "method", values_to = "rate") %>%
@@ -174,7 +264,8 @@ df_x_rate %>%
   xlab("Method") +
   ylab("Flip Rate") +
   labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
+  scale_colour_manual(values = friendly_pal(pal_choice)) +
+  theme_bw()
 ```
 
 And finally, let's look at each pair of methods and each individual synthetic diploid:
@@ -187,7 +278,7 @@ sub_plot <- function(df, x, y, x_lab, y_lab){
     geom_abline(slope = 1, intercept = 0, linetype = "dotdash") +
     xlab(x_lab) +
     ylab(y_lab) +
-    scale_color_manual(values = cbPalette) +
+    scale_color_manual(values = friendly_pal(pal_choice)) +
     labs(colour = "Population") +
     theme_classic()
   return(p1)
@@ -224,178 +315,56 @@ pairwise_plots(df_x, "flip")
 ```
 
 
-## Chromosome 15
-
-```{r}
-df_switch_15 <- read_csv(paste0(config_obj$base_dir, "/output/trio_phase_15/switch_errors/summary.csv"), show_col_types = F)
-
-df_vote_15 <- read_csv(paste0(config_obj$base_dir, "/output/vote_15/summary.csv"), show_col_types = F)
-
-df_15 <- df_switch_15 %>%
-  select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
-  pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
-  select(-drop) %>%
-  pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
-  rename(switches = other) %>%
-  bind_rows({
-    df_vote_15 %>%
-      select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
-      pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
-      select(-drop) %>%
-      pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
-      rename(switches = other)
-  }) %>%
-  arrange(pair_id)
-
-df_15 <- df_15 %>%
-  left_join({df_subj_rel %>% select(id2, SUPER) %>% rename(pair_id = id2, SP = SUPER)})
-```
-
-```{r}
-df_15 %>%
-  pivot_longer(switches:flip, names_to = "error_type", values_to = "n") %>%
-  mutate(method = factor(method, levels = c("beagle", "eagle", "shapeit", "vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
-  ggplot(aes(x = error_type, y = n, color = method)) +
-  geom_boxplot() +
-  xlab("Error Type") +
-  ylab("Errors") +
-  scale_color_manual(values = cbPalette) +
-  labs(color = "Method")
-```
-
-Let's see if there are population-level differences:
-
-```{r}
-df_15 %>%
-  ggplot(aes(x = method, y = switches, colour = SP)) +
-  geom_boxplot() +
-  xlab("Method") +
-  ylab("Switches") +
-  labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
-
-df_15 %>%
-  ggplot(aes(x = method, y = flip, colour = SP)) +
-  geom_boxplot() +
-  xlab("Method") +
-  ylab("Flips") +
-  labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
-```
-
-```{r, fig.width=8, fig.height=8}
-pairwise_plots(df_15, "switches")
-```
-
-```{r, fig.width=8, fig.height=7}
-pairwise_plots(df_15, "flip")
-```
-
-
-## Chromosome 22
-
-```{r}
-df_switch_22 <- read_csv(paste0(config_obj$base_dir, "/output/trio_phase_22/switch_errors/summary.csv"), show_col_types = F)
-
-df_vote_22 <- read_csv(paste0(config_obj$base_dir, "/output/vote_22/summary.csv"), show_col_types = F)
-
-df_22 <- df_switch_22 %>%
-  select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
-  pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
-  select(-drop) %>%
-  pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
-  rename(switches = other) %>%
-  bind_rows({
-    df_vote_22 %>%
-      select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
-      pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
-      select(-drop) %>%
-      pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
-      rename(switches = other)
-  }) %>%
-  arrange(pair_id)
-
-df_22 <- df_22 %>%
-  left_join({df_subj_rel %>% select(id2, SUPER) %>% rename(pair_id = id2, SP = SUPER)})
-```
-
-```{r}
-df_22 %>%
-  pivot_longer(switches:flip, names_to = "error_type", values_to = "n") %>%
-  mutate(method = factor(method, levels = c("beagle", "eagle", "shapeit", "vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
-  ggplot(aes(x = error_type, y = n, color = method)) +
-  geom_boxplot() +
-  xlab("Error Type") +
-  ylab("Errors") +
-  scale_color_manual(values = cbPalette) +
-  labs(color = "Method")
-```
-
-Let's see if there are population-level differences:
-
-```{r}
-df_22 %>%
-  ggplot(aes(x = method, y = switches, colour = SP)) +
-  geom_boxplot() +
-  xlab("Method") +
-  ylab("Switches") +
-  labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
-
-df_22 %>%
-  ggplot(aes(x = method, y = flip, colour = SP)) +
-  geom_boxplot() +
-  xlab("Method") +
-  ylab("Flips") +
-  labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
-```
-
-```{r, fig.width=8, fig.height=8}
-pairwise_plots(df_22, "switches")
-```
-
-```{r, fig.width=8, fig.height=7}
-pairwise_plots(df_22, "flip")
-```
-
 ## Chromosome 1
 
 ```{r}
-df_switch_1 <- read_csv(paste0(config_obj$base_dir, "/output/trio_phase_1/switch_errors/summary.csv"), show_col_types = F)
+chrom <- 1
 
-df_vote_1 <- read_csv(paste0(config_obj$base_dir, "/output/vote_1/summary.csv"), show_col_types = F)
+get_autosome_vote_df <- function(chrom){
+  df_switch_1 <- read_csv(paste0(config_obj$base_dir, 
+                                 "/output/trio_phase_", chrom, "/switch_errors/summary.csv"), 
+                          show_col_types = F)
 
-df_1 <- df_switch_1 %>%
-  select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
-  pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
-  select(-drop) %>%
-  pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
-  rename(switches = other) %>%
-  bind_rows({
-    df_vote_1 %>%
-      select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id) %>%
-      pivot_longer(-pair_id, names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
-      select(-drop) %>%
-      pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method")) %>%
-      rename(switches = other)
-  }) %>%
-  arrange(pair_id)
+  df_vote_1 <- read_csv(paste0(config_obj$base_dir, "/output/vote_", chrom, "/summary.csv"), show_col_types = F)
 
-df_1 <- df_1 %>%
-  left_join({df_subj_rel %>% select(id2, SUPER) %>% rename(pair_id = id2, SP = SUPER)})
+  df_1 <- df_switch_1 %>%
+    select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id, n_hets) %>%
+    pivot_longer(-c(pair_id, n_hets), names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
+    select(-drop) %>%
+    pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method", "n_hets")) %>%
+    rename(switches = other) %>%
+    bind_rows({
+      df_vote_1 %>%
+        select(((contains("n_other") | contains("n_flip")) & !contains("cpg")), pair_id, n_hets) %>%
+        pivot_longer(-c(pair_id, n_hets), names_to = c("drop","error", "method"), names_sep = "_", values_to = "n") %>%
+        select(-drop) %>%
+        pivot_wider(names_from = "error", values_from = "n", id_cols = c("pair_id","method", "n_hets")) %>%
+        rename(switches = other)
+    }) %>%
+    arrange(pair_id)
+
+  df_1 <- df_1 %>%
+    left_join({df_subj_rel %>% select(id2, SUPER) %>% rename(pair_id = id2, SP = SUPER)})
+  df_1
+}
+
+df_1 <- get_autosome_vote_df(1)
 ```
 
 ```{r}
 df_1 %>%
   pivot_longer(switches:flip, names_to = "error_type", values_to = "n") %>%
   mutate(method = factor(method, levels = c("beagle", "eagle", "shapeit", "vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
-  ggplot(aes(x = error_type, y = n, color = method)) +
+  mutate(rate = n / n_hets) %>%
+  ggplot(aes(x = error_type, y = rate, color = method)) +
   geom_boxplot() +
   xlab("Error Type") +
-  ylab("Errors") +
-  scale_color_manual(values = cbPalette) +
-  labs(color = "Method")
+  ylab("Error Rate\n Per Heterozygous Position") +
+  scale_color_manual(values = friendly_pal(pal_choice)) +
+  labs(color = "Method") + 
+  theme_andy() +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.8, 0.8))
 ```
 
 Let's see if there are population-level differences:
@@ -407,7 +376,8 @@ df_1 %>%
   xlab("Method") +
   ylab("Switches") +
   labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
+  scale_colour_manual(values = friendly_pal(pal_choice)) +
+  theme_andy()
 
 df_1 %>%
   ggplot(aes(x = method, y = flip, colour = SP)) +
@@ -415,7 +385,8 @@ df_1 %>%
   xlab("Method") +
   ylab("Flips") +
   labs(colour = "Population") +
-  scale_colour_manual(values = cbPalette)
+  scale_colour_manual(values = friendly_pal(pal_choice)) +
+  theme_andy()
 ```
 
 ```{r, fig.width=8, fig.height=8}
@@ -424,4 +395,201 @@ pairwise_plots(df_1, "switches")
 
 ```{r, fig.width=8, fig.height=7}
 pairwise_plots(df_1, "flip")
+```
+
+
+## Chromosome 2
+
+```{r}
+df_2 <- get_autosome_vote_df(2)
+```
+
+```{r}
+df_2 %>%
+  mutate(switches = switches / n_hets,
+         flip = flip / n_hets) %>%
+  pivot_longer(switches:flip, names_to = "error_type", values_to = "n") %>%
+  mutate(method = factor(method, levels = c("beagle", "eagle", "shapeit", "vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
+  ggplot(aes(x = error_type, y = n, color = method)) +
+  geom_boxplot() +
+  xlab("Error Type") +
+  ylab("Error Rate") +
+  scale_color_manual(values = friendly_pal(pal_choice)) +
+  labs(color = "Method") +
+  theme_andy() +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.8, 0.8))
+```
+
+```{r, fig.width=8, fig.height=8}
+pairwise_plots(df_2, "switches")
+```
+
+```{r, fig.width=8, fig.height=7}
+pairwise_plots(df_2, "flip")
+```
+
+## Chromosome 3
+
+```{r}
+autosome_analysis <- function(chrom){
+  df <- get_autosome_vote_df(chrom)
+  
+  p1 <- df %>%
+    mutate(switches = switches / n_hets,
+           flip = flip / n_hets) %>%
+    pivot_longer(switches:flip, names_to = "error_type", values_to = "n") %>%
+    mutate(method = factor(method, levels = c("beagle", "eagle", "shapeit", "vote"), labels = c("Beagle", "Eagle", "SHAPEIT", "Vote"))) %>%
+    ggplot(aes(x = error_type, y = n, color = method)) +
+    geom_boxplot() +
+    xlab("Error Type") +
+    ylab("Error Rate") +
+    scale_color_manual(values = friendly_pal(pal_choice)) +
+    labs(color = "Method") +
+    theme_andy() +
+    theme(legend.position = "inside",
+          legend.position.inside = c(0.8, 0.8))
+  
+  pairwise_plots(df, "switches")
+  pairwise_plots(df, "flip")
+  return(p1)
+}
+```
+
+```{r}
+chrom <- 3
+autosome_analysis(chrom)
+```
+
+## Chromosome 4
+
+```{r}
+chrom <- 4
+autosome_analysis(chrom)
+```
+
+## Chromosome 5
+
+```{r}
+chrom <- 5
+autosome_analysis(chrom)
+```
+
+## Chromosome 6
+
+```{r}
+chrom <- 6
+autosome_analysis(chrom)
+```
+
+## Chromosome 7
+
+```{r}
+chrom <- 7
+autosome_analysis(chrom)
+```
+
+## Chromosome 8
+
+```{r}
+chrom <- 8
+autosome_analysis(chrom)
+```
+
+## Chromosome 9
+
+```{r}
+chrom <- 9
+autosome_analysis(chrom)
+```
+
+## Chromosome 10
+
+```{r}
+chrom <- 10
+autosome_analysis(chrom)
+```
+
+## Chromosome 11
+
+```{r}
+chrom <- 11
+autosome_analysis(chrom)
+```
+
+## Chromosome 12
+
+```{r}
+chrom <- 12
+autosome_analysis(chrom)
+```
+
+## Chromosome 13
+
+```{r}
+chrom <- 13
+autosome_analysis(chrom)
+```
+
+## Chromosome 14
+
+```{r}
+chrom <- 14
+autosome_analysis(chrom)
+```
+
+## Chromosome 15
+
+```{r}
+chrom <- 15
+autosome_analysis(chrom)
+```
+
+## Chromosome 16
+
+```{r}
+chrom <- 16
+autosome_analysis(chrom)
+```
+
+## Chromosome 17
+
+```{r}
+chrom <- 17
+autosome_analysis(chrom)
+```
+
+## Chromosome 18
+
+```{r}
+chrom <- 18
+autosome_analysis(chrom)
+```
+
+## Chromosome 19
+
+```{r}
+chrom <- 19
+autosome_analysis(chrom)
+```
+
+## Chromosome 20
+
+```{r}
+chrom <- 20
+autosome_analysis(chrom)
+```
+
+## Chromosome 21
+
+```{r}
+chrom <- 21
+autosome_analysis(chrom)
+```
+
+## Chromosome 22
+
+```{r}
+chrom <- 22
+autosome_analysis(chrom)
 ```
