@@ -1,23 +1,24 @@
 #!/bin/bash
 #
-#SBATCH --job-name=pdPhase
+#SBATCH --job-name=NORARE
 #SBATCH --ntasks=1
 #SBATCH --time=10:00:00
 #SBATCH --cpus-per-task=4
-#SBATCH --mem-per-cpu=8GB
+#SBATCH --mem-per-cpu=10GB
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=beckandy@umich.edu
 #SBATCH --array=1-1000
 #SBATCH --constraint=avx2
-#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/slurm/pseudo_dip.%A.%a.err
-#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors/slurm/pseudo_dip.%A.%a.out
+#SBATCH --exclude=r[6320,6319,6333,6331,6323]
+#SBATCH -e /net/snowwhite/home/beckandy/research/phasing_clean/output/X_noRare/slurm/pseudo_dip.%A.%a.err
+#SBATCH --output=/net/snowwhite/home/beckandy/research/phasing_clean/output/X_noRare/slurm/pseudo_dip.%A.%a.out
 
 # Code for generating switch error results for pseudo-diploids constructed using male X chromosomes (non-PAR)
 # This version uses all samples not used in the generation of the PD as the reference panel (males and females)
 # Here we do not do any downsampling to make reference panels of a comparable size to male-only reference panels
 
 base_dir="/net/snowwhite/home/beckandy/research/phasing_clean"
-VCF="${base_dir}/data/1kgp/chrX_2504_snps_noPAR_noSing.bcf"
+VCF="${base_dir}/data/1kgp/chrX_2504_snps_noPAR_noSing_noRare.bcf"
 shapeit_dir="/net/snowwhite/home/beckandy/software/shapeit5/shapeit5"
 shapeit_map="${shapeit_dir}/resources/maps/b38/chrX.b38.gmap.gz"
 
@@ -26,7 +27,7 @@ beagle_jar="/net/snowwhite/home/beckandy/bin/beagle.05May22.33a.jar"
 
 eagle_map="/net/snowwhite/home/beckandy/software/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz"
 
-out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/switch_errors"
+out_dir="/net/snowwhite/home/beckandy/research/phasing_clean/output/X_noRare"
 # Read line from sample_pairs.csv
 line=$(awk -v id=${SLURM_ARRAY_TASK_ID} 'NR==id{ print; exit }' /net/snowwhite/home/beckandy/research/phasing_clean/data/sample_pairs.csv)
 arrSub=(${line//,/ })
@@ -110,19 +111,8 @@ $shapeit_dir/phase_common/bin/phase_common \
   --map $shapeit_map \
   --reference /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf \
   --region chrX \
-  --filter-maf 0.001 \
   --thread 4 \
-  --output /tmp/andy_scaffold_${SLURM_ARRAY_TASK_ID}.bcf \
-  --log test.log
-
-$shapeit_dir/phase_rare/bin/phase_rare \
-  --input /tmp/andy_input_${SLURM_ARRAY_TASK_ID}_test.vcf.gz \
-  --map $shapeit_map \
-  --scaffold /tmp/andy_scaffold_${SLURM_ARRAY_TASK_ID}.bcf \
-  --region chrX \
-  --thread 4 \
-  --output /tmp/andy_shapeit_${SLURM_ARRAY_TASK_ID}.bcf \
-  --log rare.log
+  --output /tmp/andy_shapeit_${SLURM_ARRAY_TASK_ID}.bcf
 
 echo "SHAPEIT done"
 
@@ -137,6 +127,8 @@ java -Xmx7g -jar $beagle_jar \
   nthreads=4 \
   impute=false \
   out=/tmp/andy_beagle_${SLURM_ARRAY_TASK_ID}
+
+bcftools index /tmp/andy_beagle_${SLURM_ARRAY_TASK_ID}.vcf.gz
 
 # write phasing results in tsv form
 bcftools query -f '%CHROM\t%POS\t[%GT]\n' /tmp/andy_shapeit_${SLURM_ARRAY_TASK_ID}.bcf > $out_dir/phase_results/shapeit_${SLURM_ARRAY_TASK_ID}.txt
@@ -213,6 +205,7 @@ rm /tmp/andy_input_${SLURM_ARRAY_TASK_ID}.vcf.gz
 rm /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.bcf*
 rm /tmp/andy_ref_${SLURM_ARRAY_TASK_ID}.vcf*
 rm /tmp/andy_shapeit_${SLURM_ARRAY_TASK_ID}.vcf
+rm /tmp/andy_beagle_${SLURM_ARRAY_TASK_ID}.vcf.gz.csi
 #rm /tmp/andy_sites_${SLURM_ARRAY_TASK_ID}.bed
 
 else

@@ -1,4 +1,7 @@
 data/1kgp
+data/glimpse_chunks
+.vscode
+.lintr.R
 .Rproj.user
 .Rhistory
 .RData

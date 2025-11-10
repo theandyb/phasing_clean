@@ -48,8 +48,11 @@ err_per_bin <- function(id, bin_size = 1e6){
 
 df_err_1mb <- err_per_bin(1)
 for(i in 2:1000){
+  print(i)
   df_err_1mb <- bind_rows(df_err_1mb, err_per_bin(i))
 }
+
+write_csv(df_err_1mb, "output/switch_errors/errors_mb_bin.csv")
 ```
 
 ## Plots

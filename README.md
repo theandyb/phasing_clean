@@ -148,6 +148,13 @@ bcftools view -Ob -T ^data/1kgp/singletons.txt data/1kgp/chrX_2504_snps_noPAR.bc
 
 In our analyses, we found this to remove 438,425 sites. The final bcf file contains 1,722,954 sites.
 
+*Late addition: we also want to have a version of this file with all snps with maf<0.001 removed*
+
+```
+# Remove variants with maf < 0.01
+bcftools view -i 'MAF[0]>0.001' -Ob data/1kgp/chrX_2504_snps_noPAR_noSing.bcf > data/1kgp/chrX_2504_snps_noPAR_noSing_noRare.bcf
+```
+
 ### MAF distribution in X
 
 ```
@@ -466,13 +473,13 @@ echo "Done"
 
 ```
 for chrom in `seq 1 22`; do
-(for i in `seq 1 602`; do awk -F',' '{n_cpg += $3}END{print(n_cpg)}' "output/trio_phase_${chrom}/het_loc/annotated/pair_${i}.csv" >> "output/trio_phase_${chrom}/het_cpg_count.tmp"; done) &
+(for i in `seq 1 602`; do awk -F',' '{n_cpg += $3}END{print(n_cpg)}' "output/trio_phase_${chrom}/no_th/het_loc/annotated/pair_${i}.csv" >> "output/trio_phase_${chrom}/no_th/het_cpg_count.tmp"; done) &
 done
 wait
 echo "Done"
 
 for chrom in `seq 1 22`; do
-(awk '{print(NR"\t"$1)}' output/trio_phase_${chrom}/het_cpg_count.tmp > output/trio_phase_${chrom}/het_cpg_count.tsv) &
+(awk '{print(NR"\t"$1)}' output/trio_phase_${chrom}/no_th/het_cpg_count.tmp > output/trio_phase_${chrom}/no_th/het_cpg_count.tsv) &
 done
 wait
 echo "Done"
@@ -511,3 +518,49 @@ bcftools query -l data/1kgp/chrX_2504_snps_noPAR_noSing.bcf | tr '\n' ',' | sed 
 
 bcftools query -f "%POS[,%GT]\n" -t chrX:3714940,chrX:3733925,chrX:3737426 data/1kgp/chrX_2504_snps_noPAR_noSing.bcf >> scratch/haplotype_list.txt
 ```
+
+## Running phase_rare
+
+As of now, the only output we are able to obtain are core dumps due to segfaults.
+
+### Generating GLIMPSE chunks
+
+Unfortunately, SHAPEIT5 does not provide a chunk file for chrX in it's resources. We therefore need to generate one ourselves.
+
+Check if chrX_2504_snps_noPAR_noSing.bcf has AC and AN tags, if not add them:
+
+```
+bcftools +fill-tags data/1kgp/chrX_2504_snps_noPAR_noSing.bcf -Ob -o data/1kgp/chrX_2504_snps_noPAR_noSing_ACAN.bcf -- -t AN,AC
+mv data/1kgp/chrX_2504_snps_noPAR_noSing_ACAN.bcf data/1kgp/chrX_2504_snps_noPAR_noSing.bcf
+bcftools index data/1kgp/chrX_2504_snps_noPAR_noSing.bcf
+```
+
+We need to use the chunk program from GLIMPSE to split the genome into chunks. First let's generate a sites only version of the 1kgp bcf for chrX:
+
+```
+bcftools view -G -Oz -o data/1kgp/chrX_2504_snps_noPAR_noSing_sites.vcf.gz data/1kgp/chrX_2504_snps_noPAR_noSing.bcf
+bcftools index data/1kgp/chrX_2504_snps_noPAR_noSing_sites.vcf.gz
+``` 
+
+Now we can use GLIMPSE_chunk to split the genome into chunks:
+
+```
+mkdir -p data/glimpse_chunks
+glimpse_dir=/net/snowwhite/home/beckandy/software/glimpse/chunk/bin
+${glimpse_dir}/GLIMPSE2_chunk --input data/1kgp/chrX_2504_snps_noPAR_noSing_sites.vcf.gz \
+ --region chrX \
+ --map /net/snowwhite/home/beckandy/software/shapeit5/shapeit5/resources/maps/b38/chrX.b38.gmap.gz\
+ --sequential \
+ --output data/glimpse_chunks/chrX_chunks.txt
+```
+
+I'm getting segmentation faults when using phase_rare with this chunk file, so I will try the 6cM version in the ukbb subdirectory:
+
+```
+wget https://raw.githubusercontent.com/odelaneau/shapeit5/refs/heads/main/resources/chunks/b38/UKB_WGS_200k/small_chunks_6cM/chunks_chrX.txt -O data/glimpse_chunks/chrX_chunks_6cM.txt
+```
+## Pipeline without rare variants
+
+We evaluate the performance of the three methods on synthetic diploids constructed using X chromosomes sampled from male 1kGP samples with variants with maf > 0.001. 
+
+1. `sbatch code/batch_phase_sd_noRare.sh` after ensuring required output directories exist

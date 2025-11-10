@@ -5,23 +5,6 @@ source("code/common_functions.R")
 
 config_obj <- yaml::read_yaml("_config.yaml")
 
-vote_switch_dir <- paste0(config_obj$base_dir, "/output/vote_", "1", "/switches/annotated/")
-het_loc_dir <- paste0(config_obj$base_dir,"/output/trio_phase_1/het_loc/")
-#het_loc_dir <- paste0(config_obj$base_dir,"/output/switch_errors/het_loc/")
-
-
-gc_content_1kb <- read_tsv("data/chr1_gc1kb_pilot.bed")
-colnames(gc_content_1kb) <- c("CHR", "START", "END", "AT", "GC", "A", "C", "G", "T", "TOTAL", "OTHER", "LENGTH")
-gc_content_1kb  <- gc_content_1kb %>%
-  mutate(bin_id = (START / 1000) + 1)
-
-# sample_info_df <- read_csv("data/1kgp/subject_info.csv") %>%
-#   select(SAMPLE_NAME, POPULATION, SUPER)
-#
-# pair_info_df <- read_delim("data/sample_pairs.csv", col_names = c("POP", "ID1", "ID2"))
-# pair_info_df <- left_join(pair_info_df, sample_info_df, by = c("ID1"="SAMPLE_NAME")) %>%
-#   rename(SP = SUPER) %>%
-#   select(-POPULATION)
 
 df_subj <- read_csv("data/1kgp/subject_info.csv")
 ped_df <- read_table("data/1kgp/1kGP.3202_samples.pedigree_info.txt")
@@ -159,16 +142,42 @@ vote_summary <- function(pair_id, vote_dir, gc_content_1kb, het_loc_dir, bin_siz
   ))
 }
 
-df_vcftools <- lapply(c(1:602),
-                      function(x){
-                        vote_summary(x, vote_switch_dir, gc_content_1kb, het_loc_dir)
-                      }) %>%
-  bind_rows()
+library(doParallel)
+library(foreach)
+registerDoParallel(22)
 
-df_vcftools$id2 <- 1:602
-df_vcftools <- left_join(df_vcftools, df_subj_rel, by="id2")
+get_results <- function(chrom){
+  vote_switch_dir <- paste0(config_obj$base_dir, "/output/vote_", chrom, "/switches/annotated/")
+  het_loc_dir <- paste0(config_obj$base_dir,"/output/trio_phase_", chrom, "/het_loc/")
+  gc_content_1kb <- read_tsv(paste0("data/chr", chrom, "_gc1kb_pilot.bed"))
+  colnames(gc_content_1kb) <- c("CHR", "START", "END", "AT", "GC", "A", "C", "G", "T", "TOTAL", "OTHER", "LENGTH")
+  gc_content_1kb  <- gc_content_1kb %>%
+    mutate(bin_id = (START / 1000) + 1)
 
-write_csv(df_vcftools, paste0(config_obj$base_dir, "/output/vote_", "1", "/summary.csv"))
+  df_vcftools <- lapply(c(1:602),
+                        function(x){
+                          vote_summary(x, vote_switch_dir, gc_content_1kb, het_loc_dir)
+                        }) %>%
+    bind_rows()
+
+  df_vcftools$id2 <- 1:602
+  df_vcftools
+}
+
+print("Running 22 jobs to get vote summary stats...")
+
+list_results <- foreach(chrom = 1:22, .packages = c("tidyverse")) %dopar% {
+  get_results(chrom)
+}
+stopImplicitCluster()
+
+print("Done! Writing output:")
+
+for(i in 1:22){
+  list_results[[i]] <- left_join(list_results[[i]], df_subj_rel, by="id2")
+  write_csv(list_results[[i]], paste0(config_obj$base_dir, "/output/vote_", i, "/summary.csv"))
+}
+
 # df_vcftools$pop <- pair_info_df$SP
 # df_vcftools$subpop <- pair_info_df$POP
 #
