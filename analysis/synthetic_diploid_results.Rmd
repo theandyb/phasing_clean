@@ -48,7 +48,6 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 maf_prop_df <- read_csv(paste0(config_obj$base_dir,"/output/switch_errors/maf_props.csv"))
 pair_info_df$id <- 1:1000
 maf_prop_df <- left_join(maf_prop_df, {pair_info_df %>% select(id, SP, POP)})
-#regen
 ```
 
 
@@ -67,6 +66,311 @@ df_vcftools$n_total_shapeit <- (df_vcftools$n_flip_shapeit + df_vcftools$n_other
 
 sum(df_vcftools$n_total_shapeit < df_vcftools$n_total_eagle)
 sum(df_vcftools$n_total_beagle < df_vcftools$n_total_eagle)
+```
+
+## Nov 2025: Remove rare variant analysis
+
+```{r}
+df_switch_noRare <- read_tsv("output/X_noRare/whatshap/X_noRare_errors_summary.tsv")
+df_switch_noRare <- df_switch_noRare %>% 
+  mutate(switch_rate = switches / n_het,
+         flip_rate = flips / n_het,
+         total_rate = (switches + flips) / n_het)
+
+df_switch_noRare$pop <- rep(c("EUR", "AFR", "AMR", "EAS", "SAS"), each = 600)
+```
+
+```{r}
+df_vcftools_sub <- df_vcftools %>%
+  select(pair_id, n_hets, n_other_beagle, n_other_eagle, n_other_shapeit, n_flip_beagle, n_flip_eagle, n_flip_shapeit) %>%
+  rename(sample_id = pair_id, n_het = n_hets,
+    switches_beagle = n_other_beagle, switches_eagle = n_other_eagle, switches_shapeit = n_other_shapeit,
+    flips_beagle = n_flip_beagle, flips_eagle = n_flip_eagle, flips_shapeit = n_flip_shapeit) %>%
+  pivot_longer(cols = -c(sample_id, n_het),
+               names_to = c("error_type", "method"),
+               names_sep = "_",
+               values_to = "count") %>%
+  pivot_wider(names_from = error_type, values_from = count) %>%
+  mutate(total_errors = switches + flips) %>%
+  select(sample_id, method, switches, flips, total_errors, n_het) %>%
+  mutate(switch_rate = switches / n_het,
+         flip_rate = flips / n_het)
+
+df_vcftools_sub$rare <- "with_rare"
+df_switch_noRare$rare <- "no_rare"
+combined_df <- bind_rows(df_vcftools_sub, df_switch_noRare)
+
+# pivot wider so each sample_id, method pair has a single row, with columns for switches, flips, total_errors, n_het, switch_rate, flip_rate, total_rate for both rare and no_rare
+combined_df_wide <- combined_df %>%
+  pivot_longer(cols = c(switches, flips, total_errors, n_het, switch_rate, flip_rate, total_rate),
+               names_to = "metric",
+               values_to = "value") %>%
+  unite(temp, metric, rare) %>%
+  pivot_wider(names_from = temp, values_from = value) 
+```
+
+Let's look at how switch rates and flip rates compare within methods.
+
+```{r}
+combined_df_wide %>%
+  ggplot(aes(x = switch_rate_with_rare, y = switch_rate_no_rare, color = method)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_classic() +
+  labs(x = "Switch Rate (With Rare Variants)",
+       y = "Switch Rate (No Rare Variants)",
+       color = "Method") +
+  scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven")) +
+  theme(legend.position = "top") + # larger axis text
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18))
+```
+
+And for flip rates:
+
+```{r}
+combined_df_wide %>%
+  ggplot(aes(x = flip_rate_with_rare, y = flip_rate_no_rare, color = method)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_classic() +
+  labs(x = "Flip Rate (With Rare Variants)",
+       y = "Flip Rate (No Rare Variants)",
+       color = "Method") +
+  scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven")) +
+  theme(legend.position = "top") + # larger axis text
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18))
+```
+
+For just the results without rare variants, I now want to do pairwise comparisons of methods for switch rates and flip rates.
+
+First, scatter plots for switch rates:
+
+```{r}
+df_switch_noRare %>%
+  select(sample_id, pop, method, switch_rate) %>%
+  pivot_wider(names_from = method, values_from = switch_rate) %>%
+  ggplot(aes(x = beagle, y = eagle, colour = pop)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_classic() +
+  labs(x = "Beagle Switch Rate (No Rare Variants)",
+       y = "Eagle Switch Rate (No Rare Variants)") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18)) +
+  scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
+
+df_switch_noRare %>%
+  select(sample_id, pop, method, switch_rate) %>%
+  pivot_wider(names_from = method, values_from = switch_rate) %>%
+  ggplot(aes(x = beagle, y = shapeit, colour = pop)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_classic() +
+  labs(x = "Beagle Switch Rate (No Rare Variants)",
+       y = "SHAPEIT Switch Rate (No Rare Variants)") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18)) +
+  scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
+
+df_switch_noRare %>%
+  select(sample_id, pop, method, switch_rate) %>%
+  pivot_wider(names_from = method, values_from = switch_rate) %>%
+  ggplot(aes(x = eagle, y = shapeit, colour = pop)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_classic() +
+  labs(x = "Eagle Switch Rate (No Rare Variants)",
+       y = "SHAPEIT Switch Rate (No Rare Variants)") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18)) +
+  scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
+```
+
+And now flips:
+
+```{r}
+df_switch_noRare %>%
+  select(sample_id, pop, method, flip_rate) %>%
+  pivot_wider(names_from = method, values_from = flip_rate) %>%
+  ggplot(aes(x = beagle, y = eagle, colour = pop)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_classic() +
+  labs(x = "Beagle Flip Rate (No Rare Variants)",
+       y = "Eagle Flip Rate (No Rare Variants)") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18)) +
+  scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
+
+df_switch_noRare %>%
+  select(sample_id, pop, method, flip_rate) %>%
+  pivot_wider(names_from = method, values_from = flip_rate) %>%
+  ggplot(aes(x = beagle, y = shapeit, colour = pop)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_classic() +
+  labs(x = "Beagle Flip Rate (No Rare Variants)",
+       y = "SHAPEIT Flip Rate (No Rare Variants)") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18)) +
+  scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
+
+df_switch_noRare %>%
+  select(sample_id, pop, method, flip_rate) %>%
+  pivot_wider(names_from = method, values_from = flip_rate) %>%
+  ggplot(aes(x = eagle, y = shapeit, colour = pop)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_classic() +
+  labs(x = "Eagle Flip Rate (No Rare Variants)",
+       y = "SHAPEIT Flip Rate (No Rare Variants)") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18)) +
+  scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
+```
+
+## Oct 2025: Text Revisions
+
+1. What is the distribution of heterozygous sites per sample?
+
+```{r}
+df_vcftools %>% 
+  summarize(mean_n_hets = mean(n_hets),
+            sd_n_hets = sd(n_hets),
+            min_n_hets = min(n_hets),
+            max_n_hets = max(n_hets),
+            median_n_hets = median(n_hets),
+            n = n())
+
+mean(df_vcftools$n_hets)
+# stratify summary by pop
+df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_n_hets = mean(n_hets),
+            sd_n_hets = sd(n_hets),
+            min_n_hets = min(n_hets),
+            max_n_hets = max(n_hets),
+            median_n_hets = median(n_hets),
+            n = n())
+```
+
+2. What are the average error rates per sample?
+
+```{r}
+options(pillar.sigfig = 7)
+df_vcftools %>%
+  mutate(Beagle_rate = (n_other_beagle + n_flip_beagle) / n_hets,
+         Beagle_count = (n_other_beagle + n_flip_beagle), 
+         Eagle_rate = (n_other_eagle + n_flip_eagle) / n_hets,
+         Eagle_count = (n_other_eagle + n_flip_eagle),
+         SHAPEIT_rate = (n_other_shapeit + n_flip_shapeit) / n_hets,
+         SHAPEIT_count = (n_other_shapeit + n_flip_shapeit)) %>%
+  summarize(mean_Beagle_rate = mean(Beagle_rate),
+            mean_Beagle_count = mean(Beagle_count),
+            mean_Eagle_rate = mean(Eagle_rate),
+            mean_Eagle_count = mean(Eagle_count),
+            mean_SHAPEIT_rate = mean(SHAPEIT_rate),
+            mean_SHAPEIT_count = mean(SHAPEIT_count)) %>%
+   print(n = Inf, width = Inf)
+```
+
+3. Is there a significant difference in error rates between methods? Let's do a paired t-test between each pair of methods.
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(cols = everything(), names_to = "method", values_to = "error_rate") %>%
+  group_by(method) %>%
+  summarize(mean_error_rate = mean(error_rate),
+            sd_error_rate = sd(error_rate),
+            n = n()) %>%
+  ungroup()
+
+fit <- df_vcftools %>%
+  mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
+         Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
+  select(pair_id, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(cols = -pair_id, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
+anova(fit)
+emmeans::emmeans(fit, ~ method) %>% pairs()
+```
+
+4. Do switch error rates differ across methods?
+
+```{r}
+fit <- df_vcftools %>%
+  mutate(Beagle = n_other_beagle / n_hets ,
+         Eagle = n_other_eagle / n_hets ,
+         SHAPEIT = n_other_shapeit / n_hets ) %>%
+  select(pair_id, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(cols = -pair_id, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
+anova(fit)
+emmeans::emmeans(fit, ~ method) %>% pairs()
+
+# Get mean switch rates for each method
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle / n_hets ,
+         Eagle = n_other_eagle / n_hets ,
+         SHAPEIT = n_other_shapeit / n_hets ) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  summarize(mean_Beagle = mean(Beagle),
+            mean_Eagle = mean(Eagle),
+            mean_SHAPEIT = mean(SHAPEIT))
+```
+
+5. Do flip error rates differ across methods?
+
+```{r}
+fit <- df_vcftools %>%
+  mutate(Beagle = n_flip_beagle / n_hets ,
+         Eagle = n_flip_eagle / n_hets ,
+         SHAPEIT = n_flip_shapeit / n_hets ) %>%
+  select(pair_id, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(cols = -pair_id, names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method + (1|pair_id), data = .)}
+anova(fit)
+emmeans::emmeans(fit, ~ method) %>% pairs()
+
+# Get average flip rates for each method
+df_vcftools %>%
+  mutate(Beagle = n_flip_beagle / n_hets ,
+         Eagle = n_flip_eagle / n_hets ,
+         SHAPEIT = n_flip_shapeit / n_hets ) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  summarize(mean_Beagle = mean(Beagle),
+            mean_Eagle = mean(Eagle),
+            mean_SHAPEIT = mean(SHAPEIT))
+```
+
+6. Do switch error rates differ by population?
+
+```{r}
+mean_df <- df_vcftools %>%
+  group_by(pop) %>%
+  summarize(mean_switch_beagle = mean(n_other_beagle / n_hets),
+            sd_switch_beagle = sd(n_other_beagle / n_hets),
+            mean_switch_eagle = mean(n_other_eagle / n_hets),
+            sd_switch_eagle = sd(n_other_eagle / n_hets),
+            mean_switch_shapeit = mean(n_other_shapeit / n_hets),
+            sd_switch_shapeit = sd(n_other_shapeit / n_hets))
+mean_df
+
+fit <- df_vcftools %>%
+  mutate(Beagle = n_other_beagle / n_hets ,
+         Eagle = n_other_eagle / n_hets ,
+         SHAPEIT = n_other_shapeit / n_hets ) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(cols = -c(pair_id, pop), names_to = "method", values_to = "error_rate") %>%
+  {lmerTest::lmer(error_rate ~ method * pop + (1|pair_id), data = .)}
+anova(fit)
 ```
 
 ## Tables
@@ -1912,6 +2216,68 @@ df_vcftools %>%
 ```
 
 ## MAF Bins
+
+### Draft Revision
+
+1. What is the average enrichment of variants at rare heterozygous positions?
+
+```{r}
+maf_prop_df %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_switch_rare / het_rare,
+         Eagle = eagle_switch_rare / het_rare,
+         SHAPEIT = shapeit_switch_rare / het_rare) %>%
+  select(id, SP, Beagle:SHAPEIT) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+
+```{r}
+maf_prop_df %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_switch_rare / het_rare,
+         Eagle = eagle_switch_rare / het_rare,
+         SHAPEIT = shapeit_switch_rare / het_rare) %>%
+  select(id, SP, Beagle:SHAPEIT) %>%
+  group_by(SP) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+```{r}
+maf_prop_df %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_flip_rare / het_rare,
+         Eagle = eagle_flip_rare / het_rare,
+         SHAPEIT = shapeit_flip_rare / het_rare) %>%
+  select(id, SP, Beagle:SHAPEIT) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+
+```{r}
+maf_prop_df %>%
+  pivot_wider(names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_switch_rare / het_rare,
+         Eagle = eagle_switch_rare / het_rare,
+         SHAPEIT = shapeit_switch_rare / het_rare) %>%
+  select(id, SP, Beagle:SHAPEIT) %>%
+  group_by(SP) %>%
+  summarize(Beagle = mean(Beagle),
+            Eagle = mean(Eagle),
+            SHAPEIT = mean(SHAPEIT)) %>%
+  knitr::kable()
+```
+
+### Old Work
 
 In the `maf_prop_df` data frame, we have for each synthetic diploid the proportion of heterozygous sites that are: rare variants (maf < 0.01); uncommon variants (0.01 < maf < 0.05); and common variants (maf > 0.05). We also have these proportions for each type of error for each method (switch; flip start; flip end; correct).
 
