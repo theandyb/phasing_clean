@@ -7,6 +7,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width = 8, fig.height = 6)
+```
+
 ## Libraries and Directories
 
 ```{r}
@@ -48,6 +52,37 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 maf_prop_df <- read_csv(paste0(config_obj$base_dir,"/output/switch_errors/maf_props.csv"))
 pair_info_df$id <- 1:1000
 maf_prop_df <- left_join(maf_prop_df, {pair_info_df %>% select(id, SP, POP)})
+
+#' Theme for Scientific Manuscripts
+#' 
+#' @param base_size Numeric. Base font size for the plot (default is 12 for standard manuscripts).
+#' @param base_family Character. Font family to use (default is "sans" which maps to Arial/Helvetica).
+#' 
+theme_manuscript <- function(base_size = 12, base_family = "sans") {
+  theme_classic(base_size = base_size, base_family = base_family) %+replace% 
+    theme(
+      # Ensure titles and labels are large and readable
+      plot.title = element_text(size = rel(1.2), face = "bold", hjust = 0.5, margin = margin(b = 10)),
+      plot.subtitle = element_text(size = rel(1.0), face = "plain", hjust = 0.5, margin = margin(b = 10)),
+      axis.title = element_text(size = rel(1.0), face = "bold"),
+      axis.text = element_text(size = rel(0.85), color = "black"),
+      
+      # Clean up the legend
+      legend.title = element_text(size = rel(0.9), face = "bold"),
+      legend.text = element_text(size = rel(0.85)),
+      legend.background = element_blank(),
+      legend.key = element_blank(),
+      
+      # Strips for faceted plots
+      strip.background = element_rect(fill = "grey95", color = "black", linewidth = 0.5),
+      strip.text = element_text(size = rel(0.9), face = "bold", margin = margin(t = 5, b = 5)),
+      
+      # Tweak plot margins so nothing gets cut off
+      plot.margin = margin(t = 15, r = 15, b = 15, l = 15)
+    )
+}
+
+okabe_ito_palette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 ```
 
 
@@ -92,9 +127,12 @@ df_vcftools_sub <- df_vcftools %>%
                values_to = "count") %>%
   pivot_wider(names_from = error_type, values_from = count) %>%
   mutate(total_errors = switches + flips) %>%
-  select(sample_id, method, switches, flips, total_errors, n_het) %>%
+  mutate(total_rate = total_errors / n_het) %>%
   mutate(switch_rate = switches / n_het,
-         flip_rate = flips / n_het)
+         flip_rate = flips / n_het) %>%
+  select(sample_id, method, switches, flips, total_errors, n_het, switch_rate, flip_rate, total_rate)
+
+df_vcftools_sub$pop <- rep(c("EUR", "AFR", "AMR", "EAS", "SAS"), each = 600)
 
 df_vcftools_sub$rare <- "with_rare"
 df_switch_noRare$rare <- "no_rare"
@@ -116,7 +154,7 @@ combined_df_wide %>%
   ggplot(aes(x = switch_rate_with_rare, y = switch_rate_no_rare, color = method)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(x = "Switch Rate (With Rare Variants)",
        y = "Switch Rate (No Rare Variants)",
        color = "Method") +
@@ -133,7 +171,7 @@ combined_df_wide %>%
   ggplot(aes(x = flip_rate_with_rare, y = flip_rate_no_rare, color = method)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(x = "Flip Rate (With Rare Variants)",
        y = "Flip Rate (No Rare Variants)",
        color = "Method") +
@@ -154,7 +192,7 @@ df_switch_noRare %>%
   ggplot(aes(x = beagle, y = eagle, colour = pop)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(x = "Beagle Switch Rate (No Rare Variants)",
        y = "Eagle Switch Rate (No Rare Variants)") +
   theme(axis.text = element_text(size = 16),
@@ -167,7 +205,7 @@ df_switch_noRare %>%
   ggplot(aes(x = beagle, y = shapeit, colour = pop)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(x = "Beagle Switch Rate (No Rare Variants)",
        y = "SHAPEIT Switch Rate (No Rare Variants)") +
   theme(axis.text = element_text(size = 16),
@@ -180,12 +218,29 @@ df_switch_noRare %>%
   ggplot(aes(x = eagle, y = shapeit, colour = pop)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(x = "Eagle Switch Rate (No Rare Variants)",
        y = "SHAPEIT Switch Rate (No Rare Variants)") +
   theme(axis.text = element_text(size = 16),
         axis.title = element_text(size = 18)) +
   scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
+
+# Violin plots of switch rates by method with white boxplot overlay
+df_switch_noRare %>% # rename methods to Beagle, Eagle, SHAPEIT
+  mutate(method = recode(method,
+                         beagle = "Beagle",
+                         eagle = "Eagle",
+                         shapeit = "SHAPEIT")) %>%
+  ggplot(aes(x = method, y = switch_rate, fill = method)) +
+  geom_violin(width = 1) +
+  geom_boxplot(width=0.1, color="grey", alpha=0.2) +
+  theme_manuscript(base_size=14) +
+  labs(x = "Method",
+       y = "Switch Rate (No Rare Variants)") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18),
+        legend.position = "none") +
+  scale_fill_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
 ```
 
 And now flips:
@@ -197,7 +252,7 @@ df_switch_noRare %>%
   ggplot(aes(x = beagle, y = eagle, colour = pop)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(x = "Beagle Flip Rate (No Rare Variants)",
        y = "Eagle Flip Rate (No Rare Variants)") +
   theme(axis.text = element_text(size = 16),
@@ -210,7 +265,7 @@ df_switch_noRare %>%
   ggplot(aes(x = beagle, y = shapeit, colour = pop)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(x = "Beagle Flip Rate (No Rare Variants)",
        y = "SHAPEIT Flip Rate (No Rare Variants)") +
   theme(axis.text = element_text(size = 16),
@@ -223,12 +278,29 @@ df_switch_noRare %>%
   ggplot(aes(x = eagle, y = shapeit, colour = pop)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(x = "Eagle Flip Rate (No Rare Variants)",
        y = "SHAPEIT Flip Rate (No Rare Variants)") +
   theme(axis.text = element_text(size = 16),
         axis.title = element_text(size = 18)) +
   scale_color_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
+
+# Violin plots of flip rates by method with white boxplot overlay
+df_switch_noRare %>%
+  mutate(method = recode(method,
+                         beagle = "Beagle",
+                         eagle = "Eagle",
+                         shapeit = "SHAPEIT")) %>%
+  ggplot(aes(x = method, y = flip_rate, fill = method)) +
+  geom_violin(width = 1) +
+  geom_boxplot(width=0.1, color="grey", alpha=0.2) +
+  theme_manuscript(base_size=14) +
+  labs(x = "Method",
+       y = "Flip Rate (No Rare Variants)") +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 18),
+        legend.position = "none") +
+  scale_fill_manual(values = ggpubfigs::friendly_pal("vibrant_seven"))
 ```
 
 ## Oct 2025: Text Revisions
@@ -423,6 +495,29 @@ df_vcftools %>%
   mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets ,
          Eagle = (n_other_eagle + n_flip_eagle) / n_hets ,
          SHAPEIT = (n_other_shapeit + n_flip_shapeit) / n_hets ) %>%
+  tbl_summary(by = pop,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+
+# Switch Rate by Pop
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle) / n_hets ,
+         Eagle = (n_other_eagle) / n_hets ,
+         SHAPEIT = (n_other_shapeit) / n_hets ) %>%
+  tbl_summary(by = pop,
+              include = c(Beagle, Eagle, SHAPEIT),
+              statistic = list(
+                all_continuous() ~ "{mean} ({sd})",
+                all_categorical() ~ "{n} / {N} ({p}%)")
+              )
+# Flip Rate by Pop
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets ,
+         Eagle = (n_flip_eagle) / n_hets ,
+         SHAPEIT = (n_flip_shapeit) / n_hets ) %>%
   tbl_summary(by = pop,
               include = c(Beagle, Eagle, SHAPEIT),
               statistic = list(
@@ -948,6 +1043,8 @@ df_vcftools %>%
 
 #### Enrichment
 
+ANDY START HERE!
+
 We compute the ratio of the proportion of errors at CpGs to the proportion of heterozygous locations that are at CpGs.
 
 ```{r}
@@ -981,9 +1078,9 @@ df_vcftools %>%
   geom_boxplot() +
   ylab("Odds CpG Switch / Odds CpG Het") +
   ggtitle("Odds Ratio of CpG Status for Switches") +
-  theme_classic() +
+  theme_manuscript(base_size = 14) +
   labs(colour = "Population") +
-  scale_color_manual(values = cbPalette) +
+  scale_color_manual(values = okabe_ito_palette) +
   geom_hline(yintercept = 1, linetype=2)
 
 df_vcftools %>%
@@ -1003,7 +1100,7 @@ df_vcftools %>%
   geom_boxplot() +
   ylab("Odds CpG Switch / Odds CpG Het") +
   ggtitle("Odds Ratio of CpG Status for Switches") +
-  theme_classic() +
+  theme_manuscript(base_size = 14) +
   scale_color_manual(values = cbPalette) +
   geom_hline(yintercept = 1, linetype=2)
 ```
@@ -1028,7 +1125,7 @@ df_vcftools %>%
   geom_boxplot() +
   ylab("Odds CpG Flip / Odds CpG Het") +
   ggtitle("Odds Ratio of CpG Status for Flips") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(colour = "Population") +
   scale_color_manual(values = cbPalette) +
   geom_hline(yintercept = 1, linetype=2)
@@ -1050,7 +1147,7 @@ df_vcftools %>%
   geom_boxplot() +
   ylab("Odds CpG Flip / Odds CpG Het") +
   ggtitle("Odds Ratio of CpG Status for Flips") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   scale_color_manual(values = cbPalette) +
   geom_hline(yintercept = 1, linetype=2)
 
@@ -1176,7 +1273,7 @@ df_vcftools %>%
   geom_boxplot() +
   xlab("Method") +
   ylab("Errors") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 ```
 
 ```{r}
@@ -1190,7 +1287,7 @@ df_vcftools %>%
   geom_boxplot() +
   xlab("Method") +
   ylab("Error Rate per Heterozygous Position") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 
 df_vcftools %>%
   mutate(Beagle = (n_other_beagle + n_flip_beagle) / n_hets,
@@ -1202,7 +1299,7 @@ df_vcftools %>%
   geom_violin(draw_quantiles = c(0.5)) +
   xlab("Method") +
   ylab("Error Rate per Heterozygous Position") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 ```
 
 ```{r}
@@ -1217,7 +1314,7 @@ df_vcftools %>%
   xlab("Method") +
   ylab("Error Rate per Heterozygous Position") +
   scale_color_manual(values = cbPalette) +
-  theme_classic()
+  theme_manuscript(base_size=14)
 ```
 
 ```{r}
@@ -1409,7 +1506,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
   ggtitle("Total Errors") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette) +
   labs(color = "Population")
@@ -1424,7 +1521,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Total Errors") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1437,7 +1534,7 @@ df_vcftools %>%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Total Errors") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1449,7 +1546,7 @@ cross_meth_plot <- function(df, p_title) {
   p1 <- df %>%
     ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
     geom_point() +
-    theme_classic() +
+    theme_manuscript(base_size=14) +
     geom_abline(slope = 1, intercept = 0) +
     scale_color_manual(values = cbPalette) +
     labs(color = "Population")
@@ -1462,7 +1559,7 @@ cross_meth_plot <- function(df, p_title) {
     ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
     geom_point() +
     ggtitle(p_title) +
-    theme_classic() +
+    theme_manuscript(base_size=14) +
     geom_abline(slope = 1, intercept = 0) +
     scale_color_manual(values = cbPalette) +
     guides(colour="none")
@@ -1470,7 +1567,7 @@ cross_meth_plot <- function(df, p_title) {
   p3 <- df %>%
     ggplot(aes(x = SHAPEIT, y = Eagle, color = pop)) +
     geom_point() +
-    theme_classic() +
+    theme_manuscript(base_size=14) +
     geom_abline(slope = 1, intercept = 0) +
     scale_color_manual(values = cbPalette) +
     guides(colour="none")
@@ -1494,7 +1591,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
   ggtitle("Total Errors per Heterozygous Site") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1507,7 +1604,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Total Errors per Heterozygous Site") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1520,7 +1617,7 @@ df_vcftools %>%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Total Errors per Heterozygous Site") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1559,7 +1656,7 @@ df_vcftools %>%
   ylab("Error Rate") +
   scale_color_manual(values = cbPalette) +
   labs(color = "Method") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 ```
 
 ```{r}
@@ -1612,7 +1709,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
   ggtitle("Switches") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1625,7 +1722,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Switches") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1638,7 +1735,7 @@ df_vcftools %>%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Switches") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1649,6 +1746,85 @@ df_vcftools %>%
          Eagle = (n_other_eagle ), 
          SHAPEIT = (n_other_shapeit)) %>%
   cross_meth_plot(p_title = "Switches")
+```
+
+#### Boxplots by population of switch and flip rates
+
+```{r}
+df_vcftools %>%
+  mutate(Beagle = (n_other_beagle) / n_hets,
+         Eagle = (n_other_eagle ) / n_hets, 
+         SHAPEIT = (n_other_shapeit) / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch_rate") %>%
+  ggplot(aes(x = method, y = switch_rate, colour = pop)) +
+  geom_boxplot() +
+  theme_manuscript(base_size = 14) +
+  scale_color_manual(values = okabe_ito_palette) +
+  xlab("Method") +
+  ylab("Switch Rate \nPer Heterozygous Site") +
+  labs(color = "Population") +
+  theme(
+    legend.title = element_text(size = 14), # Makes title larger
+    legend.text = element_text(size = 12)    # Makes labels larger
+  )
+
+# Use population as x axis and method as color
+df_vcftools %>%
+  mutate(Beagle = n_other_beagle / n_hets,
+         Eagle = n_other_eagle / n_hets, 
+         SHAPEIT = n_other_shapeit / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "switch_rate") %>%
+  ggplot(aes(x = pop, y = switch_rate, colour = method)) +
+  geom_boxplot() +
+  theme_manuscript(base_size = 14) +
+  scale_color_manual(values = okabe_ito_palette) +
+  xlab("Population") +
+  ylab("Switch Rate \nPer Heterozygous Site") +
+  labs(color = "Method") +
+  theme(
+    legend.title = element_text(size = 14), # Makes title larger
+    legend.text = element_text(size = 12)    # Makes labels larger
+  )
+
+# Flip rate
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "flip_rate") %>%
+  ggplot(aes(x = method, y = flip_rate, colour = pop)) +
+  geom_boxplot() +
+  theme_manuscript(base_size = 14) +
+  scale_color_manual(values = okabe_ito_palette) +
+  xlab("Method") +
+  ylab("Flip Rate \nPer Heterozygous Site") +
+  labs(color = "Population") +
+  theme(
+    legend.title = element_text(size = 14), # Makes title larger
+    legend.text = element_text(size = 12)    # Makes labels larger
+  )
+
+# use population as x axis and method as color
+df_vcftools %>%
+  mutate(Beagle = (n_flip_beagle) / n_hets,
+         Eagle = (n_flip_eagle ) / n_hets, 
+         SHAPEIT = (n_flip_shapeit) / n_hets) %>%
+  select(pair_id, pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(Beagle:SHAPEIT, names_to = "method", values_to = "flip_rate") %>%
+  ggplot(aes(x = pop, y = flip_rate, colour = method)) +
+  geom_boxplot() +
+  theme_manuscript(base_size = 14) +
+  scale_color_manual(values = okabe_ito_palette) +
+  xlab("Population") +
+  ylab("Flip Rate \nPer Heterozygous Site") +
+  labs(color = "Method") +
+    theme(
+    legend.title = element_text(size = 14), # Makes title larger
+    legend.text = element_text(size = 12)    # Makes labels larger
+  )
 ```
 
 
@@ -1662,7 +1838,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
   ggtitle("Switches per Heterozygous Site") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1675,7 +1851,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Switches per Heterozygous Site") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1688,7 +1864,7 @@ df_vcftools %>%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Switches per Heterozygous Site") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1712,7 +1888,7 @@ df_vcftools %>%
   geom_boxplot() +
   xlab("Method") +
   ylab("Switch Rate") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 ```
 
 ```{r}
@@ -1728,7 +1904,7 @@ df_vcftools %>%
   ylab("Switch Rate") +
   scale_color_manual(values = cbPalette) +
   labs(color = "Method") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 ```
 
 ```{r}
@@ -1780,7 +1956,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
   ggtitle("Flips") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1793,7 +1969,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Flips") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1806,7 +1982,7 @@ df_vcftools %>%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Flips") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1829,7 +2005,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = Eagle, color = pop)) +
   geom_point() +
   ggtitle("Flips per Heterozygous Site") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1842,7 +2018,7 @@ df_vcftools %>%
   ggplot(aes(x = Beagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Flips per Heterozygous Site") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1855,7 +2031,7 @@ df_vcftools %>%
   ggplot(aes(x = Eagle, y = SHAPEIT, color = pop)) +
   geom_point() +
   ggtitle("Flips per Heterozygous Site") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   geom_abline(slope = 1, intercept = 0) +
   scale_color_manual(values = cbPalette)
 ```
@@ -1879,7 +2055,7 @@ df_vcftools %>%
   geom_boxplot() +
   xlab("Method") +
   ylab("Flip Rate") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 ```
 
 ```{r}
@@ -1895,7 +2071,7 @@ df_vcftools %>%
   ylab("Flip Rate") +
   scale_color_manual(values = cbPalette) +
   labs(color = "Method") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 ```
 
 ```{r}
@@ -1940,7 +2116,7 @@ df_vcftools %>%
   ggtitle("Errors at CpG Sites") +
   xlab("Method") +
   ylab("Proportion") +
-  theme_classic()
+  theme_manuscript(base_size = 14)
 
 df_vcftools %>%
   mutate(Beagle = (n_other_cpg_beagle / n_other_beagle),
@@ -1953,7 +2129,7 @@ df_vcftools %>%
   ggtitle("Switches at CpG Sites") +
   xlab("Method") +
   ylab("Proportion") +
-  theme_classic()
+  theme_manuscript(base_size = 14)
 
 df_vcftools %>%
   mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle),
@@ -1966,7 +2142,7 @@ df_vcftools %>%
   ggtitle("Flips at CpG Sites") +
   xlab("Method") +
   ylab("Proportion") +
-  theme_classic()
+  theme_manuscript(base_size = 14)
 
 df_vcftools %>%
   mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle) / (n_het_cpg / n_hets),
@@ -1979,35 +2155,7 @@ df_vcftools %>%
   ggtitle("Enrichment of Errors at CpG Sites") +
   xlab("Method") +
   ylab("Enrichment") +
-  theme_classic() +
-  geom_hline(yintercept = 1)
-
-df_vcftools %>%
-  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
-         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
-         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %>%
-  select(Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(everything(), names_to = "method", values_to = "enrich") %>%
-  ggplot(aes(x = method, y = enrich)) +
-  geom_boxplot() +
-  ggtitle("Enrichment of Switches at CpG Sites") +
-  xlab("Method") +
-  ylab("Enrichment") +
-  theme_classic() +
-  geom_hline(yintercept = 1)
-
-df_vcftools %>%
-  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
-         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
-         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %>%
-  select(Beagle, Eagle, SHAPEIT) %>%
-  pivot_longer(everything(), names_to = "method", values_to = "enrich") %>%
-  ggplot(aes(x = method, y = enrich)) +
-  geom_boxplot() +
-  ggtitle("Enrichment of Flips at CpG Sites") +
-  xlab("Method") +
-  ylab("Enrichment") +
-  theme_classic() +
+  theme_manuscript(base_size = 14) +
   geom_hline(yintercept = 1)
 
 df_vcftools %>%
@@ -2021,10 +2169,40 @@ df_vcftools %>%
   ggtitle("Enrichment of Errors at CpG Sites") +
   xlab("Method") +
   ylab("Enrichment") +
-  theme_classic() +
+  theme_manuscript(base_size = 14) +
   geom_hline(yintercept = 1) +
-  scale_color_manual(values=cbPalette) +
+  scale_color_manual(values=okabe_ito_palette) +
   labs(color = "Population")
+
+df_vcftools %>%
+  mutate(Beagle = (n_switch_cpg_beagle / n_switch_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_switch_cpg_eagle / n_switch_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_switch_cpg_shapeit / n_switch_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = pop, y = enrich, colour = method)) +
+  geom_boxplot() +
+  ggtitle("Enrichment of Errors at CpG Sites") +
+  xlab("Population") +
+  ylab("Enrichment") +
+  theme_manuscript(base_size = 14) +
+  geom_hline(yintercept = 1) +
+  scale_color_manual(values=okabe_ito_palette) +
+  labs(color = "Method")
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(everything(), names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  ggtitle("Enrichment of Switches at CpG Sites") +
+  xlab("Method") +
+  ylab("Enrichment") +
+  theme_manuscript(base_size = 14) +
+  geom_hline(yintercept = 1)
 
 df_vcftools %>%
   mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
@@ -2037,10 +2215,40 @@ df_vcftools %>%
   ggtitle("Enrichment of Switches at CpG Sites") +
   xlab("Method") +
   ylab("Enrichment") +
-  theme_classic() +
-  geom_hline(yintercept = 1) +
-  scale_color_manual(values=cbPalette) +
-  labs(color = "Population")
+  labs(color = "Population") +
+  theme_manuscript(base_size = 14) +
+  geom_hline(yintercept = 1) + 
+  scale_color_manual(values=okabe_ito_palette)
+
+df_vcftools %>%
+  mutate(Beagle = (n_other_cpg_beagle / n_other_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_other_cpg_eagle / n_other_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_other_cpg_shapeit / n_other_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = pop, y = enrich, colour = method)) +
+  geom_boxplot() +
+  ggtitle("Enrichment of Switches at CpG Sites") +
+  xlab("Population") +
+  ylab("Enrichment") +
+  labs(color = "Method") +
+  theme_manuscript(base_size = 14) +
+  geom_hline(yintercept = 1) + 
+  scale_color_manual(values=okabe_ito_palette)
+
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(everything(), names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = method, y = enrich)) +
+  geom_boxplot() +
+  ggtitle("Enrichment of Flips at CpG Sites") +
+  xlab("Method") +
+  ylab("Enrichment") +
+  theme_manuscript(base_size = 14) +
+  geom_hline(yintercept = 1)
 
 df_vcftools %>%
   mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
@@ -2048,15 +2256,32 @@ df_vcftools %>%
          SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %>%
   select(pop, Beagle, Eagle, SHAPEIT) %>%
   pivot_longer(-pop, names_to = "method", values_to = "enrich") %>%
-  ggplot(aes(x = method, y = enrich, color = pop)) +
+  ggplot(aes(x = method, y = enrich, colour = pop)) +
   geom_boxplot() +
   ggtitle("Enrichment of Flips at CpG Sites") +
   xlab("Method") +
   ylab("Enrichment") +
-  theme_classic() +
+  labs(color = "Population") +
+  theme_manuscript(base_size = 14) +
   geom_hline(yintercept = 1) +
-  scale_color_manual(values=cbPalette) +
-  labs(color = "Population")
+  scale_color_manual(values=okabe_ito_palette)
+
+df_vcftools %>%
+  mutate(Beagle = (n_flip_cpg_beagle / n_flip_beagle) / (n_het_cpg / n_hets),
+         Eagle = (n_flip_cpg_eagle / n_flip_eagle) / (n_het_cpg / n_hets),
+         SHAPEIT = (n_flip_cpg_shapeit / n_flip_shapeit) / (n_het_cpg / n_hets)) %>%
+  select(pop, Beagle, Eagle, SHAPEIT) %>%
+  pivot_longer(-pop, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = pop, y = enrich, colour = method)) +
+  geom_boxplot() +
+  ggtitle("Enrichment of Flips at CpG Sites") +
+  xlab("Population") +
+  ylab("Enrichment") +
+  labs(color = "Method") +
+  theme_manuscript(base_size = 14) +
+  geom_hline(yintercept = 1) +
+  scale_color_manual(values=okabe_ito_palette)
+
 ```
 
 We observe a mild enrichment of switches and a more profound enrichment of flips at CpGs across all methods. We also observe some variation across populations within each method, for example: AFR has almost no enrichment for switches in both Beagle and SHAPEIT.
@@ -2299,7 +2524,7 @@ prop_maf_fig <- function(cat_type, title_text){
     ggtitle(paste0(title_text, " in MAF Bins")) +
     xlab("") +
     ylab("Proportion of Sites") +
-    theme_classic() +
+    theme_manuscript(base_size=14) +
     labs(color = "Population") +
     scale_color_manual(values = cbPalette)
   
@@ -2477,7 +2702,7 @@ df_switch_maf %>%
   scale_color_manual(values = cbPalette) +
   labs(color = "Method") +
   ggtitle("Switch Errors") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 
 df_switch_maf %>%
   group_by(method, maf_c) %>%
@@ -2525,7 +2750,7 @@ df_flip_maf %>%
   scale_color_manual(values = cbPalette) +
   labs(color = "Method") +
   ggtitle("Flip Errors") +
-  theme_classic()
+  theme_manuscript(base_size=14)
 
 df_flip_maf %>%
   group_by(method, maf_c) %>%
@@ -2562,10 +2787,30 @@ maf_prop_df %>%
   pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
   ggplot(aes(x = method, y = enrich, color = SP)) +
   geom_boxplot() +
-  theme_classic() +
+  theme_manuscript(base_size = 14) +
   ggtitle("Enrichment of Switches at Rare Variants") + 
   xlab("Method") +
-  ylab("Prop. rare switches / Prop. rare heterozygous sites")
+  ylab("Prop. rare switches / Prop. rare heterozygous sites") +
+  scale_color_manual(values=okabe_ito_palette) +
+  labs(color = "Population")
+
+maf_prop_df %>%
+  filter(category == "het_rare" | str_detect(category, "switch_rare")) %>%
+  select(id, category, proportion,SP) %>%
+  pivot_wider(id_cols = c("id", "SP"), names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_switch_rare / het_rare,
+         Eagle = eagle_switch_rare / het_rare,
+         SHAPEIT = shapeit_switch_rare / het_rare) %>%
+  select(id, SP, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = SP, y = enrich, color = method)) +
+  geom_boxplot() +
+  theme_manuscript(base_size = 14) +
+  ggtitle("Enrichment of Switches at Rare Variants") + 
+  xlab("Population") +
+  ylab("Prop. rare switches / Prop. rare heterozygous sites") +
+  scale_color_manual(values=okabe_ito_palette) +
+  labs(color = "Method")
 ```
 
 Same plot as above, but don't separate by population:
@@ -2582,13 +2827,10 @@ maf_prop_df %>%
   pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
   ggplot(aes(x = method, y = enrich)) +
   geom_boxplot() +
-  theme_classic() +
+  theme_manuscript(base_size = 14) +
   ggtitle("Enrichment of Switches at Rare Variants") + 
   xlab("Method") +
-  ylab("Prop. rare switches / Prop. rare heterozygous sites") + # make axis labels bigger
-  theme(axis.text = element_text(size = 14)) +
-  theme(axis.title = element_text(size = 16)) +
-  theme(plot.title = element_text(size = 18, hjust = 0.5))
+  ylab("Prop. rare switches / Prop. rare heterozygous sites") 
   
 ```
 
@@ -2607,10 +2849,30 @@ maf_prop_df %>%
   pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
   ggplot(aes(x = method, y = enrich, color = SP)) +
   geom_boxplot() +
-  theme_classic() +
+  theme_manuscript(base_size = 14) +
   ggtitle("Enrichment of Flips at Rare Variants") + 
   xlab("Method") +
-  ylab("Prop. rare flips / Prop. rare heterozygous sites")
+  ylab("Prop. rare flips / Prop. rare heterozygous sites") +
+  labs(color = "Population") +
+  scale_color_manual(values=okabe_ito_palette)
+
+maf_prop_df %>%
+  filter(category == "het_rare" | str_detect(category, "flip_rare")) %>%
+  select(id, category, proportion,SP) %>%
+  pivot_wider(id_cols = c("id", "SP"), names_from = category, values_from = proportion) %>%
+  mutate(Beagle = beagle_flip_rare / het_rare,
+         Eagle = eagle_flip_rare / het_rare,
+         SHAPEIT = shapeit_flip_rare / het_rare) %>%
+  select(id, SP, Eagle, Beagle, SHAPEIT) %>%
+  pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
+  ggplot(aes(x = SP, y = enrich, color = method)) +
+  geom_boxplot() +
+  theme_manuscript(base_size = 14) +
+  ggtitle("Enrichment of Flips at Rare Variants") + 
+  xlab("Population") +
+  ylab("Prop. rare flips / Prop. rare heterozygous sites") +
+  labs(color = "Method") +
+  scale_color_manual(values=okabe_ito_palette)
 ```
 
 Same plot as above, but don't separate by population:
@@ -2627,13 +2889,10 @@ maf_prop_df %>%
   pivot_longer(Eagle:SHAPEIT, names_to = "method", values_to = "enrich") %>%
   ggplot(aes(x = method, y = enrich)) +
   geom_boxplot() +
-  theme_classic() +
+  theme_manuscript(base_size = 14) +
   ggtitle("Enrichment of Flips at Rare Variants") + 
   xlab("Method") +
-  ylab("Prop. rare flips / Prop. rare heterozygous sites") + # make axis labels bigger
-  theme(axis.text = element_text(size = 14)) +
-  theme(axis.title = element_text(size = 16)) +
-  theme(plot.title = element_text(size = 18, hjust = 0.5))
+  ylab("Prop. rare flips / Prop. rare heterozygous sites") 
 ```
 
 
@@ -2658,7 +2917,7 @@ maf_prop_df %>%
   geom_boxplot() +
   ggtitle("Odds Ratio of Rare Variant") +
   ylab("Odds Rare Switch / Odds Rare Heterozygous") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(colour = "Population") +
   geom_hline(yintercept = 1, linetype = 2)
 
@@ -2747,7 +3006,7 @@ maf_prop_df %>%
   geom_boxplot() +
   ggtitle("Odds Ratio of Rare Variant") +
   ylab("Odds Rare Flip / Odds Rare Heterozygous") +
-  theme_classic() +
+  theme_manuscript(base_size=14) +
   labs(colour = "Population") +
   geom_hline(yintercept = 1, linetype = 2)
 
